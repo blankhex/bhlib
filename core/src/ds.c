@@ -2,41 +2,30 @@
  * BHLib
  *
  * Copyright (c) 2024 Mikhail Romanko
- *
- * Permission to use, copy, modify, and/or distribute this software for
- * any purpose with or without fee is hereby granted.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
- * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE
- * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY
- * DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN
- * AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
- * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 #include <bh/ds.h>
 #include <bh/algo.h>
 #include <string.h>
 #include <stdlib.h>
 
-void bh_array_init(struct bh_array *array, size_t element)
+void bh_array_init(bh_array_t *array, size_t element)
 {
     memset(array, 0, sizeof(*array));
     array->element = element;
 }
 
-void bh_array_destroy(struct bh_array *array)
+void bh_array_destroy(bh_array_t *array)
 {
     if (array->data)
         free(array->data);
 }
 
-void bh_array_clear(struct bh_array *array)
+void bh_array_clear(bh_array_t *array)
 {
     array->size = 0;
 }
 
-int bh_array_reserve(struct bh_array *array, size_t size)
+int bh_array_reserve(bh_array_t *array, size_t size)
 {
     void *data;
     size_t capacity;
@@ -72,7 +61,17 @@ int bh_array_reserve(struct bh_array *array, size_t size)
     return 0;
 }
 
-void *bh_array_insert(struct bh_array *array, size_t index)
+int bh_array_resize(bh_array_t *array, size_t size)
+{
+    if (size > array->size)
+        if (bh_array_reserve(array, size))
+            return -1;
+
+    array->size = size;
+    return 0;
+}
+
+void *bh_array_insert(bh_array_t *array, size_t index)
 {
     size_t move_size;
     char *from, *to;
@@ -102,12 +101,12 @@ void *bh_array_insert(struct bh_array *array, size_t index)
     return from;
 }
 
-void *bh_array_at(struct bh_array *array, size_t index)
+void *bh_array_at(bh_array_t *array, size_t index)
 {
     return (char *)array->data + index * array->element;
 }
 
-void *bh_array_remove(struct bh_array *array, void *iter)
+void *bh_array_remove(bh_array_t *array, void *iter)
 {
     size_t move_size, index;
     char *from, *to;
@@ -131,7 +130,7 @@ void *bh_array_remove(struct bh_array *array, void *iter)
     return iter;
 }
 
-void *bh_array_next(struct bh_array *array, void *iter)
+void *bh_array_next(bh_array_t *array, void *iter)
 {
     char *item = (char *)iter;
 
@@ -148,22 +147,25 @@ void *bh_array_next(struct bh_array *array, void *iter)
     return item;
 }
 
-void *bh_array_value(struct bh_array *array, void *iter)
+void *bh_array_value(bh_array_t *array, void *iter)
 {
     (void)array;
     return iter;
 }
 
-void bh_map_init(struct bh_map *map, size_t key, size_t value, int (*compare)(void *, void *), size_t (*hash)(void *))
+void bh_map_init(bh_map_t *map, size_t key, size_t value, bh_compare_cb_t compare, bh_hash_cb_t hash)
 {
     memset(map, 0, sizeof(*map));
     map->element.key = key;
     map->element.value = value;
     map->compare = compare;
     map->hash = hash;
+
+    if (!map->element.key || !map->element.value)
+        abort();
 }
 
-void bh_map_destroy(struct bh_map *map)
+void bh_map_destroy(bh_map_t *map)
 {
     if (map->capacity)
     {
@@ -173,7 +175,7 @@ void bh_map_destroy(struct bh_map *map)
     }
 }
 
-void bh_map_clear(struct bh_map *map)
+void bh_map_clear(bh_map_t *map)
 {
     /* Reset probe sequence lengths and map size */
     if (map->capacity)
@@ -181,9 +183,9 @@ void bh_map_clear(struct bh_map *map)
     map->size = 0;
 }
 
-int bh_map_reserve(struct bh_map *map, size_t size)
+int bh_map_reserve(bh_map_t *map, size_t size)
 {
-    struct bh_map other;
+    bh_map_t other;
     size_t capacity, max_capacity, max_element;
 
     capacity = map->capacity;
@@ -265,7 +267,7 @@ int bh_map_reserve(struct bh_map *map, size_t size)
     return 0;
 }
 
-void *bh_map_insert(struct bh_map *map, void *key)
+void *bh_map_insert(bh_map_t *map, void *key)
 {
     size_t bucket, *item_psl, *bucket_psl;
     void *item_key, *item_value, *bucket_key, *bucket_value, *result;
@@ -324,7 +326,7 @@ void *bh_map_insert(struct bh_map *map, void *key)
     return result;
 }
 
-void *bh_map_at(struct bh_map *map, void *key)
+void *bh_map_at(bh_map_t *map, void *key)
 {
     size_t bucket, psl;
     void *bucket_key;
@@ -353,7 +355,7 @@ void *bh_map_at(struct bh_map *map, void *key)
     return NULL;
 }
 
-void *bh_map_remove(struct bh_map *map, void *iter)
+void *bh_map_remove(bh_map_t *map, void *iter)
 {
     size_t bucket, next_bucket, *current_psl, *next_psl;
     void *current_key, *next_key, *current_value, *next_value;
@@ -403,7 +405,7 @@ void *bh_map_remove(struct bh_map *map, void *iter)
     return bh_map_next(map, iter);
 }
 
-void *bh_map_next(struct bh_map *map, void *iter)
+void *bh_map_next(bh_map_t *map, void *iter)
 {
     size_t *item;
 
@@ -427,7 +429,7 @@ void *bh_map_next(struct bh_map *map, void *iter)
     }
 }
 
-void *bh_map_key(struct bh_map *map, void *iter)
+void *bh_map_key(bh_map_t *map, void *iter)
 {
     size_t index;
 
@@ -435,7 +437,7 @@ void *bh_map_key(struct bh_map *map, void *iter)
     return (char *)map->data.key + index * map->element.key;
 }
 
-void *bh_map_value(struct bh_map *map, void *iter)
+void *bh_map_value(bh_map_t *map, void *iter)
 {
     size_t index;
 
