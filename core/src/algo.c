@@ -36,7 +36,7 @@ void bh_sort(void *array, size_t element, size_t size, bh_compare_cb_t compare)
 {
     bh_heap_make(array, element, size, compare);
     while (size)
-        bh_heap_pop(array, element, size--, compare);    
+        bh_heap_pop(array, element, size--, compare);
 }
 
 void bh_heap_make(void *array, size_t element, size_t size, bh_compare_cb_t compare)
@@ -85,7 +85,7 @@ void bh_heap_make(void *array, size_t element, size_t size, bh_compare_cb_t comp
 void bh_heap_pop(void *array, size_t element, size_t size, bh_compare_cb_t compare)
 {
     char *start, *end, *current, *left, *right;
-    
+
     if (size <= 1)
         return;
 
@@ -124,7 +124,7 @@ void bh_heap_push(const void *item, void *array, size_t element, size_t size, bh
     start = (char *)array;
     end = start + size * element;
     current = end;
-    
+
     memmove(current, item, element);
     while (current > start)
     {
