@@ -20,12 +20,14 @@ enable_testing()
 set(BH_SOURCES
     src/algo.c
     src/ds.c
+    src/thread.c
 )
 
 set(BH_HEADERS
     include/bh/algo.h
     include/bh/bh.h
     include/bh/ds.h
+    include/bh/thread.h
 )
 
 add_library(bh STATIC ${BH_SOURCES} ${BH_HEADERS})
