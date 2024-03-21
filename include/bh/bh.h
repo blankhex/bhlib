@@ -7,6 +7,7 @@
 #ifndef BHLIB_H
 #define BHLIB_H
 
+#include <bh/config.h>
 #include <stddef.h>
 
 typedef int (*bh_compare_cb_t)(const void *, const void *);

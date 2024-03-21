@@ -1,12 +1,16 @@
 #include <bh/thread.h>
 
-int bh_thread_init(bh_thread_t *thread,
-                   bh_thread_cb_t func,
-                   void *data)
+int bh_thread_init_base(bh_thread_t *thread,
+                        bh_thread_cb_t func,
+                        void *data,
+                        bh_thread_win_begin_cb_t begin,
+                        bh_thread_win_end_cb_t end)
 {
     (void)thread;
     (void)func;
     (void)data;
+    (void)begin;
+    (void)end;
 
     return -1;
 }
@@ -106,4 +110,40 @@ int bh_cond_broadcast(bh_cond_t *cond)
 void bh_cond_destroy(bh_cond_t *cond)
 {
     (void)cond;
+}
+
+int bh_tpool_init_base(bh_tpool_t *pool,
+                       size_t size,
+                       bh_thread_win_begin_cb_t begin,
+                       bh_thread_win_end_cb_t end)
+{
+    (void)pool;
+    (void)size;
+    (void)begin;
+    (void)end;
+
+    return -1;
+}
+
+int bh_tpool_job(bh_tpool_t *pool,
+                 bh_thread_cb_t job,
+                 void *data)
+{
+    (void)pool;
+    (void)job;
+    (void)data;
+
+    return -1;
+}
+
+int bh_tpool_join(bh_tpool_t *pool)
+{
+    (void)pool;
+
+    return -1;
+}
+
+void bh_tpool_destroy(bh_tpool_t *pool)
+{
+    (void)pool;
 }

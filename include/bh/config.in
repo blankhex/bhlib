@@ -1,0 +1,12 @@
+/*
+ * BHLib
+ *
+ * Copyright (c) 2024 Mikhail Romanko
+ */
+
+#ifndef BH_CONFIG_H
+#define BH_CONFIG_H
+
+#cmakedefine BH_USE_THREADS
+
+#endif /* BH_CONFIG_H */

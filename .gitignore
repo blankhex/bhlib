@@ -67,6 +67,8 @@ x64/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 
+!platform/*
+
 # Visual Studio Code
 .vscode/
 
