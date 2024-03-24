@@ -51,16 +51,6 @@ typedef struct
  * @param array    Pointer to the array
  * @param element  Element size
  *
- * Example:
- * ```c
- * bh_array_t array;
- * bh_array_init(&array, sizeof(int));
- *
- * do_stuff();
- *
- * bh_array_destroy(&array);
- * ```
- *
  * @sa bh_array_destroy
  */
 void bh_array_init(bh_array_t *array,
@@ -77,20 +67,6 @@ void bh_array_init(bh_array_t *array,
  *          respective destroy function) - then user should iterate over an
  *          array to manually destroy elements.
  *
- * Example:
- * ```c
- * bh_array_t array;
- * void *iter;
- * bh_array_init(&array, sizeof(HANDLE));
- *
- * do_stuff();
- *
- * for (iter = bh_array_next(&array, NULL); iter; iter = bh_array_next(&array, iter))
- *     CloseHandle(*(HANDLE*)bh_array_value(&array, iter));
- *
- * bh_array_destroy(&array);
- * ```
- *
  * @sa bh_array_clear, bh_array_remove
  */
 void bh_array_destroy(bh_array_t *array);
@@ -104,20 +80,6 @@ void bh_array_destroy(bh_array_t *array);
  *          respective destroy function) - then user should iterate over an
  *          array to manually destroy elements.
  *
- * Example:
- * ```c
- * bh_array_t array;
- * void *iter;
- * bh_array_init(&array, sizeof(HANDLE));
- *
- * do_stuff();
- *
- * for (iter = bh_array_next(&array, NULL); iter; iter = bh_array_next(&array, iter))
- *     CloseHandle(*(HANDLE*)bh_array_value(&array, iter));
- *
- * bh_array_clear(&array);
- * ```
- *
  * @sa bh_array_destroy, bh_array_remove
  */
 void bh_array_clear(bh_array_t *array);
@@ -129,18 +91,6 @@ void bh_array_clear(bh_array_t *array);
  * @param size   Anticipated array size
  *
  * @return 0 on success, non-zero otherwise
- *
- * Example:
- * ```c
- * bh_array_t array;
- * bh_array_init(&array, sizeof(int));
- *
- * if (bh_array_reserve(&array, 1024))
- * {
- *     fprintf(stderr, "Can't reserve space for the array!\n");
- *     return -1;
- * }
- * ```
  *
  * @sa bh_array_capacity, bh_array_resize
  */
@@ -161,18 +111,6 @@ int bh_array_reserve(bh_array_t *array,
  * @warning In case of array growing - inserted items are not initialized.
  * @warning In case of array shrinking - removed items are not destroyed.
  *
- * Example:
- * ```c
- * bh_array_t array;
- * bh_array_init(&array, sizeof(int));
- *
- * if (bh_array_resize(&array, 1024))
- * {
- *     fprintf(stderr, "Can't resize an array!");
- *     return -1;
- * }
- * ```
- *
  * @sa bh_array_reserve, bh_array_size
  */
 int bh_array_resize(bh_array_t *array,
@@ -190,27 +128,6 @@ int bh_array_resize(bh_array_t *array,
  *
  * @warning Inserted element are not initialized.
  *
- * Example:
- * ```c
- * bh_array_t array;
- * void *iter;
- * size_t i;
- * bh_array_init(&array, sizeof(int));
- *
- * for (i = 0; i < 8; i++)
- * {
- *     iter = bh_array_insert(&array, 0);
- *     if (!iter)
- *         return -1;
- *     *(int *)bh_array_value(&array, iter) = i;
- *
- *     iter = bh_array_insert(&array, -1);
- *     if (!iter)
- *         return -1;
- *     *(int *)bh_array_value(&array, iter) = i;
- * }
- * ```
- *
  * @sa bh_array_remove, bh_array_next, bh_array_value
  */
 void *bh_array_insert(bh_array_t *array,
@@ -222,19 +139,6 @@ void *bh_array_insert(bh_array_t *array,
  * @param array  Pointer to the array
  * @param index  Index
  * @return Non-null iterator on success, null otherwise
- *
- * Example:
- * ```c
- * bh_array_t array;
- * void *iter;
- * bh_array_init(&array, sizeof(int));
- *
- * do_stuff();
- *
- * iter = bh_array_at(&array, 0);
- * if (iter)
- *     printf("Value at index 0: %d\n", *(int *)bh_array_value(&array, iter));
- * ```
  *
  * @sa bh_array_next, bh_array_value, bh_array_remove
  */
@@ -253,23 +157,6 @@ void *bh_array_at(bh_array_t *array,
  *
  * @warning Removed element are not destroyed.
  *
- * Example:
- * ```c
- * bh_array_t array;
- * void *iter;
- * bh_array_init(&array, sizeof(int));
- *
- * do_stuff();
- *
- * for (iter = bh_array_next(&array, NULL); iter;)
- * {
- *     if (*(int *)bh_array_value(&array, iter) % 2)
- *         iter = bh_array_remove(&array, iter);
- *     else
- *         iter = bh_array_next(&array, iter);
- * }
- * ```
- *
  * @sa bh_array_at, bh_array_insert, bh_array_next, bh_array_value
  */
 void *bh_array_remove(bh_array_t *array,
@@ -284,19 +171,7 @@ void *bh_array_remove(bh_array_t *array,
  * @param array  Pointer to the array
  * @param iter   Iterator
  * @return Iterator to the next element or null if reached the end
- *
- * Example:
- * ```c
- * bh_array_t array;
- * void *iter;
- * bh_array_init(&array, sizeof(int));
- *
- * do_stuff();
- *
- * for (iter = bh_array_next(&array, NULL); iter; iter = bh_array_next(&array, iter))
- *     printf("Element %d\n", *(int *)bh_array_value(&array, iter));
- * ```
- *
+ * 
  * @sa bh_array_value, bh_array_remove
  */
 void *bh_array_next(bh_array_t *array,
@@ -309,18 +184,6 @@ void *bh_array_next(bh_array_t *array,
  * @param iter   Iterator
  * @return Pointer to the array value
  *
- * Example:
- * ```c
- * bh_array_t array;
- * void *iter;
- * bh_array_init(&array, sizeof(int));
- *
- * do_stuff();
- *
- * for (iter = bh_array_next(&array, NULL); iter; iter = bh_array_next(&array, iter))
- *     printf("Element %d\n", *(int *)bh_array_value(&array, iter));
- * ```
- *
  * @sa bh_array_next, bh_array_remove
  */
 void *bh_array_value(bh_array_t *array,
@@ -331,16 +194,6 @@ void *bh_array_value(bh_array_t *array,
  *
  * @param array  Pointer to the array
  * @return Array size
- *
- * Example:
- * ```c
- * bh_array_t array;
- * bh_array_init(&array, sizeof(int));
- *
- * do_stuff();
- *
- * printf("Array size: %d", (int)bh_array_size(&array));
- * ```
  *
  * @sa bh_array_capacity
  */
@@ -353,16 +206,6 @@ void *bh_array_value(bh_array_t *array,
  * @param array  Pointer to the array
  * @return Array capacity
  *
- * Example:
- * ```c
- * bh_array_t array;
- * bh_array_init(&array, sizeof(int));
- *
- * do_stuff();
- *
- * printf("Array capacity: %d", (int)bh_array_size(&array));
- * ```
- *
  * @sa bh_array_size
  */
 #define bh_array_capacity(array) \
@@ -373,17 +216,6 @@ void *bh_array_value(bh_array_t *array,
  *
  * @param array  Pointer to the array
  * @return Pointer to the data or null (if array doesn't have capacity)
- *
- * Example:
- * ```c
- * bh_array_t array;
- * int *int_array;
- * bh_array_init(&array, sizeof(int));
- *
- * do_stuff();
- *
- * int_array = (int *)bh_array_data(&array);
- * ```
  */
 #define bh_array_data(array) \
     (array)->data
@@ -399,16 +231,6 @@ void *bh_array_value(bh_array_t *array,
  * @param value    Value size
  * @param compare  Compare function
  * @param hash     Hash fucntion
- *
- * Example:
- * ```c
- * bh_map_t map;
- * bh_map_init(&map, sizeof(int), sizeof(char *), int_compare, int_hash);
- *
- * do_stuff();
- *
- * bh_map_destroy(&map);
- * ```
  *
  * @sa bh_map_destroy
  */
@@ -428,20 +250,6 @@ void bh_map_init(bh_map_t *map,
  * @warning If map's elements require custom destruction (by calling their
  *          respective destroy function) - then user should iterate over a
  *          map to manually destroy elements.
- *
- * Example:
- * ```c
- * bh_map_t map;
- * void *iter;
- * bh_map_init(&map, sizeof(int), sizeof(HANDLE), int_compare, int_hash);
- *
- * do_stuff();
- *
- * for (iter = bh_map_next(&map, NULL); iter; iter = bh_map_next(&map, iter))
- *     CloseHandle(*(HANDLE*)bh_map_value(&map, iter));
- *
- * bh_map_destroy(&map);
- * ```
  */
 void bh_map_destroy(bh_map_t *map);
 
@@ -453,20 +261,6 @@ void bh_map_destroy(bh_map_t *map);
  * @warning If map's elements require custom destruction (by calling their
  *          respective destroy function) - then user should iterate over a
  *          map to manually destroy elements.
- *
- * Example:
- * ```c
- * bh_map_t map;
- * void *iter;
- * bh_map_init(&map, sizeof(int), sizeof(HANDLE), int_compare, int_hash);
- *
- * do_stuff();
- *
- * for (iter = bh_map_next(&map, NULL); iter; iter = bh_map_next(&map, iter))
- *     CloseHandle(*(HANDLE*)bh_map_value(&map, iter));
- *
- * bh_map_clear(&map);
- * ```
  */
 void bh_map_clear(bh_map_t *map);
 
@@ -477,18 +271,6 @@ void bh_map_clear(bh_map_t *map);
  * @param size  Anticipated map size
  *
  * @return 0 on success, non-zero otherwise
- *
- * Example:
- * ```c
- * bh_map_t map;
- * bh_map_init(&map, sizeof(int), sizeof(char *), int_compare, int_hash);
- *
- * if (bh_map_reserve(&map, 1024))
- * {
- *     fprintf(stderr, "Can't reserve space for the map!\n");
- *     return -1;
- * }
- * ```
  *
  * @sa bh_map_capacity
  */
@@ -504,24 +286,6 @@ int bh_map_reserve(bh_map_t *map,
  *
  * @warning Inserted element (key and value) are not initialized.
  *
- * Example:
- * ```c
- * bh_map_t map;
- * void *iter;
- * size_t i;
- * bh_map_init(&map, sizeof(size_t), sizeof(int), size_compare, size_hash);
- *
- * for (i = 0; i < 8; i++)
- * {
- *     iter = bh_map_insert(&map, &i);
- *     if (!iter)
- *         return -1;
- *
- *     *(size_t *)bh_map_key(&map, iter) = i;
- *     *(int *)bh_map_value(&map, iter) = i;
- * }
- * ```
- *
  * @sa bh_map_remove, bh_map_next, bh_map_key, bh_map_value
  */
 void *bh_map_insert(bh_map_t *map,
@@ -533,22 +297,6 @@ void *bh_map_insert(bh_map_t *map,
  * @param map  Pointer to the map
  * @param key  Pointer to the key
  * @return Non-null iterator on success, null otherwise
- *
- * Example:
- * ```c
- * bh_map_t map;
- * int key;
- * void *iter;
- * bh_map_init(&map, sizeof(int), sizeof(int), int_compare, int_hash);
- *
- * do_stuff();
- *
- * key = 0;
- * iter = bh_map_at(&map, &key);
- *
- * if (iter)
- *     printf("Value at key %d: %d\n", key, *(int *)bh_map_value(&map, iter));
- * ```
  *
  * @sa bh_map_next, bh_map_key, bh_map_value, bh_map_remove
  */
@@ -563,23 +311,6 @@ void *bh_map_at(bh_map_t *map,
  * @return Iterator to the next element or null if reached the end
  *
  * @warning Removed element are not destroyed.
- *
- * Example:
- * ```c
- * bh_map_t map;
- * void *iter;
- * bh_map_init(&map, sizeof(int), sizeof(int), int_compare, int_hash);
- *
- * do_stuff();
- *
- * for (iter = bh_map_next(&map, NULL); iter;)
- * {
- *     if (*(int *)bh_map_key(&map, iter) % 2)
- *         iter = bh_map_remove(&map, iter);
- *     else
- *         iter = bh_map_next(&map, iter);
- * }
- * ```
  *
  * @sa bh_map_at, bh_map_insert, bh_map_next, bh_map_key, bh_map_value
  */
@@ -596,18 +327,6 @@ void *bh_map_remove(bh_map_t *map,
  * @param iter  Iterator
  * @return Iterator to the next element or null if reached the end
  *
- * Example:
- * ```c
- * bh_map_t map;
- * void *iter;
- * bh_map_init(&map, sizeof(int), sizeof(int), int_compare, int_hash);
- *
- * do_stuff();
- *
- * for (iter = bh_map_next(&map, NULL); iter; iter = bh_map_next(&map, iter))
- *     printf("Element value %d\n", *(int *)bh_map_value(&map, iter));
- * ```
- *
  * @sa bh_map_key, bh_map_value, bh_map_remove
  */
 void *bh_map_next(bh_map_t *map,
@@ -619,18 +338,6 @@ void *bh_map_next(bh_map_t *map,
  * @param map   Pointer to the map
  * @param iter  Iterator
  * @return Pointer to the map key
- *
- * Example:
- * ```c
- * bh_map_t map;
- * void *iter;
- * bh_map_init(&map, sizeof(int), sizeof(int), int_compare, int_hash);
- *
- * do_stuff();
- *
- * for (iter = bh_map_next(&map, NULL); iter; iter = bh_map_next(&map, iter))
- *     printf("Element key %d\n", *(int *)bh_map_key(&map, iter));
- * ```
  *
  * @sa bh_map_value, bh_map_next, bh_map_remove
  */
@@ -644,18 +351,6 @@ void *bh_map_key(bh_map_t *map,
  * @param iter  Iterator
  * @return Pointer to the map value
  *
- * Example:
- * ```c
- * bh_map_t map;
- * void *iter;
- * bh_map_init(&map, sizeof(int), sizeof(int), int_compare, int_hash);
- *
- * do_stuff();
- *
- * for (iter = bh_map_next(&map, NULL); iter; iter = bh_map_next(&map, iter))
- *     printf("Element value %d\n", *(int *)bh_map_value(&map, iter));
- * ```
- *
  * @sa bh_map_value, bh_map_next, bh_map_remove
  */
 void *bh_map_value(bh_map_t *map,
@@ -667,16 +362,6 @@ void *bh_map_value(bh_map_t *map,
  * @param map  Pointer to the map
  * @return Map size
  *
- * Example:
- * ```c
- * bh_map_t map;
- * bh_map_init(&map, sizeof(int), sizeof(int), int_compare, int_hash);
- *
- * do_stuff();
- *
- * printf("Map size: %d", (int)bh_map_size(&map));
- * ```
- *
  * @sa bh_map_capacity
  */
 #define bh_map_size(map) \
@@ -687,16 +372,6 @@ void *bh_map_value(bh_map_t *map,
  *
  * @param map  Pointer to the map
  * @return Map capacity
- *
- * Example:
- * ```c
- * bh_map_t map;
- * bh_map_init(&map, sizeof(int), sizeof(int), int_compare, int_hash);
- *
- * do_stuff();
- *
- * printf("Map capacity: %d", (int)bh_map_capacity(&map));
- * ```
  *
  * @sa bh_map_size
  */
