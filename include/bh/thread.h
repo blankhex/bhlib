@@ -4,6 +4,7 @@
 #include <bh/bh.h>
 
 typedef void (*bh_thread_cb_t)(void *);
+typedef struct bh_tpool_s bh_tpool_t;
 
 #ifdef BH_USE_THREADS
 /* Include thread implementation details */
@@ -27,17 +28,12 @@ typedef struct bh_cond_s
     void *handle;
 } bh_cond_t;
 
-typedef struct bh_tpool_s
-{
-    void *handle;
-} bh_tpool_t;
-
 /**
  * Initialize thread.
  *
  * @param thread  Pointer to the thread
  * @param func    Thread function
- * @parma data    Thread data
+ * @param data    Thread data
  * @return 0 on success, non-zero otherwise
  *
  * @sa bh_thread_join, bh_thread_detach, bh_thread_destroy
@@ -59,6 +55,14 @@ int bh_tpool_init(bh_tpool_t *pool,
                   size_t size);
 
 #endif
+
+struct bh_tpool_s
+{
+    bh_array_t threads;
+    bh_queue_t jobs;
+    bh_mutex_t mutex;
+    bh_cond_t condition;
+};
 
 /**
  * Join thread.

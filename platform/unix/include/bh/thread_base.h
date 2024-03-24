@@ -25,14 +25,6 @@ typedef struct bh_cons_s
     pthread_cond_t handle;
 } bh_cond_t;
 
-typedef struct bh_tpool_s
-{
-    bh_array_t threads;
-    bh_array_t jobs;
-    bh_mutex_t mutex;
-    bh_cond_t cond;
-} bh_tpool_t;
-
 int bh_thread_init(bh_thread_t *thread,
                    bh_thread_cb_t func,
                    void *data);

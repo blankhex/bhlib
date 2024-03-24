@@ -24,14 +24,6 @@ typedef struct bh_cond_s
 {
 } bh_cond_t;
 
-typedef struct bh_tpool_s
-{
-    bh_array_t threads;
-    bh_array_t jobs;
-    bh_mutex_t mutex;
-    bh_cond_t cond;
-} bh_tpool_t;
-
 typedef uintptr_t (__cdecl *bh_thread_win_begin_cb_t)(void *,
                                                       unsigned,
                                                       unsigned (__stdcall *)(void *),
