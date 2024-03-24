@@ -51,7 +51,7 @@ int bh_array_reserve(bh_array_t *array,
         data = malloc(array->element * capacity);
         if (!data)
             return -1;
-        if (array->data)
+        if (array->size)
             memmove(data, array->data, array->size * array->element);
     }
 
@@ -464,3 +464,225 @@ void *bh_map_value(bh_map_t *map,
     return (char *)map->data.value + index * map->element.value;
 }
 
+void bh_queue_init(bh_queue_t *queue,
+                   size_t element)
+{
+    memset(queue, 0, sizeof(*queue));
+    queue->element = element;
+}
+
+void bh_queue_destroy(bh_queue_t *queue)
+{
+    if (queue->data)
+        free(queue->data);
+}
+
+size_t bh_queue_size(bh_queue_t *queue)
+{
+    /* Calculate queue size */
+    if (queue->head < queue->tail)
+        return queue->tail - queue->head;
+    else if (queue->head > queue->tail)
+        return queue->capacity - queue->head + queue->tail;
+    else
+        return 0;
+}
+
+void bh_queue_clear(bh_queue_t *queue)
+{
+    queue->tail = 0;
+    queue->head = 0;
+}
+
+int bh_queue_reserve(bh_queue_t *queue,
+                     size_t size)
+{
+    void *data;
+    size_t current_size, capacity, head, tail;
+
+    /* Requested capacity should be in range [array->size; max_capacity] */
+    capacity = size;
+    current_size = bh_queue_size(queue);
+
+    if (current_size)
+        if (capacity < current_size + 1)
+            capacity = current_size + 1;
+
+    if (capacity > ((size_t)-1) / queue->element)
+        return -1;
+
+    /* Prevent same size reallocation */
+    if (capacity == queue->capacity)
+        return 0;
+
+    /* Allocate and copy data */
+    data = NULL;
+    head = 0;
+    tail = 0;
+    if (capacity)
+    {
+        data = malloc(queue->element * capacity);
+        if (!data)
+            return -1;
+
+        if (queue->head < queue->tail)
+        {
+            /* Copy everything in one go */
+            char *from;
+            size_t move_size;
+
+            from = (char *)queue->data + queue->head * queue->element;
+            move_size = (queue->tail - queue->head) * queue->element;
+            memmove(data, from, move_size);
+
+            tail = queue->tail - queue->head;
+        }
+        else if (queue->head > queue->tail)
+        {
+            /* Copy data in two steps: [head, end], [start, tail) */
+            char *from, *to;
+            size_t move_size;
+
+            to = (char *)data;
+            from = (char *)queue->data + queue->head * queue->element;
+            move_size = (queue->capacity - queue->head) * queue->element;
+            memmove(to, from, move_size);
+
+            to += move_size;
+            from = (char *)queue->data;
+            move_size = queue->tail * queue->element;
+            if (move_size)
+                memmove(to, from, move_size);
+
+            tail = queue->capacity - queue->head + queue->tail;
+        }
+    }
+
+    /* Update array fields*/
+    if (queue->data)
+        free(queue->data);
+    queue->head = head;
+    queue->tail = tail;
+    queue->data = data;
+    queue->capacity = capacity;
+
+    return 0;
+}
+
+void *bh_queue_push_front(bh_queue_t *queue)
+{
+    size_t size;
+
+    /* Check if queue can contain new element */
+    size = bh_queue_size(queue);
+    if (queue->capacity <= size + 1)
+    {
+        size_t capacity;
+
+        /* Check potential size overflow and reserve capacity */
+        capacity = (queue->capacity) ? (queue->capacity * 2) : (16);
+        if (capacity < queue->capacity || bh_queue_reserve(queue, capacity))
+            return NULL;
+    }
+
+    /* Advance head index backwards */
+    if (--queue->head >= queue->capacity)
+        queue->head = queue->capacity - 1;
+
+    return bh_queue_front(queue);
+}
+
+void *bh_queue_push_back(bh_queue_t *queue)
+{
+    size_t size;
+
+    size = bh_queue_size(queue);
+    if (queue->capacity <= size + 1)
+    {
+        size_t capacity;
+
+        /* Check potential size overflow and reserve capacity */
+        capacity = (queue->capacity) ? (queue->capacity * 2) : (16);
+        if (capacity < queue->capacity || bh_queue_reserve(queue, capacity))
+            return NULL;
+    }
+
+    /* Advance tail index */
+    if (++queue->tail >= queue->capacity)
+        queue->tail = 0;
+
+    return bh_queue_back(queue);
+}
+
+void *bh_queue_front(bh_queue_t *queue)
+{
+    if (queue->head == queue->tail)
+        return NULL;
+
+    return (char *)queue->data + queue->head * queue->element;
+}
+
+void *bh_queue_back(bh_queue_t *queue)
+{
+    size_t index;
+
+    if (queue->head == queue->tail)
+        return NULL;
+
+    index = queue->tail - 1;
+    if (index >= queue->capacity)
+        index = queue->capacity - 1;
+
+    return (char *)queue->data + index * queue->element;
+}
+
+void bh_queue_pop_front(bh_queue_t *queue)
+{
+    if (queue->head == queue->tail)
+        return;
+
+    if (++queue->head >= queue->capacity)
+        queue->head = 0;
+}
+
+void bh_queue_pop_back(bh_queue_t *queue)
+{
+    if (queue->head == queue->tail)
+        return;
+
+    if (--queue->tail >= queue->capacity)
+        queue->tail = queue->capacity - 1;
+}
+
+void *bh_queue_next(bh_queue_t *queue,
+                    void *iter)
+{
+    char *item = (char *)iter;
+
+    /* Check if queue is empty*/
+    if (queue->head == queue->tail)
+        return NULL;
+
+    /* Advance or set iterator */
+    if (item)
+    {
+        item += queue->element;
+        if (item == (char *)queue->data + queue->capacity * queue->element)
+            item = queue->data;
+    }
+    else
+        item = (char *)queue->data + queue->head * queue->element;
+
+    /* Check iterator for validity */
+    if (item == (char *)queue->data + queue->tail * queue->element)
+        return NULL;
+
+    return item;
+}
+
+void *bh_queue_value(bh_queue_t *queue,
+                     void *iter)
+{
+    (void)queue;
+    return iter;
+}

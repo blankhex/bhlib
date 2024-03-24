@@ -43,6 +43,15 @@ typedef struct
     bh_hash_cb_t hash;
 } bh_map_t;
 
+typedef struct bh_queue_s
+{
+    void *data;
+    size_t capacity;
+    size_t element;
+    size_t head;
+    size_t tail;
+} bh_queue_t;
+
 /**
  * Initialize the array with the specified element size.
  *
@@ -171,7 +180,7 @@ void *bh_array_remove(bh_array_t *array,
  * @param array  Pointer to the array
  * @param iter   Iterator
  * @return Iterator to the next element or null if reached the end
- * 
+ *
  * @sa bh_array_value, bh_array_remove
  */
 void *bh_array_next(bh_array_t *array,
@@ -377,5 +386,165 @@ void *bh_map_value(bh_map_t *map,
  */
 #define bh_map_capacity(map) \
     (map)->capacity
+
+/**
+ * Initialize the queue with the specified element size.
+ *
+ * @param queue    Pointer to the queue
+ * @param element  Element size
+ *
+ * @sa bh_queue_destroy
+ */
+void bh_queue_init(bh_queue_t *queue,
+                   size_t element);
+
+/**
+ * Destroy queue.
+ *
+ * @param queue  Pointer to the queue
+ *
+ * @warning If queue's elements require custom destruction (by calling their
+ *          respective destroy function) - then user should iterate over an
+ *          array to manually destroy elements.
+ *
+ * @sa bh_queue_clear, bh_queue_pop_front, bh_queue_pop_back
+ */
+void bh_queue_destroy(bh_queue_t *queue);
+
+/**
+ * Return size of the queue.
+ *
+ * @param queue  Pointer to the queue
+ * @return Queue size
+ *
+ * @sa bh_queue_capacity
+ */
+size_t bh_queue_size(bh_queue_t *queue);
+
+/**
+ * Reset queue size to zero.
+ *
+ * @param queue  Pointer to the queue
+ *
+ * @warning If queue's elements require custom destruction (by calling their
+ *          respective destroy function) - then user should iterate over an
+ *          array to manually destroy elements.
+ *
+ * @sa bh_queue_destroy, bh_queue_pop_front, bh_queue_pop_back
+ */
+void bh_queue_clear(bh_queue_t *queue);
+
+/**
+ * Reserve memory for the queue to store required elements.
+ *
+ * @param queue  Pointer to the queue
+ * @param size   Anticipated array size
+ * @return 0 on success, non-zero otherwise
+ *
+ * @sa bh_queue_capacity
+ */
+int bh_queue_reserve(bh_queue_t *queue,
+                     size_t size);
+
+/**
+ * Insert element at the front of the queue.
+ *
+ * @param queue  Pointer to the queue
+ * @return Non-null iterator on success, null otherwise
+ *
+ * @warning Inserted element are not initialized.
+ *
+ * @sa bh_queue_push_back, bh_queue_pop_front, bh_queue_next
+ */
+void *bh_queue_push_front(bh_queue_t *queue);
+
+/**
+ * Insert element at the back of the queue.
+ *
+ * @param queue  Pointer to the queue
+ * @return Non-null iterator on success, null otherwise
+ *
+ * @warning Inserted element are not initialized.
+ *
+ * @sa bh_queue_push_front, bh_queue_pop_back, bh_queue_next
+ */
+void *bh_queue_push_back(bh_queue_t *queue);
+
+/**
+ * Get iterator to the front element of the queue.
+ *
+ * @param queue  Pointer to the queue
+ * @return Non-null iterator on success, null otherwise
+ *
+ * @sa bh_queue_back
+ */
+void *bh_queue_front(bh_queue_t *queue);
+
+/**
+ * Get iterator to the back element of the queue.
+ *
+ * @param queue  Pointer to the queue
+ * @return Non-null iterator on success, null otherwise
+ *
+ * @sa bh_queue_front
+ */
+void *bh_queue_back(bh_queue_t *queue);
+
+/**
+ * Remove front element from the queue.
+ *
+ * @param queue  Pointer to the queue
+ *
+ * @warning Removed element are not destroyed
+ *
+ * @sa bh_queue_pop_back, bh_queue_push_front
+ */
+void bh_queue_pop_front(bh_queue_t *queue);
+
+/**
+ * Remove back element from the queue.
+ *
+ * @param queue  Pointer to the queue
+ *
+ * @warning Removed element are not destroyed
+ *
+ * @sa bh_queue_pop_back, bh_queue_push_front
+ */
+void bh_queue_pop_back(bh_queue_t *queue);
+
+/**
+ * Return iterator to the next element.
+ *
+ * @param queue  Pointer to the queue
+ * @param iter   Iterator
+ * @return Iterator to the next element or null if reached the end
+ *
+ * @sa bh_queue_value
+ */
+void *bh_queue_next(bh_queue_t *queue,
+                    void *iter);
+
+/**
+ * Return pointer to the array value.
+ *
+ * @param queue  Pointer to the queue
+ * @param iter   Iterator
+ * @return Pointer to the array value
+ *
+ * @sa bh_queue_next
+ */
+void *bh_queue_value(bh_queue_t *queue,
+                     void *iter);
+
+/**
+ * Return queue capacity.
+ *
+ * @param queue  Pointer to the queue
+ * @return Queue capacity
+ *
+ * @sa bh_queue_size
+ */
+#define bh_queue_capacity(queue) \
+    (queue)->capacity
 
 #endif /* BHLIB_DS_H */
