@@ -1,0 +1,26 @@
+BlankHex Library
+
+Library with a bunch of stuff.
+
+Currently implemented:
+- I/O device abstraction
+- File access (Windows and POSIX)
+- Data structures (hashmap, queue)
+- Algorithms (swap, sort, partition, heap)
+- Geometry math (2D/3D/4D vectors, matrices, quaternions)
+- Unit tests
+
+Future plans:
+- More geometry stuff (boxes, rays, planes, lines, triangles, etc.)
+- Thread support (thread, mutex, cv, atomics, etc.)
+- Image loading/processing/saving support
+- Polygon rasterization (possibly canvas)
+- UTF8 string support (BMP handling)
+- Font rendering
+- GUI (Windows GUI oriented, X11)
+- Deflate/Inflate implementation
+- Audio loading/processing/saving support
+- FFT/IFFT (with basic complex numbers)
+- Basic 2D/3D physics engine (possibly as a separate library?)
+- Configuration support (INI, JSON, Registry)
+- More unit tests
