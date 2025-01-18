@@ -1,0 +1,24 @@
+set(CMAKE_C_STANDARD 90)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS OFF)
+
+# Enable warnings and pedantics
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -pedantic") 
+
+# Enable testing
+include(CTest)
+enable_testing()
+
+# Search files
+file(GLOB TEST_FILES "src/*.c")
+
+foreach(TEST_FILENAME ${TEST_FILES})
+    get_filename_component(TEST_NAME ${TEST_FILENAME} NAME_WE)
+    add_executable("${TEST_NAME}" ${TEST_FILENAME})
+    target_link_libraries("${TEST_NAME}" bhlib bhunit)
+    add_test(NAME "${TEST_NAME}" COMMAND "${TEST_NAME}")
+    if(COVERAGE)
+        target_compile_options("${TEST_NAME}" PRIVATE -coverage)
+        target_link_options("${TEST_NAME}" PRIVATE -coverage)
+    endif()
+endforeach()
