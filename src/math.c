@@ -2,101 +2,89 @@
 #include <math.h>
 
 
-bh_point4f_t *bh_point4f_add(const bh_point4f_t *a,
-                             const bh_point4f_t *b,
-                             bh_point4f_t *result)
+void bh_point4f_add(const bh_point4f_t *a,
+                    const bh_point4f_t *b,
+                    bh_point4f_t *result)
 {
     result->x = a->x + b->x;
     result->y = a->y + b->y;
     result->z = a->z + b->z;
     result->w = a->w + b->w;
-
-    return result;
 }
 
 
-bh_point4f_t *bh_point4f_sub(const bh_point4f_t *a,
-                             const bh_point4f_t *b,
-                             bh_point4f_t *result)
+void bh_point4f_sub(const bh_point4f_t *a,
+                    const bh_point4f_t *b,
+                    bh_point4f_t *result)
 {
     result->x = a->x - b->x;
     result->y = a->y - b->y;
     result->z = a->z - b->z;
     result->w = a->w - b->w;
-
-    return result;
 }
 
 
-bh_point4f_t *bh_point4f_mul(const bh_point4f_t *a,
-                             const bh_point4f_t *b,
-                             bh_point4f_t *result)
+void bh_point4f_mul(const bh_point4f_t *a,
+                    const bh_point4f_t *b,
+                    bh_point4f_t *result)
 {
     result->x = a->x * b->x;
     result->y = a->y * b->y;
     result->z = a->z * b->z;
     result->w = a->w * b->w;
-
-    return result;
 }
 
 
-bh_point4f_t *bh_point4f_scale(const bh_point4f_t *a,
-                               float b,
-                               bh_point4f_t *result)
+void bh_point4f_scale(const bh_point4f_t *a,
+                      float b,
+                      bh_point4f_t *result)
 {
     result->x = a->x * b;
     result->y = a->y * b;
     result->z = a->z * b;
     result->w = a->w * b;
-
-    return result;
 }
 
 
-bh_point4f_t *bh_point4f_madd(const bh_point4f_t *a,
-                              const bh_point4f_t *b,
-                              const bh_point4f_t *c,
-                              bh_point4f_t *result)
+void bh_point4f_madd(const bh_point4f_t *a,
+                     const bh_point4f_t *b,
+                     const bh_point4f_t *c,
+                     bh_point4f_t *result)
 {
     result->x = a->x * b->x + c->x;
     result->y = a->y * b->y + c->y;
     result->z = a->z * b->z + c->z;
     result->w = a->w * b->w + c->w;
-
-    return result;
 }
 
 
-bh_point4f_t *bh_point4f_negate(const bh_point4f_t *in,
-                                bh_point4f_t *result)
+void bh_point4f_negate(const bh_point4f_t *in,
+                       bh_point4f_t *result)
 {
     result->x = -in->x;
     result->y = -in->y;
     result->z = -in->z;
     result->w = -in->w;
-
-    return result;
 }
 
 
 float bh_point4f_dot(const bh_point4f_t *a,
                      const bh_point4f_t *b)
 {
-    return a->x * b->x + a->y * b->y + a->z * b->y + a->w * b->w;
+    return a->x * b->x + a->y * b->y + a->z * b->z + a->w * b->w;
 }
 
 
 float bh_point4f_dot3(const bh_point4f_t *a,
                       const bh_point4f_t *b)
 {
-    return a->x * b->x + a->y * b->y + a->z * b->y;
+    return a->x * b->x + a->y * b->y + a->z * b->z;
 }
 
 
-bh_point4f_t *bh_point4f_cross(const bh_point4f_t *a,
-                               const bh_point4f_t *b,
-                               bh_point4f_t *result)
+void bh_point4f_cross(const bh_point4f_t *a,
+                      const bh_point4f_t *b,
+                      bh_point4f_t *result)
 {
     bh_point4f_t tmp;
 
@@ -106,7 +94,6 @@ bh_point4f_t *bh_point4f_cross(const bh_point4f_t *a,
     tmp.w = 0.0f;
 
     *result = tmp;
-    return result;
 }
 
 
@@ -116,57 +103,55 @@ float bh_point4f_length(const bh_point4f_t *in)
 }
 
 
-bh_point4f_t *bh_point4f_normal(const bh_point4f_t *in,
-                                bh_point4f_t *result)
+void bh_point4f_normal(const bh_point4f_t *in,
+                       bh_point4f_t *result)
 {
     float length;
 
     length = 1.0f / bh_point4f_length(in);
-    return bh_point4f_scale(in, length, result);
+    bh_point4f_scale(in, length, result);
 }
 
 
-bh_point4f_t *bh_point4f_min(const bh_point4f_t *a,
-                             const bh_point4f_t *b,
-                             bh_point4f_t *result)
+void bh_point4f_min(const bh_point4f_t *a,
+                    const bh_point4f_t *b,
+                    bh_point4f_t *result)
 {
     if (a->x < b->x) result->x = a->x; else result->x = b->x;
     if (a->y < b->y) result->y = a->y; else result->y = b->y;
     if (a->z < b->z) result->z = a->z; else result->z = b->z;
     if (a->w < b->w) result->w = a->w; else result->w = b->w;
-
-    return result;
 }
 
 
-bh_point4f_t *bh_point4f_max(const bh_point4f_t *a,
-                             const bh_point4f_t *b,
-                             bh_point4f_t *result)
+void bh_point4f_max(const bh_point4f_t *a,
+                    const bh_point4f_t *b,
+                    bh_point4f_t *result)
 {
     if (a->x > b->x) result->x = a->x; else result->x = b->x;
     if (a->y > b->y) result->y = a->y; else result->y = b->y;
     if (a->z > b->z) result->z = a->z; else result->z = b->z;
     if (a->w > b->w) result->w = a->w; else result->w = b->w;
-
-    return result;
 }
 
 
-bh_point4f_t *bh_point4f_lerp(const bh_point4f_t *a,
-                              const bh_point4f_t *b,
-                              float t,
-                              bh_point4f_t *result)
+void bh_point4f_lerp(const bh_point4f_t *a,
+                     const bh_point4f_t *b,
+                     float t,
+                     bh_point4f_t *result)
 {
     bh_point4f_t tmp;
-    bh_point4f_scale(bh_point4f_sub(b, a, &tmp), t, &tmp);
-    return bh_point4f_add(a, &tmp, result);
+
+    bh_point4f_sub(b, a, &tmp);
+    bh_point4f_scale(&tmp, t, &tmp);
+    bh_point4f_add(a, &tmp, result);
 }
 
 
-bh_point4f_t *bh_point4f_slerp(const bh_point4f_t *a,
-                               const bh_point4f_t *b,
-                               float t,
-                               bh_point4f_t *result)
+void bh_point4f_slerp(const bh_point4f_t *a,
+                      const bh_point4f_t *b,
+                      float t,
+                      bh_point4f_t *result)
 {
     float angle, denom;
     bh_point4f_t from, to;
@@ -175,97 +160,89 @@ bh_point4f_t *bh_point4f_slerp(const bh_point4f_t *a,
 
     /* Special case - reducing to linear interpolation */
     if (angle == 0.0f)
-        return bh_point4f_lerp(a, b, t, result);
-
-    denom = 1.0f / sinf(angle);
-    bh_point4f_scale(a, sinf((1 - t) * angle) * denom, &from);
-    bh_point4f_scale(b, sinf(t * angle) * denom, &to);
-    return bh_point4f_add(&from, &to, result);
+    {
+        bh_point4f_lerp(a, b, t, result);
+    }
+    else
+    {
+        denom = 1.0f / sinf(angle);
+        bh_point4f_scale(a, sinf((1 - t) * angle) * denom, &from);
+        bh_point4f_scale(b, sinf(t * angle) * denom, &to);
+        bh_point4f_add(&from, &to, result);
+    }
 }
 
 
-bh_point3f_t *bh_point3f_add(const bh_point3f_t *a,
-                             const bh_point3f_t *b,
-                             bh_point3f_t *result)
+void bh_point3f_add(const bh_point3f_t *a,
+                    const bh_point3f_t *b,
+                    bh_point3f_t *result)
 {
     result->x = a->x + b->x;
     result->y = a->y + b->y;
     result->z = a->z + b->z;
-
-    return result;
 }
 
 
-bh_point3f_t *bh_point3f_sub(const bh_point3f_t *a,
-                             const bh_point3f_t *b,
-                             bh_point3f_t *result)
+void bh_point3f_sub(const bh_point3f_t *a,
+                    const bh_point3f_t *b,
+                    bh_point3f_t *result)
 {
     result->x = a->x - b->x;
     result->y = a->y - b->y;
     result->z = a->z - b->z;
-
-    return result;
 }
 
 
-bh_point3f_t *bh_point3f_mul(const bh_point3f_t *a,
-                             const bh_point3f_t *b,
-                             bh_point3f_t *result)
+void bh_point3f_mul(const bh_point3f_t *a,
+                    const bh_point3f_t *b,
+                    bh_point3f_t *result)
 {
     result->x = a->x * b->x;
     result->y = a->y * b->y;
     result->z = a->z * b->z;
-
-    return result;
 }
 
 
-bh_point3f_t *bh_point3f_scale(const bh_point3f_t *a,
-                               float b,
-                               bh_point3f_t *result)
+void bh_point3f_scale(const bh_point3f_t *a,
+                      float b,
+                      bh_point3f_t *result)
 {
     result->x = a->x * b;
     result->y = a->y * b;
     result->z = a->z * b;
-
-    return result;
 }
 
 
-bh_point3f_t *bh_point3f_madd(const bh_point3f_t *a,
-                              const bh_point3f_t *b,
-                              const bh_point3f_t *c,
-                              bh_point3f_t *result)
+void bh_point3f_madd(const bh_point3f_t *a,
+                     const bh_point3f_t *b,
+                     const bh_point3f_t *c,
+                     bh_point3f_t *result)
 {
     result->x = a->x * b->x + c->x;
     result->y = a->y * b->y + c->y;
     result->z = a->z * b->z + c->z;
-
-    return result;
 }
 
 
-bh_point3f_t *bh_point3f_negate(const bh_point3f_t *in,
-                                bh_point3f_t *result)
+void bh_point3f_negate(const bh_point3f_t *in,
+                       bh_point3f_t *result)
 {
     result->x = -in->x;
     result->y = -in->y;
     result->z = -in->z;
-
-    return result;
 }
 
 
 float bh_point3f_dot(const bh_point3f_t *a,
                      const bh_point3f_t *b)
 {
-    return a->x * b->x + a->y * b->y + a->z * b->y;
+    return a->x * b->x + a->y * b->y + a->z * b->z;
 }
 
 
-bh_point3f_t *bh_point3f_cross(const bh_point3f_t *a,
-                               const bh_point3f_t *b,
-                               bh_point3f_t *result)
+void bh_point3f_cross(const bh_point3f_t *a,
+                      const bh_point3f_t *b,
+                      bh_point3f_t *result)
 {
     bh_point3f_t tmp;
 
@@ -274,7 +251,6 @@ bh_point3f_t *bh_point3f_cross(const bh_point3f_t *a,
     tmp.z = a->x * b->y - a->y * b->x;
 
     *result = tmp;
-    return result;
 }
 
 
@@ -284,55 +260,53 @@ float bh_point3f_length(const bh_point3f_t *in)
 }
 
 
-bh_point3f_t *bh_point3f_normal(const bh_point3f_t *in,
-                                bh_point3f_t *result)
+void bh_point3f_normal(const bh_point3f_t *in,
+                       bh_point3f_t *result)
 {
     float length;
 
     length = 1.0f / bh_point3f_length(in);
-    return bh_point3f_scale(in, length, result);
+    bh_point3f_scale(in, length, result);
 }
 
 
-bh_point3f_t *bh_point3f_min(const bh_point3f_t *a,
-                             const bh_point3f_t *b,
-                             bh_point3f_t *result)
+void bh_point3f_min(const bh_point3f_t *a,
+                    const bh_point3f_t *b,
+                    bh_point3f_t *result)
 {
     if (a->x < b->x) result->x = a->x; else result->x = b->x;
     if (a->y < b->y) result->y = a->y; else result->y = b->y;
     if (a->z < b->z) result->z = a->z; else result->z = b->z;
-
-    return result;
 }
 
 
-bh_point3f_t *bh_point3f_max(const bh_point3f_t *a,
-                             const bh_point3f_t *b,
-                             bh_point3f_t *result)
+void bh_point3f_max(const bh_point3f_t *a,
+                    const bh_point3f_t *b,
+                    bh_point3f_t *result)
 {
     if (a->x > b->x) result->x = a->x; else result->x = b->x;
     if (a->y > b->y) result->y = a->y; else result->y = b->y;
     if (a->z > b->z) result->z = a->z; else result->z = b->z;
-
-    return result;
 }
 
 
-bh_point3f_t *bh_point3f_lerp(const bh_point3f_t *a,
-                              const bh_point3f_t *b,
-                              float t,
-                              bh_point3f_t *result)
+void bh_point3f_lerp(const bh_point3f_t *a,
+                     const bh_point3f_t *b,
+                     float t,
+                     bh_point3f_t *result)
 {
     bh_point3f_t tmp;
-    bh_point3f_scale(bh_point3f_sub(b, a, &tmp), t, &tmp);
-    return bh_point3f_add(a, &tmp, result);
+
+    bh_point3f_sub(b, a, &tmp);
+    bh_point3f_scale(&tmp, t, &tmp);
+    bh_point3f_add(a, &tmp, result);
 }
 
 
-bh_point3f_t *bh_point3f_slerp(const bh_point3f_t *a,
-                               const bh_point3f_t *b,
-                               float t,
-                               bh_point3f_t *result)
+void bh_point3f_slerp(const bh_point3f_t *a,
+                      const bh_point3f_t *b,
+                      float t,
+                      bh_point3f_t *result)
 {
     float angle, denom;
     bh_point3f_t from, to;
@@ -341,78 +315,70 @@ bh_point3f_t *bh_point3f_slerp(const bh_point3f_t *a,
 
     /* Special case - reducing to linear interpolation */
     if (angle == 0.0f)
-        return bh_point3f_lerp(a, b, t, result);
-
-    denom = 1.0f / sinf(angle);
-    bh_point3f_scale(a, sinf((1 - t) * angle) * denom, &from);
-    bh_point3f_scale(b, sinf(t * angle) * denom, &to);
-    return bh_point3f_add(&from, &to, result);
+    {
+        bh_point3f_lerp(a, b, t, result);
+    }
+    else
+    {
+        denom = 1.0f / sinf(angle);
+        bh_point3f_scale(a, sinf((1 - t) * angle) * denom, &from);
+        bh_point3f_scale(b, sinf(t * angle) * denom, &to);
+        bh_point3f_add(&from, &to, result);
+    }
 }
 
 
-bh_point2f_t *bh_point2f_add(const bh_point2f_t *a,
-                             const bh_point2f_t *b,
-                             bh_point2f_t *result)
+void bh_point2f_add(const bh_point2f_t *a,
+                    const bh_point2f_t *b,
+                    bh_point2f_t *result)
 {
     result->x = a->x + b->x;
     result->y = a->y + b->y;
-
-    return result;
 }
 
 
-bh_point2f_t *bh_point2f_sub(const bh_point2f_t *a,
-                             const bh_point2f_t *b,
-                             bh_point2f_t *result)
+void bh_point2f_sub(const bh_point2f_t *a,
+                    const bh_point2f_t *b,
+                    bh_point2f_t *result)
 {
     result->x = a->x - b->x;
     result->y = a->y - b->y;
-
-    return result;
 }
 
 
-bh_point2f_t *bh_point2f_mul(const bh_point2f_t *a,
-                             const bh_point2f_t *b,
-                             bh_point2f_t *result)
+void bh_point2f_mul(const bh_point2f_t *a,
+                    const bh_point2f_t *b,
+                    bh_point2f_t *result)
 {
     result->x = a->x * b->x;
     result->y = a->y * b->y;
-
-    return result;
 }
 
 
-bh_point2f_t *bh_point2f_scale(const bh_point2f_t *a,
-                               float b,
-                               bh_point2f_t *result)
+void bh_point2f_scale(const bh_point2f_t *a,
+                      float b,
+                      bh_point2f_t *result)
 {
     result->x = a->x * b;
     result->y = a->y * b;
-
-    return result;
 }
 
 
-bh_point2f_t *bh_point2f_madd(const bh_point2f_t *a,
-                              const bh_point2f_t *b,
-                              const bh_point2f_t *c,
-                              bh_point2f_t *result)
+void bh_point2f_madd(const bh_point2f_t *a,
+                     const bh_point2f_t *b,
+                     const bh_point2f_t *c,
+                     bh_point2f_t *result)
 {
     result->x = a->x * b->x + c->x;
     result->y = a->y * b->y + c->y;
-
-    return result;
 }
 
 
-bh_point2f_t *bh_point2f_negate(const bh_point2f_t *in,
-                                bh_point2f_t *result)
+void bh_point2f_negate(const bh_point2f_t *in,
+                       bh_point2f_t *result)
 {
     result->x = -in->x;
     result->y = -in->y;
-
-    return result;
 }
 
 
@@ -436,53 +402,51 @@ float bh_point2f_length(const bh_point2f_t *in)
 }
 
 
-bh_point2f_t *bh_point2f_normal(const bh_point2f_t *in,
-                                bh_point2f_t *result)
+void bh_point2f_normal(const bh_point2f_t *in,
+                       bh_point2f_t *result)
 {
     float length;
 
     length = 1.0f / bh_point2f_length(in);
-    return bh_point2f_scale(in, length, result);
+    bh_point2f_scale(in, length, result);
 }
 
 
-bh_point2f_t *bh_point2f_min(const bh_point2f_t *a,
-                             const bh_point2f_t *b,
-                             bh_point2f_t *result)
+void bh_point2f_min(const bh_point2f_t *a,
+                    const bh_point2f_t *b,
+                    bh_point2f_t *result)
 {
     if (a->x < b->x) result->x = a->x; else result->x = b->x;
     if (a->y < b->y) result->y = a->y; else result->y = b->y;
-
-    return result;
 }
 
 
-bh_point2f_t *bh_point2f_max(const bh_point2f_t *a,
-                             const bh_point2f_t *b,
-                             bh_point2f_t *result)
+void bh_point2f_max(const bh_point2f_t *a,
+                    const bh_point2f_t *b,
+                    bh_point2f_t *result)
 {
     if (a->x > b->x) result->x = a->x; else result->x = b->x;
     if (a->y > b->y) result->y = a->y; else result->y = b->y;
-
-    return result;
 }
 
 
-bh_point2f_t *bh_point2f_lerp(const bh_point2f_t *a,
-                              const bh_point2f_t *b,
-                              float t,
-                              bh_point2f_t *result)
+void bh_point2f_lerp(const bh_point2f_t *a,
+                     const bh_point2f_t *b,
+                     float t,
+                     bh_point2f_t *result)
 {
     bh_point2f_t tmp;
-    bh_point2f_scale(bh_point2f_sub(b, a, &tmp), t, &tmp);
-    return bh_point2f_add(a, &tmp, result);
+
+    bh_point2f_sub(b, a, &tmp);
+    bh_point2f_scale(&tmp, t, &tmp);
+    bh_point2f_add(a, &tmp, result);
 }
 
 
-bh_point2f_t *bh_point2f_slerp(const bh_point2f_t *a,
-                               const bh_point2f_t *b,
-                               float t,
-                               bh_point2f_t *result)
+void bh_point2f_slerp(const bh_point2f_t *a,
+                      const bh_point2f_t *b,
+                      float t,
+                      bh_point2f_t *result)
 {
     float angle, denom;
     bh_point2f_t from, to;
@@ -491,123 +455,110 @@ bh_point2f_t *bh_point2f_slerp(const bh_point2f_t *a,
 
     /* Special case - reducing to linear interpolation */
     if (angle == 0.0f)
-        return bh_point2f_lerp(a, b, t, result);
-
-    denom = 1.0f / sinf(angle);
-    bh_point2f_scale(a, sinf((1 - t) * angle) * denom, &from);
-    bh_point2f_scale(b, sinf(t * angle) * denom, &to);
-    return bh_point2f_add(&from, &to, result);
+    {
+        bh_point2f_lerp(a, b, t, result);
+    }
+    else {
+        denom = 1.0f / sinf(angle);
+        bh_point2f_scale(a, sinf((1 - t) * angle) * denom, &from);
+        bh_point2f_scale(b, sinf(t * angle) * denom, &to);
+        bh_point2f_add(&from, &to, result);
+    }
 }
 
 
-bh_point4i_t *bh_point4i_add(const bh_point4i_t *a,
-                             const bh_point4i_t *b,
-                             bh_point4i_t *result)
+void bh_point4i_add(const bh_point4i_t *a,
+                    const bh_point4i_t *b,
+                    bh_point4i_t *result)
 {
     result->x = a->x + b->x;
     result->y = a->y + b->y;
     result->z = a->z + b->z;
     result->w = a->w + b->w;
-
-    return result;
 }
 
 
-bh_point4i_t *bh_point4i_sub(const bh_point4i_t *a,
-                             const bh_point4i_t *b,
-                             bh_point4i_t *result)
+void bh_point4i_sub(const bh_point4i_t *a,
+                    const bh_point4i_t *b,
+                    bh_point4i_t *result)
 {
     result->x = a->x - b->x;
     result->y = a->y - b->y;
     result->z = a->z - b->z;
     result->w = a->w - b->w;
-
-    return result;
 }
 
 
-bh_point4i_t *bh_point4i_mul(const bh_point4i_t *a,
-                             const bh_point4i_t *b,
-                             bh_point4i_t *result)
+void bh_point4i_mul(const bh_point4i_t *a,
+                    const bh_point4i_t *b,
+                    bh_point4i_t *result)
 {
     result->x = a->x * b->x;
     result->y = a->y * b->y;
     result->z = a->z * b->z;
     result->w = a->w * b->w;
-
-    return result;
 }
 
 
-bh_point4i_t *bh_point4i_scale(const bh_point4i_t *a,
-                               int b,
-                               bh_point4i_t *result)
+void bh_point4i_scale(const bh_point4i_t *a,
+                      int b,
+                      bh_point4i_t *result)
 {
     result->x = a->x * b;
     result->y = a->y * b;
     result->z = a->z * b;
     result->w = a->w * b;
-
-    return result;
 }
 
 
-bh_point4i_t *bh_point4i_madd(const bh_point4i_t *a,
-                              const bh_point4i_t *b,
-                              const bh_point4i_t *c,
-                              bh_point4i_t *result)
+void bh_point4i_madd(const bh_point4i_t *a,
+                     const bh_point4i_t *b,
+                     const bh_point4i_t *c,
+                     bh_point4i_t *result)
 {
     result->x = a->x * b->x + c->x;
     result->y = a->y * b->y + c->y;
     result->z = a->z * b->z + c->z;
     result->w = a->w * b->w + c->w;
-
-    return result;
 }
 
 
-bh_point4i_t *bh_point4i_negate(const bh_point4i_t *in,
-                                bh_point4i_t *result)
+void bh_point4i_negate(const bh_point4i_t *in,
+                       bh_point4i_t *result)
 {
     result->x = -in->x;
     result->y = -in->y;
     result->z = -in->z;
     result->w = -in->w;
-
-    return result;
 }
 
 
-bh_point4i_t *bh_point4i_min(const bh_point4i_t *a,
-                             const bh_point4i_t *b,
-                             bh_point4i_t *result)
+void bh_point4i_min(const bh_point4i_t *a,
+                    const bh_point4i_t *b,
+                    bh_point4i_t *result)
 {
     if (a->x < b->x) result->x = a->x; else result->x = b->x;
     if (a->y < b->y) result->y = a->y; else result->y = b->y;
     if (a->z < b->z) result->z = a->z; else result->z = b->z;
     if (a->w < b->w) result->w = a->w; else result->w = b->w;
-
-    return result;
 }
 
 
-bh_point4i_t *bh_point4i_max(const bh_point4i_t *a,
-                             const bh_point4i_t *b,
-                             bh_point4i_t *result)
+void bh_point4i_max(const bh_point4i_t *a,
+                    const bh_point4i_t *b,
+                    bh_point4i_t *result)
 {
     if (a->x > b->x) result->x = a->x; else result->x = b->x;
     if (a->y > b->y) result->y = a->y; else result->y = b->y;
     if (a->z > b->z) result->z = a->z; else result->z = b->z;
     if (a->w > b->w) result->w = a->w; else result->w = b->w;
-
-    return result;
 }
 
 
-bh_point4i_t *bh_point4i_lerp(const bh_point4i_t *a,
-                              const bh_point4i_t *b,
-                              float t,
-                              bh_point4i_t *result)
+void bh_point4i_lerp(const bh_point4i_t *a,
+                     const bh_point4i_t *b,
+                     float t,
+                     bh_point4i_t *result)
 {
     bh_point4i_t tmp;
 
@@ -616,110 +567,94 @@ bh_point4i_t *bh_point4i_lerp(const bh_point4i_t *a,
     tmp.z = (b->z - a->z) * t;
     tmp.w = (b->w - a->w) * t;
 
-    return bh_point4i_add(a, &tmp, result);
+    bh_point4i_add(a, &tmp, result);
 }
 
 
-bh_point3i_t *bh_point3i_add(const bh_point3i_t *a,
-                             const bh_point3i_t *b,
-                             bh_point3i_t *result)
+void bh_point3i_add(const bh_point3i_t *a,
+                    const bh_point3i_t *b,
+                    bh_point3i_t *result)
 {
     result->x = a->x + b->x;
     result->y = a->y + b->y;
     result->z = a->z + b->z;
-
-    return result;
 }
 
 
-bh_point3i_t *bh_point3i_sub(const bh_point3i_t *a,
-                             const bh_point3i_t *b,
-                             bh_point3i_t *result)
+void bh_point3i_sub(const bh_point3i_t *a,
+                    const bh_point3i_t *b,
+                    bh_point3i_t *result)
 {
     result->x = a->x - b->x;
     result->y = a->y - b->y;
     result->z = a->z - b->z;
-
-    return result;
 }
 
 
-bh_point3i_t *bh_point3i_mul(const bh_point3i_t *a,
-                             const bh_point3i_t *b,
-                             bh_point3i_t *result)
+void bh_point3i_mul(const bh_point3i_t *a,
+                    const bh_point3i_t *b,
+                    bh_point3i_t *result)
 {
     result->x = a->x * b->x;
     result->y = a->y * b->y;
     result->z = a->z * b->z;
-
-    return result;
 }
 
 
-bh_point3i_t *bh_point3i_scale(const bh_point3i_t *a,
-                               int b,
-                               bh_point3i_t *result)
+void bh_point3i_scale(const bh_point3i_t *a,
+                      int b,
+                      bh_point3i_t *result)
 {
     result->x = a->x * b;
     result->y = a->y * b;
     result->z = a->z * b;
-
-    return result;
 }
 
 
-bh_point3i_t *bh_point3i_madd(const bh_point3i_t *a,
-                              const bh_point3i_t *b,
-                              const bh_point3i_t *c,
-                              bh_point3i_t *result)
+void bh_point3i_madd(const bh_point3i_t *a,
+                     const bh_point3i_t *b,
+                     const bh_point3i_t *c,
+                     bh_point3i_t *result)
 {
     result->x = a->x * b->x + c->x;
     result->y = a->y * b->y + c->y;
     result->z = a->z * b->z + c->z;
-
-    return result;
 }
 
 
-bh_point3i_t *bh_point3i_negate(const bh_point3i_t *in,
-                                bh_point3i_t *result)
+void bh_point3i_negate(const bh_point3i_t *in,
+                       bh_point3i_t *result)
 {
     result->x = -in->x;
     result->y = -in->y;
     result->z = -in->z;
-
-    return result;
 }
 
 
-bh_point3i_t *bh_point3i_min(const bh_point3i_t *a,
-                             const bh_point3i_t *b,
-                             bh_point3i_t *result)
+void bh_point3i_min(const bh_point3i_t *a,
+                    const bh_point3i_t *b,
+                    bh_point3i_t *result)
 {
     if (a->x < b->x) result->x = a->x; else result->x = b->x;
     if (a->y < b->y) result->y = a->y; else result->y = b->y;
     if (a->z < b->z) result->z = a->z; else result->z = b->z;
-
-    return result;
 }
 
 
-bh_point3i_t *bh_point3i_max(const bh_point3i_t *a,
-                             const bh_point3i_t *b,
-                             bh_point3i_t *result)
+void bh_point3i_max(const bh_point3i_t *a,
+                    const bh_point3i_t *b,
+                    bh_point3i_t *result)
 {
     if (a->x > b->x) result->x = a->x; else result->x = b->x;
     if (a->y > b->y) result->y = a->y; else result->y = b->y;
     if (a->z > b->z) result->z = a->z; else result->z = b->z;
-
-    return result;
 }
 
 
-bh_point3i_t *bh_point3i_lerp(const bh_point3i_t *a,
-                              const bh_point3i_t *b,
-                              float t,
-                              bh_point3i_t *result)
+void bh_point3i_lerp(const bh_point3i_t *a,
+                     const bh_point3i_t *b,
+                     float t,
+                     bh_point3i_t *result)
 {
     bh_point3i_t tmp;
 
@@ -727,147 +662,128 @@ bh_point3i_t *bh_point3i_lerp(const bh_point3i_t *a,
     tmp.y = (b->y - a->y) * t;
     tmp.z = (b->z - a->z) * t;
 
-    return bh_point3i_add(a, &tmp, result);
+    bh_point3i_add(a, &tmp, result);
 }
 
 
-bh_point2i_t *bh_point2i_add(const bh_point2i_t *a,
-                             const bh_point2i_t *b,
-                             bh_point2i_t *result)
+void bh_point2i_add(const bh_point2i_t *a,
+                    const bh_point2i_t *b,
+                    bh_point2i_t *result)
 {
     result->x = a->x + b->x;
     result->y = a->y + b->y;
-
-    return result;
 }
 
 
-bh_point2i_t *bh_point2i_sub(const bh_point2i_t *a,
-                             const bh_point2i_t *b,
-                             bh_point2i_t *result)
+void bh_point2i_sub(const bh_point2i_t *a,
+                    const bh_point2i_t *b,
+                    bh_point2i_t *result)
 {
     result->x = a->x - b->x;
     result->y = a->y - b->y;
-
-    return result;
 }
 
 
-bh_point2i_t *bh_point2i_mul(const bh_point2i_t *a,
-                             const bh_point2i_t *b,
-                             bh_point2i_t *result)
+void bh_point2i_mul(const bh_point2i_t *a,
+                    const bh_point2i_t *b,
+                    bh_point2i_t *result)
 {
     result->x = a->x * b->x;
     result->y = a->y * b->y;
-
-    return result;
 }
 
 
-bh_point2i_t *bh_point2i_scale(const bh_point2i_t *a,
-                               int b,
-                               bh_point2i_t *result)
+void bh_point2i_scale(const bh_point2i_t *a,
+                      int b,
+                      bh_point2i_t *result)
 {
     result->x = a->x * b;
     result->y = a->y * b;
-
-    return result;
 }
 
 
-bh_point2i_t *bh_point2i_madd(const bh_point2i_t *a,
-                              const bh_point2i_t *b,
-                              const bh_point2i_t *c,
-                              bh_point2i_t *result)
+void bh_point2i_madd(const bh_point2i_t *a,
+                     const bh_point2i_t *b,
+                     const bh_point2i_t *c,
+                     bh_point2i_t *result)
 {
     result->x = a->x * b->x + c->x;
     result->y = a->y * b->y + c->y;
-
-    return result;
 }
 
 
-bh_point2i_t *bh_point2i_negate(const bh_point2i_t *in,
-                                bh_point2i_t *result)
+void bh_point2i_negate(const bh_point2i_t *in,
+                       bh_point2i_t *result)
 {
     result->x = -in->x;
     result->y = -in->y;
-
-    return result;
 }
 
 
-bh_point2i_t *bh_point2i_min(const bh_point2i_t *a,
-                             const bh_point2i_t *b,
-                             bh_point2i_t *result)
+void bh_point2i_min(const bh_point2i_t *a,
+                    const bh_point2i_t *b,
+                    bh_point2i_t *result)
 {
     if (a->x < b->x) result->x = a->x; else result->x = b->x;
     if (a->y < b->y) result->y = a->y; else result->y = b->y;
-
-    return result;
 }
 
 
-bh_point2i_t *bh_point2i_max(const bh_point2i_t *a,
-                             const bh_point2i_t *b,
-                             bh_point2i_t *result)
+void bh_point2i_max(const bh_point2i_t *a,
+                    const bh_point2i_t *b,
+                    bh_point2i_t *result)
 {
     if (a->x > b->x) result->x = a->x; else result->x = b->x;
     if (a->y > b->y) result->y = a->y; else result->y = b->y;
-
-    return result;
 }
 
 
-bh_point2i_t *bh_point2i_lerp(const bh_point2i_t *a,
-                              const bh_point2i_t *b,
-                              float t,
-                              bh_point2i_t *result)
+void bh_point2i_lerp(const bh_point2i_t *a,
+                     const bh_point2i_t *b,
+                     float t,
+                     bh_point2i_t *result)
 {
     bh_point2i_t tmp;
 
     tmp.x = (b->x - a->x) * t;
     tmp.y = (b->y - a->y) * t;
 
-    return bh_point2i_add(a, &tmp, result);
+    bh_point2i_add(a, &tmp, result);
 }
 
 
-bh_quat_t *bh_quat_identity(bh_quat_t *result)
+void bh_quat_identity(bh_quat_t *result)
 {
     static const bh_quat_t ident = {0.0f, 0.0f, 0.0f, 1.0f};
 
     *result = ident;
-    return result;
 }
 
 
-bh_quat_t *bh_quat_conjugate(const bh_quat_t *in,
-                             bh_quat_t *result)
+void bh_quat_conjugate(const bh_quat_t *in,
+                       bh_quat_t *result)
 {
     result->x = -in->x;
     result->y = -in->y;
     result->z = -in->z;
     result->w = in->w;
-
-    return result;
 }
 
 
-bh_quat_t *bh_quat_inverse(const bh_quat_t *in,
-                           bh_quat_t *result)
+void bh_quat_inverse(const bh_quat_t *in,
+                     bh_quat_t *result)
 {
     float length;
 
     length = bh_quat_dot(in, in);
     bh_quat_conjugate(in, result);
-    return bh_quat_scale(result, 1.0f / length, result);
+    bh_quat_scale(result, 1.0f / length, result);
 }
 
 
-bh_quat_t *bh_quat_mul(const bh_quat_t *a,
-                       const bh_quat_t *b,
-                       bh_quat_t *result)
+void bh_quat_mul(const bh_quat_t *a,
+                 const bh_quat_t *b,
+                 bh_quat_t *result)
 {
     bh_quat_t tmp1, tmp2, tmp3;
     float w;
@@ -880,15 +796,13 @@ bh_quat_t *bh_quat_mul(const bh_quat_t *a,
     bh_point4f_add(&tmp1, &tmp2, result);
     bh_point4f_add(&tmp3, result, result);
     result->w = w;
-
-    return result;
 }
 
 
-bh_quat_t *bh_quat_set_euler(float roll,
-                             float pitch,
-                             float yaw,
-                             bh_quat_t *result)
+void bh_quat_set_euler(float roll,
+                       float pitch,
+                       float yaw,
+                       bh_quat_t *result)
 {
     float cr, cp, cy, sr, sp, sy;
 
@@ -903,14 +817,12 @@ bh_quat_t *bh_quat_set_euler(float roll,
     result->y = cr * sp * cy + sr * cp * sy;
     result->z = cr * cp * sy - sr * sp * cy;
     result->w = cr * cp * cy + sr * sp * sy;
-
-    return result;
 }
 
 
-bh_quat_t *bh_quat_set_rotation(const bh_point3f_t *axis,
-                                float angle,
-                                bh_quat_t *result)
+void bh_quat_set_rotation(const bh_point3f_t *axis,
+                          float angle,
+                          bh_quat_t *result)
 {
     float c, s;
 
@@ -921,8 +833,6 @@ bh_quat_t *bh_quat_set_rotation(const bh_point3f_t *axis,
     result->y = axis->y * s;
     result->z = axis->z * s;
     result->w = c;
-
-    return result;
 }
 
 
@@ -994,8 +904,8 @@ void bh_quat_rotation(const bh_quat_t *in,
 }
 
 
-bh_matrix4f_t *bh_quat_matrix(const bh_quat_t *in,
-                              bh_matrix4f_t *result)
+void bh_quat_matrix(const bh_quat_t *in,
+                    bh_matrix4f_t *result)
 {
     float xx, xy, xz, xw, yy, yz, yw, zz, zw;
 
@@ -1019,12 +929,10 @@ bh_matrix4f_t *bh_quat_matrix(const bh_quat_t *in,
     result->z.x = 2.0f * (xz + yw);
     result->z.y = 2.0f * (yz - xw);
     result->z.z = 1.0f - 2.0f * (xx + yy);
-
-    return result;
 }
 
 
-bh_matrix4f_t *bh_matrix4f_identity(bh_matrix4f_t *result)
+void bh_matrix4f_identity(bh_matrix4f_t *result)
 {
     static const bh_matrix4f_t ident = {
         {1.0f, 0.0f, 0.0f, 0.0f},
@@ -1034,39 +942,34 @@ bh_matrix4f_t *bh_matrix4f_identity(bh_matrix4f_t *result)
     };
 
     *result = ident;
-    return result;
 }
 
 
-bh_matrix4f_t *bh_matrix4f_add(const bh_matrix4f_t *a,
-                               const bh_matrix4f_t *b,
-                               bh_matrix4f_t *result)
+void bh_matrix4f_add(const bh_matrix4f_t *a,
+                     const bh_matrix4f_t *b,
+                     bh_matrix4f_t *result)
 {
     bh_point4f_add(&a->x, &b->x, &result->x);
     bh_point4f_add(&a->y, &b->y, &result->y);
     bh_point4f_add(&a->z, &b->z, &result->z);
     bh_point4f_add(&a->w, &b->w, &result->w);
-
-    return result;
 }
 
 
-bh_matrix4f_t *bh_matrix4f_sub(const bh_matrix4f_t *a,
-                               const bh_matrix4f_t *b,
-                               bh_matrix4f_t *result)
+void bh_matrix4f_sub(const bh_matrix4f_t *a,
+                     const bh_matrix4f_t *b,
+                     bh_matrix4f_t *result)
 {
     bh_point4f_sub(&a->x, &b->x, &result->x);
     bh_point4f_sub(&a->y, &b->y, &result->y);
     bh_point4f_sub(&a->z, &b->z, &result->z);
     bh_point4f_sub(&a->w, &b->w, &result->w);
-
-    return result;
 }
 
 
-bh_matrix4f_t *bh_matrix4f_mul(const bh_matrix4f_t *a,
-                               const bh_matrix4f_t *b,
-                               bh_matrix4f_t *result)
+void bh_matrix4f_mul(const bh_matrix4f_t *a,
+                     const bh_matrix4f_t *b,
+                     bh_matrix4f_t *result)
 {
     bh_matrix4f_t tmp;
     bh_point4f_t row;
@@ -1092,25 +995,22 @@ bh_matrix4f_t *bh_matrix4f_mul(const bh_matrix4f_t *a,
     row.x = row.y = row.z = row.w = b->w.w; bh_point4f_madd(&a->w, &row, &tmp.w, &tmp.w);
 
     *result = tmp;
-    return result;
 }
 
 
-bh_matrix4f_t *bh_matrix4f_scale(const bh_matrix4f_t *a,
-                                 float b,
-                                 bh_matrix4f_t *result)
+void bh_matrix4f_scale(const bh_matrix4f_t *a,
+                       float b,
+                       bh_matrix4f_t *result)
 {
     bh_point4f_scale(&a->x, b, &result->x);
     bh_point4f_scale(&a->y, b, &result->y);
     bh_point4f_scale(&a->z, b, &result->z);
     bh_point4f_scale(&a->w, b, &result->w);
-
-    return result;
 }
 
 
-bh_matrix4f_t *bh_matrix4f_transpose(const bh_matrix4f_t *in,
-                                     bh_matrix4f_t *result)
+void bh_matrix4f_transpose(const bh_matrix4f_t *in,
+                           bh_matrix4f_t *result)
 {
     bh_matrix4f_t tmp;
 
@@ -1135,7 +1035,6 @@ bh_matrix4f_t *bh_matrix4f_transpose(const bh_matrix4f_t *in,
     tmp.w.w = in->w.w;
 
     *result = tmp;
-    return result;
 }
 
 
@@ -1166,8 +1065,8 @@ float bh_matrix4f_determinant(const bh_matrix4f_t *in)
 }
 
 
-bh_matrix4f_t *bh_matrix4f_inverse(const bh_matrix4f_t *in,
-                                   bh_matrix4f_t *result)
+int bh_matrix4f_inverse(const bh_matrix4f_t *in,
+                        bh_matrix4f_t *result)
 {
     float a, b, c, d, e, f, det;
     bh_matrix4f_t tmp;
@@ -1191,7 +1090,7 @@ bh_matrix4f_t *bh_matrix4f_inverse(const bh_matrix4f_t *in,
     det += in->w.x * tmp.x.w;
 
     if (det == 0.0f)
-        return bh_matrix4f_identity(result);
+        return BH_ERROR;
 
     tmp.y.x = -(in->y.x * f - in->z.x * e + in->w.x * d);
     tmp.y.y =  (in->x.x * f - in->z.x * c + in->w.x * b);
@@ -1222,40 +1121,37 @@ bh_matrix4f_t *bh_matrix4f_inverse(const bh_matrix4f_t *in,
     tmp.w.z = -(in->x.x * e - in->y.x * c + in->w.x * a);
     tmp.w.w =  (in->x.x * d - in->y.x * b + in->z.x * a);
 
-    return bh_matrix4f_scale(&tmp, 1.0f / det, result);
+    bh_matrix4f_scale(&tmp, 1.0f / det, result);
+    return BH_OK;
 }
 
 
-bh_matrix4f_t *bh_matrix4f_scaling(float x,
-                                   float y,
-                                   float z,
-                                   bh_matrix4f_t *result)
+void bh_matrix4f_scaling(float x,
+                         float y,
+                         float z,
+                         bh_matrix4f_t *result)
 {
     bh_matrix4f_identity(result);
     result->x.x = x;
     result->y.y = y;
     result->z.z = z;
-
-    return result;
 }
 
 
-bh_matrix4f_t *bh_matrix4f_translation(float x,
-                                       float y,
-                                       float z,
-                                       bh_matrix4f_t *result)
+void bh_matrix4f_translation(float x,
+                             float y,
+                             float z,
+                             bh_matrix4f_t *result)
 {
     bh_matrix4f_identity(result);
     result->w.x = x;
     result->w.y = y;
     result->w.z = z;
-
-    return result;
 }
 
 
-bh_matrix4f_t *bh_matrix4f_rotation_x(float angle,
-                                      bh_matrix4f_t *result)
+void bh_matrix4f_rotation_x(float angle,
+                            bh_matrix4f_t *result)
 {
     float c, s;
 
@@ -1267,13 +1163,11 @@ bh_matrix4f_t *bh_matrix4f_rotation_x(float angle,
     result->z.z = c;
     result->z.y = -s;
     result->y.z = s;
-
-    return result;
 }
 
 
-bh_matrix4f_t *bh_matrix4f_rotation_y(float angle,
-                                      bh_matrix4f_t *result)
+void bh_matrix4f_rotation_y(float angle,
+                            bh_matrix4f_t *result)
 {
     float c, s;
 
@@ -1285,13 +1179,11 @@ bh_matrix4f_t *bh_matrix4f_rotation_y(float angle,
     result->z.z = c;
     result->z.x = s;
     result->x.z = -s;
-
-    return result;
 }
 
 
-bh_matrix4f_t *bh_matrix4f_rotation_z(float angle,
-                                      bh_matrix4f_t *result)
+void bh_matrix4f_rotation_z(float angle,
+                            bh_matrix4f_t *result)
 {
     float c, s;
 
@@ -1303,14 +1195,12 @@ bh_matrix4f_t *bh_matrix4f_rotation_z(float angle,
     result->y.y = c;
     result->y.x = -s;
     result->x.y = s;
-
-    return result;
 }
 
 
-bh_matrix4f_t *bh_matrix4f_rotation(const bh_point3f_t *axis,
-                                    float angle,
-                                    bh_matrix4f_t *result)
+void bh_matrix4f_rotation(const bh_point3f_t *axis,
+                          float angle,
+                          bh_matrix4f_t *result)
 {
     float x, y, z, length;
     float c, s, moc, xx, xy, xz, yy, yz, zz;
@@ -1318,7 +1208,10 @@ bh_matrix4f_t *bh_matrix4f_rotation(const bh_point3f_t *axis,
     length = bh_point3f_length(axis);
 
     if (length == 0.0f)
-        return bh_matrix4f_identity(result);
+    {
+        bh_matrix4f_identity(result);
+        return;
+    }
 
     x = axis->x / length;
     y = axis->y / length;
@@ -1332,25 +1225,31 @@ bh_matrix4f_t *bh_matrix4f_rotation(const bh_point3f_t *axis,
             if (z != 0.0f)
             {
                 if (z < 0.0f)
-                    return bh_matrix4f_rotation_z(-angle, result);
+                    bh_matrix4f_rotation_z(-angle, result);
+                else
+                    bh_matrix4f_rotation_z(angle, result);
 
-                return bh_matrix4f_rotation_z(angle, result);
+                return;
             }
         }
         else if (z == 0.0f)
         {
             if (y < 0.0f)
-                return bh_matrix4f_rotation_y(-angle, result);
+                bh_matrix4f_rotation_y(-angle, result);
+            else
+                bh_matrix4f_rotation_y(angle, result);
 
-            return bh_matrix4f_rotation_y(angle, result);
+            return;
         }
     }
     else if (y == 0.0f && z == 0.0f)
     {
         if (x < 0.0f)
-            return bh_matrix4f_rotation_x(-angle, result);
+            bh_matrix4f_rotation_x(-angle, result);
+        else
+            bh_matrix4f_rotation_x(angle, result);
 
-        return bh_matrix4f_rotation_x(angle, result);
+        return;
     }
 
     /* Rotate around arbitrary axis */
@@ -1378,15 +1277,13 @@ bh_matrix4f_t *bh_matrix4f_rotation(const bh_point3f_t *axis,
     result->x.z = xz * moc - y * s;
     result->y.z = yz * moc + x * s;
     result->z.z = c + zz * moc;
-
-    return result;
 }
 
 
-bh_matrix4f_t *bh_matrix4f_rotation_euler(float roll,
-                                          float pitch,
-                                          float yaw,
-                                          bh_matrix4f_t *result)
+void bh_matrix4f_rotation_euler(float roll,
+                                float pitch,
+                                float yaw,
+                                bh_matrix4f_t *result)
 {
     float rs, rc, ys, yc, ps, pc;
 
@@ -1407,25 +1304,23 @@ bh_matrix4f_t *bh_matrix4f_rotation_euler(float roll,
     result->z.x = rs * ys + ps * rc * yc;
     result->z.y = ps * rc * ys - rs * yc;
     result->z.z = pc * rc;
-
-    return result;
 }
 
 
-bh_matrix4f_t *bh_matrix4f_rotation_quat(bh_quat_t *rotation,
-                                         bh_matrix4f_t *result)
+void bh_matrix4f_rotation_quat(bh_quat_t *rotation,
+                               bh_matrix4f_t *result)
 {
-    return bh_quat_matrix(rotation, result);
+    bh_quat_matrix(rotation, result);
 }
 
 
-bh_matrix4f_t *bh_matrix4f_ortho(float x_min,
-                                 float x_max,
-                                 float y_min,
-                                 float y_max,
-                                 float z_min,
-                                 float z_max,
-                                 bh_matrix4f_t *result)
+void bh_matrix4f_ortho(float x_min,
+                       float x_max,
+                       float y_min,
+                       float y_max,
+                       float z_min,
+                       float z_max,
+                       bh_matrix4f_t *result)
 {
     float dx, dy, dz;
 
@@ -1441,16 +1336,14 @@ bh_matrix4f_t *bh_matrix4f_ortho(float x_min,
     result->w.x = -(x_max + x_min) / dx;
     result->w.y = -(y_max + y_min) / dy;
     result->w.z = -(z_max + z_min) / dz;
-
-    return result;
 }
 
 
-bh_matrix4f_t *bh_matrix4f_perspective(float fov,
-                                       float aspect,
-                                       float z_min,
-                                       float z_max,
-                                       bh_matrix4f_t *result)
+void bh_matrix4f_perspective(float fov,
+                             float aspect,
+                             float z_min,
+                             float z_max,
+                             bh_matrix4f_t *result)
 {
     float t, dz;
 
@@ -1465,15 +1358,13 @@ bh_matrix4f_t *bh_matrix4f_perspective(float fov,
     result->z.w = -1.0f;
     result->w.z = -(2.0f * z_max * z_min) / dz;
     result->w.w = 0.0f;
-
-    return result;
 }
 
 
-bh_matrix4f_t *bh_matrix4f_lookat(const bh_point3f_t *camera,
-                                  const bh_point3f_t *at,
-                                  const bh_point3f_t *up,
-                                  bh_matrix4f_t *result)
+void bh_matrix4f_lookat(const bh_point3f_t *camera,
+                        const bh_point3f_t *at,
+                        const bh_point3f_t *up,
+                        bh_matrix4f_t *result)
 {
     bh_point3f_t cdir, cright, cup;
 
@@ -1500,14 +1391,12 @@ bh_matrix4f_t *bh_matrix4f_lookat(const bh_point3f_t *camera,
     result->w.y = -bh_point3f_dot(&cup, camera);
     result->w.z = -bh_point3f_dot(&cdir, camera);
     result->w.w = 1.0f;
-
-    return result;
 }
 
 
-bh_point3f_t *bh_matrix4f_transform_point3f(const bh_matrix4f_t *a,
-                                            const bh_point3f_t *b,
-                                            bh_point3f_t *result)
+void bh_matrix4f_transform_point3f(const bh_matrix4f_t *a,
+                                   const bh_point3f_t *b,
+                                   bh_point3f_t *result)
 {
     bh_point4f_t tmp, row;
 
@@ -1519,13 +1408,12 @@ bh_point3f_t *bh_matrix4f_transform_point3f(const bh_matrix4f_t *a,
     result->x = tmp.x;
     result->y = tmp.y;
     result->z = tmp.z;
-    return result;
 }
 
 
-bh_point4f_t *bh_matrix4f_transform_point4f(const bh_matrix4f_t *a,
-                                            const bh_point4f_t *b,
-                                            bh_point4f_t *result)
+void bh_matrix4f_transform_point4f(const bh_matrix4f_t *a,
+                                   const bh_point4f_t *b,
+                                   bh_point4f_t *result)
 {
     bh_point4f_t tmp, row;
 
@@ -1535,11 +1423,10 @@ bh_point4f_t *bh_matrix4f_transform_point4f(const bh_matrix4f_t *a,
     row.x = row.y = row.z = row.w = b->w; bh_point4f_madd(&a->w, &row, &tmp, &tmp);
 
     *result = tmp;
-    return result;
 }
 
 
-bh_matrix3f_t *bh_matrix3f_identity(bh_matrix3f_t *result)
+void bh_matrix3f_identity(bh_matrix3f_t *result)
 {
     static const bh_matrix3f_t ident = {
         {1.0f, 0.0f, 0.0f},
@@ -1548,37 +1435,32 @@ bh_matrix3f_t *bh_matrix3f_identity(bh_matrix3f_t *result)
     };
 
     *result = ident;
-    return result;
 }
 
 
-bh_matrix3f_t *bh_matrix3f_add(const bh_matrix3f_t *a,
-                               const bh_matrix3f_t *b,
-                               bh_matrix3f_t *result)
+void bh_matrix3f_add(const bh_matrix3f_t *a,
+                     const bh_matrix3f_t *b,
+                     bh_matrix3f_t *result)
 {
     bh_point3f_add(&a->x, &b->x, &result->x);
     bh_point3f_add(&a->y, &b->y, &result->y);
     bh_point3f_add(&a->z, &b->z, &result->z);
-
-    return result;
 }
 
 
-bh_matrix3f_t *bh_matrix3f_sub(const bh_matrix3f_t *a,
-                               const bh_matrix3f_t *b,
-                               bh_matrix3f_t *result)
+void bh_matrix3f_sub(const bh_matrix3f_t *a,
+                     const bh_matrix3f_t *b,
+                     bh_matrix3f_t *result)
 {
     bh_point3f_sub(&a->x, &b->x, &result->x);
     bh_point3f_sub(&a->y, &b->y, &result->y);
     bh_point3f_sub(&a->z, &b->z, &result->z);
-
-    return result;
 }
 
 
-bh_matrix3f_t *bh_matrix3f_mul(const bh_matrix3f_t *a,
-                               const bh_matrix3f_t *b,
-                               bh_matrix3f_t *result)
+void bh_matrix3f_mul(const bh_matrix3f_t *a,
+                     const bh_matrix3f_t *b,
+                     bh_matrix3f_t *result)
 {
     bh_matrix3f_t tmp;
     bh_point3f_t row;
@@ -1596,24 +1478,21 @@ bh_matrix3f_t *bh_matrix3f_mul(const bh_matrix3f_t *a,
     row.x = row.y = row.z = b->z.z; bh_point3f_madd(&a->z, &row, &tmp.z, &tmp.z);
 
     *result = tmp;
-    return result;
 }
 
 
-bh_matrix3f_t *bh_matrix3f_scale(const bh_matrix3f_t *a,
-                                 float b,
-                                 bh_matrix3f_t *result)
+void bh_matrix3f_scale(const bh_matrix3f_t *a,
+                       float b,
+                       bh_matrix3f_t *result)
 {
     bh_point3f_scale(&a->x, b, &result->x);
     bh_point3f_scale(&a->y, b, &result->y);
     bh_point3f_scale(&a->z, b, &result->z);
-
-    return result;
 }
 
 
-bh_matrix3f_t *bh_matrix3f_transpose(const bh_matrix3f_t *in,
-                                     bh_matrix3f_t *result)
+void bh_matrix3f_transpose(const bh_matrix3f_t *in,
+                           bh_matrix3f_t *result)
 {
     bh_matrix3f_t tmp;
 
@@ -1630,7 +1509,6 @@ bh_matrix3f_t *bh_matrix3f_transpose(const bh_matrix3f_t *in,
     tmp.z.z = in->z.z;
 
     *result = tmp;
-    return result;
 }
 
 
@@ -1657,8 +1535,8 @@ float bh_matrix3f_determinant(const bh_matrix3f_t *in)
 }
 
 
-bh_matrix3f_t *bh_matrix3f_inverse(const bh_matrix3f_t *in,
-                                   bh_matrix3f_t *result)
+int bh_matrix3f_inverse(const bh_matrix3f_t *in,
+                        bh_matrix3f_t *result)
 {
     float a, b, c, det;
     bh_matrix3f_t tmp;
@@ -1677,7 +1555,7 @@ bh_matrix3f_t *bh_matrix3f_inverse(const bh_matrix3f_t *in,
     det += in->z.x * tmp.x.z;
 
     if (det == 0.0f)
-        return bh_matrix3f_identity(result);
+        return BH_ERROR;
 
     a = in->y.x * in->z.z - in->z.x * in->y.z;
     b = in->x.x * in->z.z - in->z.x * in->x.z;
@@ -1695,38 +1573,35 @@ bh_matrix3f_t *bh_matrix3f_inverse(const bh_matrix3f_t *in,
     tmp.z.y = -b;
     tmp.z.z = c;
 
-    return bh_matrix3f_scale(&tmp, 1.0f / det, result);
+    bh_matrix3f_scale(&tmp, 1.0f / det, result);
+    return BH_OK;
 }
 
 
-bh_matrix3f_t *bh_matrix3f_scaling(float x,
-                                   float y,
-                                   bh_matrix3f_t *result)
+void bh_matrix3f_scaling(float x,
+                         float y,
+                         bh_matrix3f_t *result)
 {
     bh_matrix3f_identity(result);
 
     result->x.x = x;
     result->y.y = y;
-
-    return result;
 }
 
 
-bh_matrix3f_t *bh_matrix3f_translation(float x,
-                                       float y,
-                                       bh_matrix3f_t *result)
+void bh_matrix3f_translation(float x,
+                             float y,
+                             bh_matrix3f_t *result)
 {
     bh_matrix3f_identity(result);
 
     result->z.x = x;
     result->z.y = y;
-
-    return result;
 }
 
 
-bh_matrix3f_t *bh_matrix3f_rotation(float angle,
-                                    bh_matrix3f_t *result)
+void bh_matrix3f_rotation(float angle,
+                          bh_matrix3f_t *result)
 {
     float c, s;
 
@@ -1738,14 +1613,12 @@ bh_matrix3f_t *bh_matrix3f_rotation(float angle,
     result->y.y = c;
     result->y.x = -s;
     result->x.y = s;
-
-    return result;
 }
 
 
-bh_point2f_t *bh_matrix3f_transform_point2f(const bh_matrix3f_t *a,
-                                            const bh_point2f_t *b,
-                                            bh_point2f_t *result)
+void bh_matrix3f_transform_point2f(const bh_matrix3f_t *a,
+                                   const bh_point2f_t *b,
+                                   bh_point2f_t *result)
 {
     bh_point3f_t tmp, row;
 
@@ -1755,14 +1628,12 @@ bh_point2f_t *bh_matrix3f_transform_point2f(const bh_matrix3f_t *a,
 
     result->x = tmp.x;
     result->y = tmp.y;
-
-    return result;
 }
 
 
-bh_point3f_t *bh_matrix3f_transform_point3f(const bh_matrix3f_t *a,
-                                            const bh_point3f_t *b,
-                                            bh_point3f_t *result)
+void bh_matrix3f_transform_point3f(const bh_matrix3f_t *a,
+                                   const bh_point3f_t *b,
+                                   bh_point3f_t *result)
 {
     bh_point3f_t tmp, row;
 
@@ -1773,6 +1644,4 @@ bh_point3f_t *bh_matrix3f_transform_point3f(const bh_matrix3f_t *a,
     result->x = tmp.x;
     result->y = tmp.y;
     result->z = tmp.z;
-
-    return result;
 }
