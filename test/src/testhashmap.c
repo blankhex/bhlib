@@ -157,7 +157,7 @@ static int lookup(void)
 
         BH_VERIFY(bh_hashmap_at(hashmap, BH_INT2PTR(i * 4), NULL) == BH_OK);
         BH_VERIFY(bh_hashmap_at(hashmap, BH_INT2PTR(i * 4), &value) == BH_OK);
-        BH_VERIFY(BH_PTR2INT(value) == i);
+        BH_VERIFY(BH_PTR2INT(value) == (int)i);
     }
 
     /* Lookup non-existing elements */

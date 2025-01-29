@@ -46,6 +46,9 @@ void bh_io_free(bh_io_t *io)
 
     /* Call the IO device destruction handler */
     io->func(io + 1, BH_IO_DESTROY_CB, NULL, NULL);
+
+    /* Deallocate object */
+    free(io);
 }
 
 

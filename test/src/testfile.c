@@ -121,7 +121,7 @@ static int check_normal(void)
     BH_VERIFY(bh_io_read(io, buffer, 5, &actual) == BH_OK);
     BH_VERIFY(actual == 5);
     BH_VERIFY(memcmp(buffer, "67890", 5) == 0);
-    bh_io_close(io);
+    bh_io_free(io);
 
     /* Check operations for read and write access */
     BH_VERIFY((io = bh_file_new(FILENAME1)) != NULL);
@@ -226,7 +226,7 @@ static int check_truncate(void)
     BH_VERIFY(bh_io_seek(io, 0, BH_IO_SEEK_SET) == BH_OK);
     BH_VERIFY(bh_io_read(io, buffer, sizeof(buffer), &actual) == BH_OK);
     BH_VERIFY(actual == 0);
-    bh_io_close(io);
+    bh_io_free(io);
 
     /* Check operations for read and write access */
     BH_VERIFY((io = bh_file_new(FILENAME1)) != NULL);
@@ -321,7 +321,7 @@ static int check_exist(void)
     BH_VERIFY(bh_io_read(io, buffer, 5, &actual) == BH_OK);
     BH_VERIFY(actual == 5);
     BH_VERIFY(memcmp(buffer, "67890", 5) == 0);
-    bh_io_close(io);
+    bh_io_free(io);
 
     /* Check operations for read and write access */
     BH_VERIFY((io = bh_file_new(FILENAME1)) != NULL);
