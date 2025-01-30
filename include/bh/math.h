@@ -6,1888 +6,1395 @@
 
 
 /**
- * 2D floating point vector.
- */
-typedef struct bh_point2f_s
-{
-    /** X component */
-    float x;
-
-    /** Y Component */
-    float y;
-} bh_point2f_t;
-
-
-/**
- * 3D floating point vector.
- */
-typedef struct bh_point3f_s
-{
-    /** X component */
-    float x;
-
-    /** Y component */
-    float y;
-
-    /** Z component */
-    float z;
-} bh_point3f_t;
-
-
-/**
- * 4D floating point vector.
- */
-typedef struct bh_point4f_s
-{
-    /** X component */
-    float x;
-
-    /** Y component */
-    float y;
-
-    /** Z component */
-    float z;
-
-    /** W component */
-    float w;
-} bh_point4f_t;
-
-
-/**
- * 2D integer vector.
- */
-typedef struct bh_point2i_s
-{
-    /** X component */
-    int x;
-
-    /** Y component */
-    int y;
-} bh_point2i_t;
-
-
-/**
- * 3D integer vector.
- */
-typedef struct bh_point3i_s
-{
-    /** X component */
-    int x;
-
-    /** Y component */
-    int y;
-
-    /** Z component */
-    int z;
-} bh_point3i_t;
-
-
-/**
- * 4D integer vector.
- */
-typedef struct bh_point4i_s
-{
-    /** X component */
-    int x;
-
-    /** Y component */
-    int y;
-
-    /** Z component */
-    int z;
-
-    /** W component */
-    int w;
-} bh_point4i_t;
-
-
-/**
- * 3x3 floating point matrix.
- *
- * Each vector represent one column of the matrix.
- */
-typedef struct bh_matrix3f_s
-{
-    /** First column */
-    bh_point3f_t x;
-
-    /** Second column */
-    bh_point3f_t y;
-
-    /** Third colum */
-    bh_point3f_t z;
-} bh_matrix3f_t;
-
-
-/**
- * 4x4 floating point matrix.
- *
- * Each vector represent one column of the matrix.
- */
-typedef struct bh_matrix4f_s
-{
-    /** First column */
-    bh_point4f_t x;
-
-    /** Second column */
-    bh_point4f_t y;
-
-    /** Third column */
-    bh_point4f_t z;
-
-    /** Forth column */
-    bh_point4f_t w;
-} bh_matrix4f_t;
-
-
-/**
- * 2D floating point line.
- */
-typedef struct bh_line2f_s
-{
-    /** Normal vector */
-    bh_point2f_t normal;
-
-    /** Distance from the origin */
-    float distance;
-} bh_line2f_t;
-
-
-/**
- * 3D floating point line.
- */
-typedef struct bh_line3f_s
-{
-    /** Origin */
-    bh_point3f_t origin;
-
-    /** Normal vector */
-    bh_point3f_t normal;
-} bh_line3f_t;
-
-
-/**
- * 3D floating point plane.
- */
-typedef struct bh_plane3f_s
-{
-    /** Normal vector */
-    bh_point3f_t normal;
-
-    /** Distance from the origin */
-    float distance;
-} bh_plane3f_t;
-
-
-/**
- * 2D floating point ray.
- */
-typedef struct bh_ray2f_s
-{
-    /** Origin */
-    bh_point2f_t origin;
-
-    /** Normal or direction */
-    bh_point2f_t normal;
-} bh_ray2f_t;
-
-
-/**
- * 3D floating point ray.
- */
-typedef bh_line3f_t bh_ray3f_t;
-
-/**
- * 2D floating point AABB
- */
-typedef struct bh_aabb2f_s
-{
-    /** Origin */
-    bh_point2f_t origin;
-
-    /** Size */
-    bh_point2f_t size;
-} bh_aabb2f_t;
-
-
-/**
- * 3D floating point AABB
- */
-typedef struct bh_aabb3f_s
-{
-    /** Origin */
-    bh_point3f_t origin;
-
-    /** Size */
-    bh_point3f_t size;
-} bh_aabb3f_t;
-
-
-/**
- * 2D integer AABB
- */
-typedef struct bh_aabb2i_s
-{
-    /** Origin */
-    bh_point2i_t origin;
-
-    /** Size */
-    bh_point2i_t size;
-} bh_aabb2i_t;
-
-
-/**
- * 3D integer AABB
- */
-typedef struct bh_aabb3i_s
-{
-    /** Origin */
-    bh_point3i_t origin;
-
-    /** Size */
-    bh_point3i_t size;
-} bh_aabb3i_t;
-
-
-/**
- * Floating point quaternion
- */
-typedef bh_point4f_t bh_quat_t;
-
-
-/**
- * Adds components of two vectors.
- *
- * result = a + b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
- */
-void bh_point4f_add(const bh_point4f_t *a,
-                    const bh_point4f_t *b,
-                    bh_point4f_t *result);
-
-
-/**
- * Subtracts components of two vectors.
- *
- * result = a - b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
- */
-void bh_point4f_sub(const bh_point4f_t *a,
-                    const bh_point4f_t *b,
-                    bh_point4f_t *result);
-
-
-/**
- * Multiplies components of two vectors.
- *
- * result = a * b
+ * Adds \a a and \a b floating point vectors and stores result into \a out.
  *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 4D vector
+ * \param b    B 4D vector
+ * \param out  Output 4D vector
  */
-void bh_point4f_mul(const bh_point4f_t *a,
-                    const bh_point4f_t *b,
-                    bh_point4f_t *result);
+void BH_Vec4fAdd(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Scales the vector.
+ * Subtracts \a a and \a b floating point vectors and stores result into \a out.
  *
- * result = a * b
- *
- * \param a       Value
- * \param b       Factor
- * \param result  Result
- */
-void bh_point4f_scale(const bh_point4f_t *a,
-                      float b,
-                      bh_point4f_t *result);
-
-
-/**
- * Multiplies and adds three vectors.
- *
- * result = a * b + c
- *
- * \param a       Value
- * \param b       Value
- * \param c       Value
- * \param result  Result
- */
-void bh_point4f_madd(const bh_point4f_t *a,
-                     const bh_point4f_t *b,
-                     const bh_point4f_t *c,
-                     bh_point4f_t *result);
-
-
-/**
- * Negates the vector.
- *
- * result = -in
- *
- * \param in      Value
- * \param result  Result
- */
-void bh_point4f_negate(const bh_point4f_t *in,
-                       bh_point4f_t *result);
-
-
-/**
- * Calculates the dot product of two vectors.
- *
- * \param a  Value
- * \param b  Value
- *
- * \return Returns the dot product.
- */
-float bh_point4f_dot(const bh_point4f_t *a,
-                     const bh_point4f_t *b);
-
-
-/**
- * Calculates the dot product of two vectors with w component.
- *
- * \param a  Value
- * \param b  Value
- *
- * \return Returns the dot product.
- */
-float bh_point4f_dot3(const bh_point4f_t *a,
-                      const bh_point4f_t *b);
-
-
-/**
- * Calculates the cross product of two vectors without w component.
- *
- * result = a x b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
- */
-void bh_point4f_cross(const bh_point4f_t *a,
-                      const bh_point4f_t *b,
-                      bh_point4f_t *result);
-
-
-/**
- * Calculates the length of the vector.
- *
- * \param in  Value
- *
- * \return Returns the length.
- */
-float bh_point4f_length(const bh_point4f_t *in);
-
-
-/**
- * Normilizes the vector.
- *
- * result = in / |in|
- *
- * \param in      Value
- * \param result  Result
- */
-void bh_point4f_normal(const bh_point4f_t *in,
-                       bh_point4f_t *result);
-
-
-/**
- * Calculates vector, containing minimum components of two vectors.
- *
- * result = min(a, b)
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 4D vector
+ * \param b    B 4D vector
+ * \param out  Output 4D vector
  */
-void bh_point4f_min(const bh_point4f_t *a,
-                    const bh_point4f_t *b,
-                    bh_point4f_t *result);
+void BH_Vec4fSub(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Calculates vector, containing maximum components of two vectors.
+ * Multiplies \a a and \a b floating point vectors and stores result into
+ * \a out.
  *
- * result = max(a, b)
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 4D vector
+ * \param b    B 4D vector
+ * \param out  Output 4D vector
  */
-void bh_point4f_max(const bh_point4f_t *a,
-                    const bh_point4f_t *b,
-                    bh_point4f_t *result);
+void BH_Vec4fMul(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Calculates linear interpolation between two vectors.
+ * Scales \a a vector by the value \a b and stores result into \a out.
  *
- * result = a + (b - a) * t
- *
- * \param a       Value
- * \param b       Value
- * \param t       Factor
- * \param result  Result
+ * \param a    A 4D vector
+ * \param b    B value
+ * \param out  Output vector
  */
-void bh_point4f_lerp(const bh_point4f_t *a,
-                     const bh_point4f_t *b,
-                     float t,
-                     bh_point4f_t *result);
+void BH_Vec4fScale(const float *a,
+                   float b,
+                   float *out);
 
 
 /**
- * Calculates spherical linear interpolation between two vectors.
+ * Multiples \a a and \a b vectors, adds to \a c and stores result into \a out.
  *
- * \param a       Value
- * \param b       Value
- * \param t       Factor
- * \param result  Result
+ * \param a    A 4D vector
+ * \param b    B 4D vector
+ * \param c    C 4D vector
+ * \param out  Output 4D vector
  */
-void bh_point4f_slerp(const bh_point4f_t *a,
-                      const bh_point4f_t *b,
-                      float t,
-                      bh_point4f_t *result);
+void BH_Vec4fMulAdd(const float *a,
+                    const float *b,
+                    const float *c,
+                    float *out);
 
 
 /**
- * Adds components of two vectors.
- *
- * result = a + b
+ * Negates \a in vector and stores result into \a out.
  *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param in   Input 4D vector
+ * \param out  Output 4D vector
  */
-void bh_point3f_add(const bh_point3f_t *a,
-                    const bh_point3f_t *b,
-                    bh_point3f_t *result);
+void BH_Vec4fNegate(const float *in,
+                    float *out);
 
 
 /**
- * Subtracts components of two vectors.
+ * Computes dot product of \a a and \a b vectors and returns the result.
  *
- * result = a - b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a  A 4D vector
+ * \param b  B 4D vector
  */
-void bh_point3f_sub(const bh_point3f_t *a,
-                    const bh_point3f_t *b,
-                    bh_point3f_t *result);
+float BH_Vec4fDot(const float *a,
+                  const float *b);
 
 
 /**
- * Multiplies components of two vectors.
- *
- * result = a * b
+ * Computes length of the \a in vector and returns the result.
  *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param in  Input 4D vector
  */
-void bh_point3f_mul(const bh_point3f_t *a,
-                    const bh_point3f_t *b,
-                    bh_point3f_t *result);
+float BH_Vec4fLength(const float *in);
 
 
 /**
- * Scales the vector.
+ * Computes normal vector from the \a in and stores result into \a out.
  *
- * result = a * b
- *
- * \param a       Value
- * \param b       Factor
- * \param result  Result
+ * \param in   Input 4D vector
+ * \param out  Output 4D vector
  */
-void bh_point3f_scale(const bh_point3f_t *a,
-                      float b,
-                      bh_point3f_t *result);
+void BH_Vec4fNormal(const float *in,
+                    float *out);
 
 
 /**
- * Multiplies and adds three vectors.
- *
- * result = a * b + c
+ * Computes minimum vector from the \a a and \a b vectors and stores result
+ * into \a out.
  *
- * \param a       Value
- * \param b       Value
- * \param c       Value
- * \param result  Result
+ * \param a    A 4D vector
+ * \param b    B 4D vector
+ * \param out  Output 4D vector
  */
-void bh_point3f_madd(const bh_point3f_t *a,
-                     const bh_point3f_t *b,
-                     const bh_point3f_t *c,
-                     bh_point3f_t *result);
+void BH_Vec4fMin(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Negates the vector.
+ * Computes maximum vector from the \a a and \a b vectors and stores result
+ * into \a out.
  *
- * result = -in
- *
- * \param in      Value
- * \param result  Result
+ * \param a    A 4D vector
+ * \param b    B 4D vector
+ * \param out  Output 4D vector
  */
-void bh_point3f_negate(const bh_point3f_t *in,
-                       bh_point3f_t *result);
+void BH_Vec4fMax(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Calculates the dot product of two vectors.
+ * Interpolates between \a a and \a b vector by \a t amount and stores result
+ * into \a out.
  *
- * \param a  Value
- * \param b  Value
- *
- * \return Returns the dot product.
+ * \param a    A 4D vector
+ * \param b    B 4D vector
+ * \param t    Amount
+ * \param out  Output 4D vector
  */
-float bh_point3f_dot(const bh_point3f_t *a,
-                     const bh_point3f_t *b);
+void BH_Vec4fLerp(const float *a,
+                  const float *b,
+                  float t,
+                  float *out);
 
 
 /**
- * Calculates the cross product of two vectors.
- *
- * result = a x b
+ * Adds \a a and \a b floating point vectors and stores result into \a out.
  *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 3D vector
+ * \param b    B 3D vector
+ * \param out  Output 3D vector
  */
-void bh_point3f_cross(const bh_point3f_t *a,
-                      const bh_point3f_t *b,
-                      bh_point3f_t *result);
+void BH_Vec3fAdd(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Calculates the length of the vector.
+ * Subtracts \a a and \a b floating point vectors and stores result into \a out.
  *
- * \param in  Value
- *
- * \return Returns the length.
+ * \param a    A 3D vector
+ * \param b    B 3D vector
+ * \param out  Output 3D vector
  */
-float bh_point3f_length(const bh_point3f_t *in);
+void BH_Vec3fSub(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Normilizes the vector.
- *
- * result = in / |in|
+ * Multiplies \a a and \a b floating point vectors and stores result into
+ * \a out.
  *
- * \param in      Value
- * \param result  Result
+ * \param a    A 3D vector
+ * \param b    B 3D vector
+ * \param out  Output 3D vector
  */
-void bh_point3f_normal(const bh_point3f_t *in,
-                       bh_point3f_t *result);
+void BH_Vec3fMul(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Calculates vector, containing minimum components of two vectors.
+ * Scales \a a vector by the value \a b and stores result into \a out.
  *
- * result = min(a, b)
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 3D vector
+ * \param b    B value
+ * \param out  Output 3D vector
  */
-void bh_point3f_min(const bh_point3f_t *a,
-                    const bh_point3f_t *b,
-                    bh_point3f_t *result);
+void BH_Vec3fScale(const float *a,
+                   float b,
+                   float *out);
 
 
 /**
- * Calculates vector, containing maximum components of two vectors.
- *
- * result = max(a, b)
+ * Multiples \a a and \a b vectors, adds to \a c and stores result into \a out.
  *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 3D vector
+ * \param b    B 3D vector
+ * \param c    C 3D vector
+ * \param out  Output 3D vector
  */
-void bh_point3f_max(const bh_point3f_t *a,
-                    const bh_point3f_t *b,
-                    bh_point3f_t *result);
+void BH_Vec3fMulAdd(const float *a,
+                    const float *b,
+                    const float *c,
+                    float *out);
 
 
 /**
- * Calculates linear interpolation between two vectors.
+ * Negates \a in vector and stores result into \a out.
  *
- * result = a + (b - a) * t
+ * \param in   Input 3D vector
+ * \param out  Output 3D vector
  *
- * \param a       Value
- * \param b       Value
- * \param t       Factor
- * \param result  Result
  */
-void bh_point3f_lerp(const bh_point3f_t *a,
-                     const bh_point3f_t *b,
-                     float t,
-                     bh_point3f_t *result);
+void BH_Vec3fNegate(const float *in,
+                    float *out);
 
 
 /**
- * Calculates spherical linear interpolation between two vectors.
+ * Computes dot product of \a a and \a b vectors and returns the result.
  *
- * \param a       Value
- * \param b       Value
- * \param t       Factor
- * \param result  Result
+ * \param a  A 3D vector
+ * \param b  B 3D vector
  */
-void bh_point3f_slerp(const bh_point3f_t *a,
-                      const bh_point3f_t *b,
-                      float t,
-                      bh_point3f_t *result);
+float BH_Vec3fDot(const float *a,
+                  const float *b);
 
 
 /**
- * Adds components of two vectors.
+ * Computes cross product of \a a and \a b vectors and stores
+ * result into \a out.
  *
- * result = a + b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 3D vector
+ * \param b    B 3D vector
+ * \param out  Output 3D vector
  */
-void bh_point2f_add(const bh_point2f_t *a,
-                    const bh_point2f_t *b,
-                    bh_point2f_t *result);
+void BH_Vec3fCross(const float *a,
+                   const float *b,
+                   float *out);
 
 
 /**
- * Subtracts components of two vectors.
+ * Computes length of the \a in vector and returns the result.
  *
- * result = a - b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param in  Input 3D vector
  */
-void bh_point2f_sub(const bh_point2f_t *a,
-                    const bh_point2f_t *b,
-                    bh_point2f_t *result);
+float BH_Vec3fLength(const float *in);
 
 
 /**
- * Multiplies components of two vectors.
- *
- * result = a * b
+ * Computes normal vector from the \a in and stores result into \a out.
  *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param in   Input 3D vector
+ * \param out  Output 3D vector
  */
-void bh_point2f_mul(const bh_point2f_t *a,
-                    const bh_point2f_t *b,
-                    bh_point2f_t *result);
+void BH_Vec3fNormal(const float *in,
+                    float *out);
 
 
 /**
- * Scales the vector.
+ * Computes minimum vector from the \a a and \a b vectors and stores result into
+ * \a out.
  *
- * result = a * b
- *
- * \param a       Value
- * \param b       Factor
- * \param result  Result
+ * \param a    A 3D vector
+ * \param b    B 3D vector
+ * \param out  Output 3D vector
  */
-void bh_point2f_scale(const bh_point2f_t *a,
-                      float b,
-                      bh_point2f_t *result);
+void BH_Vec3fMin(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Multiplies and adds three vectors.
- *
- * result = a * b + c
+ * Computes maximum vector from the \a a and \a b vectors and stores result into
+ * \a out.
  *
- * \param a       Value
- * \param b       Value
- * \param c       Value
- * \param result  Result
+ * \param a    A 3D vector
+ * \param b    B 3D vector
+ * \param out  Output 3D vector
  */
-void bh_point2f_madd(const bh_point2f_t *a,
-                     const bh_point2f_t *b,
-                     const bh_point2f_t *c,
-                     bh_point2f_t *result);
+void BH_Vec3fMax(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Negates the vector.
+ * Interpolates between \a a and \a b vector by \a t amount and stores result
+ * into \a out.
  *
- * result = -in
- *
- * \param in      Value
- * \param result  Result
+ * \param a    A 3D vector
+ * \param b    B 3D vector
+ * \param t    Amount
+ * \param out  Output 3D vector
  */
-void bh_point2f_negate(const bh_point2f_t *in,
-                       bh_point2f_t *result);
+void BH_Vec3fLerp(const float *a,
+                  const float *b,
+                  float t,
+                  float *out);
 
 
 /**
- * Calculates the dot product of two vectors.
- *
- * \param a  Value
- * \param b  Value
+ * Adds \a a and \a b floating point vectors and stores result into \a out.
  *
- * \return Returns the dot product.
+ * \param a    A 2D vector
+ * \param b    B 2D vector
+ * \param out  Output 2D vector
  */
-float bh_point2f_dot(const bh_point2f_t *a,
-                     const bh_point2f_t *b);
+void BH_Vec2fAdd(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Calculates the cross product of two vectors and returns its z component.
+ * Subtracts \a a and \a b floating point vectors and stores result into \a out.
  *
- * result = a x b
- *
- * \param a  Value
- * \param b  Value
- *
- * \return Returns z component of the result vector.
+ * \param a    A 2D vector
+ * \param b    B 2D vector
+ * \param out  Output 2D vector
  */
-float bh_point2f_cross(const bh_point2f_t *a,
-                       const bh_point2f_t *b);
+void BH_Vec2fSub(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Calculates the length of the vector.
- *
- * \param in  Value
+ * Multiplies \a a and \a b floating point vectors and stores result into
+ * \a out.
  *
- * \return Returns the length.
+ * \param a    A 2D vector
+ * \param b    B 2D vector
+ * \param out  Output 2D vector
  */
-float bh_point2f_length(const bh_point2f_t *in);
+void BH_Vec2fMul(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Normilizes the vector.
+ * Scales \a a vector by the value \a b and stores result into \a out.
  *
- * result = in / |in|
- *
- * \param in      Value
- * \param result  Result
+ * \param a    A 2D vector
+ * \param b    B value
+ * \param out  Output 2D vector
  */
-void bh_point2f_normal(const bh_point2f_t *in,
-                       bh_point2f_t *result);
+void BH_Vec2fScale(const float *a,
+                   float b,
+                   float *out);
 
 
 /**
- * Calculates vector, containing minimum components of two vectors.
- *
- * result = min(a, b)
+ * Multiples \a a and \a b vectors, adds to \a c and stores result into \a out.
  *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 2D vector
+ * \param b    B 2D vector
+ * \param c    C 2D vector
+ * \param out  Output 2D vector
  */
-void bh_point2f_min(const bh_point2f_t *a,
-                    const bh_point2f_t *b,
-                    bh_point2f_t *result);
+void BH_Vec2fMulAdd(const float *a,
+                    const float *b,
+                    const float *c,
+                    float *out);
 
 
 /**
- * Calculates vector, containing maximum components of two vectors.
+ * Negates \a in vector and stores result into \a out.
  *
- * result = max(a, b)
+ * \param in   Input 2D vector
+ * \param out  Output 2D vector
  *
- * \param a       Value
- * \param b       Value
- * \param result  Result
  */
-void bh_point2f_max(const bh_point2f_t *a,
-                    const bh_point2f_t *b,
-                    bh_point2f_t *result);
+void BH_Vec2fNegate(const float *in,
+                    float *out);
 
 
 /**
- * Calculates linear interpolation between two vectors.
+ * Computes dot product of \a a and \a b vectors and returns the result.
  *
- * result = a + (b - a) * t
- *
- * \param a       Value
- * \param b       Value
- * \param t       Factor
- * \param result  Result
+ * \param a  A 2D vector
+ * \param b  B 2D vector
  */
-void bh_point2f_lerp(const bh_point2f_t *a,
-                     const bh_point2f_t *b,
-                     float t,
-                     bh_point2f_t *result);
+float BH_Vec2fDot(const float *a,
+                  const float *b);
 
 
 /**
- * Calculates spherical linear interpolation between two vectors.
+ * Computes cross product of \a a and \a b vectors and returns the result.
  *
- * \param a       Value
- * \param b       Value
- * \param t       Factor
- * \param result  Result
+ * \param a    A 2D vector
+ * \param b    B 2D vector
  */
-void bh_point2f_slerp(const bh_point2f_t *a,
-                      const bh_point2f_t *b,
-                      float t,
-                      bh_point2f_t *result);
+float BH_Vec2fCross(const float *a,
+                    const float *b);
 
 
 /**
- * Adds components of two vectors.
- *
- * result = a + b
+ * Computes length of the \a in vector and returns the result.
  *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param in  Input 2D vector
  */
-void bh_point4i_add(const bh_point4i_t *a,
-                    const bh_point4i_t *b,
-                    bh_point4i_t *result);
+float BH_Vec2fLength(const float *in);
 
 
 /**
- * Subtracts components of two vectors.
+ * Computes normal vector from the \a in and stores result into
+ * \a out.
  *
- * result = a - b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param in   Input 2D vector
+ * \param out  Output 2D vector
  */
-void bh_point4i_sub(const bh_point4i_t *a,
-                    const bh_point4i_t *b,
-                    bh_point4i_t *result);
+void BH_Vec2fNormal(const float *in,
+                    float *out);
 
 
 /**
- * Multiplies components of two vectors.
+ * Computes minimum vector from the \a a and \a b vectors and stores result into
+ * \a out.
  *
- * result = a * b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 2D vector
+ * \param b    B 2D vector
+ * \param out  Output 2D vector
  */
-void bh_point4i_mul(const bh_point4i_t *a,
-                    const bh_point4i_t *b,
-                    bh_point4i_t *result);
+void BH_Vec2fMin(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Scales the vector.
- *
- * result = a * b
+ * Computes maximum vector from the \a a and \a b vectors and stores result into
+ * \a out.
  *
- * \param a       Value
- * \param b       Factor
- * \param result  Result
+ * \param a    A 2D vector
+ * \param b    B 2D vector
+ * \param out  Output 2D vector
  */
-void bh_point4i_scale(const bh_point4i_t *a,
-                      int b,
-                      bh_point4i_t *result);
+void BH_Vec2fMax(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Multiplies and adds three vectors.
+ * Interpolates between \a a and \a b vector by \a t amount and stores result
+ * into \a out.
  *
- * result = a * b + c
- *
- * \param a       Value
- * \param b       Value
- * \param c       Value
- * \param result  Result
+ * \param a    A 2D vector
+ * \param b    B 2D vector
+ * \param t    Amount
+ * \param out  Output 2D vector
  */
-void bh_point4i_madd(const bh_point4i_t *a,
-                     const bh_point4i_t *b,
-                     const bh_point4i_t *c,
-                     bh_point4i_t *result);
+void BH_Vec2fLerp(const float *a,
+                  const float *b,
+                  float t,
+                  float *out);
 
 
 /**
- * Negates the vector.
- *
- * result = -in
+ * Adds \a a and \a b integer vectors and stores result into \a out.
  *
- * \param in      Value
- * \param result  Result
+ * \param a    A 4D vector
+ * \param b    B 4D vector
+ * \param out  Output 4D vector
  */
-void bh_point4i_negate(const bh_point4i_t *in,
-                       bh_point4i_t *result);
+void BH_Vec4iAdd(const int *a,
+                 const int *b,
+                 int *out);
 
 
 /**
- * Calculates vector, containing minimum components of two vectors.
+ * Subtracts \a a and \a b integer vectors and stores result into \a out.
  *
- * result = min(a, b)
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 4D vector
+ * \param b    B 4D vector
+ * \param out  Output 4D vector
  */
-void bh_point4i_min(const bh_point4i_t *a,
-                    const bh_point4i_t *b,
-                    bh_point4i_t *result);
+void BH_Vec4iSub(const int *a,
+                 const int *b,
+                 int *out);
 
 
 /**
- * Calculates vector, containing maximum components of two vectors.
- *
- * result = max(a, b)
+ * Multiplies \a a and \a b integers vectors and stores result into \a out.
  *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 4D vector
+ * \param b    B 4D vector
+ * \param out  Output vector
  */
-void bh_point4i_max(const bh_point4i_t *a,
-                    const bh_point4i_t *b,
-                    bh_point4i_t *result);
+void BH_Vec4iMul(const int *a,
+                 const int *b,
+                 int *out);
 
 
 /**
- * Calculates linear interpolation between two vectors.
+ * Scales \a a vector by the value \a b and stores result into \a out.
  *
- * result = a + (b - a) * t
- *
- * \param a       Value
- * \param b       Value
- * \param t       Factor
- * \param result  Result
+ * \param a    A 4D vector
+ * \param b    B value
+ * \param out  Output 4D vector
  */
-void bh_point4i_lerp(const bh_point4i_t *a,
-                     const bh_point4i_t *b,
-                     float t,
-                     bh_point4i_t *result);
+void BH_Vec4iScale(const int *a,
+                   int b,
+                   int *out);
 
 
 /**
- * Adds components of two vectors.
+ * Multiples \a a and \a b vectors, adds to \a c and stores result into \a out.
  *
- * result = a + b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 4D vector
+ * \param b    B 4D vector
+ * \param c    C 4D vector
+ * \param out  Output 4D vector
  */
-void bh_point3i_add(const bh_point3i_t *a,
-                    const bh_point3i_t *b,
-                    bh_point3i_t *result);
+void BH_Vec4iMulAdd(const int *a,
+                    const int *b,
+                    const int *c,
+                    int *out);
 
 
 /**
- * Subtracts components of two vectors.
- *
- * result = a - b
+ * Negates \a in vector and stores result into \a out.
  *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param in   Input 4D vector
+ * \param out  Output 4D vector
  */
-void bh_point3i_sub(const bh_point3i_t *a,
-                    const bh_point3i_t *b,
-                    bh_point3i_t *result);
+void BH_Vec4iNegate(const int *in,
+                    int *out);
 
 
 /**
- * Multiplies components of two vectors.
+ * Computes minimum vector from the \a a and \a b vectors and stores result into
+ * \a out.
  *
- * result = a * b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 4D vector
+ * \param b    B 4D vector
+ * \param out  Output 4D vector
  */
-void bh_point3i_mul(const bh_point3i_t *a,
-                    const bh_point3i_t *b,
-                    bh_point3i_t *result);
+void BH_Vec4iMin(const int *a,
+                 const int *b,
+                 int *out);
 
 
 /**
- * Scales the vector.
- *
- * result = a * b
+ * Computes maximum vector from the \a a and \a b vectors and stores result into
+ * \a out.
  *
- * \param a       Value
- * \param b       Factor
- * \param result  Result
+ * \param a    A 4D vector
+ * \param b    B 4D vector
+ * \param out  Output 4D vector
  */
-void bh_point3i_scale(const bh_point3i_t *a,
-                      int b,
-                      bh_point3i_t *result);
+void BH_Vec4iMax(const int *a,
+                 const int *b,
+                 int *out);
 
 
 /**
- * Multiplies and adds three vectors.
+ * Adds \a a and \a b integer vectors and stores result into \a out.
  *
- * result = a * b + c
- *
- * \param a       Value
- * \param b       Value
- * \param c       Value
- * \param result  Result
+ * \param a    A 3D vector
+ * \param b    B 3D vector
+ * \param out  Output 3D vector
  */
-void bh_point3i_madd(const bh_point3i_t *a,
-                     const bh_point3i_t *b,
-                     const bh_point3i_t *c,
-                     bh_point3i_t *result);
+void BH_Vec3iAdd(const int *a,
+                 const int *b,
+                 int *out);
 
 
 /**
- * Negates the vector.
- *
- * result = -in
+ * Subtracts \a a and \a b integer vectors and stores result into \a out.
  *
- * \param in      Value
- * \param result  Result
+ * \param a    A 3D vector
+ * \param b    B 3D vector
+ * \param out  Output 3D vector
  */
-void bh_point3i_negate(const bh_point3i_t *in,
-                       bh_point3i_t *result);
+void BH_Vec3iSub(const int *a,
+                 const int *b,
+                 int *out);
 
 
 /**
- * Calculates vector, containing minimum components of two vectors.
+ * Multiplies \a a and \a b integers vectors and stores result into \a out.
  *
- * result = min(a, b)
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 3D vector
+ * \param b    B 3D vector
+ * \param out  Output 3D vector
  */
-void bh_point3i_min(const bh_point3i_t *a,
-                    const bh_point3i_t *b,
-                    bh_point3i_t *result);
+void BH_Vec3iMul(const int *a,
+                 const int *b,
+                 int *out);
 
 
 /**
- * Calculates vector, containing maximum components of two vectors.
+ * Scales \a a vector by the value \a b and stores result into \a out.
  *
- * result = max(a, b)
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 3D vector
+ * \param b    B value
+ * \param out  Output 3D vector
  */
-void bh_point3i_max(const bh_point3i_t *a,
-                    const bh_point3i_t *b,
-                    bh_point3i_t *result);
+void BH_Vec3iScale(const int *a,
+                   int b,
+                   int *out);
 
 
 /**
- * Calculates linear interpolation between two vectors.
- *
- * result = a + (b - a) * t
+ * Multiples \a a and \a b vectors, adds to \a c and stores result into \a out.
  *
- * \param a       Value
- * \param b       Value
- * \param t       Factor
- * \param result  Result
+ * \param a    A 3D vector
+ * \param b    B 3D vector
+ * \param c    C 3D vector
+ * \param out  Output 3D vector
  */
-void bh_point3i_lerp(const bh_point3i_t *a,
-                     const bh_point3i_t *b,
-                     float t,
-                     bh_point3i_t *result);
+void BH_Vec3iMulAdd(const int *a,
+                    const int *b,
+                    const int *c,
+                    int *out);
 
 
 /**
- * Adds components of two vectors.
+ * Negates \a in vector and stores result into \a out.
  *
- * result = a + b
+ * \param in   Input 3D vector
+ * \param out  Output 3D vector
  *
- * \param a       Value
- * \param b       Value
- * \param result  Result
  */
-void bh_point2i_add(const bh_point2i_t *a,
-                    const bh_point2i_t *b,
-                    bh_point2i_t *result);
+void BH_Vec3iNegate(const int *in,
+                    int *out);
 
 
 /**
- * Subtracts components of two vectors.
+ * Computes minimum vector from the \a a and \a b vectors and stores result into
+ * \a out.
  *
- * result = a - b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 3D vector
+ * \param b    B 3D vector
+ * \param out  Output 3D vector
  */
-void bh_point2i_sub(const bh_point2i_t *a,
-                    const bh_point2i_t *b,
-                    bh_point2i_t *result);
+void BH_Vec3iMin(const int *a,
+                 const int *b,
+                 int *out);
 
 
 /**
- * Multiplies components of two vectors.
- *
- * result = a * b
+ * Computes maximum vector from the \a a and \a b vectors and stores result into
+ * \a out.
  *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 3D vector
+ * \param b    B 3D vector
+ * \param out  Output 3D vector
  */
-void bh_point2i_mul(const bh_point2i_t *a,
-                    const bh_point2i_t *b,
-                    bh_point2i_t *result);
+void BH_Vec3iMax(const int *a,
+                 const int *b,
+                 int *out);
 
 
 /**
- * Scales the vector.
+ * Adds \a a and \a b integer vectors and stores result into \a out.
  *
- * result = a * b
- *
- * \param a       Value
- * \param b       Factor
- * \param result  Result
+ * \param a    A 2D vector
+ * \param b    B 2D vector
+ * \param out  Output 2D vector
  */
-void bh_point2i_scale(const bh_point2i_t *a,
-                      int b,
-                      bh_point2i_t *result);
+void BH_Vec2iAdd(const int *a,
+                 const int *b,
+                 int *out);
 
 
 /**
- * Multiplies and adds three vectors.
- *
- * result = a * b + c
+ * Subtracts \a a and \a b integer vectors and stores result into \a out.
  *
- * \param a       Value
- * \param b       Value
- * \param c       Value
- * \param result  Result
+ * \param a    A 2D vector
+ * \param b    B 2D vector
+ * \param out  Output 2D vector
  */
-void bh_point2i_madd(const bh_point2i_t *a,
-                     const bh_point2i_t *b,
-                     const bh_point2i_t *c,
-                     bh_point2i_t *result);
+void BH_Vec2iSub(const int *a,
+                 const int *b,
+                 int *out);
 
 
 /**
- * Negates the vector.
+ * Multiplies \a a and \a b integers vectors and stores result into \a out.
  *
- * result = -in
- *
- * \param in      Value
- * \param result  Result
+ * \param a    A 2D vector
+ * \param b    B 2D vector
+ * \param out  Output 2D vector
  */
-void bh_point2i_negate(const bh_point2i_t *in,
-                       bh_point2i_t *result);
+void BH_Vec2iMul(const int *a,
+                 const int *b,
+                 int *out);
 
 
 /**
- * Calculates vector, containing minimum components of two vectors.
+ * Scales \a a vector by the value \a b and stores result into \a out.
  *
- * result = min(a, b)
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 2D vector
+ * \param b    B 2D value
+ * \param out  Output 2D vector
  */
-void bh_point2i_min(const bh_point2i_t *a,
-                    const bh_point2i_t *b,
-                    bh_point2i_t *result);
+void BH_Vec2iScale(const int *a,
+                   int b,
+                   int *out);
 
 
 /**
- * Calculates vector, containing maximum components of two vectors.
- *
- * result = max(a, b)
+ * Multiples \a a and \a b vectors, adds to \a c and stores result into \a out.
  *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 2D vector
+ * \param b    B 2D vector
+ * \param c    C 2D vector
+ * \param out  Output 2D vector
  */
-void bh_point2i_max(const bh_point2i_t *a,
-                    const bh_point2i_t *b,
-                    bh_point2i_t *result);
+void BH_Vec2iMulAdd(const int *a,
+                    const int *b,
+                    const int *c,
+                    int *out);
 
 
 /**
- * Calculates linear interpolation between two vectors.
+ * Negates \a in vector and stores result into \a out.
  *
- * result = a + (b - a) * t
+ * \param in   Input 2D vector
+ * \param out  Output 2D vector
  *
- * \param a       Value
- * \param b       Value
- * \param t       Factor
- * \param result  Result
  */
-void bh_point2i_lerp(const bh_point2i_t *a,
-                     const bh_point2i_t *b,
-                     float t,
-                     bh_point2i_t *result);
+void BH_Vec2iNegate(const int *in,
+                    int *out);
 
 
 /**
- * Adds components of two quaternions.
+ * Computes minimum vector from the \a a and \a b vectors and stores result into
+ * \a out.
  *
- * result = a + b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 2D vector
+ * \param b    B 2D vector
+ * \param out  Output 2D vector
  */
-#define bh_quat_add     bh_point4f_add
+void BH_Vec2iMin(const int *a,
+                 const int *b,
+                 int *out);
 
 
 /**
- * Subtracts components of two quaternions.
- *
- * result = a - b
+ * Computes maximum vector from the \a a and \a b vectors and stores result into
+ * \a out.
  *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 2D vector
+ * \param b    B 2D vector
+ * \param out  Output 2D vector
  */
-#define bh_quat_sub     bh_point4f_sub
+void BH_Vec2iMax(const int *a,
+                 const int *b,
+                 int *out);
 
 
 /**
- * Scales the quaternion.
+ * Adds \a a and \a b floating point quaternions and stores result into \a out.
  *
- * result = a * b
- *
- * \param a       Value
- * \param b       Factor
- * \param result  Result
+ * \param a    A quaternion
+ * \param b    B quaternion
+ * \param out  Output quaternion
  */
-#define bh_quat_scale   bh_point4f_scale
+#define BH_Quat4fAdd(a, b, out) \
+    BH_Vec4fAdd(a, b, out)
 
 
 /**
- * Negates the quaternion.
- *
- * result = -in
+ * Subtracts \a a and \a b floating point quaternions and stores result into
+ * \a out.
  *
- * \param in      Value
- * \param result  Result
+ * \param a    A quaternion
+ * \param b    B quaternion
+ * \param out  Output quaternion
  */
-#define bh_quat_negate  bh_point4f_negate
+#define BH_Quat4fSub(a, b, out) \
+    BH_Vec4fSub(a, b, out)
 
 
 /**
- * Calculates the dot product of two quaternions.
+ * Scales \a a quaternion by the value \a b and stores result into \a out.
  *
- * \param a  Value
- * \param b  Value
- *
- * \return Returns the dot product.
+ * \param a    A quaternion
+ * \param b    B value
+ * \param out  Output quaternion
  */
-#define bh_quat_dot     bh_point4f_dot
+#define BH_Quat4fScale(a, b, out) \
+    BH_Vec4fScale(a, b, out)
 
 
 /**
- * Calculates the length of the quaternion.
+ * Negates \a in quaternion and stores result into \a out.
  *
- * \param in  Value
- *
- * \return Returns the length.
+ * \param in   Input quaternion
+ * \param out  Output quaternion
  */
-#define bh_quat_length  bh_point4f_length
+#define BH_Quat4fNegate(in, out) \
+    BH_Vec4fNegate(in, out)
 
 
 /**
- * Normilizes the quaternion.
- *
- * result = in / |in|
+ * Computes dot product of \a a and \a b quaternions and returns the result.
  *
- * \param in      Value
- * \param result  Result
+ * \param a  A quaternion
+ * \param b  B quaternion
  */
-#define bh_quat_normal  bh_point4f_normal
+#define BH_Quat4fDot(a, b) \
+    BH_Vec4fDot(a, b)
 
 
 /**
- * Calculates linear interpolation between two quaternions.
+ * Computes length of the \a in quaternion and returns the result.
  *
- * result = a + (b - a) * t
- *
- * \param a       Value
- * \param b       Value
- * \param t       Factor
- * \param result  Result
+ * \param in  Input quaternion
  */
-#define bh_quat_lerp    bh_point4f_lerp
+#define BH_Quat4fLength(in) \
+    BH_Vec4fLength(in)
 
 
 /**
- * Calculates spherical linear interpolation between two quaternions.
+ * Computes normal quaternion from the \a in and stores result into \a out.
  *
- * \param a       Value
- * \param b       Value
- * \param t       Factor
- * \param result  Result
+ * \param in   Input quaternion
+ * \param out  Output quaternion
  */
-#define bh_quat_slerp   bh_point4f_slerp
+#define BH_Quat4fNormal(in, out) \
+    BH_Vec4fNormal(in, out)
 
 
 /**
- * Sets quaternions to identity.
+ * Interpolates between \a a and \a b quaternion by \a t amount and stores
+ * result into \a out.
  *
- * \param result  Result
+ * \param a    A quaternion
+ * \param b    B quaternion
+ * \param t    Amount
+ * \param out  Output quaternion
  */
-void bh_quat_identity(bh_quat_t *result);
+#define BH_Quat4fLerp(a, b, t, out) \
+    BH_Vec4fLerp(a, b, t, out)
 
 
 /**
- * Conjugates the quaternion.
- *
- * result = (-in.x, -in.y, -in.z, in.w)
+ * Stores identity quaternion into \a out.
  *
- * \param in      Value
- * \param result  Result
+ * \param out  Output quaternion.
  */
-void bh_quat_conjugate(const bh_quat_t *in,
-                       bh_quat_t *result);
+void BH_Quat4fIdentity(float *out);
 
 
 /**
- * Calculates the inverse of the quaternion.
+ * Conjugates the \a in quaternion and stores result into \a out.
  *
- * \param in      Value
- * \param result  Result
+ * \param in   Input quaternion
+ * \param out  Output quaternion
  */
-void bh_quat_inverse(const bh_quat_t *in,
-                     bh_quat_t *result);
+void BH_Quat4fConjugate(const float *in,
+                        float *out);
 
 
 /**
- * Multiplies two quaternions.
+ * Computes the inverse of the \a in quaternion and stores result into \a out.
  *
- * result = a * b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param in   Input quaternion
+ * \param out  Output quaternion
  */
-void bh_quat_mul(const bh_quat_t *a,
-                 const bh_quat_t *b,
-                 bh_quat_t *result);
+void BH_Quat4fInverse(const float *in,
+                      float *out);
 
 
 /**
- * Sets quaternion from euler angles (roll, pitch, yaw).
- *
- * Order of the rotation is ZYX (yaw, pitch, roll).
+ * Multiplies the \a a and \a b quaternions and stores result into \a out.
  *
- * \param roll    Roll
- * \param pitch   Pitch
- * \param yaw     Yaw
- * \param result  Result
+ * \param a    A quaternion
+ * \param b    B quaternion
+ * \param out  Output quaternion
  */
-void bh_quat_set_euler(float roll,
-                       float pitch,
-                       float yaw,
-                       bh_quat_t *result);
+void BH_Quat4fMul(const float *a,
+                  const float *b,
+                  float *out);
 
 
 /**
- * Sets quaternion from axis of rotation and angle.
+ * Spherically interpolates between \a a and \a b quaternions by \a t amount and
+ * stores result into \a out.
  *
- * \param axis    Axis
- * \param angle   Angle
- * \param result  Result
+ * \param a    A quaternion
+ * \param b    B quaternion
+ * \param t    Amount
+ * \param out  Output quaternion
  */
-void bh_quat_set_rotation(const bh_point3f_t *axis,
-                          float angle,
-                          bh_quat_t *result);
+void BH_Quat4fSlerp(const float *a,
+                    const float *b,
+                    float t,
+                    float *out);
 
 
 /**
- * Calculates euler angles (roll, pitch, yaw) from quaternion.
+ * Computes the quaternion that represents \a roll, \a pitch, \a yaw (euler
+ * angles) and stores result into \a out.
  *
- * Order of the rotation is ZYX (yaw, pitch, roll).
+ * Order of the rotation is ZYX (yaw, pitch, roll)
  *
- * \param in     Value
  * \param roll   Roll
  * \param pitch  Pitch
  * \param yaw    Yaw
+ * \param out    Output quaternion
  */
-void bh_quat_euler(const bh_quat_t *in,
-                   float *roll,
-                   float *pitch,
-                   float *yaw);
+void BH_Quat4fFromEuler(float roll,
+                        float pitch,
+                        float yaw,
+                        float *out);
 
 
 /**
- * Calculates axis of rotation and angle from quaternion.
+ * Computes quaternion that represents rotation by angle \a angle around
+ * axis \a axis and stores result into \a out.
  *
- * \param in     Value
- * \param axis   Axis
+ * \param axis   Axis 3D vector
  * \param angle  Angle
+ * \param out    Output quaternion
  */
-void bh_quat_rotation(const bh_quat_t *in,
-                      bh_point3f_t *axis,
-                      float *angle);
+void BH_Quat4fFromAxis(const float *axis,
+                       float angle,
+                       float *out);
 
 
 /**
- * Calculates rotation matrix from quaternion.
+ * Computes euler angles from quaternion \a in and stores result into \a roll,
+ * \a pitch, \a yaw.
  *
- * \param in      Value
- * \param result  Result
+ * Order of the rotation is ZYX (yaw, pitch, roll)
+ *
+ * \param in     Input quaternion
+ * \param roll   Output roll
+ * \param pitch  Output pitch
+ * \param yaw    Output yaw
  */
-void bh_quat_matrix(const bh_quat_t *in,
-                    bh_matrix4f_t *result);
+void BH_Quat4fToEuler(const float *in,
+                      float *roll,
+                      float *pitch,
+                      float *yaw);
 
 
 /**
- * Sets matrix to identity.
+ * Computes rotation around axis from quaternion \a in and stores result into
+ * \a axis and \a angle.
  *
- * \param result  Result
+ * \param in     Input quaternion
+ * \param axis   Output axis 3D vector
+ * \param angle  Output angle
  */
-void bh_matrix4f_identity(bh_matrix4f_t *result);
+void BH_Quat4fToAxis(const float *in,
+                     float *axis,
+                     float *angle);
 
 
 /**
- * Adds two matricies.
+ * Computes 4x4 rotation matrix from quaternion \a in and stores result into
+ * \a out.
  *
- * result = a + b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param in     Input quaternion
+ * \param out    Output 4x4 matrix
  */
-void bh_matrix4f_add(const bh_matrix4f_t *a,
-                     const bh_matrix4f_t *b,
-                     bh_matrix4f_t *result);
+void BH_Quat4fToMat4f(const float *in,
+                      float *out);
 
 
 /**
- * Subtracts two matricies.
+ * Stores identity matrix into \a out.
  *
- * result = a - b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param out  Output 4x4 matrix.
  */
-void bh_matrix4f_sub(const bh_matrix4f_t *a,
-                     const bh_matrix4f_t *b,
-                     bh_matrix4f_t *result);
+void BH_Mat4fIdentity(float *out);
 
 
 /**
- * Multiplies two matricies.
+ * Adds \a a and \a b floating point matricies and stores result into \a out.
  *
- * result = a * b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 4x4 matrix
+ * \param b    B 4x4 matrix
+ * \param out  Output 4x4 matrix
  */
-void bh_matrix4f_mul(const bh_matrix4f_t *a,
-                     const bh_matrix4f_t *b,
-                     bh_matrix4f_t *result);
+void BH_Mat4fAdd(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Scales the matrix.
+ * Subtracts \a a and \a b floating point matricies and stores result into
+ * \a out.
  *
- * result = a * b
- *
- * \param a       Value
- * \param b       Factor
- * \param result  Result
+ * \param a    A 4x4 matrix
+ * \param b    B 4x4 matrix
+ * \param out  Output 4x4 matrix
  */
-void bh_matrix4f_scale(const bh_matrix4f_t *a,
-                       float b,
-                       bh_matrix4f_t *result);
+void BH_Mat4fSub(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Transposes the matrix.
+ * Multiplies \a a and \a b floating point matricies and stores result into
+ * \a out.
  *
- * result = a^T
- *
- * \param in      Value
- * \param result  Result
+ * \param a    A 4x4 matrix
+ * \param b    B 4x4 matrix
+ * \param out  Output 4x4 matrix
  */
-void bh_matrix4f_transpose(const bh_matrix4f_t *in,
-                           bh_matrix4f_t *result);
+void BH_Mat4fMul(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Calculates the trace of the matrix.
+ * Scales \a a matrix by the value \a b and stores result into \a out.
  *
- * \param in  Value
- *
- * \return Returns trace value.
+ * \param a    A 4x4 matrix
+ * \param b    B value
+ * \param out  Output 4x4 matrix
  */
-float bh_matrix4f_trace(const bh_matrix4f_t *in);
+void BH_Mat4fScale(const float *a,
+                   float b,
+                   float *out);
 
 
 /**
- * Calculates the determinant of the matrix.
+ * Transposes matrix \a in and stores result into \a out.
  *
- * \param in  Value
- *
- * \return Returns determinant value.
+ * \param in   Input 4x4 matrix
+ * \param out  Output 4x4 matrix
  */
-float bh_matrix4f_determinant(const bh_matrix4f_t *in);
+void BH_Mat4fTranspose(const float *in,
+                       float *out);
 
 
 /**
- * Calculates the inverse of the matrix.
+ * Computes \a in matrix trace and returns the result.
  *
- * If matrix has no inverse - identity matrix will be returned.
- *
- * result = in^-1
- *
- * \param in      Value
- * \param result  Result
- *
- * \return On success, returns inverse of the matrix.
- * \return On failure, returns identity matrix.
+ * \param in  Input 4x4 matrix
  */
-int bh_matrix4f_inverse(const bh_matrix4f_t *in,
-                        bh_matrix4f_t *result);
+float BH_Mat4fTrace(const float *in);
 
 
 /**
- * Calculates scaling matrix.
+ * Computes \a in matrix determinant and returns the result.
  *
- * \param x       X scale
- * \param y       Y scale
- * \param z       Z scale
- * \param result  Result
+ * \param in  Input 4x4 matrix
  */
-void bh_matrix4f_scaling(float x,
-                         float y,
-                         float z,
-                         bh_matrix4f_t *result);
+float BH_Mat4fDet(const float *in);
 
 
 /**
- * Calculates translation matrix.
+ * Computes inverse of \a in matrix and stores result into \a out.
  *
- * \param x       X scale
- * \param y       Y scale
- * \param z       Z scale
- * \param result  Result
+ * \param in   Input 4x4 matrix
+ * \param out  OUtput 4x4 matrix
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
  */
-void bh_matrix4f_translation(float x,
+int BH_Mat4fInverse(const float *in,
+                    float *out);
+
+
+/**
+ * Computes scaling matrix from values \a x, \a y, \a z and stores result into
+ * \a out.
+ *
+ * \param x    X scale
+ * \param y    Y scale
+ * \param z    Z scale
+ * \param out  Output 4x4 matrix
+ */
+void BH_Mat4fFromScale(float x,
+                       float y,
+                       float z,
+                       float *out);
+
+
+/**
+ * Computes translation matrix from values \a x, \a y, \a z and stores result
+ * into \a out.
+ *
+ * \param x    X translation
+ * \param y    Y translation
+ * \param z    Z translation
+ * \param out  Output 4x4 matrix
+ */
+void BH_Mat4fFromTranslation(float x,
                              float y,
                              float z,
-                             bh_matrix4f_t *result);
+                             float *out);
 
 
 /**
- * Calculates x-rotation matrix (or rotation around x axis).
+ * Computes rotation matrix around x axis with angle \a angle and stores
+ * result \a out.
  *
- * \param angle   Angle
- * \param result  Result
+ * \param angle  Angle
+ * \param out    Output 4x4 matrix
  */
-void bh_matrix4f_rotation_x(float angle,
-                            bh_matrix4f_t *result);
+void BH_Mat4fFromRotationX(float angle,
+                           float *out);
 
 
 /**
- * Calculates y-rotation matrix (or rotation around y axis).
+ * Computes rotation matrix around y axis with angle \a angle and stores
+ * result \a out.
  *
- * \param angle   Angle
- * \param result  Result
+ * \param angle  Angle
+ * \param out    Output 4x4 matrix
  */
-void bh_matrix4f_rotation_y(float angle,
-                            bh_matrix4f_t *result);
+void BH_Mat4fFromRotationY(float angle,
+                           float *out);
 
 
 /**
- * Calculates z-rotation matrix (or rotation around z axis).
+ * Computes rotation matrix around z axis with angle \a angle and stores
+ * result \a out.
  *
- * \param angle   Angle
- * \param result  Result
+ * \param angle  Angle
+ * \param out    Output 4x4 matrix
  */
-void bh_matrix4f_rotation_z(float angle,
-                            bh_matrix4f_t *result);
+void BH_Mat4fFromRotationZ(float angle,
+                           float *out);
 
 
 /**
- * Calculates rotation matrix around axis.
+ * Computes rotation matrix around axis \a axis with angle \a angle and stores
+ * result \a out.
  *
- * \param axis    Axis
- * \param angle   Angle
- * \param result  Result
+ * \param axis   Axis 3D vector
+ * \param angle  Angle
+ * \param out    Output 4x4 matrix
  */
-void bh_matrix4f_rotation(const bh_point3f_t *axis,
-                          float angle,
-                          bh_matrix4f_t *result);
+void BH_Mat4fFromAxis(const float *axis,
+                      float angle,
+                      float *out);
 
 
 /**
- * Calculates rotation matrix from euler angles (roll, pitch, yaw).
+ * Computes the rotation matrix that represents \a roll, \a pitch, \a yaw (euler
+ * angles) and stores result into \a out.
  *
- * Order of the rotation is ZYX (yaw, pitch, roll).
+ * Order of the rotation is ZYX (yaw, pitch, roll)
  *
- * \param roll    Roll
- * \param pitch   Pitch
- * \param yaw     Yaw
- * \param result  Result
+ * \param roll   Roll
+ * \param pitch  Pitch
+ * \param yaw    Yaw
+ * \param out    Output 4x4 matrix
  */
-void bh_matrix4f_rotation_euler(float roll,
-                                float pitch,
-                                float yaw,
-                                bh_matrix4f_t *result);
+void BH_Mat4fFromEuler(float roll,
+                       float pitch,
+                       float yaw,
+                       float *out);
 
 
 /**
- * Calculates rotation matrix from quaternion.
+ * Computes 4x4 rotation matrix from quaternion \a in and stores result into
+ * \a out.
  *
- * \param rotation  Quaternion
- * \param result    Result
+ * \param in     Input quaternion
+ * \param out    Output 4x4 matrix
  */
-void bh_matrix4f_rotation_quat(bh_quat_t *rotation,
-                               bh_matrix4f_t *result);
+void BH_Mat4fFromQuat4f(const float *in,
+                        float *out);
 
 
 /**
- * Calculates orthographic projection matrix.
+ * Computes orthographic projection matrix and stores result into \a out.
  *
- * \param x_min   Min x
- * \param x_max   Max x
- * \param y_min   Min y
- * \param y_max   Max y
- * \param z_min   Min z
- * \param z_max   Max z
- * \param result  Result
+ * \param x_min  Min x value
+ * \param x_max  Max x value
+ * \param y_min  Min y value
+ * \param y_max  Max y value
+ * \param z_min  Min z value
+ * \param z_max  Max z value
+ * \param out    Output 4x4 matrix
  */
-void bh_matrix4f_ortho(float x_min,
-                       float x_max,
-                       float y_min,
-                       float y_max,
-                       float z_min,
-                       float z_max,
-                       bh_matrix4f_t *result);
+void BH_Mat4fFromOrtho(float xMin,
+                       float xMax,
+                       float yMin,
+                       float yMax,
+                       float zMin,
+                       float zMax,
+                       float *out);
 
 
 /**
- * Calculates perspective projection matrix.
+ * Computes perspective projection matrix and stores result into \a out.
  *
  * \param fov     Field of view
  * \param aspect  Aspect ratio
- * \param z_min   Min z
- * \param z_max   Max z
- * \param result  Result
+ * \param z_min   Min z value
+ * \param z_max   Max z value
+ * \param out     Output 4x4 matrix
  */
-void bh_matrix4f_perspective(float fov,
-                             float aspect,
-                             float z_min,
-                             float z_max,
-                             bh_matrix4f_t *result);
+void BH_Mat4fFromFrustum(float fov,
+                         float aspect,
+                         float zMin,
+                         float zMax,
+                         float *out);
 
 
 /**
- * Calculates camera view matrix.
+ * Computes camera view matrix and stores result into \a out.
  *
- * \param camera  Position
- * \param at      Target
- * \param up      Up
- * \param result  Result
+ * \param pos  Position vector
+ * \param at   Target vector
+ * \param up   Up vector
+ * \param out  Output 4x4 matrix
  */
-void bh_matrix4f_lookat(const bh_point3f_t *camera,
-                        const bh_point3f_t *at,
-                        const bh_point3f_t *up,
-                        bh_matrix4f_t *result);
+void BH_Mat4fFromLookAt(const float *pos,
+                        const float *at,
+                        const float *up,
+                        float *out);
 
 
 /**
- * Applies matrix to vector.
+ * Multiplies matrix \a a by vector \a b and stores result into \a out.
  *
- * \param a       Matrix
- * \param b       Vector
- * \param result  Result
+ * \param a    A 4x4 matrix
+ * \param b    B 4D vector
+ * \param out  Output 4D vector
  */
-void bh_matrix4f_transform_point3f(const bh_matrix4f_t *a,
-                                   const bh_point3f_t *b,
-                                   bh_point3f_t *result);
+void BH_Mat4fApplyVec4f(const float *a,
+                        const float *b,
+                        float *out);
 
 
 /**
- * Applies matrix to vector.
+ * Multiplies matrix \a a by vector \a b and stores result into \a out.
  *
- * \param a       Matrix
- * \param b       Vector
- * \param result  Result
+ * \param a    A 4x4 matrix
+ * \param b    B 3D vector
+ * \param out  Output 3D vector
  */
-void bh_matrix4f_transform_point4f(const bh_matrix4f_t *a,
-                                   const bh_point4f_t *b,
-                                   bh_point4f_t *result);
+void BH_Mat4fApplyVec4f(const float *a,
+                        const float *b,
+                        float *out);
 
 
 /**
- * Sets matrix to identity.
+ * Stores identity matrix into \a out.
  *
- * \param result  Result
+ * \param out  Output 3x3 matrix.
  */
-void bh_matrix3f_identity(bh_matrix3f_t *result);
+void BH_Mat3fIdentity(float *out);
 
 
 /**
- * Adds two matricies.
+ * Adds \a a and \a b floating point matricies and stores result into \a out.
  *
- * result = a + b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 3x3 matrix
+ * \param b    B 3x3 matrix
+ * \param out  Output 3x3 matrix
  */
-void bh_matrix3f_add(const bh_matrix3f_t *a,
-                     const bh_matrix3f_t *b,
-                     bh_matrix3f_t *result);
+void BH_Mat3fAdd(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Subtracts two matricies.
+ * Subtracts \a a and \a b floating point matricies and stores result into
+ * \a out.
  *
- * result = a - b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 3x3 matrix
+ * \param b    B 3x3 matrix
+ * \param out  Output 3x3 matrix
  */
-void bh_matrix3f_sub(const bh_matrix3f_t *a,
-                     const bh_matrix3f_t *b,
-                     bh_matrix3f_t *result);
+void BH_Mat3fSub(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Multiplies two matricies.
+ * Multiplies \a a and \a b floating point matricies and stores result into
+ * \a out.
  *
- * result = a * b
- *
- * \param a       Value
- * \param b       Value
- * \param result  Result
+ * \param a    A 3x3 matrix
+ * \param b    B 3x3 matrix
+ * \param out  Output 3x3 matrix
  */
-void bh_matrix3f_mul(const bh_matrix3f_t *a,
-                     const bh_matrix3f_t *b,
-                     bh_matrix3f_t *result);
+void BH_Mat3fMul(const float *a,
+                 const float *b,
+                 float *out);
 
 
 /**
- * Scales the matrix.
+ * Scales \a a matrix by the value \a b and stores result into \a out.
  *
- * result = a * b
- *
- * \param a       Value
- * \param b       Factor
- * \param result  Result
+ * \param a    A 3x3 matrix
+ * \param b    B value
+ * \param out  Output 3x3 matrix
  */
-void bh_matrix3f_scale(const bh_matrix3f_t *a,
-                       float b,
-                       bh_matrix3f_t *result);
+void BH_Mat3fScale(const float *a,
+                   float b,
+                   float *out);
 
 
 /**
- * Transposes the matrix.
+ * Transposes matrix \a in and stores result into \a out.
  *
- * result = a^T
- *
- * \param in      Value
- * \param result  Result
+ * \param in   Input 3x3 matrix
+ * \param out  Output 3x3 matrix
  */
-void bh_matrix3f_transpose(const bh_matrix3f_t *in,
-                           bh_matrix3f_t *result);
+void BH_Mat3fTranspose(const float *in,
+                       float *out);
 
 
 /**
- * Calculates the trace of the matrix.
+ * Computes \a in matrix trace and returns the result.
  *
- * \param in  Value
- *
- * \return Returns trace value.
+ * \param in  Input 3x3 matrix
  */
-float bh_matrix3f_trace(const bh_matrix3f_t *in);
+float BH_Mat3fTrace(const float *in);
 
 
 /**
- * Calculates the determinant of the matrix.
+ * Computes \a in matrix determinant and returns the result.
  *
- * \param in  Value
- *
- * \return Returns determinant value.
+ * \param in  Input 3x3 matrix
  */
-float bh_matrix3f_determinant(const bh_matrix3f_t *in);
+float BH_Mat3fDet(const float *in);
 
 
 /**
- * Calculates the inverse of the matrix.
+ * Computes inverse of \a in matrix and stores result into \a out.
  *
- * If matrix has no inverse - identity matrix will be returned.
+ * \param in   Input 3x3 matrix
+ * \param out  OUtput 3x3 matrix
  *
- * result = in^-1
- *
- * \param in      Value
- * \param result  Result
- *
- * \return On success, returns inverse of the matrix.
- * \return On failure, returns identity matrix.
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
  */
-int bh_matrix3f_inverse(const bh_matrix3f_t *in,
-                        bh_matrix3f_t *result);
+int BH_Mat3fInverse(const float *in,
+                    float *out);
 
 
 /**
- * Calculates scaling matrix.
+ * Computes scaling matrix from values \a x, \a y and stores result into
+ * \a out.
  *
- * \param x       X scale
- * \param y       Y scale
- * \param z       Z scale
- * \param result  Result
+ * \param x    X scale
+ * \param y    Y scale
+ * \param out  Output 3x3 matrix
  */
-void bh_matrix3f_scaling(float x,
-                         float y,
-                         bh_matrix3f_t *result);
+void BH_Mat3fFromScale(float x,
+                       float y,
+                       float *out);
 
 
 /**
- * Calculates translation matrix.
+ * Computes translation matrix from values \a x, \a y and stores result
+ * into \a out.
  *
- * \param x       X scale
- * \param y       Y scale
- * \param z       Z scale
- * \param result  Result
+ * \param x    X translation
+ * \param y    Y translation
+ * \param out  Output 3x3 matrix
  */
-void bh_matrix3f_translation(float x,
+void BH_Mat3fFromTranslation(float x,
                              float y,
-                             bh_matrix3f_t *result);
+                             float *out);
 
 
 /**
- * Calculates rotation matrix.
+ * Computes rotation matrix around with angle \a angle and stores result \a out.
  *
- * \param angle   Angle
- * \param result  Result
+ * \param angle  Angle
+ * \param out    Output 3x3 matrix
  */
-void bh_matrix3f_rotation(float angle,
-                          bh_matrix3f_t *result);
+void BH_Mat3fFromRotation(float angle,
+                          float *out);
 
 
 /**
- * Applies matrix to vector.
+ * Multiplies matrix \a a by vector \a b and stores result into \a out.
  *
- * \param a       Matrix
- * \param b       Vector
- * \param result  Result
+ * \param a    A 3x3 matrix
+ * \param b    B 3D vector
+ * \param out  Output 3D vector
  */
-void bh_matrix3f_transform_point2f(const bh_matrix3f_t *a,
-                                   const bh_point2f_t *b,
-                                   bh_point2f_t *result);
+void BH_Mat3fApplyVec3f(float *a,
+                        float *b,
+                        float *out);
 
 
 /**
- * Applies matrix to vector.
+ * Multiplies matrix \a a by vector \a b and stores result into \a out.
  *
- * \param a       Matrix
- * \param b       Vector
- * \param result  Result
+ * \param a    A 3x3 matrix
+ * \param b    B 2D vector
+ * \param out  Output 2D vector
  */
-void bh_matrix3f_transform_point3f(const bh_matrix3f_t *a,
-                                   const bh_point3f_t *b,
-                                   bh_point3f_t *result);
+void BH_Mat3fApplyVec2f(float *a,
+                        float *b,
+                        float *out);
 
 
 #endif /* BH_MATH_H */

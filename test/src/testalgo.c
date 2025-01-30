@@ -4,17 +4,17 @@
 #include <stdlib.h>
 
 
-static int int_equal(const void *lhs,
-                     const void *rhs)
+static int DBG_IntEqual(const void *lhs,
+                        const void *rhs)
 {
     return *(const int*)lhs - *(const int*)rhs;
 }
 
 
-static int verify_partition(size_t index,
-                            int pivot,
-                            int *array,
-                            size_t size)
+static int DBG_VerifyPartition(size_t index,
+                               int pivot,
+                               int *array,
+                               size_t size)
 {
     size_t i;
 
@@ -30,8 +30,8 @@ static int verify_partition(size_t index,
 }
 
 
-static int verify_heap(int *array,
-                       size_t size)
+static int DBG_VerifyHeap(int *array,
+                          size_t size)
 {
     size_t i, left, right;
 
@@ -50,7 +50,7 @@ static int verify_heap(int *array,
 }
 
 
-static int reference_rand(void)
+static int DBG_ReferenceRand(void)
 {
     static uint32_t next = 2025;
     next = next * 1103515245 + 12345;
@@ -58,7 +58,8 @@ static int reference_rand(void)
 }
 
 
-static void reference_sort(int *array, size_t size)
+static void DBG_ReferenceSort(int *array,
+                              size_t size)
 {
     size_t i, j;
     int tmp;
@@ -79,10 +80,10 @@ static void reference_sort(int *array, size_t size)
 }
 
 
-static void fill_arrays(int *array,
-                        int *reference,
-                        size_t size,
-                        int mask)
+static void DBG_FillArrays(int *array,
+                           int *reference,
+                           size_t size,
+                           int mask)
 {
     size_t i;
     int negate;
@@ -95,7 +96,7 @@ static void fill_arrays(int *array,
     /* Fill the array */
     for (i = 0; i < size; ++i)
     {
-        array[i] = reference_rand();
+        array[i] = DBG_ReferenceRand();
 
         if (mask > 1)
             array[i] = array[i] % mask;
@@ -109,19 +110,19 @@ static void fill_arrays(int *array,
 }
 
 
-static int check_sort(void)
+static int CheckSort(void)
 {
     size_t sizes[] = {1, 2, 3, 5, 11, 23, 41, 79, 163, 317, 0}, *size;
     int reference[317], data[317];
 
     /* Test empty array and one element arrays */
     data[0] = 1; data[1] = 2; data[2] = 3;
-    bh_sort(data, 0, sizeof(int), int_equal);
+    BH_Sort(data, 0, sizeof(int), DBG_IntEqual);
     BH_VERIFY(data[0] == 1);
     BH_VERIFY(data[1] == 2);
     BH_VERIFY(data[2] == 3);
 
-    bh_sort(data, 1, sizeof(int), int_equal);
+    BH_Sort(data, 1, sizeof(int), DBG_IntEqual);
     BH_VERIFY(data[0] == 1);
     BH_VERIFY(data[1] == 2);
     BH_VERIFY(data[2] == 3);
@@ -129,27 +130,27 @@ static int check_sort(void)
     /* Test array against different sizes */
     for (size = sizes; *size; ++size)
     {
-        fill_arrays(data, reference, *size, 0);
-        reference_sort(reference, *size);
-        bh_sort(data, *size, sizeof(int), int_equal);
+        DBG_FillArrays(data, reference, *size, 0);
+        DBG_ReferenceSort(reference, *size);
+        BH_Sort(data, *size, sizeof(int), DBG_IntEqual);
         BH_VERIFY(memcmp(reference, data, *size * sizeof(int)) == 0);
     }
 
     /* Test against negative values */
     for (size = sizes; *size; ++size)
     {
-        fill_arrays(data, reference, *size, -1);
-        reference_sort(reference, *size);
-        bh_sort(data, *size, sizeof(int), int_equal);
+        DBG_FillArrays(data, reference, *size, -1);
+        DBG_ReferenceSort(reference, *size);
+        BH_Sort(data, *size, sizeof(int), DBG_IntEqual);
         BH_VERIFY(memcmp(reference, data, *size * sizeof(int)) == 0);
     }
 
     /* Test against duplicates */
     for (size = sizes; *size; ++size)
     {
-        fill_arrays(data, reference, *size, 4);
-        reference_sort(reference, *size);
-        bh_sort(data, *size, sizeof(int), int_equal);
+        DBG_FillArrays(data, reference, *size, 4);
+        DBG_ReferenceSort(reference, *size);
+        BH_Sort(data, *size, sizeof(int), DBG_IntEqual);
         BH_VERIFY(memcmp(reference, data, *size * sizeof(int)) == 0);
     }
 
@@ -157,7 +158,7 @@ static int check_sort(void)
 }
 
 
-static int check_partition(void)
+static int CheckPartition(void)
 {
     size_t sizes[] = {1, 2, 3, 5, 11, 23, 41, 79, 163, 317, 0}, *size;
     int reference[317], data[317], value, *pivot;
@@ -165,13 +166,13 @@ static int check_partition(void)
     /* Test empty array and one element array */
     data[0] = 1; data[1] = 2; data[2] = 3;
     value = 0;
-    pivot = bh_partition(&value, data, 0, sizeof(int), int_equal);
+    pivot = BH_Partition(&value, data, 0, sizeof(int), DBG_IntEqual);
     BH_VERIFY(pivot != NULL);
     BH_VERIFY(data[0] == 1);
     BH_VERIFY(data[1] == 2);
     BH_VERIFY(data[2] == 3);
 
-    pivot = bh_partition(&value, data, 1, sizeof(int), int_equal);
+    pivot = BH_Partition(&value, data, 1, sizeof(int), DBG_IntEqual);
     BH_VERIFY(pivot == data);
     BH_VERIFY(data[0] == 1);
     BH_VERIFY(data[1] == 2);
@@ -180,104 +181,104 @@ static int check_partition(void)
     /* Test array against different sizes */
     for (size = sizes; *size; ++size)
     {
-        fill_arrays(data, reference, *size, 0);
+        DBG_FillArrays(data, reference, *size, 0);
         value = 16384;
-        pivot = bh_partition(&value, data, *size, sizeof(int), int_equal);
-        BH_VERIFY(verify_partition(pivot - data, value, data, *size) == 0);
+        pivot = BH_Partition(&value, data, *size, sizeof(int), DBG_IntEqual);
+        BH_VERIFY(DBG_VerifyPartition(pivot - data, value, data, *size) == 0);
 
-        reference_sort(data, *size);
-        reference_sort(reference, *size);
+        DBG_ReferenceSort(data, *size);
+        DBG_ReferenceSort(reference, *size);
         BH_VERIFY(memcmp(data, reference, *size * sizeof(int)) == 0);
     }
 
     /* Test against negative values */
     for (size = sizes; *size; ++size)
     {
-        fill_arrays(data, reference, *size, -1);
+        DBG_FillArrays(data, reference, *size, -1);
         value = -16384;
-        pivot = bh_partition(&value, data, *size, sizeof(int), int_equal);
-        BH_VERIFY(verify_partition(pivot - data, value, data, *size) == 0);
+        pivot = BH_Partition(&value, data, *size, sizeof(int), DBG_IntEqual);
+        BH_VERIFY(DBG_VerifyPartition(pivot - data, value, data, *size) == 0);
 
-        reference_sort(data, *size);
-        reference_sort(reference, *size);
+        DBG_ReferenceSort(data, *size);
+        DBG_ReferenceSort(reference, *size);
         BH_VERIFY(memcmp(data, reference, *size * sizeof(int)) == 0);
     }
 
     /* Test against duplicates */
     for (size = sizes; *size; ++size)
     {
-        fill_arrays(data, reference, *size, 4);
+        DBG_FillArrays(data, reference, *size, 4);
         value = 2;
-        pivot = bh_partition(&value, data, *size, sizeof(int), int_equal);
-        BH_VERIFY(verify_partition(pivot - data, value, data, *size) == 0);
+        pivot = BH_Partition(&value, data, *size, sizeof(int), DBG_IntEqual);
+        BH_VERIFY(DBG_VerifyPartition(pivot - data, value, data, *size) == 0);
 
-        reference_sort(data, *size);
-        reference_sort(reference, *size);
+        DBG_ReferenceSort(data, *size);
+        DBG_ReferenceSort(reference, *size);
         BH_VERIFY(memcmp(data, reference, *size * sizeof(int)) == 0);
     }
 
     /* Test array against small pivots */
     for (size = sizes; *size; ++size)
     {
-        fill_arrays(data, reference, *size, 0);
+        DBG_FillArrays(data, reference, *size, 0);
         value = -100;
-        pivot = bh_partition(&value, data, *size, sizeof(int), int_equal);
-        BH_VERIFY(verify_partition(pivot - data, value, data, *size) == 0);
+        pivot = BH_Partition(&value, data, *size, sizeof(int), DBG_IntEqual);
+        BH_VERIFY(DBG_VerifyPartition(pivot - data, value, data, *size) == 0);
 
-        reference_sort(data, *size);
-        reference_sort(reference, *size);
+        DBG_ReferenceSort(data, *size);
+        DBG_ReferenceSort(reference, *size);
         BH_VERIFY(memcmp(data, reference, *size * sizeof(int)) == 0);
     }
 
     /* Test array against large pivots */
     for (size = sizes; *size; ++size)
     {
-        fill_arrays(data, reference, *size, 0);
+        DBG_FillArrays(data, reference, *size, 0);
         value = 65536;
-        pivot = bh_partition(&value, data, *size, sizeof(int), int_equal);
-        BH_VERIFY(verify_partition(pivot - data, value, data, *size) == 0);
+        pivot = BH_Partition(&value, data, *size, sizeof(int), DBG_IntEqual);
+        BH_VERIFY(DBG_VerifyPartition(pivot - data, value, data, *size) == 0);
 
-        reference_sort(data, *size);
-        reference_sort(reference, *size);
+        DBG_ReferenceSort(data, *size);
+        DBG_ReferenceSort(reference, *size);
         BH_VERIFY(memcmp(data, reference, *size * sizeof(int)) == 0);
     }
 
     /* Test array against different sizes (pivot inside the array) */
     for (size = sizes; *size; ++size)
     {
-        fill_arrays(data, reference, *size, 0);
+        DBG_FillArrays(data, reference, *size, 0);
         value = data[0];
-        pivot = bh_partition(data, data, *size, sizeof(int), int_equal);
-        BH_VERIFY(verify_partition(pivot - data, value, data, *size) == 0);
+        pivot = BH_Partition(data, data, *size, sizeof(int), DBG_IntEqual);
+        BH_VERIFY(DBG_VerifyPartition(pivot - data, value, data, *size) == 0);
 
-        reference_sort(data, *size);
-        reference_sort(reference, *size);
+        DBG_ReferenceSort(data, *size);
+        DBG_ReferenceSort(reference, *size);
         BH_VERIFY(memcmp(data, reference, *size * sizeof(int)) == 0);
     }
 
     /* Test against negative values (pivot inside the array) */
     for (size = sizes; *size; ++size)
     {
-        fill_arrays(data, reference, *size, -1);
+        DBG_FillArrays(data, reference, *size, -1);
         value = data[0];
-        pivot = bh_partition(data, data, *size, sizeof(int), int_equal);
-        BH_VERIFY(verify_partition(pivot - data, value, data, *size) == 0);
+        pivot = BH_Partition(data, data, *size, sizeof(int), DBG_IntEqual);
+        BH_VERIFY(DBG_VerifyPartition(pivot - data, value, data, *size) == 0);
 
-        reference_sort(data, *size);
-        reference_sort(reference, *size);
+        DBG_ReferenceSort(data, *size);
+        DBG_ReferenceSort(reference, *size);
         BH_VERIFY(memcmp(data, reference, *size * sizeof(int)) == 0);
     }
 
     /* Test against duplicates (pivot inside the array) */
     for (size = sizes; *size; ++size)
     {
-        fill_arrays(data, reference, *size, 4);
+        DBG_FillArrays(data, reference, *size, 4);
         value = data[0];
-        pivot = bh_partition(data, data, *size, sizeof(int), int_equal);
-        BH_VERIFY(verify_partition(pivot - data, value, data, *size) == 0);
+        pivot = BH_Partition(data, data, *size, sizeof(int), DBG_IntEqual);
+        BH_VERIFY(DBG_VerifyPartition(pivot - data, value, data, *size) == 0);
 
-        reference_sort(data, *size);
-        reference_sort(reference, *size);
+        DBG_ReferenceSort(data, *size);
+        DBG_ReferenceSort(reference, *size);
         BH_VERIFY(memcmp(data, reference, *size * sizeof(int)) == 0);
     }
 
@@ -287,11 +288,11 @@ static int check_partition(void)
         memset(data, 0, sizeof(int) * *size);
         memset(reference, 0, sizeof(int) * *size);
         value = data[*size - 1];
-        pivot = bh_partition(data + *size - 1, data, *size, sizeof(int), int_equal);
-        BH_VERIFY(verify_partition(pivot - data, value, data, *size) == 0);
+        pivot = BH_Partition(data + *size - 1, data, *size, sizeof(int), DBG_IntEqual);
+        BH_VERIFY(DBG_VerifyPartition(pivot - data, value, data, *size) == 0);
 
-        reference_sort(data, *size);
-        reference_sort(reference, *size);
+        DBG_ReferenceSort(data, *size);
+        DBG_ReferenceSort(reference, *size);
         BH_VERIFY(memcmp(data, reference, *size * sizeof(int)) == 0);
     }
 
@@ -299,14 +300,14 @@ static int check_partition(void)
 }
 
 
-static int check_heap_make(void)
+static int CheckHeapMake(void)
 {
     size_t sizes[] = {1, 2, 3, 5, 11, 23, 41, 79, 163, 317, 0}, *size;
     int data[317];
 
     /* Test empty array */
     data[0] = 1; data[1] = 2; data[2] = 3;
-    bh_heap_make(data, 0, sizeof(int), int_equal);
+    BH_HeapMake(data, 0, sizeof(int), DBG_IntEqual);
     BH_VERIFY(data[0] == 1);
     BH_VERIFY(data[1] == 2);
     BH_VERIFY(data[2] == 3);
@@ -314,32 +315,32 @@ static int check_heap_make(void)
     /* Test array against different sizes */
     for (size = sizes; *size; ++size)
     {
-        fill_arrays(data, NULL, *size, 0);
-        bh_heap_make(data, *size, sizeof(int), int_equal);
-        BH_VERIFY(verify_heap(data, *size) == 0);
+        DBG_FillArrays(data, NULL, *size, 0);
+        BH_HeapMake(data, *size, sizeof(int), DBG_IntEqual);
+        BH_VERIFY(DBG_VerifyHeap(data, *size) == 0);
     }
 
     /* Test array against negative values */
     for (size = sizes; *size; ++size)
     {
-        fill_arrays(data, NULL, *size, -1);
-        bh_heap_make(data, *size, sizeof(int), int_equal);
-        BH_VERIFY(verify_heap(data, *size) == 0);
+        DBG_FillArrays(data, NULL, *size, -1);
+        BH_HeapMake(data, *size, sizeof(int), DBG_IntEqual);
+        BH_VERIFY(DBG_VerifyHeap(data, *size) == 0);
     }
 
     /* Test against duplicates */
     for (size = sizes; *size; ++size)
     {
-        fill_arrays(data, NULL, *size, 4);
-        bh_heap_make(data, *size, sizeof(int), int_equal);
-        BH_VERIFY(verify_heap(data, *size) == 0);
+        DBG_FillArrays(data, NULL, *size, 4);
+        BH_HeapMake(data, *size, sizeof(int), DBG_IntEqual);
+        BH_VERIFY(DBG_VerifyHeap(data, *size) == 0);
     }
 
     return 0;
 }
 
 
-static int check_heap_insert(void)
+static int CheckHeapInsert(void)
 {
     size_t sizes[] = {1, 2, 3, 5, 11, 23, 41, 79, 163, 317, 0}, *size;
     int data[317], reference[317];
@@ -348,18 +349,18 @@ static int check_heap_insert(void)
     for (size = sizes; *size; ++size)
     {
         size_t i;
-        fill_arrays(data, reference, *size, 0);
+        DBG_FillArrays(data, reference, *size, 0);
         for (i = 0; i < *size; ++i)
         {
             int value;
 
             value = data[i];
-            bh_heap_insert(&value, data, i, sizeof(int), int_equal);
-            BH_VERIFY(verify_heap(data, i + 1) == 0);
+            BH_HeapInsert(&value, data, i, sizeof(int), DBG_IntEqual);
+            BH_VERIFY(DBG_VerifyHeap(data, i + 1) == 0);
         }
 
-        reference_sort(data, *size);
-        reference_sort(reference, *size);
+        DBG_ReferenceSort(data, *size);
+        DBG_ReferenceSort(reference, *size);
         BH_VERIFY(memcmp(data, reference, *size) == 0);
     }
 
@@ -367,15 +368,15 @@ static int check_heap_insert(void)
     for (size = sizes; *size; ++size)
     {
         size_t i;
-        fill_arrays(data, reference, *size, 0);
+        DBG_FillArrays(data, reference, *size, 0);
         for (i = 0; i < *size; ++i)
         {
-            bh_heap_insert(NULL, data, i, sizeof(int), int_equal);
-            BH_VERIFY(verify_heap(data, i + 1) == 0);
+            BH_HeapInsert(NULL, data, i, sizeof(int), DBG_IntEqual);
+            BH_VERIFY(DBG_VerifyHeap(data, i + 1) == 0);
         }
 
-        reference_sort(data, *size);
-        reference_sort(reference, *size);
+        DBG_ReferenceSort(data, *size);
+        DBG_ReferenceSort(reference, *size);
         BH_VERIFY(memcmp(data, reference, *size) == 0);
     }
 
@@ -383,7 +384,7 @@ static int check_heap_insert(void)
 }
 
 
-static int check_heap_remove(void)
+static int CheckHeapRemove(void)
 {
     size_t sizes[] = {1, 2, 3, 5, 11, 23, 41, 79, 163, 317, 0}, *size;
     int data[317], reference[317];
@@ -392,17 +393,17 @@ static int check_heap_remove(void)
     for (size = sizes; *size; ++size)
     {
         size_t i;
-        fill_arrays(data, reference, *size, 0);
-        bh_heap_make(data, *size, sizeof(int), int_equal);
+        DBG_FillArrays(data, reference, *size, 0);
+        BH_HeapMake(data, *size, sizeof(int), DBG_IntEqual);
 
         for (i = *size; i > 0; i--)
         {
-            BH_VERIFY(verify_heap(data, i) == 0);
-            bh_heap_remove(data, i, sizeof(int), int_equal);
+            BH_VERIFY(DBG_VerifyHeap(data, i) == 0);
+            BH_HeapRemove(data, i, sizeof(int), DBG_IntEqual);
         }
 
-        reference_sort(data, *size);
-        reference_sort(reference, *size);
+        DBG_ReferenceSort(data, *size);
+        DBG_ReferenceSort(reference, *size);
         BH_VERIFY(memcmp(data, reference, *size) == 0);
     }
 
@@ -410,57 +411,57 @@ static int check_heap_remove(void)
 }
 
 
-static int check_heap_replace(void)
+static int CheckHeapReplace(void)
 {
     int data[11] = {1, 2, 3, 5, 11, 23, 41, 79, 163, 317, 0};
     int reference[11] = {1, 2, 3, 5, 11, 23, 41, 79, 163, 317, 0};
     int value;
 
     /* Prepare test arrays */
-    bh_heap_make(data, 10, sizeof(int), int_equal);
-    bh_heap_make(reference, 10, sizeof(int), int_equal);
-    BH_VERIFY(verify_heap(data, 10) == 0);
-    BH_VERIFY(verify_heap(reference, 10) == 0);
+    BH_HeapMake(data, 10, sizeof(int), DBG_IntEqual);
+    BH_HeapMake(reference, 10, sizeof(int), DBG_IntEqual);
+    BH_VERIFY(DBG_VerifyHeap(data, 10) == 0);
+    BH_VERIFY(DBG_VerifyHeap(reference, 10) == 0);
 
     /* Verfify heap replace */
     value = 20;
-    bh_heap_replace(&value, data, 10, sizeof(int), int_equal);
-    bh_heap_remove(reference, 10, sizeof(int), int_equal);
-    bh_heap_insert(&value, reference, 9, sizeof(int), int_equal);
+    BH_HeapReplace(&value, data, 10, sizeof(int), DBG_IntEqual);
+    BH_HeapRemove(reference, 10, sizeof(int), DBG_IntEqual);
+    BH_HeapInsert(&value, reference, 9, sizeof(int), DBG_IntEqual);
 
-    BH_VERIFY(verify_heap(data, 10) == 0);
-    BH_VERIFY(verify_heap(reference, 10) == 0);
-    bh_sort(data, 10, sizeof(int), int_equal);
-    bh_sort(reference, 10, sizeof(int), int_equal);
+    BH_VERIFY(DBG_VerifyHeap(data, 10) == 0);
+    BH_VERIFY(DBG_VerifyHeap(reference, 10) == 0);
+    BH_Sort(data, 10, sizeof(int), DBG_IntEqual);
+    BH_Sort(reference, 10, sizeof(int), DBG_IntEqual);
     BH_VERIFY(memcmp(data, reference, 10 * sizeof(int)) == 0);
 
     /* Verify heap replace on single element array */
     value = 400;
-    bh_heap_replace(&value, data, 1, sizeof(int), int_equal);
-    bh_heap_remove(reference, 1, sizeof(int), int_equal);
-    bh_heap_insert(&value, reference, 0, sizeof(int), int_equal);
+    BH_HeapReplace(&value, data, 1, sizeof(int), DBG_IntEqual);
+    BH_HeapRemove(reference, 1, sizeof(int), DBG_IntEqual);
+    BH_HeapInsert(&value, reference, 0, sizeof(int), DBG_IntEqual);
 
-    BH_VERIFY(verify_heap(data, 1) == 0);
-    BH_VERIFY(verify_heap(reference, 1) == 0);
+    BH_VERIFY(DBG_VerifyHeap(data, 1) == 0);
+    BH_VERIFY(DBG_VerifyHeap(reference, 1) == 0);
     BH_VERIFY(memcmp(data, reference, 1 * sizeof(int)) == 0);
 
     /* Prepare test arrays */
-    bh_sort(data, 10, sizeof(int), int_equal);
-    bh_sort(reference, 10, sizeof(int), int_equal);
-    bh_heap_make(data, 10, sizeof(int), int_equal);
-    bh_heap_make(reference, 10, sizeof(int), int_equal);
-    BH_VERIFY(verify_heap(data, 10) == 0);
-    BH_VERIFY(verify_heap(reference, 10) == 0);
+    BH_Sort(data, 10, sizeof(int), DBG_IntEqual);
+    BH_Sort(reference, 10, sizeof(int), DBG_IntEqual);
+    BH_HeapMake(data, 10, sizeof(int), DBG_IntEqual);
+    BH_HeapMake(reference, 10, sizeof(int), DBG_IntEqual);
+    BH_VERIFY(DBG_VerifyHeap(data, 10) == 0);
+    BH_VERIFY(DBG_VerifyHeap(reference, 10) == 0);
 
     data[10] = 1000;
     value = 1000;
-    bh_heap_replace(NULL, data, 10, sizeof(int), int_equal);
-    bh_heap_remove(reference, 10, sizeof(int), int_equal);
-    bh_heap_insert(&value, reference, 9, sizeof(int), int_equal);
-    BH_VERIFY(verify_heap(data, 10) == 0);
-    BH_VERIFY(verify_heap(reference, 10) == 0);
-    bh_sort(data, 10, sizeof(int), int_equal);
-    bh_sort(reference, 10, sizeof(int), int_equal);
+    BH_HeapReplace(NULL, data, 10, sizeof(int), DBG_IntEqual);
+    BH_HeapRemove(reference, 10, sizeof(int), DBG_IntEqual);
+    BH_HeapInsert(&value, reference, 9, sizeof(int), DBG_IntEqual);
+    BH_VERIFY(DBG_VerifyHeap(data, 10) == 0);
+    BH_VERIFY(DBG_VerifyHeap(reference, 10) == 0);
+    BH_Sort(data, 10, sizeof(int), DBG_IntEqual);
+    BH_Sort(reference, 10, sizeof(int), DBG_IntEqual);
     BH_VERIFY(memcmp(data, reference, 10 * sizeof(int)) == 0);
 
     return 0;
@@ -472,12 +473,12 @@ int main(int argc, char **argv)
     BH_UNUSED(argc);
     BH_UNUSED(argv);
 
-    bh_unit_add("sort", check_sort);
-    bh_unit_add("partition", check_partition);
-    bh_unit_add("heap_make", check_heap_make);
-    bh_unit_add("heap_insert", check_heap_insert);
-    bh_unit_add("heap_remove", check_heap_remove);
-    bh_unit_add("heap_replace", check_heap_replace);
+    BH_UnitAdd("Sort", CheckSort);
+    BH_UnitAdd("Partition", CheckPartition);
+    BH_UnitAdd("HeapMake", CheckHeapMake);
+    BH_UnitAdd("HeapInsert", CheckHeapInsert);
+    BH_UnitAdd("HeapRemove", CheckHeapRemove);
+    BH_UnitAdd("HeapReplace", CheckHeapReplace);
 
-    return bh_unit_run();
+    return BH_UnitRun();
 }

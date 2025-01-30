@@ -5,7 +5,7 @@
 #include "common.h"
 
 
-typedef struct bh_hashmap_s bh_hashmap_t;
+typedef struct BH_Hashmap BH_Hashmap;
 
 
 /**
@@ -17,8 +17,8 @@ typedef struct bh_hashmap_s bh_hashmap_t;
  * \return On success, returns hashmap handle.
  * \return On failure, returns a null pointer.
  */
-bh_hashmap_t *bh_hashmap_new(bh_equal_cb_t equal,
-                             bh_hash_cb_t hash);
+BH_Hashmap *BH_HashmapNew(BH_EqualCallback equal,
+                          BH_HashCallback hash);
 
 
 /**
@@ -26,7 +26,7 @@ bh_hashmap_t *bh_hashmap_new(bh_equal_cb_t equal,
  *
  * \param hashmap  Hashmap handle
  */
-void bh_hashmap_free(bh_hashmap_t *hashmap);
+void BH_HashmapFree(BH_Hashmap *hashmap);
 
 
 /**
@@ -34,7 +34,7 @@ void bh_hashmap_free(bh_hashmap_t *hashmap);
  *
  * \param hashmap  Hashmap handle
  */
-void bh_hashmap_clear(bh_hashmap_t *hashmap);
+void BH_HashmapClear(BH_Hashmap *hashmap);
 
 
 /**
@@ -52,8 +52,8 @@ void bh_hashmap_clear(bh_hashmap_t *hashmap);
  * \return On success, returns zero value.
  * \return On failure, returns error code.
  */
-int bh_hashmap_reserve(bh_hashmap_t *hashmap,
-                       size_t size);
+int BH_HashmapReserve(BH_Hashmap *hashmap,
+                      size_t size);
 
 
 /**
@@ -69,9 +69,9 @@ int bh_hashmap_reserve(bh_hashmap_t *hashmap,
  * \return On success, returns zero value.
  * \return On failure, returns error code.
  */
-int bh_hashmap_insert(bh_hashmap_t *hashmap,
-                      void *key,
-                      void *value);
+int BH_HashmapInsert(BH_Hashmap *hashmap,
+                     void *key,
+                     void *value);
 
 
 /**
@@ -84,8 +84,8 @@ int bh_hashmap_insert(bh_hashmap_t *hashmap,
  * \note If hashmap contains several elements with the same key, this function
  *       will remove only one key-value pair.
  */
-void bh_hashmap_remove(bh_hashmap_t *hashmap,
-                       void *key);
+void BH_HashmapRemove(BH_Hashmap *hashmap,
+                      void *key);
 
 
 /**
@@ -98,9 +98,9 @@ void bh_hashmap_remove(bh_hashmap_t *hashmap,
  * \return On success, returns zero value.
  * \return On failure, returns error code.
  */
-int bh_hashmap_at(bh_hashmap_t *hashmap,
-                  void *key,
-                  void **value);
+int BH_HashmapAt(BH_Hashmap *hashmap,
+                 void *key,
+                 void **value);
 
 
 /**
@@ -111,7 +111,7 @@ int bh_hashmap_at(bh_hashmap_t *hashmap,
  * \return If hashmap is empty, returns non-zero value
  * \return If hashmap is not empty, returns zero value
  */
-int bh_hashmap_empty(bh_hashmap_t *hashmap);
+int BH_HashmapEmpty(BH_Hashmap *hashmap);
 
 
 /**
@@ -121,7 +121,7 @@ int bh_hashmap_empty(bh_hashmap_t *hashmap);
  *
  * \return Returns the size of the hashmap.
  */
-size_t bh_hashmap_size(bh_hashmap_t *hashmap);
+size_t BH_HashmapSize(BH_Hashmap *hashmap);
 
 
 /**
@@ -131,7 +131,7 @@ size_t bh_hashmap_size(bh_hashmap_t *hashmap);
  *
  * \return Returns the capacity of the hashmap.
  */
-size_t bh_hashmap_capacity(bh_hashmap_t *hashmap);
+size_t BH_HashmapCapacity(BH_Hashmap *hashmap);
 
 
 /**
@@ -141,7 +141,7 @@ size_t bh_hashmap_capacity(bh_hashmap_t *hashmap);
  *
  * \return Returns the load factor of the hashmap.
  */
-float bh_hashmap_factor(bh_hashmap_t *hashmap);
+float BH_HashmapFactor(BH_Hashmap *hashmap);
 
 
 /**
@@ -152,8 +152,8 @@ float bh_hashmap_factor(bh_hashmap_t *hashmap);
  *
  * \note New load factor will be applied on the next reserve/insert operation.
  */
-void bh_hashmap_set_factor(bh_hashmap_t *hashmap,
-                           float factor);
+void BH_HashmapSetFactor(BH_Hashmap *hashmap,
+                         float factor);
 
 
 /**
@@ -168,8 +168,8 @@ void bh_hashmap_set_factor(bh_hashmap_t *hashmap,
  * \note If hashmap contains several elements with the same key, this function
  *       will return iterator to one of them
  */
-void *bh_hashmap_iter_at(bh_hashmap_t *hashmap,
-                         void *key);
+void *BH_HashmapIterAt(BH_Hashmap *hashmap,
+                       void *key);
 
 
 /**
@@ -184,8 +184,8 @@ void *bh_hashmap_iter_at(bh_hashmap_t *hashmap,
  * \return On success, returns new iterator value for the next element.
  * \return On failure, returns NULL pointer.
  */
-void *bh_hashmap_iter_next(bh_hashmap_t *hashmap,
-                           void *iter);
+void *BH_HashmapIterNext(BH_Hashmap *hashmap,
+                         void *iter);
 
 
 /**
@@ -196,8 +196,8 @@ void *bh_hashmap_iter_next(bh_hashmap_t *hashmap,
  *
  * \note Calling this function will invalidate iterators.
  */
-void bh_hashmap_iter_remove(bh_hashmap_t *hashmap,
-                            void *iter);
+void BH_HashmapIterRemove(BH_Hashmap *hashmap,
+                          void *iter);
 
 
 /**
@@ -207,7 +207,7 @@ void bh_hashmap_iter_remove(bh_hashmap_t *hashmap,
  *
  * \return Returns key.
  */
-void *bh_hashmap_iter_key(void *iter);
+void *BH_HashmapIterKey(void *iter);
 
 
 /**
@@ -217,7 +217,7 @@ void *bh_hashmap_iter_key(void *iter);
  *
  * \return Returns value.
  */
-void *bh_hashmap_iter_value(void *iter);
+void *BH_HashmapIterValue(void *iter);
 
 
 #endif /* BH_HASHMAP_H */

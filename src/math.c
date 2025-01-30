@@ -1,858 +1,728 @@
 #include <bh/math.h>
 #include <math.h>
+#include <string.h>
 
 
-void bh_point4f_add(const bh_point4f_t *a,
-                    const bh_point4f_t *b,
-                    bh_point4f_t *result)
+void BH_Vec4fAdd(const float *a,
+                 const float *b,
+                 float *out)
 {
-    result->x = a->x + b->x;
-    result->y = a->y + b->y;
-    result->z = a->z + b->z;
-    result->w = a->w + b->w;
+    out[0] = a[0] + b[0];
+    out[1] = a[1] + b[1];
+    out[2] = a[2] + b[2];
+    out[3] = a[3] + b[3];
 }
 
 
-void bh_point4f_sub(const bh_point4f_t *a,
-                    const bh_point4f_t *b,
-                    bh_point4f_t *result)
+void BH_Vec4fSub(const float *a,
+                 const float *b,
+                 float *out)
 {
-    result->x = a->x - b->x;
-    result->y = a->y - b->y;
-    result->z = a->z - b->z;
-    result->w = a->w - b->w;
+    out[0] = a[0] - b[0];
+    out[1] = a[1] - b[1];
+    out[2] = a[2] - b[2];
+    out[3] = a[3] - b[3];
 }
 
 
-void bh_point4f_mul(const bh_point4f_t *a,
-                    const bh_point4f_t *b,
-                    bh_point4f_t *result)
+void BH_Vec4fMul(const float *a,
+                 const float *b,
+                 float *out)
 {
-    result->x = a->x * b->x;
-    result->y = a->y * b->y;
-    result->z = a->z * b->z;
-    result->w = a->w * b->w;
+    out[0] = a[0] * b[0];
+    out[1] = a[1] * b[1];
+    out[2] = a[2] * b[2];
+    out[3] = a[3] * b[3];
 }
 
 
-void bh_point4f_scale(const bh_point4f_t *a,
-                      float b,
-                      bh_point4f_t *result)
+void BH_Vec4fScale(const float *a,
+                   const float b,
+                   float *out)
 {
-    result->x = a->x * b;
-    result->y = a->y * b;
-    result->z = a->z * b;
-    result->w = a->w * b;
+    out[0] = a[0] * b;
+    out[1] = a[1] * b;
+    out[2] = a[2] * b;
+    out[3] = a[3] * b;
 }
 
 
-void bh_point4f_madd(const bh_point4f_t *a,
-                     const bh_point4f_t *b,
-                     const bh_point4f_t *c,
-                     bh_point4f_t *result)
+void BH_Vec4fMulAdd(const float *a,
+                    const float *b,
+                    const float *c,
+                    float *out)
 {
-    result->x = a->x * b->x + c->x;
-    result->y = a->y * b->y + c->y;
-    result->z = a->z * b->z + c->z;
-    result->w = a->w * b->w + c->w;
+    out[0] = a[0] * b[0] + c[0];
+    out[1] = a[1] * b[1] + c[1];
+    out[2] = a[2] * b[2] + c[2];
+    out[3] = a[3] * b[3] + c[3];
 }
 
 
-void bh_point4f_negate(const bh_point4f_t *in,
-                       bh_point4f_t *result)
+void BH_Vec4fNegate(const float *in,
+                    float *out)
 {
-    result->x = -in->x;
-    result->y = -in->y;
-    result->z = -in->z;
-    result->w = -in->w;
+    out[0] = -in[0];
+    out[1] = -in[1];
+    out[2] = -in[2];
+    out[3] = -in[3];
 }
 
 
-float bh_point4f_dot(const bh_point4f_t *a,
-                     const bh_point4f_t *b)
+float BH_Vec4fDot(const float *a,
+                  const float *b)
 {
-    return a->x * b->x + a->y * b->y + a->z * b->z + a->w * b->w;
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
 }
 
 
-float bh_point4f_dot3(const bh_point4f_t *a,
-                      const bh_point4f_t *b)
+float BH_Vec4fLength(const float *in)
 {
-    return a->x * b->x + a->y * b->y + a->z * b->z;
+    return sqrt(BH_Vec4fDot(in, in));
 }
 
 
-void bh_point4f_cross(const bh_point4f_t *a,
-                      const bh_point4f_t *b,
-                      bh_point4f_t *result)
+void BH_Vec4fNormal(const float *in,
+                    float *out)
 {
-    bh_point4f_t tmp;
-
-    tmp.x = a->y * b->z - a->z * b->y;
-    tmp.y = a->z * b->x - a->x * b->z;
-    tmp.z = a->x * b->y - a->y * b->x;
-    tmp.w = 0.0f;
-
-    *result = tmp;
-}
-
-
-float bh_point4f_length(const bh_point4f_t *in)
-{
-    return sqrtf(bh_point4f_dot(in, in));
-}
-
-
-void bh_point4f_normal(const bh_point4f_t *in,
-                       bh_point4f_t *result)
-{
-    float length;
-
-    length = 1.0f / bh_point4f_length(in);
-    bh_point4f_scale(in, length, result);
-}
-
-
-void bh_point4f_min(const bh_point4f_t *a,
-                    const bh_point4f_t *b,
-                    bh_point4f_t *result)
-{
-    if (a->x < b->x) result->x = a->x; else result->x = b->x;
-    if (a->y < b->y) result->y = a->y; else result->y = b->y;
-    if (a->z < b->z) result->z = a->z; else result->z = b->z;
-    if (a->w < b->w) result->w = a->w; else result->w = b->w;
-}
-
-
-void bh_point4f_max(const bh_point4f_t *a,
-                    const bh_point4f_t *b,
-                    bh_point4f_t *result)
-{
-    if (a->x > b->x) result->x = a->x; else result->x = b->x;
-    if (a->y > b->y) result->y = a->y; else result->y = b->y;
-    if (a->z > b->z) result->z = a->z; else result->z = b->z;
-    if (a->w > b->w) result->w = a->w; else result->w = b->w;
+    BH_Vec4fScale(in, 1.0f / BH_Vec4fLength(in), out);
 }
 
 
-void bh_point4f_lerp(const bh_point4f_t *a,
-                     const bh_point4f_t *b,
-                     float t,
-                     bh_point4f_t *result)
+void BH_Vec4fMin(const float *a,
+                 const float *b,
+                 float *out)
 {
-    bh_point4f_t tmp;
-
-    bh_point4f_sub(b, a, &tmp);
-    bh_point4f_scale(&tmp, t, &tmp);
-    bh_point4f_add(a, &tmp, result);
+    if (a[0] < b[0]) out[0] = a[0]; else out[0] = b[0];
+    if (a[1] < b[1]) out[1] = a[1]; else out[1] = b[1];
+    if (a[2] < b[2]) out[2] = a[2]; else out[2] = b[2];
+    if (a[3] < b[3]) out[3] = a[3]; else out[3] = b[3];
 }
 
 
-void bh_point4f_slerp(const bh_point4f_t *a,
-                      const bh_point4f_t *b,
-                      float t,
-                      bh_point4f_t *result)
+void BH_Vec4fMax(const float *a,
+                 const float *b,
+                 float *out)
 {
-    float angle, denom;
-    bh_point4f_t from, to;
-
-    angle = acosf(bh_point4f_dot(a, b));
-
-    /* Special case - reducing to linear interpolation */
-    if (angle == 0.0f)
-    {
-        bh_point4f_lerp(a, b, t, result);
-    }
-    else
-    {
-        denom = 1.0f / sinf(angle);
-        bh_point4f_scale(a, sinf((1 - t) * angle) * denom, &from);
-        bh_point4f_scale(b, sinf(t * angle) * denom, &to);
-        bh_point4f_add(&from, &to, result);
-    }
+    if (a[0] > b[0]) out[0] = a[0]; else out[0] = b[0];
+    if (a[1] > b[1]) out[1] = a[1]; else out[1] = b[1];
+    if (a[2] > b[2]) out[2] = a[2]; else out[2] = b[2];
+    if (a[3] > b[3]) out[3] = a[3]; else out[3] = b[3];
 }
 
 
-void bh_point3f_add(const bh_point3f_t *a,
-                    const bh_point3f_t *b,
-                    bh_point3f_t *result)
+void BH_Vec4fLerp(const float *a,
+                  const float *b,
+                  float t,
+                  float *out)
 {
-    result->x = a->x + b->x;
-    result->y = a->y + b->y;
-    result->z = a->z + b->z;
-}
+    float tmp[4];
 
-
-void bh_point3f_sub(const bh_point3f_t *a,
-                    const bh_point3f_t *b,
-                    bh_point3f_t *result)
-{
-    result->x = a->x - b->x;
-    result->y = a->y - b->y;
-    result->z = a->z - b->z;
+    BH_Vec4fSub(b, a, tmp);
+    BH_Vec4fScale(tmp, t, tmp);
+    BH_Vec4fAdd(a, tmp, out);
 }
 
 
-void bh_point3f_mul(const bh_point3f_t *a,
-                    const bh_point3f_t *b,
-                    bh_point3f_t *result)
+void BH_Vec3fAdd(const float *a,
+                 const float *b,
+                 float *out)
 {
-    result->x = a->x * b->x;
-    result->y = a->y * b->y;
-    result->z = a->z * b->z;
+    out[0] = a[0] + b[0];
+    out[1] = a[1] + b[1];
+    out[2] = a[2] + b[2];
 }
 
 
-void bh_point3f_scale(const bh_point3f_t *a,
-                      float b,
-                      bh_point3f_t *result)
+void BH_Vec3fSub(const float *a,
+                 const float *b,
+                 float *out)
 {
-    result->x = a->x * b;
-    result->y = a->y * b;
-    result->z = a->z * b;
+    out[0] = a[0] - b[0];
+    out[1] = a[1] - b[1];
+    out[2] = a[2] - b[2];
 }
 
 
-void bh_point3f_madd(const bh_point3f_t *a,
-                     const bh_point3f_t *b,
-                     const bh_point3f_t *c,
-                     bh_point3f_t *result)
+void BH_Vec3fMul(const float *a,
+                 const float *b,
+                 float *out)
 {
-    result->x = a->x * b->x + c->x;
-    result->y = a->y * b->y + c->y;
-    result->z = a->z * b->z + c->z;
+    out[0] = a[0] * b[0];
+    out[1] = a[1] * b[1];
+    out[2] = a[2] * b[2];
 }
 
 
-void bh_point3f_negate(const bh_point3f_t *in,
-                       bh_point3f_t *result)
+void BH_Vec3fScale(const float *a,
+                   const float b,
+                   float *out)
 {
-    result->x = -in->x;
-    result->y = -in->y;
-    result->z = -in->z;
+    out[0] = a[0] * b;
+    out[1] = a[1] * b;
+    out[2] = a[2] * b;
 }
 
 
-float bh_point3f_dot(const bh_point3f_t *a,
-                     const bh_point3f_t *b)
+void BH_Vec3fMulAdd(const float *a,
+                    const float *b,
+                    const float *c,
+                    float *out)
 {
-    return a->x * b->x + a->y * b->y + a->z * b->z;
+    out[0] = a[0] * b[0] + c[0];
+    out[1] = a[1] * b[1] + c[1];
+    out[2] = a[2] * b[2] + c[2];
 }
 
 
-void bh_point3f_cross(const bh_point3f_t *a,
-                      const bh_point3f_t *b,
-                      bh_point3f_t *result)
+void BH_Vec3fNegate(const float *in,
+                    float *out)
 {
-    bh_point3f_t tmp;
-
-    tmp.x = a->y * b->z - a->z * b->y;
-    tmp.y = a->z * b->x - a->x * b->z;
-    tmp.z = a->x * b->y - a->y * b->x;
-
-    *result = tmp;
+    out[0] = -in[0];
+    out[1] = -in[1];
+    out[2] = -in[2];
 }
 
 
-float bh_point3f_length(const bh_point3f_t *in)
+float BH_Vec3fDot(const float *a,
+                  const float *b)
 {
-    return sqrtf(bh_point3f_dot(in, in));
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
 
 
-void bh_point3f_normal(const bh_point3f_t *in,
-                       bh_point3f_t *result)
+void BH_Vec3fCross(const float *a,
+                   const float *b,
+                   float *out)
 {
-    float length;
-
-    length = 1.0f / bh_point3f_length(in);
-    bh_point3f_scale(in, length, result);
-}
+    float tmp[3];
 
-
-void bh_point3f_min(const bh_point3f_t *a,
-                    const bh_point3f_t *b,
-                    bh_point3f_t *result)
-{
-    if (a->x < b->x) result->x = a->x; else result->x = b->x;
-    if (a->y < b->y) result->y = a->y; else result->y = b->y;
-    if (a->z < b->z) result->z = a->z; else result->z = b->z;
+    tmp[0] = a[1] * b[2] - a[2] * b[1];
+    tmp[1] = a[2] * b[0] - a[0] * b[2];
+    tmp[2] = a[0] * b[1] - a[1] * b[0];
+    memcpy(out, tmp, sizeof(tmp));
 }
 
 
-void bh_point3f_max(const bh_point3f_t *a,
-                    const bh_point3f_t *b,
-                    bh_point3f_t *result)
+float BH_Vec3fLength(const float *in)
 {
-    if (a->x > b->x) result->x = a->x; else result->x = b->x;
-    if (a->y > b->y) result->y = a->y; else result->y = b->y;
-    if (a->z > b->z) result->z = a->z; else result->z = b->z;
+    return sqrt(BH_Vec3fDot(in, in));
 }
 
 
-void bh_point3f_lerp(const bh_point3f_t *a,
-                     const bh_point3f_t *b,
-                     float t,
-                     bh_point3f_t *result)
+void BH_Vec3fNormal(const float *in,
+                    float *out)
 {
-    bh_point3f_t tmp;
-
-    bh_point3f_sub(b, a, &tmp);
-    bh_point3f_scale(&tmp, t, &tmp);
-    bh_point3f_add(a, &tmp, result);
+    BH_Vec3fScale(in, 1.0f / BH_Vec3fLength(in), out);
 }
 
 
-void bh_point3f_slerp(const bh_point3f_t *a,
-                      const bh_point3f_t *b,
-                      float t,
-                      bh_point3f_t *result)
+void BH_Vec3fMin(const float *a,
+                 const float *b,
+                 float *out)
 {
-    float angle, denom;
-    bh_point3f_t from, to;
-
-    angle = acosf(bh_point3f_dot(a, b));
-
-    /* Special case - reducing to linear interpolation */
-    if (angle == 0.0f)
-    {
-        bh_point3f_lerp(a, b, t, result);
-    }
-    else
-    {
-        denom = 1.0f / sinf(angle);
-        bh_point3f_scale(a, sinf((1 - t) * angle) * denom, &from);
-        bh_point3f_scale(b, sinf(t * angle) * denom, &to);
-        bh_point3f_add(&from, &to, result);
-    }
+    if (a[0] < b[0]) out[0] = a[0]; else out[0] = b[0];
+    if (a[1] < b[1]) out[1] = a[1]; else out[1] = b[1];
+    if (a[2] < b[2]) out[2] = a[2]; else out[2] = b[2];
 }
 
 
-void bh_point2f_add(const bh_point2f_t *a,
-                    const bh_point2f_t *b,
-                    bh_point2f_t *result)
+void BH_Vec3fMax(const float *a,
+                 const float *b,
+                 float *out)
 {
-    result->x = a->x + b->x;
-    result->y = a->y + b->y;
+    if (a[0] > b[0]) out[0] = a[0]; else out[0] = b[0];
+    if (a[1] > b[1]) out[1] = a[1]; else out[1] = b[1];
+    if (a[2] > b[2]) out[2] = a[2]; else out[2] = b[2];
 }
 
 
-void bh_point2f_sub(const bh_point2f_t *a,
-                    const bh_point2f_t *b,
-                    bh_point2f_t *result)
+void BH_Vec3fLerp(const float *a,
+                  const float *b,
+                  float t,
+                  float *out)
 {
-    result->x = a->x - b->x;
-    result->y = a->y - b->y;
-}
-
+    float tmp[3];
 
-void bh_point2f_mul(const bh_point2f_t *a,
-                    const bh_point2f_t *b,
-                    bh_point2f_t *result)
-{
-    result->x = a->x * b->x;
-    result->y = a->y * b->y;
+    BH_Vec3fSub(b, a, tmp);
+    BH_Vec3fScale(tmp, t, tmp);
+    BH_Vec3fAdd(a, tmp, out);
 }
 
 
-void bh_point2f_scale(const bh_point2f_t *a,
-                      float b,
-                      bh_point2f_t *result)
+void BH_Vec2fAdd(const float *a,
+                 const float *b,
+                 float *out)
 {
-    result->x = a->x * b;
-    result->y = a->y * b;
+    out[0] = a[0] + b[0];
+    out[1] = a[1] + b[1];
 }
 
 
-void bh_point2f_madd(const bh_point2f_t *a,
-                     const bh_point2f_t *b,
-                     const bh_point2f_t *c,
-                     bh_point2f_t *result)
+void BH_Vec2fSub(const float *a,
+                 const float *b,
+                 float *out)
 {
-    result->x = a->x * b->x + c->x;
-    result->y = a->y * b->y + c->y;
+    out[0] = a[0] - b[0];
+    out[1] = a[1] - b[1];
 }
 
 
-void bh_point2f_negate(const bh_point2f_t *in,
-                       bh_point2f_t *result)
+void BH_Vec2fMul(const float *a,
+                 const float *b,
+                 float *out)
 {
-    result->x = -in->x;
-    result->y = -in->y;
+    out[0] = a[0] * b[0];
+    out[1] = a[1] * b[1];
 }
 
 
-float bh_point2f_dot(const bh_point2f_t *a,
-                     const bh_point2f_t *b)
+void BH_Vec2fScale(const float *a,
+                   const float b,
+                   float *out)
 {
-    return a->x * b->x + a->y * b->y;
+    out[0] = a[0] * b;
+    out[1] = a[1] * b;
 }
 
 
-float bh_point2f_cross(const bh_point2f_t *a,
-                       const bh_point2f_t *b)
+void BH_Vec2fMulAdd(const float *a,
+                    const float *b,
+                    const float *c,
+                    float *out)
 {
-    return a->x * b->y - a->y * b->x;
+    out[0] = a[0] * b[0] + c[0];
+    out[1] = a[1] * b[1] + c[1];
 }
 
 
-float bh_point2f_length(const bh_point2f_t *in)
+void BH_Vec2fNegate(const float *in,
+                    float *out)
 {
-    return sqrtf(bh_point2f_dot(in, in));
+    out[0] = -in[0];
+    out[1] = -in[1];
 }
 
 
-void bh_point2f_normal(const bh_point2f_t *in,
-                       bh_point2f_t *result)
+float BH_Vec2fDot(const float *a,
+                  const float *b)
 {
-    float length;
-
-    length = 1.0f / bh_point2f_length(in);
-    bh_point2f_scale(in, length, result);
+    return a[0] * b[0] + a[1] * b[1];
 }
 
 
-void bh_point2f_min(const bh_point2f_t *a,
-                    const bh_point2f_t *b,
-                    bh_point2f_t *result)
+float BH_Vec2fCross(const float *a,
+                    const float *b)
 {
-    if (a->x < b->x) result->x = a->x; else result->x = b->x;
-    if (a->y < b->y) result->y = a->y; else result->y = b->y;
+    return a[0] * b[1] - a[1] * b[0];
 }
 
 
-void bh_point2f_max(const bh_point2f_t *a,
-                    const bh_point2f_t *b,
-                    bh_point2f_t *result)
+float BH_Vec2fLength(const float *in)
 {
-    if (a->x > b->x) result->x = a->x; else result->x = b->x;
-    if (a->y > b->y) result->y = a->y; else result->y = b->y;
+    return sqrt(BH_Vec2fDot(in, in));
 }
 
 
-void bh_point2f_lerp(const bh_point2f_t *a,
-                     const bh_point2f_t *b,
-                     float t,
-                     bh_point2f_t *result)
+void BH_Vec2fNormal(const float *in,
+                    float *out)
 {
-    bh_point2f_t tmp;
-
-    bh_point2f_sub(b, a, &tmp);
-    bh_point2f_scale(&tmp, t, &tmp);
-    bh_point2f_add(a, &tmp, result);
+    BH_Vec2fScale(in, 1.0f / BH_Vec2fLength(in), out);
 }
 
 
-void bh_point2f_slerp(const bh_point2f_t *a,
-                      const bh_point2f_t *b,
-                      float t,
-                      bh_point2f_t *result)
+void BH_Vec2fMin(const float *a,
+                 const float *b,
+                 float *out)
 {
-    float angle, denom;
-    bh_point2f_t from, to;
-
-    angle = acosf(bh_point2f_dot(a, b));
-
-    /* Special case - reducing to linear interpolation */
-    if (angle == 0.0f)
-    {
-        bh_point2f_lerp(a, b, t, result);
-    }
-    else {
-        denom = 1.0f / sinf(angle);
-        bh_point2f_scale(a, sinf((1 - t) * angle) * denom, &from);
-        bh_point2f_scale(b, sinf(t * angle) * denom, &to);
-        bh_point2f_add(&from, &to, result);
-    }
+    if (a[0] < b[0]) out[0] = a[0]; else out[0] = b[0];
+    if (a[1] < b[1]) out[1] = a[1]; else out[1] = b[1];
 }
 
 
-void bh_point4i_add(const bh_point4i_t *a,
-                    const bh_point4i_t *b,
-                    bh_point4i_t *result)
+void BH_Vec2fMax(const float *a,
+                 const float *b,
+                 float *out)
 {
-    result->x = a->x + b->x;
-    result->y = a->y + b->y;
-    result->z = a->z + b->z;
-    result->w = a->w + b->w;
+    if (a[0] > b[0]) out[0] = a[0]; else out[0] = b[0];
+    if (a[1] > b[1]) out[1] = a[1]; else out[1] = b[1];
 }
 
 
-void bh_point4i_sub(const bh_point4i_t *a,
-                    const bh_point4i_t *b,
-                    bh_point4i_t *result)
+void BH_Vec2fLerp(const float *a,
+                  const float *b,
+                  float t,
+                  float *out)
 {
-    result->x = a->x - b->x;
-    result->y = a->y - b->y;
-    result->z = a->z - b->z;
-    result->w = a->w - b->w;
-}
+    float tmp[2];
 
-
-void bh_point4i_mul(const bh_point4i_t *a,
-                    const bh_point4i_t *b,
-                    bh_point4i_t *result)
-{
-    result->x = a->x * b->x;
-    result->y = a->y * b->y;
-    result->z = a->z * b->z;
-    result->w = a->w * b->w;
+    BH_Vec2fSub(b, a, tmp);
+    BH_Vec2fScale(tmp, t, tmp);
+    BH_Vec2fAdd(a, tmp, out);
 }
 
 
-void bh_point4i_scale(const bh_point4i_t *a,
-                      int b,
-                      bh_point4i_t *result)
+void BH_Vec4iAdd(const int *a,
+                 const int *b,
+                 int *out)
 {
-    result->x = a->x * b;
-    result->y = a->y * b;
-    result->z = a->z * b;
-    result->w = a->w * b;
+    out[0] = a[0] + b[0];
+    out[1] = a[1] + b[1];
+    out[2] = a[2] + b[2];
+    out[3] = a[3] + b[3];
 }
 
 
-void bh_point4i_madd(const bh_point4i_t *a,
-                     const bh_point4i_t *b,
-                     const bh_point4i_t *c,
-                     bh_point4i_t *result)
+void BH_Vec4iSub(const int *a,
+                 const int *b,
+                 int *out)
 {
-    result->x = a->x * b->x + c->x;
-    result->y = a->y * b->y + c->y;
-    result->z = a->z * b->z + c->z;
-    result->w = a->w * b->w + c->w;
+    out[0] = a[0] - b[0];
+    out[1] = a[1] - b[1];
+    out[2] = a[2] - b[2];
+    out[3] = a[3] - b[3];
 }
 
 
-void bh_point4i_negate(const bh_point4i_t *in,
-                       bh_point4i_t *result)
+void BH_Vec4iMul(const int *a,
+                 const int *b,
+                 int *out)
 {
-    result->x = -in->x;
-    result->y = -in->y;
-    result->z = -in->z;
-    result->w = -in->w;
+    out[0] = a[0] * b[0];
+    out[1] = a[1] * b[1];
+    out[2] = a[2] * b[2];
+    out[3] = a[3] * b[3];
 }
 
 
-void bh_point4i_min(const bh_point4i_t *a,
-                    const bh_point4i_t *b,
-                    bh_point4i_t *result)
+void BH_Vec4iScale(const int *a,
+                   int b,
+                   int *out)
 {
-    if (a->x < b->x) result->x = a->x; else result->x = b->x;
-    if (a->y < b->y) result->y = a->y; else result->y = b->y;
-    if (a->z < b->z) result->z = a->z; else result->z = b->z;
-    if (a->w < b->w) result->w = a->w; else result->w = b->w;
+    out[0] = a[0] * b;
+    out[1] = a[1] * b;
+    out[2] = a[2] * b;
+    out[3] = a[3] * b;
 }
 
 
-void bh_point4i_max(const bh_point4i_t *a,
-                    const bh_point4i_t *b,
-                    bh_point4i_t *result)
+void BH_Vec4iMulAdd(const int *a,
+                    const int *b,
+                    const int *c,
+                    int *out)
 {
-    if (a->x > b->x) result->x = a->x; else result->x = b->x;
-    if (a->y > b->y) result->y = a->y; else result->y = b->y;
-    if (a->z > b->z) result->z = a->z; else result->z = b->z;
-    if (a->w > b->w) result->w = a->w; else result->w = b->w;
+    out[0] = a[0] * b[0] + c[0];
+    out[1] = a[1] * b[1] + c[1];
+    out[2] = a[2] * b[2] + c[2];
+    out[3] = a[3] * b[3] + c[3];
 }
 
 
-void bh_point4i_lerp(const bh_point4i_t *a,
-                     const bh_point4i_t *b,
-                     float t,
-                     bh_point4i_t *result)
+void BH_Vec4iNegate(const int *in,
+                    int *out)
 {
-    bh_point4i_t tmp;
-
-    tmp.x = (b->x - a->x) * t;
-    tmp.y = (b->y - a->y) * t;
-    tmp.z = (b->z - a->z) * t;
-    tmp.w = (b->w - a->w) * t;
-
-    bh_point4i_add(a, &tmp, result);
+    out[0] = -in[0];
+    out[1] = -in[1];
+    out[2] = -in[2];
+    out[3] = -in[3];
 }
 
 
-void bh_point3i_add(const bh_point3i_t *a,
-                    const bh_point3i_t *b,
-                    bh_point3i_t *result)
+void BH_Vec4iMin(const int *a,
+                 const int *b,
+                 int *out)
 {
-    result->x = a->x + b->x;
-    result->y = a->y + b->y;
-    result->z = a->z + b->z;
+    if (a[0] < b[0]) out[0] = a[0]; else out[0] = b[0];
+    if (a[1] < b[1]) out[1] = a[1]; else out[1] = b[1];
+    if (a[2] < b[2]) out[2] = a[2]; else out[2] = b[2];
+    if (a[3] < b[3]) out[3] = a[3]; else out[3] = b[3];
 }
 
 
-void bh_point3i_sub(const bh_point3i_t *a,
-                    const bh_point3i_t *b,
-                    bh_point3i_t *result)
+void BH_Vec4iMax(const int *a,
+                 const int *b,
+                 int *out)
 {
-    result->x = a->x - b->x;
-    result->y = a->y - b->y;
-    result->z = a->z - b->z;
+    if (a[0] > b[0]) out[0] = a[0]; else out[0] = b[0];
+    if (a[1] > b[1]) out[1] = a[1]; else out[1] = b[1];
+    if (a[2] > b[2]) out[2] = a[2]; else out[2] = b[2];
+    if (a[3] > b[3]) out[3] = a[3]; else out[3] = b[3];
 }
 
 
-void bh_point3i_mul(const bh_point3i_t *a,
-                    const bh_point3i_t *b,
-                    bh_point3i_t *result)
+void BH_Vec3iAdd(const int *a,
+                 const int *b,
+                 int *out)
 {
-    result->x = a->x * b->x;
-    result->y = a->y * b->y;
-    result->z = a->z * b->z;
+    out[0] = a[0] + b[0];
+    out[1] = a[1] + b[1];
+    out[2] = a[2] + b[2];
 }
 
 
-void bh_point3i_scale(const bh_point3i_t *a,
-                      int b,
-                      bh_point3i_t *result)
+void BH_Vec3iSub(const int *a,
+                 const int *b,
+                 int *out)
 {
-    result->x = a->x * b;
-    result->y = a->y * b;
-    result->z = a->z * b;
+    out[0] = a[0] - b[0];
+    out[1] = a[1] - b[1];
+    out[2] = a[2] - b[2];
 }
 
 
-void bh_point3i_madd(const bh_point3i_t *a,
-                     const bh_point3i_t *b,
-                     const bh_point3i_t *c,
-                     bh_point3i_t *result)
+void BH_Vec3iMul(const int *a,
+                 const int *b,
+                 int *out)
 {
-    result->x = a->x * b->x + c->x;
-    result->y = a->y * b->y + c->y;
-    result->z = a->z * b->z + c->z;
+    out[0] = a[0] * b[0];
+    out[1] = a[1] * b[1];
+    out[2] = a[2] * b[2];
 }
 
 
-void bh_point3i_negate(const bh_point3i_t *in,
-                       bh_point3i_t *result)
+void BH_Vec3iScale(const int *a,
+                   int b,
+                   int *out)
 {
-    result->x = -in->x;
-    result->y = -in->y;
-    result->z = -in->z;
+    out[0] = a[0] * b;
+    out[1] = a[1] * b;
+    out[2] = a[2] * b;
 }
 
 
-void bh_point3i_min(const bh_point3i_t *a,
-                    const bh_point3i_t *b,
-                    bh_point3i_t *result)
+void BH_Vec3iMulAdd(const int *a,
+                    const int *b,
+                    const int *c,
+                    int *out)
 {
-    if (a->x < b->x) result->x = a->x; else result->x = b->x;
-    if (a->y < b->y) result->y = a->y; else result->y = b->y;
-    if (a->z < b->z) result->z = a->z; else result->z = b->z;
+    out[0] = a[0] * b[0] + c[0];
+    out[1] = a[1] * b[1] + c[1];
+    out[2] = a[2] * b[2] + c[2];
 }
 
 
-void bh_point3i_max(const bh_point3i_t *a,
-                    const bh_point3i_t *b,
-                    bh_point3i_t *result)
+void BH_Vec3iNegate(const int *in,
+                    int *out)
 {
-    if (a->x > b->x) result->x = a->x; else result->x = b->x;
-    if (a->y > b->y) result->y = a->y; else result->y = b->y;
-    if (a->z > b->z) result->z = a->z; else result->z = b->z;
+    out[0] = -in[0];
+    out[1] = -in[1];
+    out[2] = -in[2];
 }
 
 
-void bh_point3i_lerp(const bh_point3i_t *a,
-                     const bh_point3i_t *b,
-                     float t,
-                     bh_point3i_t *result)
+void BH_Vec3iMin(const int *a,
+                 const int *b,
+                 int *out)
 {
-    bh_point3i_t tmp;
-
-    tmp.x = (b->x - a->x) * t;
-    tmp.y = (b->y - a->y) * t;
-    tmp.z = (b->z - a->z) * t;
-
-    bh_point3i_add(a, &tmp, result);
+    if (a[0] < b[0]) out[0] = a[0]; else out[0] = b[0];
+    if (a[1] < b[1]) out[1] = a[1]; else out[1] = b[1];
+    if (a[2] < b[2]) out[2] = a[2]; else out[2] = b[2];
 }
 
 
-void bh_point2i_add(const bh_point2i_t *a,
-                    const bh_point2i_t *b,
-                    bh_point2i_t *result)
+void BH_Vec3iMax(const int *a,
+                 const int *b,
+                 int *out)
 {
-    result->x = a->x + b->x;
-    result->y = a->y + b->y;
+    if (a[0] > b[0]) out[0] = a[0]; else out[0] = b[0];
+    if (a[1] > b[1]) out[1] = a[1]; else out[1] = b[1];
+    if (a[2] > b[2]) out[2] = a[2]; else out[2] = b[2];
 }
 
 
-void bh_point2i_sub(const bh_point2i_t *a,
-                    const bh_point2i_t *b,
-                    bh_point2i_t *result)
+void BH_Vec2iAdd(const int *a,
+                 const int *b,
+                 int *out)
 {
-    result->x = a->x - b->x;
-    result->y = a->y - b->y;
+    out[0] = a[0] + b[0];
+    out[1] = a[1] + b[1];
 }
 
 
-void bh_point2i_mul(const bh_point2i_t *a,
-                    const bh_point2i_t *b,
-                    bh_point2i_t *result)
+void BH_Vec2iSub(const int *a,
+                 const int *b,
+                 int *out)
 {
-    result->x = a->x * b->x;
-    result->y = a->y * b->y;
+    out[0] = a[0] - b[0];
+    out[1] = a[1] - b[1];
 }
 
 
-void bh_point2i_scale(const bh_point2i_t *a,
-                      int b,
-                      bh_point2i_t *result)
+void BH_Vec2iMul(const int *a,
+                 const int *b,
+                 int *out)
 {
-    result->x = a->x * b;
-    result->y = a->y * b;
+    out[0] = a[0] * b[0];
+    out[1] = a[1] * b[1];
 }
 
 
-void bh_point2i_madd(const bh_point2i_t *a,
-                     const bh_point2i_t *b,
-                     const bh_point2i_t *c,
-                     bh_point2i_t *result)
+void BH_Vec2iScale(const int *a,
+                   int b,
+                   int *out)
 {
-    result->x = a->x * b->x + c->x;
-    result->y = a->y * b->y + c->y;
+    out[0] = a[0] * b;
+    out[1] = a[1] * b;
 }
 
 
-void bh_point2i_negate(const bh_point2i_t *in,
-                       bh_point2i_t *result)
+void BH_Vec2iMulAdd(const int *a,
+                    const int *b,
+                    const int *c,
+                    int *out)
 {
-    result->x = -in->x;
-    result->y = -in->y;
+    out[0] = a[0] * b[0] + c[0];
+    out[1] = a[1] * b[1] + c[1];
 }
 
 
-void bh_point2i_min(const bh_point2i_t *a,
-                    const bh_point2i_t *b,
-                    bh_point2i_t *result)
+void BH_Vec2iNegate(const int *in,
+                    int *out)
 {
-    if (a->x < b->x) result->x = a->x; else result->x = b->x;
-    if (a->y < b->y) result->y = a->y; else result->y = b->y;
+    out[0] = -in[0];
+    out[1] = -in[1];
 }
 
 
-void bh_point2i_max(const bh_point2i_t *a,
-                    const bh_point2i_t *b,
-                    bh_point2i_t *result)
+void BH_Vec2iMin(const int *a,
+                 const int *b,
+                 int *out)
 {
-    if (a->x > b->x) result->x = a->x; else result->x = b->x;
-    if (a->y > b->y) result->y = a->y; else result->y = b->y;
+    if (a[0] < b[0]) out[0] = a[0]; else out[0] = b[0];
+    if (a[1] < b[1]) out[1] = a[1]; else out[1] = b[1];
 }
 
 
-void bh_point2i_lerp(const bh_point2i_t *a,
-                     const bh_point2i_t *b,
-                     float t,
-                     bh_point2i_t *result)
+void BH_Vec2iMax(const int *a,
+                 const int *b,
+                 int *out)
 {
-    bh_point2i_t tmp;
-
-    tmp.x = (b->x - a->x) * t;
-    tmp.y = (b->y - a->y) * t;
-
-    bh_point2i_add(a, &tmp, result);
+    if (a[0] > b[0]) out[0] = a[0]; else out[0] = b[0];
+    if (a[1] > b[1]) out[1] = a[1]; else out[1] = b[1];
 }
 
 
-void bh_quat_identity(bh_quat_t *result)
+void BH_Quat4fIdentity(float *out)
 {
-    static const bh_quat_t ident = {0.0f, 0.0f, 0.0f, 1.0f};
-
-    *result = ident;
+    static const float ident[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+    memcpy(out, ident, sizeof(ident));
 }
 
 
-void bh_quat_conjugate(const bh_quat_t *in,
-                       bh_quat_t *result)
+void BH_Quat4fConjugate(const float *in,
+                        float *out)
 {
-    result->x = -in->x;
-    result->y = -in->y;
-    result->z = -in->z;
-    result->w = in->w;
+    out[0] = -in[0];
+    out[1] = -in[1];
+    out[2] = -in[2];
+    out[3] = in[3];
 }
 
 
-void bh_quat_inverse(const bh_quat_t *in,
-                     bh_quat_t *result)
+void BH_Quat4fInverse(const float *in,
+                      float *out)
 {
-    float length;
+    float dot;
 
-    length = bh_quat_dot(in, in);
-    bh_quat_conjugate(in, result);
-    bh_quat_scale(result, 1.0f / length, result);
+    dot = BH_Vec4fDot(in, in);
+    BH_Quat4fConjugate(in, out);
+    BH_Quat4fScale(out, 1.0f / dot, out);
 }
 
 
-void bh_quat_mul(const bh_quat_t *a,
-                 const bh_quat_t *b,
-                 bh_quat_t *result)
+void BH_Quat4fMul(const float *a,
+                  const float *b,
+                  float *out)
 {
-    bh_quat_t tmp1, tmp2, tmp3;
+    float tmp1[4], tmp2[4], tmp3[4];
     float w;
 
-    w = a->w * b->w - bh_point4f_dot3(a, b);
-
-    bh_point4f_scale(a, b->w, &tmp1);
-    bh_point4f_scale(b, a->w, &tmp2);
-    bh_point4f_cross(a, b, &tmp3);
-    bh_point4f_add(&tmp1, &tmp2, result);
-    bh_point4f_add(&tmp3, result, result);
-    result->w = w;
+    w = a[3] * b[3] - BH_Vec3fDot(a, b);
+    BH_Vec4fScale(a, b[3], tmp1);
+    BH_Vec4fScale(b, a[3], tmp2);
+    BH_Vec3fCross(a, b, tmp3);
+    BH_Vec4fAdd(tmp1, tmp2, out);
+    BH_Vec4fAdd(tmp3, out, out);
+    out[3] = w;
 }
 
 
-void bh_quat_set_euler(float roll,
-                       float pitch,
-                       float yaw,
-                       bh_quat_t *result)
+void BH_Quat4fSlerp(const float *a,
+                    const float *b,
+                    float t,
+                    float *out)
+{
+    float angle, denom;
+    float from[4], to[4];
+
+    angle = acos(BH_Vec4fDot(a, b));
+    if (angle == 0.0f)
+    {
+        BH_Vec4fLerp(a, b, t, out);
+        return;
+    }
+
+    denom = 1.0f / sin(angle);
+    BH_Vec4fScale(a, sin((1 - t) * angle) * denom, from);
+    BH_Vec4fScale(b, sin(t * angle) * denom, to);
+    BH_Vec4fAdd(from, to, out);
+}
+
+
+void BH_Quat4fFromEuler(float roll,
+                        float pitch,
+                        float yaw,
+                        float *out)
 {
     float cr, cp, cy, sr, sp, sy;
 
-    cr = cosf(roll / 2.0f);
-    cp = cosf(pitch / 2.0f);
-    cy = cosf(yaw / 2.0f);
-    sr = sinf(roll / 2.0f);
-    sp = sinf(pitch / 2.0f);
-    sy = sinf(yaw / 2.0f);
+    cr = cos(roll / 2.0f);
+    cp = cos(pitch / 2.0f);
+    cy = cos(yaw / 2.0f);
+    sr = sin(roll / 2.0f);
+    sp = sin(pitch / 2.0f);
+    sy = sin(yaw / 2.0f);
 
-    result->x = sr * cp * cy - cr * sp * sy;
-    result->y = cr * sp * cy + sr * cp * sy;
-    result->z = cr * cp * sy - sr * sp * cy;
-    result->w = cr * cp * cy + sr * sp * sy;
+    out[0] = sr * cp * cy - cr * sp * sy;
+    out[1] = cr * sp * cy + sr * cp * sy;
+    out[2] = cr * cp * sy - sr * sp * cy;
+    out[3] = cr * cp * cy + sr * sp * sy;
 }
 
 
-void bh_quat_set_rotation(const bh_point3f_t *axis,
-                          float angle,
-                          bh_quat_t *result)
+void BH_Quat4fFromAxis(const float *axis,
+                       float angle,
+                       float *out)
 {
     float c, s;
 
-    c = cosf(angle / 2.0f);
-    s = sinf(angle / 2.0f);
+    c = cos(angle / 2.0f);
+    s = sin(angle / 2.0f);
 
-    result->x = axis->x * s;
-    result->y = axis->y * s;
-    result->z = axis->z * s;
-    result->w = c;
+    out[0] = axis[0] * s;
+    out[1] = axis[1] * s;
+    out[2] = axis[2] * s;
+    out[3] = c;
 }
 
 
-void bh_quat_euler(const bh_quat_t *in,
-                   float *roll,
-                   float *pitch,
-                   float *yaw)
+void BH_Quat4fToEuler(const float *in,
+                      float *roll,
+                      float *pitch,
+                      float *yaw)
 {
     float ww, xw, yw, zw, xx, xy, xz, yy, yz, zz, angle;
 
-    xx = in->x * in->x;
-    xy = in->x * in->y;
-    xz = in->x * in->z;
-    xw = in->x * in->w;
-    yy = in->y * in->y;
-    yz = in->y * in->z;
-    yw = in->y * in->w;
-    zz = in->z * in->z;
-    zw = in->z * in->w;
-    ww = in->w * in->w;
+    xx = in[0] * in[0];
+    xy = in[0] * in[1];
+    xz = in[0] * in[2];
+    xw = in[0] * in[3];
+    yy = in[1] * in[1];
+    yz = in[1] * in[2];
+    yw = in[1] * in[3];
+    zz = in[2] * in[2];
+    zw = in[2] * in[3];
+    ww = in[3] * in[3];
 
     angle = 2.0f * (yw - xz);
     if (angle > 1.0f)
@@ -860,403 +730,348 @@ void bh_quat_euler(const bh_quat_t *in,
     if (angle < -1.0f)
         angle = -1.0f;
 
-    *pitch = asinf(angle);
+    *pitch = asin(angle);
 
     if (*pitch == (M_PI / 2.0f))
     {
         *roll = 0.0f;
-        *yaw = -2.0f * atan2f(in->x, in->w);
+        *yaw = -2.0f * atan2(in[0], in[3]);
     }
     else if (*pitch == (M_PI / -2.0f))
     {
         *roll = 0.0f;
-        *yaw = 2.0f * atan2f(in->x, in->w);
+        *yaw = 2.0f * atan2(in[0], in[3]);
     }
     else
     {
-        *roll = atan2f(2.0f * (xw + yz), ww - xx - yy + zz);
-        *yaw = atan2f(2.0f * (zw + xy), ww + xx - yy - zz);
+        *roll = atan2(2.0f * (xw + yz), ww - xx - yy + zz);
+        *yaw = atan2(2.0f * (zw + xy), ww + xx - yy - zz);
     }
 }
 
 
-void bh_quat_rotation(const bh_quat_t *in,
-                      bh_point3f_t *axis,
-                      float *angle)
+void BH_Quat4fToAxis(const float *in,
+                     float *axis,
+                     float *angle)
 {
-    float tmp;
-
-    *angle = 2.0f * acosf(in->w);
-    tmp = sqrtf(1.0f - in->w * in->w);
+    *angle = 2.0f * acos(in[3]);
 
     if (*angle == 0.0f)
     {
-        axis->x = 1.0f;
-        axis->y = 0.0f;
-        axis->z = 0.0f;
+        axis[0] = 1.0f;
+        axis[1] = 0.0f;
+        axis[2] = 0.0f;
     }
     else
     {
-        axis->x = in->x / tmp;
-        axis->y = in->y / tmp;
-        axis->z = in->z / tmp;
+        float tmp;
+
+        tmp = sqrt(1.0f - in[3] * in[3]);
+        axis[0] = in[0] / tmp;
+        axis[1] = in[1] / tmp;
+        axis[2] = in[2] / tmp;
     }
 }
 
 
-void bh_quat_matrix(const bh_quat_t *in,
-                    bh_matrix4f_t *result)
+void BH_Quat4fToMat4f(const float *in,
+                      float *out)
 {
     float xx, xy, xz, xw, yy, yz, yw, zz, zw;
 
-    xx = in->x * in->x;
-    xy = in->x * in->y;
-    xz = in->x * in->z;
-    xw = in->x * in->w;
-    yy = in->y * in->y;
-    yz = in->y * in->z;
-    yw = in->y * in->w;
-    zz = in->z * in->z;
-    zw = in->z * in->w;
+    xx = in[0] * in[0];
+    xy = in[0] * in[1];
+    xz = in[0] * in[2];
+    xw = in[0] * in[3];
+    yy = in[1] * in[1];
+    yz = in[1] * in[2];
+    yw = in[1] * in[3];
+    zz = in[2] * in[2];
+    zw = in[2] * in[3];
 
-    bh_matrix4f_identity(result);
-    result->x.x = 1.0f - 2.0f * (yy + zz);
-    result->x.y = 2.0f * (xy + zw);
-    result->x.z = 2.0f * (xz - yw);
-    result->y.x = 2.0f * (xy - zw);
-    result->y.y = 1.0f - 2.0f * (xx + zz);
-    result->y.z = 2.0f * (yz + xw);
-    result->z.x = 2.0f * (xz + yw);
-    result->z.y = 2.0f * (yz - xw);
-    result->z.z = 1.0f - 2.0f * (xx + yy);
+    BH_Mat4fIdentity(out);
+    out[0] = 1.0f - 2.0f * (yy + zz);
+    out[1] = 2.0f * (xy + zw);
+    out[2] = 2.0f * (xz - yw);
+    out[4] = 2.0f * (xy - zw);
+    out[5] = 1.0f - 2.0f * (xx + zz);
+    out[6] = 2.0f * (yz + xw);
+    out[8] = 2.0f * (xz + yw);
+    out[9] = 2.0f * (yz - xw);
+    out[10] = 1.0f - 2.0f * (xx + yy);
 }
 
 
-void bh_matrix4f_identity(bh_matrix4f_t *result)
+void BH_Mat4fIdentity(float *out)
 {
-    static const bh_matrix4f_t ident = {
-        {1.0f, 0.0f, 0.0f, 0.0f},
-        {0.0f, 1.0f, 0.0f, 0.0f},
-        {0.0f, 0.0f, 1.0f, 0.0f},
-        {0.0f, 0.0f, 0.0f, 1.0f}
+    const float ident[16] =
+    {
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f
     };
 
-    *result = ident;
+    memcpy(out, ident, sizeof(ident));
 }
 
 
-void bh_matrix4f_add(const bh_matrix4f_t *a,
-                     const bh_matrix4f_t *b,
-                     bh_matrix4f_t *result)
+void BH_Mat4fAdd(const float *a,
+                 const float *b,
+                 float *out)
 {
-    bh_point4f_add(&a->x, &b->x, &result->x);
-    bh_point4f_add(&a->y, &b->y, &result->y);
-    bh_point4f_add(&a->z, &b->z, &result->z);
-    bh_point4f_add(&a->w, &b->w, &result->w);
+    BH_Vec4fAdd(&a[0], &b[0], &out[0]);
+    BH_Vec4fAdd(&a[4], &b[4], &out[4]);
+    BH_Vec4fAdd(&a[8], &b[8], &out[8]);
+    BH_Vec4fAdd(&a[12], &b[12], &out[12]);
 }
 
 
-void bh_matrix4f_sub(const bh_matrix4f_t *a,
-                     const bh_matrix4f_t *b,
-                     bh_matrix4f_t *result)
+void BH_Mat4fSub(const float *a,
+                 const float *b,
+                 float *out)
 {
-    bh_point4f_sub(&a->x, &b->x, &result->x);
-    bh_point4f_sub(&a->y, &b->y, &result->y);
-    bh_point4f_sub(&a->z, &b->z, &result->z);
-    bh_point4f_sub(&a->w, &b->w, &result->w);
+    BH_Vec4fSub(&a[0], &b[0], &out[0]);
+    BH_Vec4fSub(&a[4], &b[4], &out[4]);
+    BH_Vec4fSub(&a[8], &b[8], &out[8]);
+    BH_Vec4fSub(&a[12], &b[12], &out[12]);
 }
 
 
-void bh_matrix4f_mul(const bh_matrix4f_t *a,
-                     const bh_matrix4f_t *b,
-                     bh_matrix4f_t *result)
+void BH_Mat4fMul(const float *a,
+                 const float *b,
+                 float *out)
 {
-    bh_matrix4f_t tmp;
-    bh_point4f_t row;
+    float tmp[16], row[4];
 
-    row.x = row.y = row.z = row.w = b->x.x; bh_point4f_mul(&a->x, &row, &tmp.x);
-    row.x = row.y = row.z = row.w = b->x.y; bh_point4f_madd(&a->y, &row, &tmp.x, &tmp.x);
-    row.x = row.y = row.z = row.w = b->x.z; bh_point4f_madd(&a->z, &row, &tmp.x, &tmp.x);
-    row.x = row.y = row.z = row.w = b->x.w; bh_point4f_madd(&a->w, &row, &tmp.x, &tmp.x);
+    row[0] = row[1] = row[2] = row[3] = b[0]; BH_Vec4fMul(&a[0], row, &tmp[0]);
+    row[0] = row[1] = row[2] = row[3] = b[1]; BH_Vec4fMulAdd(&a[4], row, &tmp[0], &tmp[0]);
+    row[0] = row[1] = row[2] = row[3] = b[2]; BH_Vec4fMulAdd(&a[8], row, &tmp[0], &tmp[0]);
+    row[0] = row[1] = row[2] = row[3] = b[3]; BH_Vec4fMulAdd(&a[12], row, &tmp[0], &tmp[0]);
 
-    row.x = row.y = row.z = row.w = b->y.x; bh_point4f_mul(&a->x, &row, &tmp.y);
-    row.x = row.y = row.z = row.w = b->y.y; bh_point4f_madd(&a->y, &row, &tmp.y, &tmp.y);
-    row.x = row.y = row.z = row.w = b->y.z; bh_point4f_madd(&a->z, &row, &tmp.y, &tmp.y);
-    row.x = row.y = row.z = row.w = b->y.w; bh_point4f_madd(&a->w, &row, &tmp.y, &tmp.y);
+    row[0] = row[1] = row[2] = row[3] = b[4]; BH_Vec4fMul(&a[0], row, &tmp[4]);
+    row[0] = row[1] = row[2] = row[3] = b[5]; BH_Vec4fMulAdd(&a[4], row, &tmp[4], &tmp[4]);
+    row[0] = row[1] = row[2] = row[3] = b[6]; BH_Vec4fMulAdd(&a[8], row, &tmp[4], &tmp[4]);
+    row[0] = row[1] = row[2] = row[3] = b[7]; BH_Vec4fMulAdd(&a[12], row, &tmp[4], &tmp[4]);
 
-    row.x = row.y = row.z = row.w = b->z.x; bh_point4f_mul(&a->x, &row, &tmp.z);
-    row.x = row.y = row.z = row.w = b->z.y; bh_point4f_madd(&a->y, &row, &tmp.z, &tmp.z);
-    row.x = row.y = row.z = row.w = b->z.z; bh_point4f_madd(&a->z, &row, &tmp.z, &tmp.z);
-    row.x = row.y = row.z = row.w = b->z.w; bh_point4f_madd(&a->w, &row, &tmp.z, &tmp.z);
+    row[0] = row[1] = row[2] = row[3] = b[8]; BH_Vec4fMul(&a[0], row, &tmp[8]);
+    row[0] = row[1] = row[2] = row[3] = b[9]; BH_Vec4fMulAdd(&a[4], row, &tmp[8], &tmp[8]);
+    row[0] = row[1] = row[2] = row[3] = b[10]; BH_Vec4fMulAdd(&a[8], row, &tmp[8], &tmp[8]);
+    row[0] = row[1] = row[2] = row[3] = b[11]; BH_Vec4fMulAdd(&a[12], row, &tmp[8], &tmp[8]);
 
-    row.x = row.y = row.z = row.w = b->w.x; bh_point4f_mul(&a->x, &row, &tmp.w);
-    row.x = row.y = row.z = row.w = b->w.y; bh_point4f_madd(&a->y, &row, &tmp.w, &tmp.w);
-    row.x = row.y = row.z = row.w = b->w.z; bh_point4f_madd(&a->z, &row, &tmp.w, &tmp.w);
-    row.x = row.y = row.z = row.w = b->w.w; bh_point4f_madd(&a->w, &row, &tmp.w, &tmp.w);
+    row[0] = row[1] = row[2] = row[3] = b[12]; BH_Vec4fMul(&a[0], row, &tmp[12]);
+    row[0] = row[1] = row[2] = row[3] = b[13]; BH_Vec4fMulAdd(&a[4], row, &tmp[12], &tmp[12]);
+    row[0] = row[1] = row[2] = row[3] = b[14]; BH_Vec4fMulAdd(&a[8], row, &tmp[12], &tmp[12]);
+    row[0] = row[1] = row[2] = row[3] = b[15]; BH_Vec4fMulAdd(&a[12], row, &tmp[12], &tmp[12]);
 
-    *result = tmp;
+    memcpy(out, tmp, sizeof(tmp));
 }
 
 
-void bh_matrix4f_scale(const bh_matrix4f_t *a,
-                       float b,
-                       bh_matrix4f_t *result)
+void BH_Mat4fScale(const float *a,
+                   float b,
+                   float *out)
 {
-    bh_point4f_scale(&a->x, b, &result->x);
-    bh_point4f_scale(&a->y, b, &result->y);
-    bh_point4f_scale(&a->z, b, &result->z);
-    bh_point4f_scale(&a->w, b, &result->w);
+    BH_Vec4fScale(&a[0], b, &out[0]);
+    BH_Vec4fScale(&a[4], b, &out[4]);
+    BH_Vec4fScale(&a[8], b, &out[8]);
+    BH_Vec4fScale(&a[12], b, &out[12]);
 }
 
 
-void bh_matrix4f_transpose(const bh_matrix4f_t *in,
-                           bh_matrix4f_t *result)
+void BH_Mat4fTranspose(const float *in,
+                       float *out)
 {
-    bh_matrix4f_t tmp;
+    float tmp[16];
 
-    tmp.x.x = in->x.x;
-    tmp.x.y = in->y.x;
-    tmp.x.z = in->z.x;
-    tmp.x.w = in->w.x;
+    tmp[0] = in[0]; tmp[4] = in[1]; tmp[8] = in[2]; tmp[12] = in[3];
+    tmp[1] = in[4]; tmp[5] = in[5]; tmp[9] = in[6]; tmp[13] = in[7];
+    tmp[2] = in[8]; tmp[6] = in[9]; tmp[10] = in[10]; tmp[14] = in[11];
+    tmp[3] = in[12]; tmp[7] = in[13]; tmp[11] = in[14]; tmp[15] = in[15];
 
-    tmp.y.x = in->x.y;
-    tmp.y.y = in->y.y;
-    tmp.y.z = in->z.y;
-    tmp.y.w = in->w.y;
-
-    tmp.z.x = in->x.z;
-    tmp.z.y = in->y.z;
-    tmp.z.z = in->z.z;
-    tmp.z.w = in->w.z;
-
-    tmp.w.x = in->x.w;
-    tmp.w.y = in->y.w;
-    tmp.w.z = in->z.w;
-    tmp.w.w = in->w.w;
-
-    *result = tmp;
+    memcpy(out, tmp, sizeof(tmp));
 }
 
 
-float bh_matrix4f_trace(const bh_matrix4f_t *in)
+float BH_Mat4fTrace(const float *in)
 {
-    return in->x.x + in->y.y + in->z.z + in->w.w;
+    return in[0] + in[5] + in[10] + in[15];
 }
 
 
-float bh_matrix4f_determinant(const bh_matrix4f_t *in)
+float BH_Mat4fDet(const float *in)
 {
     float a, b, c, d, e, f, result;
 
-    a = in->x.z * in->y.w - in->x.w * in->y.z;
-    b = in->x.z * in->z.w - in->x.w * in->z.z;
-    c = in->x.z * in->w.w - in->x.w * in->w.z;
-    d = in->y.z * in->z.w - in->y.w * in->z.z;
-    e = in->y.z * in->w.w - in->y.w * in->w.z;
-    f = in->z.z * in->w.w - in->z.w * in->w.z;
+    a = in[2]  * in[7]  - in[3]  * in[6];
+    b = in[2]  * in[11] - in[3]  * in[10];
+    c = in[2]  * in[15] - in[3]  * in[14];
+    d = in[6]  * in[11] - in[7]  * in[10];
+    e = in[6]  * in[15] - in[7]  * in[14];
+    f = in[10] * in[15] - in[11] * in[14];
 
     result = 0.0f;
-    result += in->x.x * (in->y.y * f - in->z.y * e + in->w.y * d);
-    result -= in->y.x * (in->x.y * f - in->z.y * c + in->w.y * b);
-    result += in->z.x * (in->x.y * e - in->y.y * c + in->w.y * a);
-    result -= in->w.x * (in->x.y * d - in->y.y * b + in->z.y * a);
+    result += in[0]  * (in[5] * f - in[9] * e + in[13] * d);
+    result -= in[4]  * (in[1] * f - in[9] * c + in[13] * b);
+    result += in[8]  * (in[1] * e - in[5] * c + in[13] * a);
+    result -= in[12] * (in[1] * d - in[5] * b + in[9]  * a);
 
     return result;
 }
 
 
-int bh_matrix4f_inverse(const bh_matrix4f_t *in,
-                        bh_matrix4f_t *result)
+int BH_Mat4fInverse(const float *in,
+                    float *out)
 {
     float a, b, c, d, e, f, det;
-    bh_matrix4f_t tmp;
+    float tmp[16];
 
-    a = in->x.z * in->y.w - in->x.w * in->y.z;
-    b = in->x.z * in->z.w - in->x.w * in->z.z;
-    c = in->x.z * in->w.w - in->x.w * in->w.z;
-    d = in->y.z * in->z.w - in->y.w * in->z.z;
-    e = in->y.z * in->w.w - in->y.w * in->w.z;
-    f = in->z.z * in->w.w - in->z.w * in->w.z;
+    a = in[2]  * in[7]  - in[3]  * in[6];
+    b = in[2]  * in[11] - in[3]  * in[10];
+    c = in[2]  * in[15] - in[3]  * in[14];
+    d = in[6]  * in[11] - in[7]  * in[10];
+    e = in[6]  * in[15] - in[7]  * in[14];
+    f = in[10] * in[15] - in[11] * in[14];
 
-    tmp.x.x =  (in->y.y * f - in->z.y * e + in->w.y * d);
-    tmp.x.y = -(in->x.y * f - in->z.y * c + in->w.y * b);
-    tmp.x.z =  (in->x.y * e - in->y.y * c + in->w.y * a);
-    tmp.x.w = -(in->x.y * d - in->y.y * b + in->z.y * a);
+    tmp[0] =  (in[5] * f - in[9] * e + in[13] * d);
+    tmp[1] = -(in[1] * f - in[9] * c + in[13] * b);
+    tmp[2] =  (in[1] * e - in[5] * c + in[13] * a);
+    tmp[3] = -(in[1] * d - in[5] * b + in[9]  * a);
 
     det = 0.0f;
-    det += in->x.x * tmp.x.x;
-    det += in->y.x * tmp.x.y;
-    det += in->z.x * tmp.x.z;
-    det += in->w.x * tmp.x.w;
+    det += in[0]  * tmp[0];
+    det += in[4]  * tmp[1];
+    det += in[8]  * tmp[2];
+    det += in[12] * tmp[3];
 
     if (det == 0.0f)
         return BH_ERROR;
 
-    tmp.y.x = -(in->y.x * f - in->z.x * e + in->w.x * d);
-    tmp.y.y =  (in->x.x * f - in->z.x * c + in->w.x * b);
-    tmp.y.z = -(in->x.x * e - in->y.x * c + in->w.x * a);
-    tmp.y.w =  (in->x.x * d - in->y.x * b + in->z.x * a);
+    tmp[4] = -(in[4] * f - in[8] * e + in[12] * d);
+    tmp[5] =  (in[0] * f - in[8] * c + in[12] * b);
+    tmp[6] = -(in[0] * e - in[4] * c + in[12] * a);
+    tmp[7] =  (in[0] * d - in[4] * b + in[8]  * a);
 
-    a = in->x.y * in->y.w - in->x.w * in->y.y;
-    b = in->x.y * in->z.w - in->x.w * in->z.y;
-    c = in->x.y * in->w.w - in->x.w * in->w.y;
-    d = in->y.y * in->z.w - in->y.w * in->z.y;
-    e = in->y.y * in->w.w - in->y.w * in->w.y;
-    f = in->z.y * in->w.w - in->z.w * in->w.y;
+    a = in[1] * in[7]  - in[3]  * in[5];
+    b = in[1] * in[11] - in[3]  * in[9];
+    c = in[1] * in[15] - in[3]  * in[13];
+    d = in[5] * in[11] - in[7]  * in[9];
+    e = in[5] * in[15] - in[7]  * in[13];
+    f = in[9] * in[15] - in[11] * in[13];
 
-    tmp.z.x =  (in->y.x * f - in->z.x * e + in->w.x * d);
-    tmp.z.y = -(in->x.x * f - in->z.x * c + in->w.x * b);
-    tmp.z.z =  (in->x.x * e - in->y.x * c + in->w.x * a);
-    tmp.z.w = -(in->x.x * d - in->y.x * b + in->z.x * a);
+    tmp[8] =   (in[4] * f - in[8] * e + in[12] * d);
+    tmp[9] =  -(in[0] * f - in[8] * c + in[12] * b);
+    tmp[10] =  (in[0] * e - in[4] * c + in[12] * a);
+    tmp[11] = -(in[0] * d - in[4] * b + in[8]  * a);
 
-    a = in->x.y * in->y.z - in->x.z * in->y.y;
-    b = in->x.y * in->z.z - in->x.z * in->z.y;
-    c = in->x.y * in->w.z - in->x.z * in->w.y;
-    d = in->y.y * in->z.z - in->y.z * in->z.y;
-    e = in->y.y * in->w.z - in->y.z * in->w.y;
-    f = in->z.y * in->w.z - in->z.z * in->w.y;
+    a = in[1] * in[6]  - in[2]  * in[5];
+    b = in[1] * in[10] - in[2]  * in[9];
+    c = in[1] * in[14] - in[2]  * in[13];
+    d = in[5] * in[10] - in[6]  * in[9];
+    e = in[5] * in[14] - in[6]  * in[13];
+    f = in[9] * in[14] - in[10] * in[13];
 
-    tmp.w.x = -(in->y.x * f - in->z.x * e + in->w.x * d);
-    tmp.w.y =  (in->x.x * f - in->z.x * c + in->w.x * b);
-    tmp.w.z = -(in->x.x * e - in->y.x * c + in->w.x * a);
-    tmp.w.w =  (in->x.x * d - in->y.x * b + in->z.x * a);
+    tmp[12] = -(in[4] * f - in[8] * e + in[12] * d);
+    tmp[13] =  (in[0] * f - in[8] * c + in[12] * b);
+    tmp[14] = -(in[0] * e - in[4] * c + in[12] * a);
+    tmp[15] =  (in[0] * d - in[4] * b + in[8]  * a);
 
-    bh_matrix4f_scale(&tmp, 1.0f / det, result);
+    BH_Mat4fScale(tmp, 1.0f / det, out);
     return BH_OK;
 }
 
 
-void bh_matrix4f_scaling(float x,
-                         float y,
-                         float z,
-                         bh_matrix4f_t *result)
+void BH_Mat4fFromScale(float x,
+                       float y,
+                       float z,
+                       float *out)
 {
-    bh_matrix4f_identity(result);
-    result->x.x = x;
-    result->y.y = y;
-    result->z.z = z;
+    BH_Mat4fIdentity(out);
+    out[0] = x;
+    out[5] = y;
+    out[10] = z;
 }
 
 
-void bh_matrix4f_translation(float x,
+void BH_Mat4fFromTranslation(float x,
                              float y,
                              float z,
-                             bh_matrix4f_t *result)
+                             float *out)
 {
-    bh_matrix4f_identity(result);
-    result->w.x = x;
-    result->w.y = y;
-    result->w.z = z;
+    BH_Mat4fIdentity(out);
+    out[12] = x;
+    out[13] = y;
+    out[14] = z;
 }
 
 
-void bh_matrix4f_rotation_x(float angle,
-                            bh_matrix4f_t *result)
-{
-    float c, s;
-
-    c = cosf(angle);
-    s = sinf(angle);
-
-    bh_matrix4f_identity(result);
-    result->y.y = c;
-    result->z.z = c;
-    result->z.y = -s;
-    result->y.z = s;
-}
-
-
-void bh_matrix4f_rotation_y(float angle,
-                            bh_matrix4f_t *result)
+void BH_Mat4fFromRotationX(float angle,
+                           float *out)
 {
     float c, s;
 
-    c = cosf(angle);
-    s = sinf(angle);
+    c = cos(angle);
+    s = sin(angle);
 
-    bh_matrix4f_identity(result);
-    result->x.x = c;
-    result->z.z = c;
-    result->z.x = s;
-    result->x.z = -s;
+    BH_Mat4fIdentity(out);
+    out[5] = c;
+    out[6] = s;
+    out[9] = -s;
+    out[10] = c;
 }
 
 
-void bh_matrix4f_rotation_z(float angle,
-                            bh_matrix4f_t *result)
+void BH_Mat4fFromRotationY(float angle,
+                           float *out)
 {
     float c, s;
 
-    c = cosf(angle);
-    s = sinf(angle);
+    c = cos(angle);
+    s = sin(angle);
 
-    bh_matrix4f_identity(result);
-    result->x.x = c;
-    result->y.y = c;
-    result->y.x = -s;
-    result->x.y = s;
+    BH_Mat4fIdentity(out);
+    out[0] = c;
+    out[2] = -s;
+    out[8] = s;
+    out[10] = c;
 }
 
 
-void bh_matrix4f_rotation(const bh_point3f_t *axis,
-                          float angle,
-                          bh_matrix4f_t *result)
+void BH_Mat4fFromRotationZ(float angle,
+                           float *out)
+{
+    float c, s;
+
+    c = cos(angle);
+    s = sin(angle);
+
+    BH_Mat4fIdentity(out);
+    out[0] = c;
+    out[1] = s;
+    out[4] = -s;
+    out[5] = c;
+}
+
+
+void BH_Mat4fFromAxis(const float *axis,
+                      float angle,
+                      float *out)
 {
     float x, y, z, length;
     float c, s, moc, xx, xy, xz, yy, yz, zz;
 
-    length = bh_point3f_length(axis);
+    length = BH_Vec3fLength(axis);
+    BH_Mat4fIdentity(out);
 
     if (length == 0.0f)
-    {
-        bh_matrix4f_identity(result);
         return;
-    }
 
-    x = axis->x / length;
-    y = axis->y / length;
-    z = axis->z / length;
+    x = axis[0] / length;
+    y = axis[1] / length;
+    z = axis[2] / length;
 
-    /* Handle simple axis aligned rotations */
-    if (x == 0.0f)
-    {
-        if (y == 0.0f)
-        {
-            if (z != 0.0f)
-            {
-                if (z < 0.0f)
-                    bh_matrix4f_rotation_z(-angle, result);
-                else
-                    bh_matrix4f_rotation_z(angle, result);
-
-                return;
-            }
-        }
-        else if (z == 0.0f)
-        {
-            if (y < 0.0f)
-                bh_matrix4f_rotation_y(-angle, result);
-            else
-                bh_matrix4f_rotation_y(angle, result);
-
-            return;
-        }
-    }
-    else if (y == 0.0f && z == 0.0f)
-    {
-        if (x < 0.0f)
-            bh_matrix4f_rotation_x(-angle, result);
-        else
-            bh_matrix4f_rotation_x(angle, result);
-
-        return;
-    }
-
-    /* Rotate around arbitrary axis */
-    bh_matrix4f_identity(result);
-
-    c = cosf(angle);
-    s = sinf(angle);
+    c = cos(angle);
+    s = sin(angle);
     moc = 1.0f - c;
 
     xx = x * x;
@@ -1266,382 +1081,369 @@ void bh_matrix4f_rotation(const bh_point3f_t *axis,
     yz = y * z;
     zz = z * z;
 
-    result->x.x = c + xx * moc;
-    result->y.x = xy * moc - z * s;
-    result->z.x = xz * moc + y * s;
+    out[0] = c + xx * moc;
+    out[1] = xy * moc + z * s;
+    out[2] = xz * moc - y * s;
 
-    result->x.y = xy * moc + z * s;
-    result->y.y = c + yy * moc;
-    result->z.y = yz * moc - x * s;
+    out[4] = xy * moc - z * s;
+    out[5] = c + yy * moc;
+    out[6] = yz * moc + x * s;
 
-    result->x.z = xz * moc - y * s;
-    result->y.z = yz * moc + x * s;
-    result->z.z = c + zz * moc;
+    out[8] = xz * moc + y * s;
+    out[9] = yz * moc - x * s;
+    out[10] = c + zz * moc;
 }
 
 
-void bh_matrix4f_rotation_euler(float roll,
-                                float pitch,
-                                float yaw,
-                                bh_matrix4f_t *result)
+void BH_Mat4fFromEuler(float roll,
+                       float pitch,
+                       float yaw,
+                       float *out)
 {
     float rs, rc, ys, yc, ps, pc;
 
-    rs = sinf(roll);
-    rc = cosf(roll);
-    ps = sinf(pitch);
-    pc = cosf(pitch);
-    ys = sinf(yaw);
-    yc = cosf(yaw);
+    rs = sin(roll);
+    rc = cos(roll);
+    ps = sin(pitch);
+    pc = cos(pitch);
+    ys = sin(yaw);
+    yc = cos(yaw);
 
-    bh_matrix4f_identity(result);
-    result->x.x = pc * yc;
-    result->x.y = pc * ys;
-    result->x.z = -ps;
-    result->y.x = ps * rs * yc - rc * ys;
-    result->y.y = ps * rs * ys + rc * yc;
-    result->y.z = pc * rs;
-    result->z.x = rs * ys + ps * rc * yc;
-    result->z.y = ps * rc * ys - rs * yc;
-    result->z.z = pc * rc;
+    BH_Mat4fIdentity(out);
+    out[0] = pc * yc;
+    out[1] = pc * ys;
+    out[2] = -ps;
+    out[4] = ps * rs * yc - rc * ys;
+    out[5] = ps * rs * ys + rc * yc;
+    out[6] = pc * rs;
+    out[8] = rs * ys + ps * rc * yc;
+    out[9] = ps * rc * ys - rs * yc;
+    out[10] = pc * rc;
 }
 
 
-void bh_matrix4f_rotation_quat(bh_quat_t *rotation,
-                               bh_matrix4f_t *result)
+void BH_Mat4fFromQuat4f(const float *in,
+                        float *out)
 {
-    bh_quat_matrix(rotation, result);
+    BH_Quat4fToMat4f(in, out);
 }
 
 
-void bh_matrix4f_ortho(float x_min,
-                       float x_max,
-                       float y_min,
-                       float y_max,
-                       float z_min,
-                       float z_max,
-                       bh_matrix4f_t *result)
+void BH_Mat4fFromOrtho(float xMin,
+                       float xMax,
+                       float yMin,
+                       float yMax,
+                       float zMin,
+                       float zMax,
+                       float *out)
 {
     float dx, dy, dz;
 
-    dx = x_max - x_min;
-    dy = y_max - y_min;
-    dz = z_max - z_min;
+    dx = xMax - xMin;
+    dy = yMax - yMin;
+    dz = zMax - zMin;
 
-    bh_matrix4f_identity(result);
+    BH_Mat4fIdentity(out);
 
-    result->x.x = 2.0f / dx;
-    result->y.y = 2.0f / dy;
-    result->z.z = -2.0f / dz;
-    result->w.x = -(x_max + x_min) / dx;
-    result->w.y = -(y_max + y_min) / dy;
-    result->w.z = -(z_max + z_min) / dz;
+    out[0] = 2.0f / dx;
+    out[5] = 2.0f / dy;
+    out[10] = -2.0f / dz;
+    out[12] = -(xMax + xMin) / dx;
+    out[13] = -(yMax + yMin) / dy;
+    out[14] = -(zMax + zMin) / dz;
 }
 
 
-void bh_matrix4f_perspective(float fov,
-                             float aspect,
-                             float z_min,
-                             float z_max,
-                             bh_matrix4f_t *result)
+void BH_Mat4fFromFrustum(float fov,
+                         float aspect,
+                         float zMin,
+                         float zMax,
+                         float *out)
 {
     float t, dz;
 
-    dz = z_max - z_min;
+    dz = zMax - zMin;
     t = tanf(fov / 2.0f);
 
-    bh_matrix4f_identity(result);
+    BH_Mat4fIdentity(out);
 
-    result->x.x = 1.0f / (aspect * t);
-    result->y.y = 1.0f / t;
-    result->z.z = -(z_max + z_min) / dz;
-    result->z.w = -1.0f;
-    result->w.z = -(2.0f * z_max * z_min) / dz;
-    result->w.w = 0.0f;
+    out[0] = 1.0f / (aspect * t);
+    out[5] = 1.0f / t;
+    out[10] = -(zMax + zMin) / dz;
+    out[11] = -1.0f;
+    out[14] = -(2.0f * zMax * zMin) / dz;
+    out[15] = 0.0f;
 }
 
 
-void bh_matrix4f_lookat(const bh_point3f_t *camera,
-                        const bh_point3f_t *at,
-                        const bh_point3f_t *up,
-                        bh_matrix4f_t *result)
+void BH_Mat4fFromLookAt(const float *pos,
+                        const float *at,
+                        const float *up,
+                        float *out)
 {
-    bh_point3f_t cdir, cright, cup;
+    float cdir[3], cright[3], cup[3];
 
-    bh_point3f_sub(camera, at, &cdir); bh_point3f_normal(&cdir, &cdir);
-    bh_point3f_cross(up, &cdir, &cright); bh_point3f_normal(&cright, &cright);
-    bh_point3f_cross(&cdir, &cright, &cup);
+    BH_Vec3fSub(pos, at, cdir);
+    BH_Vec3fNormal(cdir, cdir);
+    BH_Vec3fCross(up, cdir, cright);
+    BH_Vec3fNormal(cright, cright);
+    BH_Vec3fCross(cdir, cright, cup);
 
-    result->x.x = cright.x;
-    result->x.y = cup.x;
-    result->x.z = cdir.x;
-    result->x.w = 0.0f;
+    out[0] = cright[0];
+    out[1] = cup[0];
+    out[2] = cdir[0];
+    out[3] = 0.0f;
 
-    result->y.x = cright.y;
-    result->y.y = cup.y;
-    result->y.z = cdir.y;
-    result->y.w = 0.0f;
+    out[4] = cright[1];
+    out[5] = cup[1];
+    out[6] = cdir[1];
+    out[7] = 0.0f;
 
-    result->z.x = cright.z;
-    result->z.y = cup.z;
-    result->z.z = cdir.z;
-    result->z.w = 0.0f;
+    out[8] = cright[2];
+    out[9] = cup[2];
+    out[10] = cdir[2];
+    out[11] = 0.0f;
 
-    result->w.x = -bh_point3f_dot(&cright, camera);
-    result->w.y = -bh_point3f_dot(&cup, camera);
-    result->w.z = -bh_point3f_dot(&cdir, camera);
-    result->w.w = 1.0f;
+    out[12] = -BH_Vec3fDot(cright, pos);
+    out[13] = -BH_Vec3fDot(cup, pos);
+    out[14] = -BH_Vec3fDot(cdir, pos);
+    out[15] = 1.0f;
 }
 
 
-void bh_matrix4f_transform_point3f(const bh_matrix4f_t *a,
-                                   const bh_point3f_t *b,
-                                   bh_point3f_t *result)
+void BH_Mat4fApplyVec4f(const float *a,
+                        const float *b,
+                        float *out)
 {
-    bh_point4f_t tmp, row;
+    float tmp[4], row[4];
 
-    row.x = row.y = row.z = row.w = b->x; bh_point4f_mul(&a->x, &row, &tmp);
-    row.x = row.y = row.z = row.w = b->y; bh_point4f_madd(&a->y, &row, &tmp, &tmp);
-    row.x = row.y = row.z = row.w = b->z; bh_point4f_madd(&a->z, &row, &tmp, &tmp);
-    row.x = row.y = row.z = row.w = 1.0f; bh_point4f_madd(&a->w, &row, &tmp, &tmp);
+    row[0] = row[1] = row[2] = row[3] = b[0]; BH_Vec4fMul(&a[0], row, tmp);
+    row[0] = row[1] = row[2] = row[3] = b[1]; BH_Vec4fMulAdd(&a[4], row, tmp, tmp);
+    row[0] = row[1] = row[2] = row[3] = b[2]; BH_Vec4fMulAdd(&a[8], row, tmp, tmp);
+    row[0] = row[1] = row[2] = row[3] = b[3]; BH_Vec4fMulAdd(&a[12], row, tmp, tmp);
 
-    result->x = tmp.x;
-    result->y = tmp.y;
-    result->z = tmp.z;
+    memcpy(out, tmp, sizeof(tmp));
 }
 
 
-void bh_matrix4f_transform_point4f(const bh_matrix4f_t *a,
-                                   const bh_point4f_t *b,
-                                   bh_point4f_t *result)
+void BH_Mat4fApplyVec3f(const float *a,
+                        const float *b,
+                        float *out)
 {
-    bh_point4f_t tmp, row;
+    float tmp[4], row[4];
 
-    row.x = row.y = row.z = row.w = b->x; bh_point4f_mul(&a->x, &row, &tmp);
-    row.x = row.y = row.z = row.w = b->y; bh_point4f_madd(&a->y, &row, &tmp, &tmp);
-    row.x = row.y = row.z = row.w = b->z; bh_point4f_madd(&a->z, &row, &tmp, &tmp);
-    row.x = row.y = row.z = row.w = b->w; bh_point4f_madd(&a->w, &row, &tmp, &tmp);
+    row[0] = row[1] = row[2] = row[3] = b[0]; BH_Vec4fMul(&a[0], row, tmp);
+    row[0] = row[1] = row[2] = row[3] = b[1]; BH_Vec4fMulAdd(&a[4], row, tmp, tmp);
+    row[0] = row[1] = row[2] = row[3] = b[2]; BH_Vec4fMulAdd(&a[8], row, tmp, tmp);
+    row[0] = row[1] = row[2] = row[3] = 1.0f; BH_Vec4fMulAdd(&a[12], row, tmp, tmp);
 
-    *result = tmp;
+    memcpy(out, tmp, sizeof(float) * 3);
 }
 
 
-void bh_matrix3f_identity(bh_matrix3f_t *result)
+void BH_Mat3fIdentity(float *out)
 {
-    static const bh_matrix3f_t ident = {
-        {1.0f, 0.0f, 0.0f},
-        {0.0f, 1.0f, 0.0f},
-        {0.0f, 0.0f, 1.0f}
+    static const float ident[9] =
+    {
+        1.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 1.0f
     };
 
-    *result = ident;
+    memcpy(out, ident, sizeof(ident));
 }
 
 
-void bh_matrix3f_add(const bh_matrix3f_t *a,
-                     const bh_matrix3f_t *b,
-                     bh_matrix3f_t *result)
+void BH_Mat3fAdd(const float *a,
+                 const float *b,
+                 float *out)
 {
-    bh_point3f_add(&a->x, &b->x, &result->x);
-    bh_point3f_add(&a->y, &b->y, &result->y);
-    bh_point3f_add(&a->z, &b->z, &result->z);
+    BH_Vec3fAdd(&a[0], &b[0], &out[0]);
+    BH_Vec3fAdd(&a[3], &b[3], &out[3]);
+    BH_Vec3fAdd(&a[6], &b[6], &out[6]);
 }
 
 
-void bh_matrix3f_sub(const bh_matrix3f_t *a,
-                     const bh_matrix3f_t *b,
-                     bh_matrix3f_t *result)
+void BH_Mat3fSub(const float *a,
+                 const float *b,
+                 float *out)
 {
-    bh_point3f_sub(&a->x, &b->x, &result->x);
-    bh_point3f_sub(&a->y, &b->y, &result->y);
-    bh_point3f_sub(&a->z, &b->z, &result->z);
+    BH_Vec3fSub(&a[0], &b[0], &out[0]);
+    BH_Vec3fSub(&a[3], &b[3], &out[3]);
+    BH_Vec3fSub(&a[6], &b[6], &out[6]);
 }
 
 
-void bh_matrix3f_mul(const bh_matrix3f_t *a,
-                     const bh_matrix3f_t *b,
-                     bh_matrix3f_t *result)
+void BH_Mat3fMul(const float *a,
+                 const float *b,
+                 float *out)
 {
-    bh_matrix3f_t tmp;
-    bh_point3f_t row;
+    float tmp[9], row[3];
 
-    row.x = row.y = row.z = b->x.x; bh_point3f_mul(&a->x, &row, &tmp.x);
-    row.x = row.y = row.z = b->x.y; bh_point3f_madd(&a->y, &row, &tmp.x, &tmp.x);
-    row.x = row.y = row.z = b->x.z; bh_point3f_madd(&a->z, &row, &tmp.x, &tmp.x);
+    row[0] = row[1] = row[2] = b[0]; BH_Vec3fMul(&a[0], row, &tmp[0]);
+    row[0] = row[1] = row[2] = b[1]; BH_Vec3fMulAdd(&a[3], row, &tmp[0], &tmp[0]);
+    row[0] = row[1] = row[2] = b[2]; BH_Vec3fMulAdd(&a[6], row, &tmp[0], &tmp[0]);
 
-    row.x = row.y = row.z = b->y.x; bh_point3f_mul(&a->x, &row, &tmp.y);
-    row.x = row.y = row.z = b->y.y; bh_point3f_madd(&a->y, &row, &tmp.y, &tmp.y);
-    row.x = row.y = row.z = b->y.z; bh_point3f_madd(&a->z, &row, &tmp.y, &tmp.y);
+    row[0] = row[1] = row[2] = b[3]; BH_Vec3fMul(&a[0], row, &tmp[3]);
+    row[0] = row[1] = row[2] = b[4]; BH_Vec3fMulAdd(&a[3], row, &tmp[3], &tmp[3]);
+    row[0] = row[1] = row[2] = b[5]; BH_Vec3fMulAdd(&a[6], row, &tmp[3], &tmp[3]);
 
-    row.x = row.y = row.z = b->z.x; bh_point3f_mul(&a->x, &row, &tmp.z);
-    row.x = row.y = row.z = b->z.y; bh_point3f_madd(&a->y, &row, &tmp.z, &tmp.z);
-    row.x = row.y = row.z = b->z.z; bh_point3f_madd(&a->z, &row, &tmp.z, &tmp.z);
+    row[0] = row[1] = row[2] = b[6]; BH_Vec3fMul(&a[0], row, &tmp[6]);
+    row[0] = row[1] = row[2] = b[7]; BH_Vec3fMulAdd(&a[3], row, &tmp[6], &tmp[6]);
+    row[0] = row[1] = row[2] = b[8]; BH_Vec3fMulAdd(&a[6], row, &tmp[6], &tmp[6]);
 
-    *result = tmp;
+    memcpy(out, tmp, sizeof(tmp));
 }
 
 
-void bh_matrix3f_scale(const bh_matrix3f_t *a,
-                       float b,
-                       bh_matrix3f_t *result)
+void BH_Mat3fScale(const float *a,
+                   float b,
+                   float *out)
 {
-    bh_point3f_scale(&a->x, b, &result->x);
-    bh_point3f_scale(&a->y, b, &result->y);
-    bh_point3f_scale(&a->z, b, &result->z);
+    BH_Vec3fScale(&a[0], b, &out[0]);
+    BH_Vec3fScale(&a[3], b, &out[3]);
+    BH_Vec3fScale(&a[6], b, &out[6]);
 }
 
 
-void bh_matrix3f_transpose(const bh_matrix3f_t *in,
-                           bh_matrix3f_t *result)
+void BH_Mat3fTranspose(const float *in,
+                       float *out)
 {
-    bh_matrix3f_t tmp;
+    float tmp[9];
 
-    tmp.x.x = in->x.x;
-    tmp.x.y = in->y.x;
-    tmp.x.z = in->z.x;
+    tmp[0] = in[0]; tmp[3] = in[1]; tmp[6] = in[2];
+    tmp[1] = in[3]; tmp[4] = in[4]; tmp[7] = in[5];
+    tmp[2] = in[6]; tmp[5] = in[7]; tmp[8] = in[8];
 
-    tmp.y.x = in->x.y;
-    tmp.y.y = in->y.y;
-    tmp.y.z = in->z.y;
-
-    tmp.z.x = in->x.z;
-    tmp.z.y = in->y.z;
-    tmp.z.z = in->z.z;
-
-    *result = tmp;
+    memcpy(out, tmp, sizeof(tmp));
 }
 
 
-float bh_matrix3f_trace(const bh_matrix3f_t *in)
+float BH_Mat3fTrace(const float *in)
 {
-    return in->x.x + in->y.y + in->z.z;
+    return in[0] + in[4] + in[8];
 }
 
 
-float bh_matrix3f_determinant(const bh_matrix3f_t *in)
+float BH_Mat3fDet(const float *in)
 {
     float a, b, c, result;
 
-    a = in->y.y * in->z.z - in->z.y * in->y.z;
-    b = in->x.y * in->z.z - in->z.y * in->x.z;
-    c = in->x.y * in->y.z - in->y.y * in->x.z;
+    a = in[4] * in[8] - in[7] * in[5];
+    b = in[1] * in[8] - in[7] * in[2];
+    c = in[1] * in[5] - in[4] * in[2];
 
     result = 0.0f;
-    result += in->x.x * a;
-    result -= in->y.x * b;
-    result += in->z.x * c;
+    result += in[0] * a;
+    result -= in[3] * b;
+    result += in[6] * c;
 
     return result;
 }
 
 
-int bh_matrix3f_inverse(const bh_matrix3f_t *in,
-                        bh_matrix3f_t *result)
+int BH_Mat3fInverse(const float *in,
+                    float *out)
 {
     float a, b, c, det;
-    bh_matrix3f_t tmp;
+    float tmp[16];
 
-    a = in->y.y * in->z.z - in->z.y * in->y.z;
-    b = in->x.y * in->z.z - in->z.y * in->x.z;
-    c = in->x.y * in->y.z - in->y.y * in->x.z;
+    a = in[4] * in[8] - in[7] * in[5];
+    b = in[1] * in[8] - in[7] * in[2];
+    c = in[1] * in[5] - in[4] * in[2];
 
-    tmp.x.x = a;
-    tmp.x.y = -b;
-    tmp.x.z = c;
+    tmp[0] =  a;
+    tmp[1] = -b;
+    tmp[2] =  c;
 
     det = 0.0f;
-    det += in->x.x * tmp.x.x;
-    det += in->y.x * tmp.x.y;
-    det += in->z.x * tmp.x.z;
+    det += in[0] * tmp[0];
+    det += in[3] * tmp[1];
+    det += in[6] * tmp[2];
 
     if (det == 0.0f)
         return BH_ERROR;
 
-    a = in->y.x * in->z.z - in->z.x * in->y.z;
-    b = in->x.x * in->z.z - in->z.x * in->x.z;
-    c = in->x.x * in->y.z - in->y.x * in->x.z;
+    a = in[3] * in[8] - in[6] * in[5];
+    b = in[0] * in[8] - in[6] * in[2];
+    c = in[0] * in[5] - in[3] * in[2];
 
-    tmp.y.x = -a;
-    tmp.y.y = b;
-    tmp.y.z = -c;
+    tmp[3] = -a;
+    tmp[4] =  b;
+    tmp[5] = -c;
 
-    a = in->y.x * in->z.y - in->z.x * in->y.y;
-    b = in->x.x * in->z.y - in->z.x * in->x.y;
-    c = in->x.x * in->y.y - in->y.x * in->x.y;
+    a = in[3] * in[7] - in[6] * in[4];
+    b = in[0] * in[7] - in[6] * in[1];
+    c = in[0] * in[4] - in[3] * in[1];
 
-    tmp.z.x = a;
-    tmp.z.y = -b;
-    tmp.z.z = c;
+    tmp[6] =  a;
+    tmp[7] = -b;
+    tmp[8] =  c;
 
-    bh_matrix3f_scale(&tmp, 1.0f / det, result);
+    BH_Mat3fScale(tmp, 1.0f / det, out);
     return BH_OK;
 }
 
 
-void bh_matrix3f_scaling(float x,
-                         float y,
-                         bh_matrix3f_t *result)
+void BH_Mat3fFromScale(float x,
+                       float y,
+                       float *out)
 {
-    bh_matrix3f_identity(result);
-
-    result->x.x = x;
-    result->y.y = y;
+    BH_Mat3fIdentity(out);
+    out[0] = x;
+    out[4] = y;
 }
 
 
-void bh_matrix3f_translation(float x,
+void BH_Mat3fFromTranslation(float x,
                              float y,
-                             bh_matrix3f_t *result)
+                             float *out)
 {
-    bh_matrix3f_identity(result);
-
-    result->z.x = x;
-    result->z.y = y;
+    BH_Mat3fIdentity(out);
+    out[6] = x;
+    out[7] = y;
 }
 
 
-void bh_matrix3f_rotation(float angle,
-                          bh_matrix3f_t *result)
+void BH_Mat3fFromRotation(float angle,
+                          float *out)
 {
     float c, s;
 
-    c = cosf(angle);
-    s = sinf(angle);
+    c = cos(angle);
+    s = sin(angle);
 
-    bh_matrix3f_identity(result);
-    result->x.x = c;
-    result->y.y = c;
-    result->y.x = -s;
-    result->x.y = s;
+    BH_Mat3fIdentity(out);
+    out[0] = c;
+    out[1] = s;
+    out[3] = -s;
+    out[4] = c;
 }
 
 
-void bh_matrix3f_transform_point2f(const bh_matrix3f_t *a,
-                                   const bh_point2f_t *b,
-                                   bh_point2f_t *result)
+void BH_Mat3fApplyVec3f(float *a,
+                        float *b,
+                        float *out)
 {
-    bh_point3f_t tmp, row;
+    float tmp[3], row[3];
 
-    row.x = row.y = row.z = b->x; bh_point3f_mul(&a->x, &row, &tmp);
-    row.x = row.y = row.z = b->y; bh_point3f_madd(&a->y, &row, &tmp, &tmp);
-    row.x = row.y = row.z = 1.0f; bh_point3f_madd(&a->z, &row, &tmp, &tmp);
+    row[0] = row[1] = row[2] = b[0]; BH_Vec3fMul(&a[0], row, tmp);
+    row[0] = row[1] = row[2] = b[1]; BH_Vec3fMulAdd(&a[3], row, tmp, tmp);
+    row[0] = row[1] = row[2] = b[2]; BH_Vec3fMulAdd(&a[6], row, tmp, tmp);
 
-    result->x = tmp.x;
-    result->y = tmp.y;
+    memcpy(out, tmp, sizeof(tmp));
 }
 
 
-void bh_matrix3f_transform_point3f(const bh_matrix3f_t *a,
-                                   const bh_point3f_t *b,
-                                   bh_point3f_t *result)
+void BH_Mat3fApplyVec2f(float *a,
+                        float *b,
+                        float *out)
 {
-    bh_point3f_t tmp, row;
+    float tmp[3], row[3];
 
-    row.x = row.y = row.z = b->x; bh_point3f_mul(&a->x, &row, &tmp);
-    row.x = row.y = row.z = b->y; bh_point3f_madd(&a->y, &row, &tmp, &tmp);
-    row.x = row.y = row.z = b->z; bh_point3f_madd(&a->z, &row, &tmp, &tmp);
+    row[0] = row[1] = row[2] = b[0]; BH_Vec3fMul(&a[0], row, tmp);
+    row[0] = row[1] = row[2] = b[1]; BH_Vec3fMulAdd(&a[3], row, tmp, tmp);
+    row[0] = row[1] = row[2] = 1.0f; BH_Vec3fMulAdd(&a[6], row, tmp, tmp);
 
-    result->x = tmp.x;
-    result->y = tmp.y;
-    result->z = tmp.z;
+    memcpy(out, tmp, sizeof(float) * 2);
 }

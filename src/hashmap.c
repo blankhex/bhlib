@@ -3,29 +3,29 @@
 #include <string.h>
 
 
-typedef struct bh_hashmap_node_s
+typedef struct BH_HashmapNode
 {
     void *key;
     void *value;
-} bh_hashmap_node_t;
+} BH_HashmapNode;
 
 
-struct bh_hashmap_s
+struct BH_Hashmap
 {
-    bh_hashmap_node_t *data;
+    BH_HashmapNode *data;
     size_t *psls;
     size_t size;
     size_t capacity;
     size_t threshold;
-    bh_equal_cb_t equal;
-    bh_hash_cb_t hash;
+    BH_EqualCallback equal;
+    BH_HashCallback hash;
     float factor;
 };
 
 
-static void bh_hashmap_init(bh_hashmap_t *hashmap,
-                            bh_equal_cb_t equal,
-                            bh_hash_cb_t hash)
+static void BH_HashmapInit(BH_Hashmap *hashmap,
+                           BH_EqualCallback equal,
+                           BH_HashCallback hash)
 {
     memset(hashmap, 0, sizeof(*hashmap));
     hashmap->factor = 0.75f;
@@ -34,7 +34,7 @@ static void bh_hashmap_init(bh_hashmap_t *hashmap,
 }
 
 
-static void bh_hashmap_destroy(bh_hashmap_t *hashmap)
+static void BH_HashmapDestroy(BH_Hashmap *hashmap)
 {
     if (hashmap->capacity)
     {
@@ -44,10 +44,10 @@ static void bh_hashmap_destroy(bh_hashmap_t *hashmap)
 }
 
 
-static int calc_capacity(size_t size,
-                         float factor,
-                         size_t *capacity,
-                         size_t *threshold)
+static int BH_CalcCapacity(size_t size,
+                           float factor,
+                           size_t *capacity,
+                           size_t *threshold)
 {
     /* Check if we need any capacity at all */
     if (!size)
@@ -71,54 +71,54 @@ static int calc_capacity(size_t size,
     }
 
     /* Catch malloc overflow */
-    if (*capacity >= ((size_t)-1) / sizeof(bh_hashmap_node_t))
+    if (*capacity >= ((size_t)-1) / sizeof(BH_HashmapNode))
         return BH_OOM;
 
     return BH_OK;
 }
 
 
-static void copy_hashmap(bh_hashmap_t *dest,
-                         bh_hashmap_t *src)
+static void BH_CopyHashmap(BH_Hashmap *dest,
+                           BH_Hashmap *src)
 {
     void *iter;
 
     /* Iterate and insert data into hashmap */
-    iter = bh_hashmap_iter_next(src, NULL);
+    iter = BH_HashmapIterNext(src, NULL);
     while (iter)
     {
         void *key, *value;
 
-        key = bh_hashmap_iter_key(iter);
-        value = bh_hashmap_iter_value(iter);
-        bh_hashmap_insert(dest, key, value);
+        key = BH_HashmapIterKey(iter);
+        value = BH_HashmapIterValue(iter);
+        BH_HashmapInsert(dest, key, value);
 
-        iter = bh_hashmap_iter_next(src, iter);
+        iter = BH_HashmapIterNext(src, iter);
     }
 }
 
 
-bh_hashmap_t *bh_hashmap_new(bh_equal_cb_t equal,
-                             bh_hash_cb_t hash)
+BH_Hashmap *BH_HashmapNew(BH_EqualCallback equal,
+                          BH_HashCallback hash)
 {
-    bh_hashmap_t *result;
+    BH_Hashmap *result;
 
     result = malloc(sizeof(*result));
     if (result)
-        bh_hashmap_init(result, equal, hash);
+        BH_HashmapInit(result, equal, hash);
 
     return result;
 }
 
 
-void bh_hashmap_free(bh_hashmap_t *hashmap)
+void BH_HashmapFree(BH_Hashmap *hashmap)
 {
-    bh_hashmap_destroy(hashmap);
+    BH_HashmapDestroy(hashmap);
     free(hashmap);
 }
 
 
-void bh_hashmap_clear(bh_hashmap_t *hashmap)
+void BH_HashmapClear(BH_Hashmap *hashmap)
 {
     if (hashmap->capacity)
         memset(hashmap->psls, 0, hashmap->capacity * sizeof(size_t));
@@ -126,10 +126,10 @@ void bh_hashmap_clear(bh_hashmap_t *hashmap)
 }
 
 
-int bh_hashmap_reserve(bh_hashmap_t *hashmap,
-                       size_t size)
+int BH_HashmapReserve(BH_Hashmap *hashmap,
+                      size_t size)
 {
-    bh_hashmap_t other;
+    BH_Hashmap other;
     size_t capacity, threshold;
 
     /* New capacity can't be smaller then current hashmap size */
@@ -137,7 +137,7 @@ int bh_hashmap_reserve(bh_hashmap_t *hashmap,
         size = hashmap->size;
 
     /* Calculate new capacity */
-    if (calc_capacity(size, hashmap->factor, &capacity, &threshold))
+    if (BH_CalcCapacity(size, hashmap->factor, &capacity, &threshold))
         return BH_OOM;
 
     /* Prevent same size reallocation */
@@ -145,7 +145,7 @@ int bh_hashmap_reserve(bh_hashmap_t *hashmap,
         return BH_OK;
 
     /* Initialize new hashmap */
-    bh_hashmap_init(&other, hashmap->equal, hashmap->hash);
+    BH_HashmapInit(&other, hashmap->equal, hashmap->hash);
     other.factor = hashmap->factor;
 
     if (capacity)
@@ -170,26 +170,26 @@ int bh_hashmap_reserve(bh_hashmap_t *hashmap,
         memset(other.psls, 0, sizeof(size_t) * other.capacity);
 
         /* Copy data from old hashmap to the new hashmap */
-        copy_hashmap(&other, hashmap);
+        BH_CopyHashmap(&other, hashmap);
     }
 
     /* Swap hashmaps */
-    bh_hashmap_destroy(hashmap);
+    BH_HashmapDestroy(hashmap);
     *hashmap = other;
     return BH_OK;
 }
 
 
-int bh_hashmap_insert(bh_hashmap_t *hashmap,
-                      void *key,
-                      void *value)
+int BH_HashmapInsert(BH_Hashmap *hashmap,
+                     void *key,
+                     void *value)
 {
     size_t bucket, psl, tmp_psl;
-    bh_hashmap_node_t item, tmp;
+    BH_HashmapNode item, tmp;
 
     /* Try to stay below hashmap threshold */
     if (hashmap->size + 1 > hashmap->threshold)
-        if (bh_hashmap_reserve(hashmap, hashmap->size + 1))
+        if (BH_HashmapReserve(hashmap, hashmap->size + 1))
             if (hashmap->size >= hashmap->capacity)
                 return BH_OOM;
 
@@ -228,60 +228,60 @@ int bh_hashmap_insert(bh_hashmap_t *hashmap,
 }
 
 
-void bh_hashmap_remove(bh_hashmap_t *hashmap,
-                       void *key)
+void BH_HashmapRemove(BH_Hashmap *hashmap,
+                      void *key)
 {
     void *iter;
 
-    iter = bh_hashmap_iter_at(hashmap, key);
+    iter = BH_HashmapIterAt(hashmap, key);
     if (iter)
-        bh_hashmap_iter_remove(hashmap, iter);
+        BH_HashmapIterRemove(hashmap, iter);
 }
 
 
-int bh_hashmap_at(bh_hashmap_t *hashmap,
-                  void *key,
-                  void **value)
+int BH_HashmapAt(BH_Hashmap *hashmap,
+                 void *key,
+                 void **value)
 {
     void *iter;
-    iter = bh_hashmap_iter_at(hashmap, key);
+    iter = BH_HashmapIterAt(hashmap, key);
 
     if (!iter)
         return BH_NOTFOUND;
 
     if (value)
-        *value = bh_hashmap_iter_value(iter);
+        *value = BH_HashmapIterValue(iter);
 
     return BH_OK;
 }
 
 
-int bh_hashmap_empty(bh_hashmap_t *hashmap)
+int BH_HashmapEmpty(BH_Hashmap *hashmap)
 {
     return !hashmap->size;
 }
 
 
-size_t bh_hashmap_size(bh_hashmap_t *hashmap)
+size_t BH_HashmapSize(BH_Hashmap *hashmap)
 {
     return hashmap->size;
 }
 
 
-size_t bh_hashmap_capacity(bh_hashmap_t *hashmap)
+size_t BH_HashmapCapacity(BH_Hashmap *hashmap)
 {
     return hashmap->capacity;
 }
 
 
-float bh_hashmap_factor(bh_hashmap_t *hashmap)
+float BH_HashmapFactor(BH_Hashmap *hashmap)
 {
     return hashmap->factor;
 }
 
 
-void bh_hashmap_set_factor(bh_hashmap_t *hashmap,
-                           float factor)
+void BH_HashmapSetFactor(BH_Hashmap *hashmap,
+                         float factor)
 {
     /* Limit the factor value to [0.15, 1.0] */
     factor = (factor > 1.0f) ? (1.0f) : (factor);
@@ -293,8 +293,8 @@ void bh_hashmap_set_factor(bh_hashmap_t *hashmap,
 }
 
 
-void *bh_hashmap_iter_at(bh_hashmap_t *hashmap,
-                         void *key)
+void *BH_HashmapIterAt(BH_Hashmap *hashmap,
+                       void *key)
 {
     size_t bucket, psl;
 
@@ -321,12 +321,12 @@ void *bh_hashmap_iter_at(bh_hashmap_t *hashmap,
 }
 
 
-void *bh_hashmap_iter_next(bh_hashmap_t *hashmap,
-                           void *iter)
+void *BH_HashmapIterNext(BH_Hashmap *hashmap,
+                         void *iter)
 {
-    bh_hashmap_node_t *item;
+    BH_HashmapNode *item;
 
-    item = (bh_hashmap_node_t *)iter;
+    item = (BH_HashmapNode *)iter;
     while (1)
     {
         /* Advance or set iterator to the first element */
@@ -346,8 +346,8 @@ void *bh_hashmap_iter_next(bh_hashmap_t *hashmap,
 }
 
 
-void bh_hashmap_iter_remove(bh_hashmap_t *hashmap,
-                            void *iter)
+void BH_HashmapIterRemove(BH_Hashmap *hashmap,
+                          void *iter)
 {
     size_t bucket, next_bucket;
 
@@ -357,7 +357,7 @@ void bh_hashmap_iter_remove(bh_hashmap_t *hashmap,
 
     /* Adjust hashmap size, calculate current and next bucket index */
     hashmap->size--;
-    bucket = (bh_hashmap_node_t *)iter - hashmap->data;
+    bucket = (BH_HashmapNode *)iter - hashmap->data;
     next_bucket = (bucket + 1) & (hashmap->capacity - 1);
 
     /* Shift all elements toward their preffered place */
@@ -377,14 +377,14 @@ void bh_hashmap_iter_remove(bh_hashmap_t *hashmap,
 }
 
 
-void *bh_hashmap_iter_key(void *iter)
+void *BH_HashmapIterKey(void *iter)
 {
-    return ((bh_hashmap_node_t *)iter)->key;
+    return ((BH_HashmapNode *)iter)->key;
 }
 
 
-void *bh_hashmap_iter_value(void *iter)
+void *BH_HashmapIterValue(void *iter)
 {
-    return ((bh_hashmap_node_t *)iter)->value;
+    return ((BH_HashmapNode *)iter)->value;
 }
 

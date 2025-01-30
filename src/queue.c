@@ -3,7 +3,7 @@
 #include <string.h>
 
 
-struct bh_queue_s
+struct BH_Queue
 {
     void **data;
     size_t size;
@@ -13,54 +13,54 @@ struct bh_queue_s
 };
 
 
-static void bh_queue_init(bh_queue_t *queue)
+static void BH_QueueInit(BH_Queue *queue)
 {
     memset(queue, 0, sizeof(*queue));
 }
 
 
-static void bh_queue_destroy(bh_queue_t *queue)
+static void BH_QueueDestroy(BH_Queue *queue)
 {
     if (queue->capacity)
         free(queue->data);
 }
 
 
-static void queue_copy(bh_queue_t *dest,
-                       bh_queue_t *src)
+static void BH_QueueCopy(BH_Queue *dest,
+                       BH_Queue *src)
 {
     void *iter;
 
     /* Iterate over old queue and insert data into new queue */
-    iter = bh_queue_iter_next(src, NULL);
+    iter = BH_QueueIterNext(src, NULL);
     while (iter)
     {
-        bh_queue_insert(dest, bh_queue_iter_value(iter));
-        iter = bh_queue_iter_next(src, iter);
+        BH_QueueInsert(dest, BH_QueueIterValue(iter));
+        iter = BH_QueueIterNext(src, iter);
     }
 }
 
 
-bh_queue_t *bh_queue_new(void)
+BH_Queue *BH_QueueNew(void)
 {
-    bh_queue_t *result;
+    BH_Queue *result;
 
     result = malloc(sizeof(*result));
     if (result)
-        bh_queue_init(result);
+        BH_QueueInit(result);
 
     return result;
 }
 
 
-void bh_queue_free(bh_queue_t *queue)
+void BH_QueueFree(BH_Queue *queue)
 {
-    bh_queue_destroy(queue);
+    BH_QueueDestroy(queue);
     free(queue);
 }
 
 
-void bh_queue_clear(bh_queue_t *queue)
+void BH_QueueClear(BH_Queue *queue)
 {
     queue->head = 0;
     queue->tail = 0;
@@ -68,10 +68,10 @@ void bh_queue_clear(bh_queue_t *queue)
 }
 
 
-int bh_queue_reserve(bh_queue_t *queue,
+int BH_QueueReserve(BH_Queue *queue,
                      size_t size)
 {
-    bh_queue_t other;
+    BH_Queue other;
 
     /* New capacity should be great or equal to current size */
     if (size < queue->size)
@@ -86,7 +86,7 @@ int bh_queue_reserve(bh_queue_t *queue,
         return BH_OK;
 
     /* Prepare new empty queue */
-    bh_queue_init(&other);
+    BH_QueueInit(&other);
     if (size)
     {
         /* Allocate new capacity for the queue */
@@ -96,7 +96,7 @@ int bh_queue_reserve(bh_queue_t *queue,
             return BH_OOM;
 
         /* Iterate over old queue and insert data into new queue */
-        queue_copy(&other, queue);
+        BH_QueueCopy(&other, queue);
     }
 
     /* If old queue had allocated data - free it */
@@ -109,7 +109,7 @@ int bh_queue_reserve(bh_queue_t *queue,
 }
 
 
-int bh_queue_insert(bh_queue_t *queue,
+int BH_QueueInsert(BH_Queue *queue,
                     void *value)
 {
     /* Check if queue can contain new element */
@@ -119,7 +119,7 @@ int bh_queue_insert(bh_queue_t *queue,
 
         /* Check for capacity overflow and reserve capacity */
         capacity = (queue->capacity) ? (queue->capacity * 2) : (16);
-        if (capacity < queue->capacity || bh_queue_reserve(queue, capacity))
+        if (capacity < queue->capacity || BH_QueueReserve(queue, capacity))
             return BH_OOM;
     }
 
@@ -133,7 +133,7 @@ int bh_queue_insert(bh_queue_t *queue,
 }
 
 
-void bh_queue_remove(bh_queue_t *queue)
+void BH_QueueRemove(BH_Queue *queue)
 {
     /* Do nothing if queue is empty */
     if (!queue->size)
@@ -146,7 +146,7 @@ void bh_queue_remove(bh_queue_t *queue)
 }
 
 
-int bh_queue_front(bh_queue_t *queue, void **value)
+int BH_QueueFront(BH_Queue *queue, void **value)
 {
     /* Do nothing if queue is empty */
     if (!queue->size)
@@ -158,25 +158,25 @@ int bh_queue_front(bh_queue_t *queue, void **value)
 }
 
 
-int bh_queue_empty(bh_queue_t *queue)
+int BH_QueueEmpty(BH_Queue *queue)
 {
     return !queue->size;
 }
 
 
-size_t bh_queue_size(bh_queue_t *queue)
+size_t BH_QueueSize(BH_Queue *queue)
 {
     return queue->size;
 }
 
 
-size_t bh_queue_capacity(bh_queue_t *queue)
+size_t BH_QueueCapacity(BH_Queue *queue)
 {
     return queue->capacity;
 }
 
 
-void *bh_queue_iter_next(bh_queue_t *queue,
+void *BH_QueueIterNext(BH_Queue *queue,
                          void *iter)
 {
     void **element = (void **)iter;
@@ -203,7 +203,7 @@ void *bh_queue_iter_next(bh_queue_t *queue,
 }
 
 
-void *bh_queue_iter_value(void *iter)
+void *BH_QueueIterValue(void *iter)
 {
     return *(void **)iter;
 }

@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <math.h>
 
-typedef int (*bh_unit_cb_t)(void);
+typedef int (*BH_UnitCallback)(void);
 
 #define BH_VERIFY(e) \
     do { \
@@ -34,7 +34,23 @@ typedef int (*bh_unit_cb_t)(void);
     } while(0)
 
 
-void bh_unit_add(const char *name, bh_unit_cb_t func);
-int bh_unit_run(void);
+
+/**
+ * Adds unit test \a cb with name \a name for the testing.
+ *
+ * \param name  Unit test name
+ * \param cb    Unit test function
+ */
+void BH_UnitAdd(const char *name,
+                BH_UnitCallback cb);
+
+
+/**
+ * Runs unit tests.
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_UnitRun(void);
 
 #endif /* BH_UNIT_H */

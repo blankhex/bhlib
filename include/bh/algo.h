@@ -12,7 +12,7 @@
  * \param src	Pointer to the element
  * \param size	Element size in bytes
  */
-void bh_swap(void *dest,
+void BH_Swap(void *dest,
              void *src,
              size_t size);
 
@@ -30,11 +30,11 @@ void bh_swap(void *dest,
  *
  * \return Pointer to the first element of the second partition.
  */
-void *bh_partition(void *pivot,
+void *BH_Partition(void *pivot,
                    void *array,
                    size_t size,
                    size_t element,
-                   bh_equal_cb_t equal);
+                   BH_EqualCallback equal);
 
 
 /**
@@ -45,10 +45,10 @@ void *bh_partition(void *pivot,
  * \param element   Element size in bytes
  * \param equal     Comparision function
  */
-void bh_sort(void *array,
+void BH_Sort(void *array,
              size_t size,
              size_t element,
-             bh_equal_cb_t equal);
+             BH_EqualCallback equal);
 
 
 /**
@@ -59,10 +59,10 @@ void bh_sort(void *array,
  * \param element   Element size in bytes
  * \param equal     Comparision function
  */
-void bh_heap_make(void *array,
-                  size_t size,
-                  size_t element,
-                  bh_equal_cb_t equal);
+void BH_HeapMake(void *array,
+                 size_t size,
+                 size_t element,
+                 BH_EqualCallback equal);
 
 
 /**
@@ -73,10 +73,10 @@ void bh_heap_make(void *array,
  * \param element   Element size in bytes
  * \param equal     Comparasion function
  */
-void bh_heap_remove(void *array,
-                    size_t size,
-                    size_t element,
-                    bh_equal_cb_t equal);
+void BH_HeapRemove(void *array,
+                   size_t size,
+                   size_t element,
+                   BH_EqualCallback equal);
 
 
 /**
@@ -91,11 +91,11 @@ void bh_heap_remove(void *array,
  * \param element   Element size in bytes
  * \param equal     Comparasion function
  */
-void bh_heap_insert(void *value,
-                    void *array,
-                    size_t size,
-                    size_t element,
-                    bh_equal_cb_t equal);
+void BH_HeapInsert(void *value,
+                   void *array,
+                   size_t size,
+                   size_t element,
+                   BH_EqualCallback equal);
 
 
 /**
@@ -106,8 +106,8 @@ void bh_heap_insert(void *value,
  *
  * This function is roughly equivalent to the following code:
  * \code
- * bh_heap_remove(array, size, element, equal);
- * bh_heap_insert(value, array, size - 1, element, equal);
+ * BH_HeapRemove(array, size, element, equal);
+ * BH_HeapInsert(value, array, size - 1, element, equal);
  * \endcode
  *
  * \param value     Pointer to the value
@@ -116,11 +116,11 @@ void bh_heap_insert(void *value,
  * \param element   Element size in bytes
  * \param equal     Comparasion function
  */
-void bh_heap_replace(void *value,
-                     void *array,
-                     size_t size,
-                     size_t element,
-                     bh_equal_cb_t equal);
+void BH_HeapReplace(void *value,
+                    void *array,
+                    size_t size,
+                    size_t element,
+                    BH_EqualCallback equal);
 
 
 #endif /* BH_ALGO_H */

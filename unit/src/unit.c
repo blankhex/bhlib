@@ -1,27 +1,31 @@
 #include <bh/unit.h>
 #include <stdlib.h>
 
-typedef struct bh_unit_s
+typedef struct BH_Unit
 {
-    struct bh_unit_s *next;
+    struct BH_Unit *next;
     const char *name;
-    bh_unit_cb_t func;
-} bh_unit_t;
+    BH_UnitCallback cb;
+} BH_Unit;
 
-static bh_unit_t *root = NULL;
 
-void bh_unit_add(const char *name, bh_unit_cb_t func)
+static BH_Unit *root = NULL;
+
+
+void BH_UnitAdd(const char *name, BH_UnitCallback cb)
 {
-    bh_unit_t *unit, *current;
+    BH_Unit *unit, *current;
 
+    /* Allocate and fill new unit test entry */
     unit = malloc(sizeof(*unit));
     if (!unit)
         return;
 
-    unit->name = name;
-    unit->func = func;
     unit->next = NULL;
+    unit->name = name;
+    unit->cb = cb;
 
+    /* Append unit test entry */
     current = root;
     while (current && current->next)
         current = current->next;
@@ -32,16 +36,17 @@ void bh_unit_add(const char *name, bh_unit_cb_t func)
         root = unit;
 }
 
-int bh_unit_run(void)
+
+int BH_UnitRun(void)
 {
-    bh_unit_t *current;
+    BH_Unit *current;
     printf("Running tests...\n");
 
     current = root;
     while (current)
     {
         printf("%s\n", current->name);
-        if (current->func())
+        if (current->cb())
         {
             printf("\tFAIL\n");
             return -1;

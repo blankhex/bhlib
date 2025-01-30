@@ -2,7 +2,7 @@
 #include <string.h>
 
 
-void bh_swap(void *dest,
+void BH_Swap(void *dest,
              void *src,
              size_t size)
 {
@@ -30,11 +30,11 @@ void bh_swap(void *dest,
 }
 
 
-void *bh_partition(void *pivot,
+void *BH_Partition(void *pivot,
                    void *array,
                    size_t size,
                    size_t element,
-                   bh_equal_cb_t equal)
+                   BH_EqualCallback equal)
 {
     char *start, *end, *i, *j;
 
@@ -66,7 +66,7 @@ void *bh_partition(void *pivot,
             pivot = i;
 
         /* Swap elements and continue */
-        bh_swap(i, j, element);
+        BH_Swap(i, j, element);
         i += element;
         j -= element;
     }
@@ -77,10 +77,10 @@ void *bh_partition(void *pivot,
 
 
 #if 0
-static void bh_sort_insert(void *array,
-                           size_t size,
-                           size_t element,
-                           bh_equal_cb_t equal)
+static void BH_SortInsert(void *array,
+                          size_t size,
+                          size_t element,
+                          BH_EqualCallback equal)
 {
     size_t i, j;
 
@@ -95,7 +95,7 @@ static void bh_sort_insert(void *array,
             rhs = (char *)array + (j - 1) * element;
 
             if (equal(lhs, rhs) < 0)
-                bh_swap(lhs, rhs, element);
+                BH_Swap(lhs, rhs, element);
             else
                 break;
         }
@@ -105,10 +105,10 @@ static void bh_sort_insert(void *array,
 #endif
 
 
-static void bh_sort_shell(void *array,
-                          size_t size,
-                          size_t element,
-                          bh_equal_cb_t equal)
+static void BH_SortShell(void *array,
+                         size_t size,
+                         size_t element,
+                         BH_EqualCallback equal)
 {
     static const size_t gaps[10] = {1750, 701, 301, 132, 57, 23, 10, 4, 1, 0};
     const size_t *gap;
@@ -127,7 +127,7 @@ static void bh_sort_shell(void *array,
                 rhs = (char *)array + (j - *gap) * element;
 
                 if (equal(lhs, rhs) < 0)
-                    bh_swap(lhs, rhs, element);
+                    BH_Swap(lhs, rhs, element);
                 else
                     break;
             }
@@ -136,24 +136,24 @@ static void bh_sort_shell(void *array,
 }
 
 
-static void bh_sort_heap(void *array,
-                         size_t size,
-                         size_t element,
-                         bh_equal_cb_t equal)
+static void BH_SortHeap(void *array,
+                        size_t size,
+                        size_t element,
+                        BH_EqualCallback equal)
 {
     size_t i;
 
-    bh_heap_make(array, size, element, equal);
+    BH_HeapMake(array, size, element, equal);
     for (i = size; i > 0; i--)
-        bh_heap_remove(array, i, element, equal);
+        BH_HeapRemove(array, i, element, equal);
 }
 
 
-static void bh_sort_intro_r(void *array,
-                            size_t size,
-                            size_t element,
-                            bh_equal_cb_t equal,
-                            size_t depth)
+static void BH_SortIntroR(void *array,
+                          size_t size,
+                          size_t element,
+                          BH_EqualCallback equal,
+                          size_t depth)
 {
     /* Introsort (with manual tail call optimization) */
     while (1)
@@ -163,13 +163,13 @@ static void bh_sort_intro_r(void *array,
         if (size < 16)
         {
             /* There are less then 16 elements left - use Shell/Insert sort */
-            bh_sort_shell(array, size, element, equal);
+            BH_SortShell(array, size, element, equal);
             return;
         }
         else if (!depth)
         {
             /* Max depth reached - use heap sort */
-            bh_sort_heap(array, size, element, equal);
+            BH_SortHeap(array, size, element, equal);
             return;
         }
 
@@ -199,10 +199,10 @@ static void bh_sort_intro_r(void *array,
         }
 
         /* Partition the array */
-        middle = bh_partition(pivot, array, size, element, equal);
+        middle = BH_Partition(pivot, array, size, element, equal);
 
         /* Recursive call into first half */
-        bh_sort_intro_r(array, (middle - start) / element, element, equal, depth - 1);
+        BH_SortIntroR(array, (middle - start) / element, element, equal, depth - 1);
 
         /* Setup array and size for the second half */
         array = middle;
@@ -212,10 +212,10 @@ static void bh_sort_intro_r(void *array,
 }
 
 
-void bh_sort(void *array,
+void BH_Sort(void *array,
              size_t size,
              size_t element,
-             bh_equal_cb_t equal)
+             BH_EqualCallback equal)
 {
     size_t depth, depth_log;
 
@@ -229,14 +229,14 @@ void bh_sort(void *array,
     }
 
     /* Call main sorting function */
-    bh_sort_intro_r(array, size, element, equal, depth);
+    BH_SortIntroR(array, size, element, equal, depth);
 }
 
 
-void bh_heap_make(void *array,
-                  size_t size,
-                  size_t element,
-                  bh_equal_cb_t equal)
+void BH_HeapMake(void *array,
+                 size_t size,
+                 size_t element,
+                 BH_EqualCallback equal)
 {
     char *start, *end;
     size_t i;
@@ -268,7 +268,7 @@ void bh_heap_make(void *array,
             if (equal(current, biggest) < 0)
             {
                 /* Swap content and recalculate children pointers */
-                bh_swap(current, biggest, element);
+                BH_Swap(current, biggest, element);
                 current = biggest;
                 left = start + (current - start) * 2 + element;
                 right = left + element;
@@ -280,10 +280,10 @@ void bh_heap_make(void *array,
 }
 
 
-void bh_heap_remove(void *array,
-                    size_t size,
-                    size_t element,
-                    bh_equal_cb_t equal)
+void BH_HeapRemove(void *array,
+                   size_t size,
+                   size_t element,
+                   BH_EqualCallback equal)
 {
     char *start, *end, *current, *left, *right;
 
@@ -298,7 +298,7 @@ void bh_heap_remove(void *array,
     right = left + element;
 
     /* Swap first and last element */
-    bh_swap(current, end, element);
+    BH_Swap(current, end, element);
 
     /* Iterate until we reach the end */
     while (left < end)
@@ -314,7 +314,7 @@ void bh_heap_remove(void *array,
         if (equal(current, biggest) < 0)
         {
             /* Swap content and recalculate children pointers */
-            bh_swap(current, biggest, element);
+            BH_Swap(current, biggest, element);
             current = biggest;
             left = start + (current - start) * 2 + element;
             right = left + element;
@@ -325,11 +325,11 @@ void bh_heap_remove(void *array,
 }
 
 
-void bh_heap_insert(void *value,
-                    void *array,
-                    size_t size,
-                    size_t element,
-                    bh_equal_cb_t equal)
+void BH_HeapInsert(void *value,
+                   void *array,
+                   size_t size,
+                   size_t element,
+                   BH_EqualCallback equal)
 {
     char *start, *end, *current;
 
@@ -353,7 +353,7 @@ void bh_heap_insert(void *value,
         if (equal(parent, current) < 0)
         {
             /* Swap current and parent */
-            bh_swap(parent, current, element);
+            BH_Swap(parent, current, element);
             current = parent;
         }
         else
@@ -362,11 +362,11 @@ void bh_heap_insert(void *value,
 }
 
 
-void bh_heap_replace(void *value,
-                     void *array,
-                     size_t size,
-                     size_t element,
-                     bh_equal_cb_t equal)
+void BH_HeapReplace(void *value,
+                    void *array,
+                    size_t size,
+                    size_t element,
+                    BH_EqualCallback equal)
 {
     char *start, *end, *current, *left, *right;
 
@@ -400,7 +400,7 @@ void bh_heap_replace(void *value,
         if (equal(current, biggest) < 0)
         {
             /* Swap content and recalculate children pointers */
-            bh_swap(current, biggest, element);
+            BH_Swap(current, biggest, element);
             current = biggest;
             left = start + (current - start) * 2 + element;
             right = left + element;

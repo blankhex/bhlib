@@ -2,9 +2,10 @@
 
 int main()
 {
-    bh_io_t *io = bh_file_new("hello.txt");
-    bh_io_open(io, BH_IO_WRITE);
-    bh_io_write(io, "Hello, world!", 13, NULL);
-    bh_io_free(io);
+    BH_IO *io = BH_FileNew("hello.txt");
+    BH_IOOpen(io, BH_IO_WRITE);
+    BH_IOWrite(io, "Hello, world!", 13, NULL);
+    BH_IOFree(io);
+
     return 0;
 }

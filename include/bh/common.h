@@ -17,8 +17,9 @@
 #define BH_PTR2INT(x)   ((intptr_t)(x))
 #define BH_INT2PTR(x)   ((void*)(x))
 
-typedef int (*bh_equal_cb_t)(const void *, const void *);
-typedef size_t (*bh_hash_cb_t)(const void *);
+
+typedef int (*BH_EqualCallback)(const void *, const void *);
+typedef size_t (*BH_HashCallback)(const void *);
 
 #endif /* BH_COMMON_H */
 

@@ -40,10 +40,11 @@
 #define BH_IO_FLAG_EOF      0x0002
 #define BH_IO_FLAG_OPEN     0x0004
 
-#define BH_FILE_CLASSNAME   "bh_file"
+#define BH_FILE_CLASSNAME   "BH_File"
 
-typedef struct bh_io_s bh_io_t;
-typedef int (*bh_io_func_t)(void *, int, void *, void *);
+
+typedef struct BH_IO BH_IO;
+typedef int (*BH_IOCallback)(void *, int ,void *, void *);
 
 
 /**
@@ -54,7 +55,7 @@ typedef int (*bh_io_func_t)(void *, int, void *, void *);
  * \return On success, returns IO handle.
  * \return On failure, returns NULL pointer.
  */
-bh_io_t *bh_file_new(const char *path);
+BH_IO *BH_FileNew(const char *path);
 
 
 /**
@@ -65,7 +66,7 @@ bh_io_t *bh_file_new(const char *path);
  * \return On success, returns IO handle.
  * \return On failure, returns NULL pointer.
  */
-bh_io_t *bh_buffer_new(bh_io_t *io);
+BH_IO *BH_BufferNew(BH_IO *io);
 
 
 /**
@@ -77,8 +78,8 @@ bh_io_t *bh_buffer_new(bh_io_t *io);
  * \return On success, returns IO handle.
  * \return On failure, returns NULL pointer.
  */
-bh_io_t *bh_io_new(bh_io_func_t func,
-                   void *data);
+BH_IO *BH_IONew(BH_IOCallback cb,
+                void *data);
 
 
 /**
@@ -86,7 +87,7 @@ bh_io_t *bh_io_new(bh_io_func_t func,
  *
  * \param io  IO handle
  */
-void bh_io_free(bh_io_t *io);
+void BH_IOFree(BH_IO *io);
 
 
 /**
@@ -97,7 +98,7 @@ void bh_io_free(bh_io_t *io);
  * \return On success, returns pointer to constant string.
  * \return On failure, returns NULL pointer
  */
-const char *bh_io_classname(bh_io_t *io);
+const char *BH_IOClassname(BH_IO* io);
 
 
 /**
@@ -109,8 +110,8 @@ const char *bh_io_classname(bh_io_t *io);
  * \return On success, returns zero value.
  * \return On failure, returns error code.
  */
-int bh_io_open(bh_io_t *io,
-               int mode);
+int BH_IOOpen(BH_IO *io,
+              int mode);
 
 
 /**
@@ -121,7 +122,7 @@ int bh_io_open(bh_io_t *io,
  * \return On success, returns zero value.
  * \return On failure, returns error code.
  */
-int bh_io_close(bh_io_t *io);
+int BH_IOClose(BH_IO *io);
 
 
 /**
@@ -135,10 +136,10 @@ int bh_io_close(bh_io_t *io);
  * \return On success, returns zero value.
  * \return On failure, returns error code.
  */
-int bh_io_read(bh_io_t *io,
-               char *buffer,
-               size_t size,
-               size_t *actual);
+int BH_IORead(BH_IO *io,
+              char *buffer,
+              size_t size,
+              size_t *actual);
 
 
 /**
@@ -152,10 +153,10 @@ int bh_io_read(bh_io_t *io,
  * \return On success, returns zero value.
  * \return On failure, returns error code.
  */
-int bh_io_write(bh_io_t *io,
-                const char *buffer,
-                size_t size,
-                size_t *actual);
+int BH_IOWrite(BH_IO *io,
+               const char *buffer,
+               size_t size,
+               size_t *actual);
 
 
 /**
@@ -169,10 +170,10 @@ int bh_io_write(bh_io_t *io,
  * \return On success, returns zero value.
  * \return On failure, returns error code.
  */
-int bh_io_peek(bh_io_t *io,
-               char *buffer,
-               size_t size,
-               size_t *actual);
+int BH_IOPeek(BH_IO *io,
+              char *buffer,
+              size_t size,
+              size_t *actual);
 
 
 /**
@@ -184,8 +185,8 @@ int bh_io_peek(bh_io_t *io,
  * \return On success, returns zero value.
  * \return On failure, returns error code.
  */
-int bh_io_tell(bh_io_t *io,
-               int64_t *position);
+int BH_IOTell(BH_IO *io,
+              int64_t *position);
 
 
 /**
@@ -198,9 +199,9 @@ int bh_io_tell(bh_io_t *io,
  * \return On success, returns zero value.
  * \return On failure, returns error code.
  */
-int bh_io_seek(bh_io_t *io,
-               int64_t position,
-               int direction);
+int BH_IOSeek(BH_IO *io,
+              int64_t position,
+              int direction);
 
 
 /**
@@ -211,7 +212,7 @@ int bh_io_seek(bh_io_t *io,
  * \return On success, returns zero value.
  * \return On failure, returns error code.
  */
-int bh_io_flush(bh_io_t *io);
+int BH_IOFlush(BH_IO *io);
 
 
 /**
@@ -223,8 +224,8 @@ int bh_io_flush(bh_io_t *io);
  * \return On success, returns zero value.
  * \return On failure, returns error code.
  */
-int bh_io_size(bh_io_t *io,
-               int64_t *size);
+int BH_IOSize(BH_IO *io,
+              int64_t *size);
 
 
 /**
@@ -234,7 +235,7 @@ int bh_io_size(bh_io_t *io,
  *
  * \return Flags of the IO
  */
-int bh_io_flags(bh_io_t *io);
+int BH_IOFlags(BH_IO *io);
 
 
 /**
@@ -245,7 +246,7 @@ int bh_io_flags(bh_io_t *io);
  * \return On success, returns zero value.
  * \return On failure, returns error code.
  */
-int bh_io_clear(bh_io_t *io);
+int BH_IOClear(BH_IO *io);
 
 
 #endif /* BH_IO_H */
