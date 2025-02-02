@@ -408,6 +408,47 @@ static int checkVec2i(void)
 
 static int checkQuat(void)
 {
+    float a[4], b[3], r[4];
+    float roll, pitch, yaw, angle;
+
+    a[0] = -0.9018f; a[1] = -0.0010f; a[2] = -0.4099f; a[3] = 0.1370f;
+    b[0] = -0.9104f; b[1] = -0.0010f; b[2] = -0.4138f;
+
+    BH_Quat4fIdentity(r);
+    BH_VERIFY_DELTA(r[0], 0.000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[1], 0.000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[2], 0.000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[3], 1.000f, ACCEPTABLE_DELTA);
+
+    BH_Quat4fConjugate(a, r);
+    BH_VERIFY_DELTA(r[0], 0.9018f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[1], 0.0010f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[2], 0.4099f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[3], 0.1370f, ACCEPTABLE_DELTA);
+
+    BH_Quat4fToEuler(a, &roll, &pitch, &yaw);
+    BH_VERIFY_DELTA(roll,  -2.7671f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(pitch, -0.8324f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(yaw,   -0.1649f, ACCEPTABLE_DELTA);
+
+    BH_Quat4fFromEuler(-2.7671f, -0.8324f, -0.1649f, r);
+    BH_VERIFY_DELTA(r[0], -0.9018f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[1], -0.0010f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[2], -0.4099f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[3],  0.1370f, ACCEPTABLE_DELTA);
+
+    BH_Quat4fFromAxis(b, 2.8668f, r);
+    BH_VERIFY_DELTA(r[0], -0.9018f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[1], -0.0010f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[2], -0.4099f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[3],  0.1370f, ACCEPTABLE_DELTA);
+
+    BH_Quat4fToAxis(a, r, &angle);
+    BH_VERIFY_DELTA(r[0], -0.9104f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[1], -0.0010f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[2], -0.4138f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(angle, 2.8668f, ACCEPTABLE_DELTA);
+
     return 0;
 }
 

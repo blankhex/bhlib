@@ -12,6 +12,21 @@ typedef struct BH_Unit
 static BH_Unit *root = NULL;
 
 
+static void BH_UnitCleanup(void)
+{
+    BH_Unit *current;
+
+    current = root;
+    while (current)
+    {
+        BH_Unit *next = current->next;
+
+        free(current);
+        current = next;
+    }
+}
+
+
 void BH_UnitAdd(const char *name, BH_UnitCallback cb)
 {
     BH_Unit *unit, *current;
@@ -49,6 +64,7 @@ int BH_UnitRun(void)
         if (current->cb())
         {
             printf("\tFAIL\n");
+            BH_UnitCleanup();
             return -1;
         }
         printf("\tPASS\n");
@@ -56,6 +72,7 @@ int BH_UnitRun(void)
         current = current->next;
     }
 
+    BH_UnitCleanup();
     return 0;
 }
 
