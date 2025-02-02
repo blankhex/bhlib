@@ -1,5 +1,5 @@
-#include <bh/unit.h>
-#include <bh/io.h>
+#include <BH/IO.h>
+#include <BH/Unit.h>
 #include <string.h>
 
 

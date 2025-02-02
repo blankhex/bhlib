@@ -2,7 +2,7 @@
 #define BH_IO_H
 
 
-#include "common.h"
+#include "Common.h"
 
 
 #define BH_IO_INFO_CB       0x0000

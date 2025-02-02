@@ -1,4 +1,4 @@
-#include <bh/algo.h>
+#include <BH/Algo.h>
 #include <string.h>
 
 

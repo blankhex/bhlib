@@ -66,20 +66,20 @@ endif(TESTING)
 
 # Set library code
 set(BH_SOURCE
-    src/algo.c
-    src/hashmap.c
-    src/io.c
-    src/math.c
-    src/queue.c
+    src/Algo.c
+    src/Hashmap.c
+    src/IO.c
+    src/Math.c
+    src/Queue.c
 )
 
 set(BH_HEADER
-    include/bh/common.h
-    include/bh/algo.h
-    include/bh/hashmap.h
-    include/bh/io.h
-    include/bh/math.h
-    include/bh/queue.h
+    include/BH/Common.h
+    include/BH/Algo.h
+    include/BH/Hashmap.h
+    include/BH/IO.h
+    include/BH/Math.h
+    include/BH/Queue.h
 )
 
 set(BH_INCLUDE_DIRS
@@ -93,21 +93,21 @@ if(WIN32)
 
     # Add platform dependent files
     list(APPEND BH_SOURCE
-        src/win32/file.c
+        src/win32/File.c
     )
 elseif(UNIX)
     message(STATUS "Platform: Unix (Linux/BSD/MacOS X)")
 
     # Add platform dependent files
     list(APPEND BH_SOURCE
-        src/posix/file.c
+        src/posix/File.c
     )
 else()
     message(STATUS "Platform: Unknown")
 
     # Add platform dependent files
     list(APPEND BH_SOURCE
-        src/dummy/file.c
+        src/dummy/File.c
     )
 endif()
 

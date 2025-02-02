@@ -1,5 +1,5 @@
-#include <bh/algo.h>
-#include <bh/unit.h>
+#include <BH/Algo.h>
+#include <BH/Unit.h>
 #include <string.h>
 #include <stdlib.h>
 

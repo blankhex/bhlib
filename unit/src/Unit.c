@@ -1,4 +1,4 @@
-#include <bh/unit.h>
+#include <BH/Unit.h>
 #include <stdlib.h>
 
 typedef struct BH_Unit

@@ -1,4 +1,4 @@
-#include <bh/hashmap.h>
+#include <BH/Hashmap.h>
 #include <stdlib.h>
 #include <string.h>
 

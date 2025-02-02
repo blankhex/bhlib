@@ -1,5 +1,5 @@
-#include <bh/hashmap.h>
-#include <bh/unit.h>
+#include <BH/Hashmap.h>
+#include <BH/Unit.h>
 
 
 static size_t DBG_PtrIntHash(const void *ptr)

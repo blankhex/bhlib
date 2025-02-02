@@ -1,4 +1,4 @@
-#include <bh/math.h>
+#include <BH/Math.h>
 #include <math.h>
 #include <string.h>
 

@@ -1,4 +1,4 @@
-#include <bh/io.h>
+#include <BH/IO.h>
 
 typedef struct BH_File
 {

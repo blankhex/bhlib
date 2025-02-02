@@ -2,7 +2,7 @@
 #define BH_HASHMAP_H
 
 
-#include "common.h"
+#include "Common.h"
 
 
 typedef struct BH_Hashmap BH_Hashmap;

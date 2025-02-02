@@ -2,7 +2,7 @@
 #define BH_QUEUE_H
 
 
-#include "common.h"
+#include "Common.h"
 
 
 typedef struct BH_Queue BH_Queue;

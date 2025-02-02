@@ -1,4 +1,4 @@
-#include <bh/io.h>
+#include <BH/IO.h>
 #include <malloc.h>
 
 

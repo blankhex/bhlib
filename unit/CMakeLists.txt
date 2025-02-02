@@ -10,11 +10,11 @@ set(CMAKE_C_EXTENSIONS OFF)
 
 # Library code
 set(BHUNIT_SOURCE
-    src/unit.c
+    src/Unit.c
 )
 
 set(BHUNIT_HEADER
-    include/bh/unit.h
+    include/BH/Unit.h
 )
 
 # Library

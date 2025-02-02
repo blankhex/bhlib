@@ -2,7 +2,7 @@
 #define BH_ALGO_H
 
 
-#include "common.h"
+#include "Common.h"
 
 
 /**

@@ -1,4 +1,4 @@
-#include <bh/queue.h>
+#include <BH/Queue.h>
 #include <stdlib.h>
 #include <string.h>
 

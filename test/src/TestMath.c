@@ -1,5 +1,5 @@
-#include <bh/math.h>
-#include <bh/unit.h>
+#include <BH/Math.h>
+#include <BH/Unit.h>
 
 
 #define ACCEPTABLE_DELTA 0.0001f

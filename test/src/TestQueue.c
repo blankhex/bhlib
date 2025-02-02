@@ -1,5 +1,5 @@
-#include <bh/queue.h>
-#include <bh/unit.h>
+#include <BH/Queue.h>
+#include <BH/Unit.h>
 
 
 static int NewFree(void)
