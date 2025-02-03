@@ -1235,7 +1235,7 @@ void BH_Mat4fApplyVec4f(const float *a,
  * \param b    B 3D vector
  * \param out  Output 3D vector
  */
-void BH_Mat4fApplyVec4f(const float *a,
+void BH_Mat4fApplyVec3f(const float *a,
                         const float *b,
                         float *out);
 

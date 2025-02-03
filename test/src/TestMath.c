@@ -449,6 +449,14 @@ static int checkQuat(void)
     BH_VERIFY_DELTA(r[2], -0.4138f, ACCEPTABLE_DELTA);
     BH_VERIFY_DELTA(angle, 2.8668f, ACCEPTABLE_DELTA);
 
+
+    BH_Quat4fInverse(a, r);
+    BH_Quat4fMul(a, r, r);
+    BH_VERIFY_DELTA(r[0], 0.000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[1], 0.000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[2], 0.000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[3], 1.000f, ACCEPTABLE_DELTA);
+
     return 0;
 }
 
@@ -626,6 +634,48 @@ static int checkMat4f(void)
 
     BH_VERIFY(BH_Mat4fInverse(b, r) != BH_OK);
 
+    BH_Mat4fFromTranslation(1.0f, 2.0f, 3.0f, r);
+    BH_VERIFY_DELTA(r[0],  1.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[1],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[2],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[3],  0.0000f, ACCEPTABLE_DELTA);
+
+    BH_VERIFY_DELTA(r[4],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[5],  1.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[6],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[7],  0.0000f, ACCEPTABLE_DELTA);
+
+    BH_VERIFY_DELTA(r[8],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[9],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[10],  1.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[11],  0.0000f, ACCEPTABLE_DELTA);
+
+    BH_VERIFY_DELTA(r[12],  1.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[13],  2.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[14],  3.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[15],  1.0000f, ACCEPTABLE_DELTA);
+
+    BH_Mat4fFromScale(1.0f, 2.0f, 3.0f, r);
+    BH_VERIFY_DELTA(r[0],  1.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[1],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[2],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[3],  0.0000f, ACCEPTABLE_DELTA);
+
+    BH_VERIFY_DELTA(r[4],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[5],  2.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[6],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[7],  0.0000f, ACCEPTABLE_DELTA);
+
+    BH_VERIFY_DELTA(r[8],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[9],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[10],  3.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[11],  0.0000f, ACCEPTABLE_DELTA);
+
+    BH_VERIFY_DELTA(r[12],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[13],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[14],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[15],  1.0000f, ACCEPTABLE_DELTA);
+
     return 0;
 }
 
@@ -745,9 +795,121 @@ static int checkMat3f(void)
 
     BH_VERIFY(BH_Mat3fInverse(b, r) != BH_OK);
 
+    BH_Mat3fFromTranslation(1.0f, 2.0f, r);
+    BH_VERIFY_DELTA(r[0],  1.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[1],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[2],  0.0000f, ACCEPTABLE_DELTA);
+
+    BH_VERIFY_DELTA(r[3],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[4],  1.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[5],  0.0000f, ACCEPTABLE_DELTA);
+
+    BH_VERIFY_DELTA(r[6],  1.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[7],  2.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[8],  1.0000f, ACCEPTABLE_DELTA);
+
+    BH_Mat3fFromScale(1.0f, 2.0f, r);
+    BH_VERIFY_DELTA(r[0],  1.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[1],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[2],  0.0000f, ACCEPTABLE_DELTA);
+
+    BH_VERIFY_DELTA(r[3],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[4],  2.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[5],  0.0000f, ACCEPTABLE_DELTA);
+
+    BH_VERIFY_DELTA(r[6],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[7],  0.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(r[8],  1.0000f, ACCEPTABLE_DELTA);
+
     return 0;
 }
 
+
+int checkQuatMat4f(void)
+{
+    float a[16], b[16], c[4];
+    
+    BH_Mat4fFromEuler(-2.7671f, -0.8324f, -0.1649f, a);
+
+    BH_Quat4fFromEuler(-2.7671f, -0.8324f, -0.1649f, c);
+    BH_VERIFY_DELTA(c[0], -0.9018f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(c[1], -0.0010f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(c[2], -0.4099f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(c[3],  0.1370f, ACCEPTABLE_DELTA);
+    BH_Quat4fToMat4f(c, b);
+
+    BH_VERIFY_DELTA(a[0], b[0], ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(a[1], b[1], ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(a[2], b[2], ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(a[3], b[3], ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(a[4], b[4], ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(a[5], b[5], ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(a[6], b[6], ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(a[7], b[7], ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(a[8], b[8], ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(a[9], b[9], ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(a[10], b[10], ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(a[11], b[11], ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(a[12], b[12], ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(a[13], b[13], ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(a[14], b[14], ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(a[15], b[15], ACCEPTABLE_DELTA);
+
+    return 0;
+}
+
+
+int checkVecMat4f(void)
+{
+    float a[16] = 
+    {
+        5.0f, 3.0f, 1.0f, 2.0f, 
+        1.0f, 0.0f, 3.0f, 0.0f,
+        2.0f, 0.0f, 4.0f, 0.0f, 
+        7.0f, 2.0f, 5.0f, 3.0f
+    };
+    float b[4];
+    
+    b[0] = 2.0f; b[1] = -1.0f; b[2] = 4.0f; b[3] = 0.0f;
+    BH_Mat4fApplyVec4f(a, b, b);
+    BH_VERIFY_DELTA(b[0], 17.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(b[1],  6.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(b[2], 15.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(b[3],  4.0000f, ACCEPTABLE_DELTA);
+
+    b[0] = 2.0f; b[1] = -1.0f; b[2] = 4.0f;
+    BH_Mat4fApplyVec3f(a, b, b);
+    BH_VERIFY_DELTA(b[0], 24.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(b[1],  8.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(b[2], 20.0000f, ACCEPTABLE_DELTA);
+
+    return 0;
+}
+
+
+int checkVecMat3f(void)
+{
+    float a[9] = 
+    {
+         0.0f,  1.0f, -3.0f, 
+        -3.0f, -4.0f,  4.0f,
+        -2.0f, -2.0f,  1.0f, 
+    };
+    float b[3];
+    
+    b[0] = 2.0f; b[1] = -1.0f; b[2] = 4.0f;
+    BH_Mat3fApplyVec3f(a, b, b);
+    BH_VERIFY_DELTA(b[0], -5.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(b[1], -2.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(b[2], -6.0000f, ACCEPTABLE_DELTA);
+
+    b[0] = 2.0f; b[1] = -1.0f;
+    BH_Mat3fApplyVec2f(a, b, b);
+    BH_VERIFY_DELTA(b[0], 1.0000f, ACCEPTABLE_DELTA);
+    BH_VERIFY_DELTA(b[1], 4.0000f, ACCEPTABLE_DELTA);
+
+    return 0;
+}
 
 int main(int argc, char **argv)
 {
@@ -763,6 +925,9 @@ int main(int argc, char **argv)
     BH_UnitAdd("Quat", checkQuat);
     BH_UnitAdd("Mat4f", checkMat4f);
     BH_UnitAdd("Mat3f", checkMat3f);
+    BH_UnitAdd("QuatMat4f", checkQuatMat4f);
+    BH_UnitAdd("VecMat4f", checkVecMat4f);
+    BH_UnitAdd("VecMat3f", checkVecMat3f);
 
     return BH_UnitRun();
 }
