@@ -224,3 +224,11 @@ int BH_IOClear(BH_IO *io)
     /* Call the IO device clear error handler */
     return io->cb(io + 1, BH_IO_CLEAR_CB, NULL, NULL);
 }
+
+
+
+BH_IO *BH_BufferNew(BH_IO *io)
+{
+    (void)io;
+    return NULL;
+}

@@ -48,34 +48,34 @@ typedef int (*BH_IOCallback)(void *, int ,void *, void *);
 
 
 /**
- * Creates the IO handle that represents file.
+ * Creates the IO that represents file with the given \a path.
  *
- * \param path  Path to the file
+ * \param path  File path
  *
- * \return On success, returns IO handle.
+ * \return On success, returns IO pointer.
  * \return On failure, returns NULL pointer.
  */
 BH_IO *BH_FileNew(const char *path);
 
 
 /**
- * Creates the IO handle that represents buffered IO.
+ * Creates the IO that buffers access to other \a io.
  *
- * \param io  IO handle
+ * \param io  IO pointer
  *
- * \return On success, returns IO handle.
+ * \return On success, returns IO pointer.
  * \return On failure, returns NULL pointer.
  */
 BH_IO *BH_BufferNew(BH_IO *io);
 
 
 /**
- * Creates the IO handle with specified handler and context.
+ * Creates the IO with specified callback \a cb and \a data.
  *
- * \param func  IO actions handler
+ * \param cb    Callback
  * \param data  Initialization data
  *
- * \return On success, returns IO handle.
+ * \return On success, returns IO pointer.
  * \return On failure, returns NULL pointer.
  */
 BH_IO *BH_IONew(BH_IOCallback cb,
@@ -83,17 +83,17 @@ BH_IO *BH_IONew(BH_IOCallback cb,
 
 
 /**
- * Destroys the IO.
+ * Destroys the \a io.
  *
- * \param io  IO handle
+ * \param io  IO pointer
  */
 void BH_IOFree(BH_IO *io);
 
 
 /**
- * Returns the IO instance classname.
+ * Returns the \a io classname.
  *
- * \param io  IO handle
+ * \param io  IO pointer
  *
  * \return On success, returns pointer to constant string.
  * \return On failure, returns NULL pointer
@@ -102,12 +102,12 @@ const char *BH_IOClassname(BH_IO* io);
 
 
 /**
- * Opens the IO in specified mode of operation.
+ * Opens the \a io in specified \a mode of operation.
  *
- * \param io    IO handle
+ * \param io    IO pointer
  * \param mode  Mode of operation
  *
- * \return On success, returns zero value.
+ * \return On success, returns zero.
  * \return On failure, returns error code.
  */
 int BH_IOOpen(BH_IO *io,
@@ -115,25 +115,25 @@ int BH_IOOpen(BH_IO *io,
 
 
 /**
- * Closes the IO.
+ * Closes the \a io.
  *
- * \param io  IO handle
+ * \param io  IO pointer
  *
- * \return On success, returns zero value.
+ * \return On success, returns zero.
  * \return On failure, returns error code.
  */
 int BH_IOClose(BH_IO *io);
 
 
 /**
- * Reads up to specified amount of bytes from the IO into memory buffer.
+ * Reads up to \a size bytes from the \a io into \a buffer.
  *
- * \param io      IO handle
- * \param buffer  Pointer to the buffer
- * \param size    Bytes to read
- * \param actual  Bytes read
+ * \param io      IO pointer
+ * \param buffer  Buffer pointer
+ * \param size    Buffer size
+ * \param actual  Bytes read (optional)
  *
- * \return On success, returns zero value.
+ * \return On success, returns zero.
  * \return On failure, returns error code.
  */
 int BH_IORead(BH_IO *io,
@@ -143,14 +143,14 @@ int BH_IORead(BH_IO *io,
 
 
 /**
- * Writes up to specified amount of bytes into the IO from the memory buffer.
+ * Writes up to \a size bytes to the \a io from \a buffer.
  *
- * \param io      IO handle
- * \param buffer  Pointer to the buffer
- * \param size    Bytes to write
- * \param actual  Bytes written
+ * \param io      IO pointer
+ * \param buffer  Buffer pointer
+ * \param size    Buffer size
+ * \param actual  Bytes written (optional)
  *
- * \return On success, returns zero value.
+ * \return On success, returns zero.
  * \return On failure, returns error code.
  */
 int BH_IOWrite(BH_IO *io,
@@ -160,14 +160,14 @@ int BH_IOWrite(BH_IO *io,
 
 
 /**
- * Peeks up to specified amount of bytes from the IO handle.
+ * Peeks up to \a size bytes from \a io into \a buffer.
  *
- * \param io  IO handle
- * \param buffer  Pointer to the buffer
- * \param size    Bytes to peek
- * \param actial  Bytes peeked
+ * \param io      IO pointer
+ * \param buffer  Buffer pointer
+ * \param size    Buffer size
+ * \param actial  Bytes peeked (optional)
  *
- * \return On success, returns zero value.
+ * \return On success, returns zero.
  * \return On failure, returns error code.
  */
 int BH_IOPeek(BH_IO *io,
@@ -177,12 +177,12 @@ int BH_IOPeek(BH_IO *io,
 
 
 /**
- * Tells current offset in the IO.
+ * Tells current \a position in the \a io.
  *
- * \param io        IO handle
- * \param position  Offset
+ * \param io        IO pointer
+ * \param position  Position
  *
- * \return On success, returns zero value.
+ * \return On success, returns zero.
  * \return On failure, returns error code.
  */
 int BH_IOTell(BH_IO *io,
@@ -190,13 +190,13 @@ int BH_IOTell(BH_IO *io,
 
 
 /**
- * Seeks to specified offset in the IO.
+ * Seeks to specified \a position and \a direction in the \a io.
  *
- * \param io         IO handle
- * \param position   Offset
+ * \param io         IO pointer
+ * \param position   Position
  * \param direction  Direction
  *
- * \return On success, returns zero value.
+ * \return On success, returns zero.
  * \return On failure, returns error code.
  */
 int BH_IOSeek(BH_IO *io,
@@ -205,23 +205,23 @@ int BH_IOSeek(BH_IO *io,
 
 
 /**
- * Flushes the internal buffers of the IO.
+ * Flushes the internal buffers of the \a io.
  *
- * \param io  IO handle
+ * \param io  IO pointer
  *
- * \return On success, returns zero value.
+ * \return On success, returns zero.
  * \return On failure, returns error code.
  */
 int BH_IOFlush(BH_IO *io);
 
 
 /**
- * Returns the size of the IO (either total or available size).
+ * Returns total or available size of the \a io.
  *
- * \param io    IO handle
+ * \param io    IO pointer
  * \param size  Available/total size
  *
- * \return On success, returns zero value.
+ * \return On success, returns zero.
  * \return On failure, returns error code.
  */
 int BH_IOSize(BH_IO *io,
@@ -229,9 +229,9 @@ int BH_IOSize(BH_IO *io,
 
 
 /**
- * Returns flags of the IO.
+ * Returns flags of the \a io.
  *
- * \param io  IO handle
+ * \param io  IO pointer
  *
  * \return Flags of the IO
  */
@@ -239,11 +239,11 @@ int BH_IOFlags(BH_IO *io);
 
 
 /**
- * Clears errors of the IO.
+ * Clears errors of the \a io.
  *
- * \param io  IO handle
+ * \param io  IO pointer
  *
- * \return On success, returns zero value.
+ * \return On success, returns zero.
  * \return On failure, returns error code.
  */
 int BH_IOClear(BH_IO *io);

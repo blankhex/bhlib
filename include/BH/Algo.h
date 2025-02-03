@@ -6,10 +6,10 @@
 
 
 /**
- * Exchanges the values of two elements.
+ * Exchanges values between \a src and \a dest elements of sizze \a size.
  *
- * \param dest	Pointer to the element
- * \param src	Pointer to the element
+ * \param dest	Destination element pointer
+ * \param src	Source element pointer
  * \param size	Element size in bytes
  */
 void BH_Swap(void *dest,
@@ -18,15 +18,16 @@ void BH_Swap(void *dest,
 
 
 /**
- * Partitions the array relative to the specified pivot element.
+ * Partitions the \a array (with specified \a size and \a element size)
+ * relative to specified \a pivot element.
  *
- * The pivot element can be part of the partitioned array.
+ * The \a pivot element can be part of the partitioned \a array.
  *
- * \param pivot     Pointer to the pivot element
- * \param array     Pointer to the array
- * \param size      Array size
- * \param element   Element size in bytes
- * \param equal     Comparision function
+ * \param pivot    Pivot element pointer
+ * \param array    Array pointer
+ * \param size     Array size
+ * \param element  Array element size
+ * \param equal    Comparision function
  *
  * \return Pointer to the first element of the second partition.
  */
@@ -38,12 +39,15 @@ void *BH_Partition(void *pivot,
 
 
 /**
- * Sorts the array.
+ * Sorts the \a array (with specified \a size and \a element size).
  *
- * \param array     Pointer to the array
- * \param size      Array size
- * \param element   Element size in bytes
- * \param equal     Comparision function
+ * The sorting algorithm is implementation defined and may change between
+ * revisions.
+ *
+ * \param array    Array pointer
+ * \param size     Array size
+ * \param element  Array element size
+ * \param equal    Comparision function
  */
 void BH_Sort(void *array,
              size_t size,
@@ -52,12 +56,12 @@ void BH_Sort(void *array,
 
 
 /**
- * Makes heap in an array from the array.
+ * Heapifies an \a array (with specified \a size and \a element size).
  *
- * \param array     Pointer to the array
- * \param size      Array size
- * \param element   Element size in bytes
- * \param equal     Comparision function
+ * \param array    Array pointer
+ * \param size     Array size
+ * \param element  Array element size
+ * \param equal    Comparision function
  */
 void BH_HeapMake(void *array,
                  size_t size,
@@ -66,11 +70,12 @@ void BH_HeapMake(void *array,
 
 
 /**
- * Removes top/first element from a heap in an array.
+ * Removes top value from the heapified \a array (with specified \a size
+ * and \a element size).
  *
- * \param array     Pointer to the array
+ * \param array     Array pointer
  * \param size      Array size
- * \param element   Element size in bytes
+ * \param element   Array element size
  * \param equal     Comparasion function
  */
 void BH_HeapRemove(void *array,
@@ -80,16 +85,17 @@ void BH_HeapRemove(void *array,
 
 
 /**
- * Inserts new element into heap in an array.
+ * Inserts new \a value into heapified \a array in an array (with specified
+ * \a size and \a element size)
  *
- * If the pointer to value is NULL, this function assumes that the new value
- * is at the end of the array.
+ * If \a value pointer is NULL, it is assumed that new value is placed at the
+ * end of the array.
  *
- * \param value     Pointer to the value
- * \param array     Pointer to the array
- * \param size      Array size
- * \param element   Element size in bytes
- * \param equal     Comparasion function
+ * \param value    Value pointer
+ * \param array    Array pointer
+ * \param size     Array size
+ * \param element  Array element size
+ * \param equal    Comparasion function
  */
 void BH_HeapInsert(void *value,
                    void *array,
@@ -99,22 +105,17 @@ void BH_HeapInsert(void *value,
 
 
 /**
- * Removes top/first element and inserts new element into heap in an array.
+ * Removes top value from heapified \a array (with specified \a size and
+ * \a element size) and inserts new \a value.
  *
- * If the pointer to value is NULL, this function assumes that the new value
- * is at the end of the array.
+ * If value pointer is NULL, it is assumed that new value is placed at the
+ * end of the array.
  *
- * This function is roughly equivalent to the following code:
- * \code
- * BH_HeapRemove(array, size, element, equal);
- * BH_HeapInsert(value, array, size - 1, element, equal);
- * \endcode
- *
- * \param value     Pointer to the value
- * \param array     Pointer to the array
- * \param size      Array size
- * \param element   Element size in bytes
- * \param equal     Comparasion function
+ * \param value    Value pointer
+ * \param array    Array pointer
+ * \param size     Array size
+ * \param element  Array element size
+ * \param equal    Comparasion function
  */
 void BH_HeapReplace(void *value,
                     void *array,
