@@ -18,12 +18,12 @@ set(BHUNIT_HEADER
 )
 
 # Library
-add_library(bhunit STATIC ${BHUNIT_SOURCE} ${BHUNIT_HEADER})
-target_include_directories(bhunit PUBLIC include)
+add_library(BHUnit STATIC ${BHUNIT_SOURCE} ${BHUNIT_HEADER})
+target_include_directories(BHUnit PUBLIC include)
 
 # Enable all compiler warnings
 if(MSVC)
-  target_compile_options(bhunit PRIVATE /W4 /WX)
+  target_compile_options(BHUnit PRIVATE /W4 /WX)
 else()
-  target_compile_options(bhunit PRIVATE -Wall -Wextra -Wpedantic -Werror -fstrict-aliasing)
+  target_compile_options(BHUnit PRIVATE -Wall -Wextra -Wpedantic -Werror -fstrict-aliasing)
 endif()

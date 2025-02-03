@@ -112,21 +112,21 @@ else()
 endif()
 
 # Library
-add_library(bhlib STATIC ${BH_SOURCE} ${BH_HEADER})
-target_include_directories(bhlib PUBLIC ${BH_INCLUDE_DIRS})
-target_link_libraries(bhlib PUBLIC m)
+add_library(BHLib STATIC ${BH_SOURCE} ${BH_HEADER})
+target_include_directories(BHLib PUBLIC ${BH_INCLUDE_DIRS})
+target_link_libraries(BHLib PUBLIC m)
 
 # Enable all compiler warnings
 if(MSVC)
-  target_compile_options(bhlib PRIVATE /W4 /WX)
+  target_compile_options(BHLib PRIVATE /W4 /WX)
 else()
-  target_compile_options(bhlib PRIVATE -Wall -Wextra -Wpedantic -Werror -fstrict-aliasing)
+  target_compile_options(BHLib PRIVATE -Wall -Wextra -Wpedantic -Werror -fstrict-aliasing)
 endif()
 
 # Coverage
 if(COVERAGE)
-    target_compile_options(bhlib PRIVATE -coverage)
-    target_link_options(bhlib PRIVATE -coverage)
+    target_compile_options(BHLib PRIVATE -coverage)
+    target_link_options(BHLib PRIVATE -coverage)
 endif()
 
 # Tests

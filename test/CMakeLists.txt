@@ -13,7 +13,7 @@ foreach(TEST_FILENAME ${TEST_FILES})
     # Add test
     get_filename_component(TEST_NAME ${TEST_FILENAME} NAME_WE)
     add_executable("${TEST_NAME}" ${TEST_FILENAME})
-    target_link_libraries("${TEST_NAME}" bhlib bhunit)
+    target_link_libraries("${TEST_NAME}" BHLib BHUnit)
     add_test(NAME "${TEST_NAME}" COMMAND "${TEST_NAME}")
 
     # Enable all compiler warnings
