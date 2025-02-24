@@ -180,6 +180,72 @@ BH_UNIT_TEST(Time)
 }
 
 
+BH_UNIT_TEST(RayBox)
+{
+    float start[2], direction[2], bMin[2], bMax[2], r[2];
+    float time;
+
+    bMin[0] =-2.0f; bMin[1] =-2.0f;
+    bMax[0] = 3.0f; bMax[1] = 3.0f;
+
+    start[0] = 0.0f; start[1] = 0.0f;
+    direction[0] = 1.0f; direction[1] = 0.0f;
+    BH_VERIFY(BH_Ray2fIntersectBox2f(start, direction, bMin, bMax, &time, r) == BH_OK);
+    BH_VERIFY(BH_Box2fContains(bMin, bMax, r) == BH_OK);
+
+    start[0] = -4.0f; start[1] = 0.0f;
+    BH_VERIFY(BH_Ray2fIntersectBox2f(start, direction, bMin, bMax, &time, r) == BH_OK);
+    BH_VERIFY(BH_Box2fContains(bMin, bMax, r) == BH_OK);
+
+    start[0] = 4.0f; start[1] = 0.0f;
+    BH_VERIFY(BH_Ray2fIntersectBox2f(start, direction, bMin, bMax, &time, r) != BH_OK);
+
+    start[0] = 4.0f; start[1] = 0.0f;
+    direction[0] = -1.0f; direction[1] = 0.0f;
+    BH_VERIFY(BH_Ray2fIntersectBox2f(start, direction, bMin, bMax, &time, r) == BH_OK);
+    BH_VERIFY(BH_Box2fContains(bMin, bMax, r) == BH_OK);
+
+    start[0] = 4.0f; start[1] = 4.0f;
+    direction[0] = -1.0f; direction[1] = 0.0f;
+    BH_VERIFY(BH_Ray2fIntersectBox2f(start, direction, bMin, bMax, &time, r) != BH_OK);
+
+    return 0;
+}
+
+
+BH_UNIT_TEST(SegmentBox)
+{
+    float start[2], end[2], bMin[2], bMax[2], r[2];
+    float time;
+
+    bMin[0] =-2.0f; bMin[1] =-2.0f;
+    bMax[0] = 3.0f; bMax[1] = 3.0f;
+
+    start[0] = 0.0f; start[1] = 0.0f;
+    end[0] = 5.0f; end[1] = 0.0f;
+    BH_VERIFY(BH_Segment2fIntersectBox2f(start, end, bMin, bMax, &time, r) == BH_OK);
+    BH_VERIFY(BH_Box2fContains(bMin, bMax, r) == BH_OK);
+
+    start[0] = -4.0f; start[1] = 0.0f;
+    BH_VERIFY(BH_Segment2fIntersectBox2f(start, end, bMin, bMax, &time, r) == BH_OK);
+    BH_VERIFY(BH_Box2fContains(bMin, bMax, r) == BH_OK);
+
+    start[0] = 4.0f; start[1] = 0.0f;
+    BH_VERIFY(BH_Segment2fIntersectBox2f(start, end, bMin, bMax, &time, r) != BH_OK);
+
+    start[0] = 4.0f; start[1] = 0.0f;
+    end[0] = -5.0f; end[1] = 0.0f;
+    BH_VERIFY(BH_Segment2fIntersectBox2f(start, end, bMin, bMax, &time, r) == BH_OK);
+    BH_VERIFY(BH_Box2fContains(bMin, bMax, r) == BH_OK);
+
+    start[0] = 4.0f; start[1] = 4.0f;
+    end[0] = -5.0f; end[1] = 4.0f;
+    BH_VERIFY(BH_Segment2fIntersectBox2f(start, end, bMin, bMax, &time, r) != BH_OK);
+
+    return 0;
+}
+
+
 int main(int argc, char **argv)
 {
     (void)argc;
@@ -191,6 +257,8 @@ int main(int argc, char **argv)
     BH_UNIT_ADD(SegmentIntersectLine);
     BH_UNIT_ADD(SegmentIntersectSegment);
     BH_UNIT_ADD(Time);
+    BH_UNIT_ADD(RayBox);
+    BH_UNIT_ADD(SegmentBox);
 
     return BH_UnitRun();
 }

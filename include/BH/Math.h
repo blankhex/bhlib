@@ -1775,73 +1775,73 @@ int BH_Ray2fIntersectLine(const float *start,
 
 /**
  * Computes time of intersection \a time1 and \a time2 between one line (given
- * \a startA and \a directionA) and other line (given \a startB and
- * \a directionB).
+ * \a aStart and \a aDirection) and other line (given \a bStart and
+ * \a bDirection).
  *
- * \param startA      A Start 2D vector
- * \param directionA  A Direction 2D vector
- * \param startB      B Start 2D vector
- * \param directionB  B Direction 2D vector
+ * \param aStart      A Start 2D vector
+ * \param aDirection  A Direction 2D vector
+ * \param bStart      B Start 2D vector
+ * \param bDirection  B Direction 2D vector
  * \param time1       Time of intersection of first line
  * \param time2       Time of intersection of second line
  *
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Ray2fIntersectTime(const float *startA,
-                          const float *directionA,
-                          const float *startB,
-                          const float *directionB,
+int BH_Ray2fIntersectTime(const float *aStart,
+                          const float *aDirection,
+                          const float *bStart,
+                          const float *bDirection,
                           float *time1,
                           float *time2);
 
 
 /**
- * Computes time of intersection \a t between one ray (given \a startA and
- * \a directionA) and other ray (given \a startB and \a directionB) and stores
+ * Computes time of intersection \a t between one ray (given \a aStart and
+ * \a aDirection) and other ray (given \a bStart and \a bDirection) and stores
  * intersection point into \a out.
  *
  * The returned intersection time \a t is for the first ray.
  *
- * \param startA      A Start 2D vector
- * \param directionA  A Direction 2D vector
- * \param startB      B Start 2D vector
- * \param directionB  B Direction 2D vector
+ * \param aStart      A Start 2D vector
+ * \param aDirection  A Direction 2D vector
+ * \param bStart      B Start 2D vector
+ * \param bDirection  B Direction 2D vector
  * \param t           Time of intersection
  * \param out         Output 2D vector
  *
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Ray2fIntersectRay(const float *startA,
-                         const float *directionA,
-                         const float *startB,
-                         const float *directionB,
+int BH_Ray2fIntersectRay(const float *aStart,
+                         const float *aDirection,
+                         const float *bStart,
+                         const float *bDirection,
                          float *t,
                          float *out);
 
 
 /**
- * Computes time of intersection \a t between one ray (given \a startA and
- * \a directionA) and segment (given \a startB and \a endB) and stores result
+ * Computes time of intersection \a t between one ray (given \a aStart and
+ * \a aDirection) and segment (given \a bStart and \a bEnd) and stores result
  * into \a out.
  *
  * The returned intersection time \a t is for the ray.
  *
- * \param startA      A Start 2D vector
- * \param directionA  A Direction 2D vector
- * \param startB      B Start 2D vector
- * \param endB        B End 2D vector
+ * \param aStart      A Start 2D vector
+ * \param aDirection  A Direction 2D vector
+ * \param bStart      B Start 2D vector
+ * \param bEnd        B End 2D vector
  * \param t           Time of intersection
  * \param out         Output 2D vector
  *
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Ray2fIntersectSegment(const float *startA,
-                             const float *directionA,
-                             const float *startB,
-                             const float *endB,
+int BH_Ray2fIntersectSegment(const float *aStart,
+                             const float *aDirection,
+                             const float *bStart,
+                             const float *bEnd,
                              float *t,
                              float *out);
 
@@ -1869,27 +1869,280 @@ int BH_Segment2fIntersectLine(const float *start,
 
 
 /**
- * Computes time of intersection \a t between one segment (given \a startA and
- * \a endA) and other sergment (given \a startB and \a endB) and stores
+ * Computes time of intersection \a t between one segment (given \a aStart and
+ * \a aEnd) and other sergment (given \a bStart and \a bEnd) and stores
  * intersection point into \a out.
  *
  * The returned intersection time \a t is for the first segment.
  *
- * \param startA     A Start 2D vector
- * \param endA       A End 2D vector
- * \param startB     B Start 2D vector
- * \param endB       B End 2D vector
+ * \param aStart     A Start 2D vector
+ * \param aEnd       A End 2D vector
+ * \param bStart     B Start 2D vector
+ * \param bEnd       B End 2D vector
  * \param t          Time of intersection
  * \param out        Output 2D vector
  *
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Segment2fIntersectSegment(const float *startA,
-                                 const float *endA,
-                                 const float *startB,
-                                 const float *endB,
+int BH_Segment2fIntersectSegment(const float *aStart,
+                                 const float *aEnd,
+                                 const float *bStart,
+                                 const float *bEnd,
                                  float *t,
                                  float *out);
+
+
+/**
+ * Computes union of two 3D boxes (given by \a aMin, \a aMax, \a bMin, \a bMax)
+ * and stores the result into \a outMin, \a outMax.
+ *
+ * \param aMin    A minimal 3D vector
+ * \param aMax    A maximal 3D vector
+ * \param bMin    B minimal 3D vector
+ * \param bMax    B maximal 3D vector
+ * \param outMin  Output minimal 3D vector
+ * \param outMax  Output maximal 3D vector
+ */
+void BH_Box3fUnion(const float *aMin,
+                   const float *aMax,
+                   const float *bMin,
+                   const float *bMax,
+                   float *outMin,
+                   float *outMax);
+
+
+/**
+ * Computes intersection of two 3D boxes (given by \a aMin, \a aMax, \a bMin,
+ * \a bMax), stores the result into \a outMin, \a outMax and returns
+ * intersection test result.
+ *
+ * \param aMin    A minimal 3D vector
+ * \param aMax    A maximal 3D vector
+ * \param bMin    B minimal 3D vector
+ * \param bMax    B maximal 3D vector
+ * \param outMin  Output minimal 3D vector
+ * \param outMax  Output maximal 3D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Box3fIntersect(const float *aMin,
+                      const float *aMax,
+                      const float *bMin,
+                      const float *bMax,
+                      float *outMin,
+                      float *outMax);
+
+
+/**
+ * Checks if \a point is inside the box (given by \a aMin, \a aMax) and returns
+ * the result of the check.
+ *
+ * \param aMin   A minimal 3D vector
+ * \param aMax   A maximal 3D vector
+ * \param point  Point 3D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Box3fContains(const float *aMin,
+                     const float *aMax,
+                     const float *point);
+
+
+/**
+ * Computes bounding box for the \a points of \a size elements and stores the
+ * result into \a outMin, \a outMax.
+ *
+ * \param points  Array of 3D points
+ * \param size    Array size
+ * \param outMin  Output minimal 3D vector
+ * \param outMax  Output maximal 3D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Box3fEnclose(const float *points,
+                    size_t size,
+                    float *outMin,
+                    float *outMax);
+
+
+/**
+ * Computes union of two 2D boxes (given by \a aMin, \a aMax, \a bMin, \a bMax)
+ * and stores the result into \a outMin, \a outMax.
+ *
+ * \param aMin    A minimal 2D vector
+ * \param aMax    A maximal 2D vector
+ * \param bMin    B minimal 2D vector
+ * \param bMax    B maximal 2D vector
+ * \param outMin  Output minimal 2D vector
+ * \param outMax  Output maximal 2D vector
+ */
+void BH_Box2fUnion(const float *aMin,
+                   const float *aMax,
+                   const float *bMin,
+                   const float *bMax,
+                   float *outMin,
+                   float *outMax);
+
+
+/**
+ * Computes intersection of two 2D boxes (given by \a aMin, \a aMax, \a bMin,
+ * \a bMax), stores the result into \a outMin, \a outMax and returns
+ * intersection test result.
+ *
+ * \param aMin    A minimal 2D vector
+ * \param aMax    A maximal 2D vector
+ * \param bMin    B minimal 2D vector
+ * \param bMax    B maximal 2D vector
+ * \param outMin  Output minimal 2D vector
+ * \param outMax  Output maximal 2D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Box2fIntersect(const float *aMin,
+                      const float *aMax,
+                      const float *bMin,
+                      const float *bMax,
+                      float *outMin,
+                      float *outMax);
+
+
+/**
+ * Checks if \a point is inside the box (given by \a aMin, \a aMax) and returns
+ * the result of the check.
+ *
+ * \param aMin   A minimal 2D vector
+ * \param aMax   A maximal 2D vector
+ * \param point  Point 2D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Box2fContains(const float *aMin,
+                     const float *aMax,
+                     const float *point);
+
+
+/**
+ * Computes bounding box for the \a points of \a size elements and stores the
+ * result into \a outMin, \a outMax.
+ *
+ * \param points  Array of 2D points
+ * \param size    Array size
+ * \param outMin  Output minimal 2D vector
+ * \param outMax  Output maximal 2D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Box2fEnclose(const float *points,
+                    size_t size,
+                    float *outMin,
+                    float *outMax);
+
+
+/**
+ * Computes time of intersection \a t between ray (given \a aStart and
+ * \a aDirection) and 3D box (given \a bMin, \a bMax) and stores intersection
+ * point into \a out.
+ *
+ * The returned intersection time \a t is for the ray.
+ *
+ * \param aStart      Start 3D vector
+ * \param aDirection  Direction 3D vector
+ * \param bMin        A 3D vector
+ * \param bMax        B 3D vector
+ * \param t           Time of intersection
+ * \param out         Output 3D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Ray3fIntersectBox3f(const float *aStart,
+                           const float *aDirection,
+                           const float *bMin,
+                           const float *bMax,
+                           float *t,
+                           float *out);
+
+
+/**
+ * Computes time of intersection \a t between segment (given \a aStart and
+ * \a aEnd) and 3D box (given \a bMin, \a bMax) and stores intersection point
+ * into \a out.
+ *
+ * The returned intersection time \a t is for the segment.
+ *
+ * \param aStart  Start 3D vector
+ * \param aEnd    End 3D vector
+ * \param bMin    A 3D vector
+ * \param bMax    B 3D vector
+ * \param t       Time of intersection
+ * \param out     Output 3D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Segment3fIntersectBox3f(const float *aStart,
+                               const float *aEnd,
+                               const float *bMin,
+                               const float *bMax,
+                               float *t,
+                               float *out);
+
+
+/**
+ * Computes time of intersection \a t between ray (given \a aStart and
+ * \a aDirection) and 2D box (given \a bMin, \a bMax) and stores intersection
+ * point into \a out.
+ *
+ * The returned intersection time \a t is for the ray.
+ *
+ * \param aStart      Start 2D vector
+ * \param aDirection  Direction 2D vector
+ * \param bMin        A 2D vector
+ * \param bMax        B 2D vector
+ * \param t           Time of intersection
+ * \param out         Output 2D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Ray2fIntersectBox2f(const float *aStart,
+                           const float *aDirection,
+                           const float *bMin,
+                           const float *bMax,
+                           float *t,
+                           float *out);
+
+
+/**
+ * Computes time of intersection \a t between segment (given \a aStart and
+ * \a aEnd) and 2D box (given \a bMin, \a bMax) and stores intersection point
+ * into \a out.
+ *
+ * The returned intersection time \a t is for the segment.
+ *
+ * \param aStart  Start 2D vector
+ * \param aEnd    End 2D vector
+ * \param bMin    A 2D vector
+ * \param bMax    B 2D vector
+ * \param t       Time of intersection
+ * \param out     Output 2D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Segment2fIntersectBox2f(const float *aStart,
+                               const float *aEnd,
+                               const float *bMin,
+                               const float *bMax,
+                               float *t,
+                               float *out);
+
 
 #endif /* BH_MATH_H */

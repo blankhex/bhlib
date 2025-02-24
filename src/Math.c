@@ -4,6 +4,11 @@
 #include <string.h>
 
 
+/*#define EPSILON 0.00001f*/
+#define EPSILON 0.00001f
+#define PI      3.14159265358979323846f
+
+
 void BH_Vec4fAdd(const float *a,
                  const float *b,
                  float *out)
@@ -79,7 +84,7 @@ float BH_Vec4fDot(const float *a,
 
 float BH_Vec4fLength(const float *in)
 {
-    return sqrt(BH_Vec4fDot(in, in));
+    return sqrtf(BH_Vec4fDot(in, in));
 }
 
 
@@ -246,7 +251,7 @@ void BH_Vec3fCross(const float *a,
 
 float BH_Vec3fLength(const float *in)
 {
-    return sqrt(BH_Vec3fDot(in, in));
+    return sqrtf(BH_Vec3fDot(in, in));
 }
 
 
@@ -399,7 +404,7 @@ float BH_Vec2fCross(const float *a,
 
 float BH_Vec2fLength(const float *in)
 {
-    return sqrt(BH_Vec2fDot(in, in));
+    return sqrtf(BH_Vec2fDot(in, in));
 }
 
 
@@ -779,16 +784,16 @@ void BH_Quat4fSlerp(const float *a,
     float angle, denom;
     float from[4], to[4];
 
-    angle = acos(BH_Vec4fDot(a, b));
-    if (angle == 0.0f)
+    angle = acosf(BH_Vec4fDot(a, b));
+    if (fabsf(angle) < EPSILON)
     {
         BH_Vec4fLerp(a, b, t, out);
         return;
     }
 
-    denom = 1.0f / sin(angle);
-    BH_Vec4fScale(a, sin((1 - t) * angle) * denom, from);
-    BH_Vec4fScale(b, sin(t * angle) * denom, to);
+    denom = 1.0f / sinf(angle);
+    BH_Vec4fScale(a, sinf((1 - t) * angle) * denom, from);
+    BH_Vec4fScale(b, sinf(t * angle) * denom, to);
     BH_Vec4fAdd(from, to, out);
 }
 
@@ -800,12 +805,12 @@ void BH_Quat4fFromEuler(float roll,
 {
     float cr, cp, cy, sr, sp, sy;
 
-    cr = cos(roll / 2.0f);
-    cp = cos(pitch / 2.0f);
-    cy = cos(yaw / 2.0f);
-    sr = sin(roll / 2.0f);
-    sp = sin(pitch / 2.0f);
-    sy = sin(yaw / 2.0f);
+    cr = cosf(roll / 2.0f);
+    cp = cosf(pitch / 2.0f);
+    cy = cosf(yaw / 2.0f);
+    sr = sinf(roll / 2.0f);
+    sp = sinf(pitch / 2.0f);
+    sy = sinf(yaw / 2.0f);
 
     out[0] = sr * cp * cy - cr * sp * sy;
     out[1] = cr * sp * cy + sr * cp * sy;
@@ -820,8 +825,8 @@ void BH_Quat4fFromAxis(const float *axis,
 {
     float c, s;
 
-    c = cos(angle / 2.0f);
-    s = sin(angle / 2.0f);
+    c = cosf(angle / 2.0f);
+    s = sinf(angle / 2.0f);
 
     out[0] = axis[0] * s;
     out[1] = axis[1] * s;
@@ -854,22 +859,22 @@ void BH_Quat4fToEuler(const float *in,
     if (angle < -1.0f)
         angle = -1.0f;
 
-    *pitch = asin(angle);
+    *pitch = asinf(angle);
 
-    if (*pitch == (M_PI / 2.0f))
+    if (fabsf(*pitch - (PI / 2.0f)) < EPSILON)
     {
         *roll = 0.0f;
-        *yaw = -2.0f * atan2(in[0], in[3]);
+        *yaw = -2.0f * atan2f(in[0], in[3]);
     }
-    else if (*pitch == (M_PI / -2.0f))
+    else if (fabsf(*pitch - (PI / -2.0f)) < EPSILON)
     {
         *roll = 0.0f;
-        *yaw = 2.0f * atan2(in[0], in[3]);
+        *yaw = 2.0f * atan2f(in[0], in[3]);
     }
     else
     {
-        *roll = atan2(2.0f * (xw + yz), ww - xx - yy + zz);
-        *yaw = atan2(2.0f * (zw + xy), ww + xx - yy - zz);
+        *roll = atan2f(2.0f * (xw + yz), ww - xx - yy + zz);
+        *yaw = atan2f(2.0f * (zw + xy), ww + xx - yy - zz);
     }
 }
 
@@ -878,9 +883,9 @@ void BH_Quat4fToAxis(const float *in,
                      float *axis,
                      float *angle)
 {
-    *angle = 2.0f * acos(in[3]);
+    *angle = 2.0f * acosf(in[3]);
 
-    if (*angle == 0.0f)
+    if (fabsf(*angle) < EPSILON)
     {
         axis[0] = 1.0f;
         axis[1] = 0.0f;
@@ -890,7 +895,7 @@ void BH_Quat4fToAxis(const float *in,
     {
         float tmp;
 
-        tmp = sqrt(1.0f - in[3] * in[3]);
+        tmp = sqrtf(1.0f - in[3] * in[3]);
         axis[0] = in[0] / tmp;
         axis[1] = in[1] / tmp;
         axis[2] = in[2] / tmp;
@@ -1068,7 +1073,7 @@ int BH_Mat4fInverse(const float *in,
     det += in[8]  * tmp[2];
     det += in[12] * tmp[3];
 
-    if (det == 0.0f)
+    if (fabsf(det) < EPSILON)
         return BH_ERROR;
 
     tmp[4] = -(in[4] * f - in[8] * e + in[12] * d);
@@ -1134,8 +1139,8 @@ void BH_Mat4fFromRotationX(float angle,
 {
     float c, s;
 
-    c = cos(angle);
-    s = sin(angle);
+    c = cosf(angle);
+    s = sinf(angle);
 
     BH_Mat4fIdentity(out);
     out[5] = c;
@@ -1150,8 +1155,8 @@ void BH_Mat4fFromRotationY(float angle,
 {
     float c, s;
 
-    c = cos(angle);
-    s = sin(angle);
+    c = cosf(angle);
+    s = sinf(angle);
 
     BH_Mat4fIdentity(out);
     out[0] = c;
@@ -1166,8 +1171,8 @@ void BH_Mat4fFromRotationZ(float angle,
 {
     float c, s;
 
-    c = cos(angle);
-    s = sin(angle);
+    c = cosf(angle);
+    s = sinf(angle);
 
     BH_Mat4fIdentity(out);
     out[0] = c;
@@ -1187,15 +1192,15 @@ void BH_Mat4fFromAxis(const float *axis,
     length = BH_Vec3fLength(axis);
     BH_Mat4fIdentity(out);
 
-    if (length == 0.0f)
+    if (fabsf(length) < EPSILON)
         return;
 
     x = axis[0] / length;
     y = axis[1] / length;
     z = axis[2] / length;
 
-    c = cos(angle);
-    s = sin(angle);
+    c = cosf(angle);
+    s = sinf(angle);
     moc = 1.0f - c;
 
     xx = x * x;
@@ -1226,12 +1231,12 @@ void BH_Mat4fFromEuler(float roll,
 {
     float rs, rc, ys, yc, ps, pc;
 
-    rs = sin(roll);
-    rc = cos(roll);
-    ps = sin(pitch);
-    pc = cos(pitch);
-    ys = sin(yaw);
-    yc = cos(yaw);
+    rs = sinf(roll);
+    rc = cosf(roll);
+    ps = sinf(pitch);
+    pc = cosf(pitch);
+    ys = sinf(yaw);
+    yc = cosf(yaw);
 
     BH_Mat4fIdentity(out);
     out[0] = pc * yc;
@@ -1485,7 +1490,7 @@ int BH_Mat3fInverse(const float *in,
     det += in[3] * tmp[1];
     det += in[6] * tmp[2];
 
-    if (det == 0.0f)
+    if (fabsf(det) < EPSILON)
         return BH_ERROR;
 
     a = in[3] * in[8] - in[6] * in[5];
@@ -1534,8 +1539,8 @@ void BH_Mat3fFromRotation(float angle,
 {
     float c, s;
 
-    c = cos(angle);
-    s = sin(angle);
+    c = cosf(angle);
+    s = sinf(angle);
 
     BH_Mat3fIdentity(out);
     out[0] = c;
@@ -1583,7 +1588,7 @@ int BH_PlaneFromPoints(const float *a,
     BH_Vec3fSub(b, a, tmp1);
     BH_Vec3fSub(c, a, tmp2);
     BH_Vec3fCross(tmp2, tmp1, tmp1);
-    if (BH_Vec3fNormalEx(tmp1, tmp1) == 0.0f)
+    if (BH_Vec3fNormalEx(tmp1, tmp1) < EPSILON)
         return BH_ERROR;
 
     out[3] = BH_Vec3fDot(a, tmp1);
@@ -1624,7 +1629,7 @@ int BH_Ray3fIntersectPlane(const float *start,
     time = (plane[3] - BH_Vec3fDot(plane, start)) / denom;
 
     /* Check for ray/plane parallel to each other or point is behing the ray. */
-    if (denom == 0.0f || time < 0.0f)
+    if (fabsf(denom) < EPSILON || time < 0.0f)
         return BH_ERROR;
 
     /* Compute intersection point */
@@ -1696,7 +1701,7 @@ int BH_Segment3fIntersectPlane(const float *start,
     time = (plane[3] - BH_Vec3fDot(plane, start)) / denom;
 
     /* Check for ray/plane parallel to each other or point is behing the ray. */
-    if (denom == 0.0f || time < 0.0f || time > 1.0f)
+    if (fabsf(denom) < EPSILON || time < 0.0f || time > 1.0f)
         return BH_ERROR;
 
     /* Compute intersection point */
@@ -1787,7 +1792,7 @@ int BH_LineFromPoints(const float *a,
 
     tmp[0] = a[1] - b[1];
     tmp[1] = b[0] - a[0];
-    if (BH_Vec2fNormalEx(tmp, tmp) == 0.0f)
+    if (BH_Vec2fNormalEx(tmp, tmp) < EPSILON)
         return BH_ERROR;
 
     out[2] = BH_Vec2fDot(tmp, a);
@@ -1828,7 +1833,7 @@ int BH_Ray2fIntersectLine(const float *start,
     time = (line[2] - BH_Vec2fDot(line, start)) / denom;
 
     /* Check for ray/plane parallel to each other or point is behing the ray. */
-    if (denom == 0.0f || time < 0.0f)
+    if (fabsf(denom) < EPSILON || time < 0.0f)
         return BH_ERROR;
 
     /* Compute intersection point */
@@ -1839,10 +1844,10 @@ int BH_Ray2fIntersectLine(const float *start,
 }
 
 
-int BH_Ray2fIntersectTime(const float *startA,
-                          const float *directionA,
-                          const float *startB,
-                          const float *directionB,
+int BH_Ray2fIntersectTime(const float *aStart,
+                          const float *aDirection,
+                          const float *bStart,
+                          const float *bDirection,
                           float *time1,
                           float *time2)
 {
@@ -1850,15 +1855,15 @@ int BH_Ray2fIntersectTime(const float *startA,
     float denom;
 
     /* Rotate directions by 90 degrees and caluclate denom */
-    tmp1[0] = -directionA[1]; tmp1[1] = directionA[0];
-    tmp2[0] = -directionB[1]; tmp2[1] = directionB[0];
-    denom = BH_Vec2fDot(tmp1, directionB);
+    tmp1[0] = -aDirection[1]; tmp1[1] = aDirection[0];
+    tmp2[0] = -bDirection[1]; tmp2[1] = bDirection[0];
+    denom = BH_Vec2fDot(tmp1, bDirection);
 
-    if (denom == 0.0f)
+    if (fabsf(denom) < EPSILON)
         return BH_ERROR;
 
     /* Calculate segments offset and intersection times */
-    BH_Vec2fSub(startA, startB, tmp3);
+    BH_Vec2fSub(aStart, bStart, tmp3);
     *time1 = BH_Vec2fDot(tmp3, tmp2) / denom;
     *time2 = BH_Vec2fDot(tmp3, tmp1) / denom;
 
@@ -1866,48 +1871,48 @@ int BH_Ray2fIntersectTime(const float *startA,
 }
 
 
-int BH_Ray2fIntersectRay(const float *startA,
-                         const float *directionA,
-                         const float *startB,
-                         const float *directionB,
+int BH_Ray2fIntersectRay(const float *aStart,
+                         const float *aDirection,
+                         const float *bStart,
+                         const float *bDirection,
                          float *t,
                          float *out)
 {
     float tmp[2];
     float time1, time2;
 
-    if (BH_Ray2fIntersectTime(startA, directionA, startB, directionB, &time1, &time2))
+    if (BH_Ray2fIntersectTime(aStart, aDirection, bStart, bDirection, &time1, &time2))
         return BH_ERROR;
 
     if (time1 < 0.0f || time2 < 0.0f)
         return BH_ERROR;
 
-    BH_Vec2fScale(directionA, time1, tmp);
-    BH_Vec2fAdd(startA, tmp, out);
+    BH_Vec2fScale(aDirection, time1, tmp);
+    BH_Vec2fAdd(aStart, tmp, out);
     *t = time1;
     return BH_OK;
 }
 
 
-int BH_Ray2fIntersectSegment(const float *startA,
-                             const float *directionA,
-                             const float *startB,
-                             const float *endB,
+int BH_Ray2fIntersectSegment(const float *aStart,
+                             const float *aDirection,
+                             const float *bStart,
+                             const float *bEnd,
                              float *t,
                              float *out)
 {
     float tmp[2];
     float time1, time2;
 
-    BH_Vec2fSub(endB, startB, tmp);
-    if (BH_Ray2fIntersectTime(startA, directionA, startB, tmp, &time1, &time2))
+    BH_Vec2fSub(bEnd, bStart, tmp);
+    if (BH_Ray2fIntersectTime(aStart, aDirection, bStart, tmp, &time1, &time2))
         return BH_ERROR;
 
     if (time1 < 0.0f || time2 < 0.0f || time2 > 1.0f)
         return BH_ERROR;
 
-    BH_Vec2fScale(directionA, time1, tmp);
-    BH_Vec2fAdd(startA, tmp, out);
+    BH_Vec2fScale(aDirection, time1, tmp);
+    BH_Vec2fAdd(aStart, tmp, out);
     *t = time1;
     return BH_OK;
 }
@@ -1928,7 +1933,7 @@ int BH_Segment2fIntersectLine(const float *start,
     time = (line[2] - BH_Vec2fDot(line, start)) / denom;
 
     /* Check for ray/plane parallel to each other or point is behing the ray. */
-    if (denom == 0.0f || time < 0.0f || time > 1.0f)
+    if (fabsf(denom) < EPSILON || time < 0.0f || time > 1.0f)
         return BH_ERROR;
 
     /* Compute intersection point */
@@ -1939,26 +1944,327 @@ int BH_Segment2fIntersectLine(const float *start,
 }
 
 
-int BH_Segment2fIntersectSegment(const float *startA,
-                                 const float *endA,
-                                 const float *startB,
-                                 const float *endB,
+int BH_Segment2fIntersectSegment(const float *aStart,
+                                 const float *aEnd,
+                                 const float *bStart,
+                                 const float *bEnd,
                                  float *t,
                                  float *out)
 {
     float tmp1[2], tmp2[2];
     float time1, time2;
 
-    BH_Vec2fSub(endA, startA, tmp1);
-    BH_Vec2fSub(endB, startB, tmp2);
-    if (BH_Ray2fIntersectTime(startA, tmp1, startB, tmp2, &time1, &time2))
+    BH_Vec2fSub(aEnd, aStart, tmp1);
+    BH_Vec2fSub(bEnd, bStart, tmp2);
+    if (BH_Ray2fIntersectTime(aStart, tmp1, bStart, tmp2, &time1, &time2))
         return BH_ERROR;
 
     if (time1 < 0.0f || time1 > 1.0f || time2 < 0.0f || time2 > 1.0f)
         return BH_ERROR;
 
-    BH_Vec2fLerp(startA, endA, time1, out);
+    BH_Vec2fLerp(aStart, aEnd, time1, out);
     *t = time1;
 
+    return BH_OK;
+}
+
+
+void BH_Box3fUnion(const float *aMin,
+                   const float *aMax,
+                   const float *bMin,
+                   const float *bMax,
+                   float *outMin,
+                   float *outMax)
+{
+    BH_Vec3fMin(aMin, bMin, outMin);
+    BH_Vec3fMax(aMax, bMax, outMax);
+}
+
+
+int BH_Box3fIntersect(const float *aMin,
+                      const float *aMax,
+                      const float *bMin,
+                      const float *bMax,
+                      float *outMin,
+                      float *outMax)
+{
+    BH_Vec3fMax(aMin, bMin, outMin);
+    BH_Vec3fMin(aMax, bMax, outMax);
+
+    if (outMin[0] >= outMax[0] || outMin[1] >= outMax[1] || outMin[2] >= outMax[2])
+        return BH_ERROR;
+
+    return BH_OK;
+}
+
+
+int BH_Box3fContains(const float *aMin,
+                     const float *aMax,
+                     const float *point)
+{
+    if (point[0] < aMin[0] || point[1] < aMin[1] || point[2] < aMin[2])
+        return BH_ERROR;
+
+    if (point[0] > aMax[0] || point[1] > aMax[1] || point[2] > aMax[2])
+        return BH_ERROR;
+
+    return BH_OK;
+}
+
+
+int BH_Box3fEnclose(const float *points,
+                    size_t size,
+                    float *outMin,
+                    float *outMax)
+{
+    float tmp1[3], tmp2[3];
+    size_t i;
+
+    if (!size)
+        return BH_ERROR;
+
+    memcpy(tmp1, points, sizeof(tmp1));
+    memcpy(tmp2, points, sizeof(tmp2));
+
+    for (i = 1; i < size; i++)
+    {
+        BH_Vec3fMin(tmp1, points + i * 3, tmp1);
+        BH_Vec3fMax(tmp2, points + i * 3, tmp2);
+    }
+
+    memcpy(outMin, tmp1, sizeof(tmp1));
+    memcpy(outMax, tmp2, sizeof(tmp2));
+    return BH_OK;
+}
+
+
+void BH_Box2fUnion(const float *aMin,
+                   const float *aMax,
+                   const float *bMin,
+                   const float *bMax,
+                   float *outMin,
+                   float *outMax)
+{
+    BH_Vec2fMin(aMin, bMin, outMin);
+    BH_Vec2fMax(aMax, bMax, outMax);
+}
+
+
+int BH_Box2fIntersect(const float *aMin,
+                      const float *aMax,
+                      const float *bMin,
+                      const float *bMax,
+                      float *outMin,
+                      float *outMax)
+{
+    BH_Vec2fMax(aMin, bMin, outMin);
+    BH_Vec2fMin(aMax, bMax, outMax);
+
+    if (outMin[0] >= outMax[0] || outMin[1] >= outMax[1])
+        return BH_ERROR;
+
+    return BH_OK;
+}
+
+
+int BH_Box2fContains(const float *aMin,
+                     const float *aMax,
+                     const float *point)
+{
+    if (point[0] < aMin[0] || point[1] < aMin[1])
+        return BH_ERROR;
+
+    if (point[0] > aMax[0] || point[1] > aMax[1])
+        return BH_ERROR;
+
+    return BH_OK;
+}
+
+
+int BH_Box2fEnclose(const float *points,
+                    size_t size,
+                    float *outMin,
+                    float *outMax)
+{
+    float tmp1[2], tmp2[2];
+    size_t i;
+
+    if (!size)
+        return BH_ERROR;
+
+    memcpy(tmp1, points, sizeof(tmp1));
+    memcpy(tmp2, points, sizeof(tmp2));
+
+    for (i = 1; i < size; i++)
+    {
+        BH_Vec2fMin(tmp1, points + i * 2, tmp1);
+        BH_Vec2fMax(tmp2, points + i * 2, tmp2);
+    }
+
+    memcpy(outMin, tmp1, sizeof(tmp1));
+    memcpy(outMax, tmp2, sizeof(tmp2));
+    return BH_OK;
+}
+
+
+int BH_Ray3fIntersectBox3f(const float *aStart,
+                           const float *aDirection,
+                           const float *bMin,
+                           const float *bMax,
+                           float *t,
+                           float *out)
+{
+    float timeNear, timeFar, hitNear, hitFar, denom, tmp;
+    int i;
+
+    timeNear = -1.0f / 0.0f;
+    timeFar  =  1.0f / 0.0f;
+
+    /* Check if origin inside box */
+    if (!BH_Box3fContains(bMin, bMax, aStart))
+    {
+        memcpy(out, aStart, sizeof(float) * 3);
+        *t = 0.0f;
+        return BH_OK;
+    }
+
+    /* Check each axis for the minimal and maximum intersection time */
+    for (i = 0; i < 3; i++)
+    {
+        if (fabsf(aDirection[i]) < EPSILON)
+        {
+            if (aStart[i] < bMin[i] || aStart[i] > bMax[i])
+                return BH_ERROR;
+            continue;
+        }
+
+        denom = 1.0f / aDirection[i];
+        hitNear = (bMin[i] - aStart[i]) * denom;
+        hitFar  = (bMax[i] - aStart[i]) * denom;
+
+        if (hitNear > hitFar)
+        {
+            tmp = hitNear;
+            hitNear = hitFar;
+            hitFar = tmp;
+        }
+
+        if (hitNear > timeNear)
+            timeNear = hitNear;
+        if (hitFar < timeFar)
+            timeFar = hitFar;
+
+        if (timeNear > timeFar || timeFar < 0.0f)
+            return BH_ERROR;
+    }
+
+    out[0] = aStart[0] + aDirection[0] * timeNear;
+    out[1] = aStart[1] + aDirection[1] * timeNear;
+    out[2] = aStart[2] + aDirection[2] * timeNear;
+    *t = timeNear;
+
+    return BH_OK;
+}
+
+
+int BH_Segment3fIntersectBox3f(const float *aStart,
+                               const float *aEnd,
+                               const float *bMin,
+                               const float *bMax,
+                               float *t,
+                               float *out)
+{
+    float tmp[3];
+    float time;
+
+    BH_Vec3fSub(aEnd, aStart, tmp);
+    if (BH_Ray3fIntersectBox3f(aStart, tmp, bMin, bMax, &time, out))
+        return BH_ERROR;
+
+    if (time > 1.0f)
+        return BH_ERROR;
+
+    *t = time;
+    return BH_OK;
+}
+
+
+int BH_Ray2fIntersectBox2f(const float *aStart,
+                           const float *aDirection,
+                           const float *bMin,
+                           const float *bMax,
+                           float *t,
+                           float *out)
+{
+    float timeNear, timeFar, hitNear, hitFar, denom, tmp;
+    int i;
+
+    timeNear = -1.0f / 0.0f;
+    timeFar  =  1.0f / 0.0f;
+
+    /* Check if origin inside box */
+    if (!BH_Box2fContains(bMin, bMax, aStart))
+    {
+        memcpy(out, aStart, sizeof(float) * 2);
+        *t = 0.0f;
+        return BH_OK;
+    }
+
+    /* Check each axis for the minimal and maximum intersection time */
+    for (i = 0; i < 2; i++)
+    {
+        if (fabsf(aDirection[i]) < EPSILON)
+        {
+            if (aStart[i] < bMin[i] || aStart[i] > bMax[i])
+                return BH_ERROR;
+            continue;
+        }
+
+        denom = 1.0f / aDirection[i];
+        hitNear = (bMin[i] - aStart[i]) * denom;
+        hitFar  = (bMax[i] - aStart[i]) * denom;
+
+        if (hitNear > hitFar)
+        {
+            tmp = hitNear;
+            hitNear = hitFar;
+            hitFar = tmp;
+        }
+
+        if (hitNear > timeNear)
+            timeNear = hitNear;
+        if (hitFar < timeFar)
+            timeFar = hitFar;
+
+        if (timeNear > timeFar || timeFar < 0.0f)
+            return BH_ERROR;
+    }
+
+    out[0] = aStart[0] + aDirection[0] * timeNear;
+    out[1] = aStart[1] + aDirection[1] * timeNear;
+    *t = timeNear;
+
+    return BH_OK;
+}
+
+
+int BH_Segment2fIntersectBox2f(const float *aStart,
+                               const float *aEnd,
+                               const float *bMin,
+                               const float *bMax,
+                               float *t,
+                               float *out)
+{
+    float tmp[3];
+    float time;
+
+    BH_Vec2fSub(aEnd, aStart, tmp);
+    if (BH_Ray2fIntersectBox2f(aStart, tmp, bMin, bMax, &time, out))
+        return BH_ERROR;
+
+    if (time > 1.0f)
+        return BH_ERROR;
+
+    *t = time;
     return BH_OK;
 }

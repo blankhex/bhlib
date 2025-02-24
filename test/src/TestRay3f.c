@@ -86,6 +86,72 @@ BH_UNIT_TEST(Barycentric)
 }
 
 
+BH_UNIT_TEST(RayBox)
+{
+    float start[3], direction[3], bMin[3], bMax[3], r[3];
+    float time;
+
+    bMin[0] =-2.0f; bMin[1] =-2.0f; bMin[2] =-2.0f;
+    bMax[0] = 3.0f; bMax[1] = 3.0f; bMax[2] = 3.0f;
+
+    start[0] = 0.0f; start[1] = 0.0f; start[2] = 0.0f;
+    direction[0] = 1.0f; direction[1] = 0.0f; direction[2] = 0.0f;
+    BH_VERIFY(BH_Ray3fIntersectBox3f(start, direction, bMin, bMax, &time, r) == BH_OK);
+    BH_VERIFY(BH_Box3fContains(bMin, bMax, r) == BH_OK);
+
+    start[0] = -4.0f; start[1] = 0.0f; start[2] = 0.0f;
+    BH_VERIFY(BH_Ray3fIntersectBox3f(start, direction, bMin, bMax, &time, r) == BH_OK);
+    BH_VERIFY(BH_Box3fContains(bMin, bMax, r) == BH_OK);
+
+    start[0] = 4.0f; start[1] = 0.0f; start[2] = 0.0f;
+    BH_VERIFY(BH_Ray3fIntersectBox3f(start, direction, bMin, bMax, &time, r) != BH_OK);
+
+    start[0] = 4.0f; start[1] = 0.0f; start[2] = 0.0f;
+    direction[0] = -1.0f; direction[1] = 0.0f; direction[2] = 0.0f;
+    BH_VERIFY(BH_Ray3fIntersectBox3f(start, direction, bMin, bMax, &time, r) == BH_OK);
+    BH_VERIFY(BH_Box3fContains(bMin, bMax, r) == BH_OK);
+
+    start[0] = 4.0f; start[1] = 4.0f; start[2] = 4.0f;
+    direction[0] = -1.0f; direction[1] = 0.0f; direction[2] = 0.0f;
+    BH_VERIFY(BH_Ray3fIntersectBox3f(start, direction, bMin, bMax, &time, r) != BH_OK);
+
+    return 0;
+}
+
+
+BH_UNIT_TEST(SegmentBox)
+{
+    float start[3], end[3], bMin[3], bMax[3], r[3];
+    float time;
+
+    bMin[0] =-2.0f; bMin[1] =-2.0f; bMin[2] =-2.0f;
+    bMax[0] = 3.0f; bMax[1] = 3.0f; bMax[2] = 3.0f;
+
+    start[0] = 0.0f; start[1] = 0.0f; start[2] = 0.0f;
+    end[0] = 5.0f; end[1] = 0.0f; end[2] = 0.0f;
+    BH_VERIFY(BH_Segment3fIntersectBox3f(start, end, bMin, bMax, &time, r) == BH_OK);
+    BH_VERIFY(BH_Box3fContains(bMin, bMax, r) == BH_OK);
+
+    start[0] = -4.0f; start[1] = 0.0f; start[2] = 0.0f;
+    BH_VERIFY(BH_Segment3fIntersectBox3f(start, end, bMin, bMax, &time, r) == BH_OK);
+    BH_VERIFY(BH_Box3fContains(bMin, bMax, r) == BH_OK);
+
+    start[0] = 4.0f; start[1] = 0.0f; start[2] = 0.0f;
+    BH_VERIFY(BH_Segment3fIntersectBox3f(start, end, bMin, bMax, &time, r) != BH_OK);
+
+    start[0] = 4.0f; start[1] = 0.0f; start[2] = 0.0f;
+    end[0] = -5.0f; end[1] = 0.0f; end[2] = 0.0f;
+    BH_VERIFY(BH_Segment3fIntersectBox3f(start, end, bMin, bMax, &time, r) == BH_OK);
+    BH_VERIFY(BH_Box3fContains(bMin, bMax, r) == BH_OK);
+
+    start[0] = 4.0f; start[1] = 4.0f; start[2] = 4.0f;
+    end[0] = -5.0f; end[1] = 4.0f; end[2] = 0.0f;
+    BH_VERIFY(BH_Segment3fIntersectBox3f(start, end, bMin, bMax, &time, r) != BH_OK);
+
+    return 0;
+}
+
+
 int main(int argc, char **argv)
 {
     (void)argc;
@@ -94,6 +160,8 @@ int main(int argc, char **argv)
     BH_UNIT_ADD(RayIntersectTriangle);
     BH_UNIT_ADD(SegmentIntersectTriangle);
     BH_UNIT_ADD(Barycentric);
+    BH_UNIT_ADD(RayBox);
+    BH_UNIT_ADD(SegmentBox);
 
     return BH_UnitRun();
 }
