@@ -28,11 +28,19 @@ typedef int (*BH_UnitCallback)(void);
         if (BH_VERIFY_DELTA < 0.0) \
             BH_VERIFY_DELTA = -BH_VERIFY_DELTA; \
         if (BH_VERIFY_DELTA > (e)) { \
-            printf("%s:%d\t%s (differs by %f)\n", __FILE__, __LINE__, #x " == " #y, BH_VERIFY_DELTA); \
+            printf("%s:%d\t%s (differs by %f)\n", \
+                   __FILE__, __LINE__, #x " == " #y, BH_VERIFY_DELTA); \
             return -1; \
         } \
     } while(0)
 
+
+#define BH_UNIT_TEST(name) \
+    static int unit##name(void)
+
+
+#define     BH_UNIT_ADD(name) \
+    BH_UnitAdd(#name, unit##name)
 
 
 /**

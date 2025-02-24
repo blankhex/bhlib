@@ -55,6 +55,7 @@ void BH_UnitAdd(const char *name, BH_UnitCallback cb)
 int BH_UnitRun(void)
 {
     BH_Unit *current;
+    int result = 0;
     printf("Running tests...\n");
 
     current = root;
@@ -64,15 +65,16 @@ int BH_UnitRun(void)
         if (current->cb())
         {
             printf("\tFAIL\n");
-            BH_UnitCleanup();
-            return -1;
+            result = -1;
         }
-        printf("\tPASS\n");
+        else
+            printf("\tPASS\n");
+
         fflush(stdout);
         current = current->next;
     }
 
     BH_UnitCleanup();
-    return 0;
+    return result;
 }
 

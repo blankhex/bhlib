@@ -1,4 +1,5 @@
 #include <BH/Math.h>
+
 #include <math.h>
 #include <string.h>
 
@@ -89,6 +90,17 @@ void BH_Vec4fNormal(const float *in,
 }
 
 
+float BH_Vec4fNormalEx(const float *in,
+                       float *out)
+{
+    float length;
+
+    length = BH_Vec4fLength(in);
+    BH_Vec4fScale(in, 1.0f / length, out);
+    return length;
+}
+
+
 void BH_Vec4fMin(const float *a,
                  const float *b,
                  float *out)
@@ -121,6 +133,34 @@ void BH_Vec4fLerp(const float *a,
     BH_Vec4fSub(b, a, tmp);
     BH_Vec4fScale(tmp, t, tmp);
     BH_Vec4fAdd(a, tmp, out);
+}
+
+
+void BH_Vec4fProject(const float *a,
+                     const float *b,
+                     float *out)
+{
+    float amount;
+
+    amount = BH_Vec4fDot(a, b) / BH_Vec4fDot(b, b);
+    BH_Vec4fScale(b, amount, out);
+}
+
+
+void BH_Vec4fBarycentric(const float *a,
+                         const float *b,
+                         const float *c,
+                         float v,
+                         float w,
+                         float *out)
+{
+    float tmp1[4], tmp2[4];
+    float u;
+
+    u = 1.0f - v - w;
+    tmp1[0] = tmp1[1] = tmp1[2] = tmp1[3] = u; BH_Vec4fMul(a, tmp1, tmp2);
+    tmp1[0] = tmp1[1] = tmp1[2] = tmp1[3] = v; BH_Vec4fMulAdd(b, tmp1, tmp2, tmp2);
+    tmp1[0] = tmp1[1] = tmp1[2] = tmp1[3] = w; BH_Vec4fMulAdd(c, tmp1, tmp2, out);
 }
 
 
@@ -217,6 +257,17 @@ void BH_Vec3fNormal(const float *in,
 }
 
 
+float BH_Vec3fNormalEx(const float *in,
+                       float *out)
+{
+    float length;
+
+    length = BH_Vec3fLength(in);
+    BH_Vec3fScale(in, 1.0f / length, out);
+    return length;
+}
+
+
 void BH_Vec3fMin(const float *a,
                  const float *b,
                  float *out)
@@ -247,6 +298,34 @@ void BH_Vec3fLerp(const float *a,
     BH_Vec3fSub(b, a, tmp);
     BH_Vec3fScale(tmp, t, tmp);
     BH_Vec3fAdd(a, tmp, out);
+}
+
+
+void BH_Vec3fProject(const float *a,
+                     const float *b,
+                     float *out)
+{
+    float amount;
+
+    amount = BH_Vec3fDot(a, b) / BH_Vec3fDot(b, b);
+    BH_Vec3fScale(b, amount, out);
+}
+
+
+void BH_Vec3fBarycentric(const float *a,
+                         const float *b,
+                         const float *c,
+                         float v,
+                         float w,
+                         float *out)
+{
+    float tmp1[3], tmp2[3];
+    float u;
+
+    u = 1.0f - v - w;
+    tmp1[0] = tmp1[1] = tmp1[2] = u; BH_Vec3fMul(a, tmp1, tmp2);
+    tmp1[0] = tmp1[1] = tmp1[2] = v; BH_Vec3fMulAdd(b, tmp1, tmp2, tmp2);
+    tmp1[0] = tmp1[1] = tmp1[2] = w; BH_Vec3fMulAdd(c, tmp1, tmp2, out);
 }
 
 
@@ -331,6 +410,17 @@ void BH_Vec2fNormal(const float *in,
 }
 
 
+float BH_Vec2fNormalEx(const float *in,
+                       float *out)
+{
+    float length;
+
+    length = BH_Vec2fLength(in);
+    BH_Vec2fScale(in, 1.0f / length, out);
+    return length;
+}
+
+
 void BH_Vec2fMin(const float *a,
                  const float *b,
                  float *out)
@@ -359,6 +449,40 @@ void BH_Vec2fLerp(const float *a,
     BH_Vec2fSub(b, a, tmp);
     BH_Vec2fScale(tmp, t, tmp);
     BH_Vec2fAdd(a, tmp, out);
+}
+
+
+void BH_Vec2fProject(const float *a,
+                     const float *b,
+                     float *out)
+{
+    float amount;
+
+    amount = BH_Vec2fDot(a, b) / BH_Vec2fDot(b, b);
+    BH_Vec2fScale(b, amount, out);
+}
+
+
+void BH_Vec2fBarycentric(const float *a,
+                         const float *b,
+                         const float *c,
+                         float v,
+                         float w,
+                         float *out)
+{
+    float tmp1[2], tmp2[2];
+    float u;
+
+    u = 1.0f - v - w;
+    tmp1[0] = tmp1[1] = u; BH_Vec2fMul(a, tmp1, tmp2);
+    tmp1[0] = tmp1[1] = v; BH_Vec2fMulAdd(b, tmp1, tmp2, tmp2);
+    tmp1[0] = tmp1[1] = w; BH_Vec2fMulAdd(c, tmp1, tmp2, out);
+}
+
+
+float BH_Lerpf(float a, float b, float t)
+{
+    return a + (b - a) * t;
 }
 
 
@@ -1176,37 +1300,37 @@ void BH_Mat4fFromFrustum(float fov,
 }
 
 
-void BH_Mat4fFromLookAt(const float *pos,
+void BH_Mat4fFromLookAt(const float *position,
                         const float *at,
                         const float *up,
                         float *out)
 {
-    float cdir[3], cright[3], cup[3];
+    float cameraDir[3], cameraRight[3], cameraUp[3];
 
-    BH_Vec3fSub(pos, at, cdir);
-    BH_Vec3fNormal(cdir, cdir);
-    BH_Vec3fCross(up, cdir, cright);
-    BH_Vec3fNormal(cright, cright);
-    BH_Vec3fCross(cdir, cright, cup);
+    BH_Vec3fSub(position, at, cameraDir);
+    BH_Vec3fNormal(cameraDir, cameraDir);
+    BH_Vec3fCross(up, cameraDir, cameraRight);
+    BH_Vec3fNormal(cameraRight, cameraRight);
+    BH_Vec3fCross(cameraDir, cameraRight, cameraUp);
 
-    out[0] = cright[0];
-    out[1] = cup[0];
-    out[2] = cdir[0];
+    out[0] = cameraRight[0];
+    out[1] = cameraUp[0];
+    out[2] = cameraDir[0];
     out[3] = 0.0f;
 
-    out[4] = cright[1];
-    out[5] = cup[1];
-    out[6] = cdir[1];
+    out[4] = cameraRight[1];
+    out[5] = cameraUp[1];
+    out[6] = cameraDir[1];
     out[7] = 0.0f;
 
-    out[8] = cright[2];
-    out[9] = cup[2];
-    out[10] = cdir[2];
+    out[8] = cameraRight[2];
+    out[9] = cameraUp[2];
+    out[10] = cameraDir[2];
     out[11] = 0.0f;
 
-    out[12] = -BH_Vec3fDot(cright, pos);
-    out[13] = -BH_Vec3fDot(cup, pos);
-    out[14] = -BH_Vec3fDot(cdir, pos);
+    out[12] = -BH_Vec3fDot(cameraRight, position);
+    out[13] = -BH_Vec3fDot(cameraUp, position);
+    out[14] = -BH_Vec3fDot(cameraDir, position);
     out[15] = 1.0f;
 }
 
@@ -1446,4 +1570,395 @@ void BH_Mat3fApplyVec2f(float *a,
     row[0] = row[1] = row[2] = 1.0f; BH_Vec3fMulAdd(&a[6], row, tmp, tmp);
 
     memcpy(out, tmp, sizeof(float) * 2);
+}
+
+
+int BH_PlaneFromPoints(const float *a,
+                       const float *b,
+                       const float *c,
+                       float *out)
+{
+    float tmp1[3], tmp2[3];
+
+    BH_Vec3fSub(b, a, tmp1);
+    BH_Vec3fSub(c, a, tmp2);
+    BH_Vec3fCross(tmp2, tmp1, tmp1);
+    if (BH_Vec3fNormalEx(tmp1, tmp1) == 0.0f)
+        return BH_ERROR;
+
+    out[3] = BH_Vec3fDot(a, tmp1);
+    memcpy(out, tmp1, sizeof(tmp1));
+    return BH_OK;
+}
+
+
+float BH_PlaneDistance(const float *plane,
+                       const float *point)
+{
+    return BH_Vec3fDot(plane, point) - plane[3];
+}
+
+
+void BH_PlaneClosestPoint(const float *plane,
+                          const float *point,
+                          float *out)
+{
+    float tmp[3];
+
+    BH_Vec3fScale(plane, BH_PlaneDistance(plane, point), tmp);
+    BH_Vec3fSub(point, tmp, out);
+}
+
+
+int BH_Ray3fIntersectPlane(const float *start,
+                           const float *direction,
+                           const float *plane,
+                           float *t,
+                           float *out)
+{
+    float tmp1[3];
+    float denom, time;
+
+    /* Calculate intersection time */
+    denom = BH_Vec3fDot(direction, plane);
+    time = (plane[3] - BH_Vec3fDot(plane, start)) / denom;
+
+    /* Check for ray/plane parallel to each other or point is behing the ray. */
+    if (denom == 0.0f || time < 0.0f)
+        return BH_ERROR;
+
+    /* Compute intersection point */
+    BH_Vec3fScale(direction, time, tmp1);
+    BH_Vec3fAdd(start, tmp1, out);
+    *t = time;
+    return BH_OK;
+}
+
+
+int BH_Ray3fIntersectTriangle(const float *start,
+                              const float *direction,
+                              const float *a,
+                              const float *b,
+                              const float *c,
+                              float *t,
+                              float *out)
+{
+    float plane[4];
+    float tmp1[3], tmp2[3], tmp3[3];
+    float time;
+
+    /* Compute plane */
+    if (BH_PlaneFromPoints(a, b, c, plane))
+        return BH_ERROR;
+
+    /* Compute intersection point in ray against plane */
+    if (BH_Ray3fIntersectPlane(start, direction, plane, &time, tmp3))
+        return BH_ERROR;
+
+    /* Check if point inside rectangle */
+    BH_Vec3fSub(b, a, tmp1);
+    BH_Vec3fSub(tmp3, a, tmp2);
+    BH_Vec3fCross(tmp2, tmp1, tmp1);
+    if (BH_Vec3fDot(tmp1, plane) < 0.0f)
+        return BH_ERROR;
+
+    BH_Vec3fSub(c, b, tmp1);
+    BH_Vec3fSub(tmp3, b, tmp2);
+    BH_Vec3fCross(tmp2, tmp1, tmp1);
+    if (BH_Vec3fDot(tmp1, plane) < 0.0f)
+        return BH_ERROR;
+
+    BH_Vec3fSub(a, c, tmp1);
+    BH_Vec3fSub(tmp3, c, tmp2);
+    BH_Vec3fCross(tmp2, tmp1, tmp1);
+    if (BH_Vec3fDot(tmp1, plane) < 0.0f)
+        return BH_ERROR;
+
+    /* Copy intersection point */
+    memcpy(out, tmp3, sizeof(tmp3));
+    *t = time;
+    return BH_OK;
+}
+
+
+int BH_Segment3fIntersectPlane(const float *start,
+                               const float *end,
+                               const float *plane,
+                               float *t,
+                               float *out)
+{
+    float tmp[3];
+    float denom, time;
+
+    /* Calculate intersection time */
+    BH_Vec3fSub(end, start, tmp);
+    denom = BH_Vec3fDot(tmp, plane);
+    time = (plane[3] - BH_Vec3fDot(plane, start)) / denom;
+
+    /* Check for ray/plane parallel to each other or point is behing the ray. */
+    if (denom == 0.0f || time < 0.0f || time > 1.0f)
+        return BH_ERROR;
+
+    /* Compute intersection point */
+    BH_Vec3fScale(tmp, time, tmp);
+    BH_Vec3fAdd(start, tmp, out);
+    *t = time;
+    return BH_OK;
+}
+
+
+int BH_Segment3fIntersectTriangle(const float *start,
+                                  const float *end,
+                                  const float *a,
+                                  const float *b,
+                                  const float *c,
+                                  float *t,
+                                  float *out)
+{
+    float plane[4];
+    float tmp1[3], tmp2[3], tmp3[3];
+    float time;
+
+    /* Compute plane */
+    if (BH_PlaneFromPoints(a, b, c, plane))
+        return BH_ERROR;
+
+    /* Compute intersection point in ray against plane */
+    if (BH_Segment3fIntersectPlane(start, end, plane, &time, tmp3))
+        return BH_ERROR;
+
+    /* Check if point inside rectangle */
+    BH_Vec3fSub(b, a, tmp1);
+    BH_Vec3fSub(tmp3, a, tmp2);
+    BH_Vec3fCross(tmp2, tmp1, tmp1);
+    if (BH_Vec3fDot(tmp1, plane) < 0.0f)
+        return BH_ERROR;
+
+    BH_Vec3fSub(c, b, tmp1);
+    BH_Vec3fSub(tmp3, b, tmp2);
+    BH_Vec3fCross(tmp2, tmp1, tmp1);
+    if (BH_Vec3fDot(tmp1, plane) < 0.0f)
+        return BH_ERROR;
+
+    BH_Vec3fSub(a, c, tmp1);
+    BH_Vec3fSub(tmp3, c, tmp2);
+    BH_Vec3fCross(tmp2, tmp1, tmp1);
+    if (BH_Vec3fDot(tmp1, plane) < 0.0f)
+        return BH_ERROR;
+
+    /* Copy intersection point */
+    memcpy(out, tmp3, sizeof(tmp3));
+    *t = time;
+    return BH_OK;
+}
+
+
+void BH_Triangle3fBarycentric(const float *a,
+                              const float *b,
+                              const float *c,
+                              const float *point,
+                              float *out)
+{
+    float tmp1[3], tmp2[3], tmp3[3];
+    float t11, t12, t22, t31, t32, denom;
+
+    BH_Vec3fSub(b, a, tmp1);
+    BH_Vec3fSub(c, a, tmp2);
+    BH_Vec3fSub(point, a, tmp3);
+
+    t11 = BH_Vec3fDot(tmp1, tmp1);
+    t12 = BH_Vec3fDot(tmp1, tmp2);
+    t22 = BH_Vec3fDot(tmp2, tmp2);
+    t31 = BH_Vec3fDot(tmp3, tmp1);
+    t32 = BH_Vec3fDot(tmp3, tmp2);
+    denom = 1.0f / (t11 * t22 - t12 * t12);
+
+    out[1] = (t22 * t31 - t12 * t32) * denom;
+    out[2] = (t11 * t32 - t12 * t31) * denom;
+    out[0] = 1.0f - out[1] - out[2];
+}
+
+
+int BH_LineFromPoints(const float *a,
+                      const float *b,
+                      float *out)
+{
+    float tmp[2];
+
+    tmp[0] = a[1] - b[1];
+    tmp[1] = b[0] - a[0];
+    if (BH_Vec2fNormalEx(tmp, tmp) == 0.0f)
+        return BH_ERROR;
+
+    out[2] = BH_Vec2fDot(tmp, a);
+    memcpy(out, tmp, sizeof(tmp));
+    return BH_OK;
+}
+
+
+float BH_LineDistance(const float *line,
+                      const float *point)
+{
+    return BH_Vec2fDot(line, point) - line[2];
+}
+
+
+void BH_LineClosestPoint(const float *line,
+                         const float *point,
+                         float *out)
+{
+    float tmp[2];
+
+    BH_Vec2fScale(line, BH_LineDistance(line, point), tmp);
+    BH_Vec2fSub(point, tmp, out);
+}
+
+
+int BH_Ray2fIntersectLine(const float *start,
+                          const float *direction,
+                          const float *line,
+                          float *t,
+                          float *out)
+{
+    float tmp1[2];
+    float denom, time;
+
+    /* Calculate intersection time */
+    denom = BH_Vec2fDot(direction, line);
+    time = (line[2] - BH_Vec2fDot(line, start)) / denom;
+
+    /* Check for ray/plane parallel to each other or point is behing the ray. */
+    if (denom == 0.0f || time < 0.0f)
+        return BH_ERROR;
+
+    /* Compute intersection point */
+    BH_Vec2fScale(direction, time, tmp1);
+    BH_Vec2fAdd(start, tmp1, out);
+    *t = time;
+    return BH_OK;
+}
+
+
+int BH_Ray2fIntersectTime(const float *startA,
+                          const float *directionA,
+                          const float *startB,
+                          const float *directionB,
+                          float *time1,
+                          float *time2)
+{
+    float tmp1[2], tmp2[2], tmp3[2];
+    float denom;
+
+    /* Rotate directions by 90 degrees and caluclate denom */
+    tmp1[0] = -directionA[1]; tmp1[1] = directionA[0];
+    tmp2[0] = -directionB[1]; tmp2[1] = directionB[0];
+    denom = BH_Vec2fDot(tmp1, directionB);
+
+    if (denom == 0.0f)
+        return BH_ERROR;
+
+    /* Calculate segments offset and intersection times */
+    BH_Vec2fSub(startA, startB, tmp3);
+    *time1 = BH_Vec2fDot(tmp3, tmp2) / denom;
+    *time2 = BH_Vec2fDot(tmp3, tmp1) / denom;
+
+    return BH_OK;
+}
+
+
+int BH_Ray2fIntersectRay(const float *startA,
+                         const float *directionA,
+                         const float *startB,
+                         const float *directionB,
+                         float *t,
+                         float *out)
+{
+    float tmp[2];
+    float time1, time2;
+
+    if (BH_Ray2fIntersectTime(startA, directionA, startB, directionB, &time1, &time2))
+        return BH_ERROR;
+
+    if (time1 < 0.0f || time2 < 0.0f)
+        return BH_ERROR;
+
+    BH_Vec2fScale(directionA, time1, tmp);
+    BH_Vec2fAdd(startA, tmp, out);
+    *t = time1;
+    return BH_OK;
+}
+
+
+int BH_Ray2fIntersectSegment(const float *startA,
+                             const float *directionA,
+                             const float *startB,
+                             const float *endB,
+                             float *t,
+                             float *out)
+{
+    float tmp[2];
+    float time1, time2;
+
+    BH_Vec2fSub(endB, startB, tmp);
+    if (BH_Ray2fIntersectTime(startA, directionA, startB, tmp, &time1, &time2))
+        return BH_ERROR;
+
+    if (time1 < 0.0f || time2 < 0.0f || time2 > 1.0f)
+        return BH_ERROR;
+
+    BH_Vec2fScale(directionA, time1, tmp);
+    BH_Vec2fAdd(startA, tmp, out);
+    *t = time1;
+    return BH_OK;
+}
+
+
+int BH_Segment2fIntersectLine(const float *start,
+                              const float *end,
+                              const float *line,
+                              float *t,
+                              float *out)
+{
+    float tmp[2];
+    float denom, time;
+
+    /* Calculate intersection time */
+    BH_Vec2fSub(end, start, tmp);
+    denom = BH_Vec2fDot(tmp, line);
+    time = (line[2] - BH_Vec2fDot(line, start)) / denom;
+
+    /* Check for ray/plane parallel to each other or point is behing the ray. */
+    if (denom == 0.0f || time < 0.0f || time > 1.0f)
+        return BH_ERROR;
+
+    /* Compute intersection point */
+    BH_Vec2fScale(tmp, time, tmp);
+    BH_Vec2fAdd(start, tmp, out);
+    *t = time;
+    return BH_OK;
+}
+
+
+int BH_Segment2fIntersectSegment(const float *startA,
+                                 const float *endA,
+                                 const float *startB,
+                                 const float *endB,
+                                 float *t,
+                                 float *out)
+{
+    float tmp1[2], tmp2[2];
+    float time1, time2;
+
+    BH_Vec2fSub(endA, startA, tmp1);
+    BH_Vec2fSub(endB, startB, tmp2);
+    if (BH_Ray2fIntersectTime(startA, tmp1, startB, tmp2, &time1, &time2))
+        return BH_ERROR;
+
+    if (time1 < 0.0f || time1 > 1.0f || time2 < 0.0f || time2 > 1.0f)
+        return BH_ERROR;
+
+    BH_Vec2fLerp(startA, endA, time1, out);
+    *t = time1;
+
+    return BH_OK;
 }

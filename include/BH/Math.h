@@ -107,6 +107,19 @@ void BH_Vec4fNormal(const float *in,
 
 
 /**
+ * Computes normal vector from the \a in stores result into \a out and returns
+ * source length of the vector.
+ *
+ * \param in   Input 4D vector
+ * \param out  Output 4D vector
+ *
+ * \return Returns length prior to normalization
+ */
+float BH_Vec4fNormalEx(const float *in,
+                       float *out);
+
+
+/**
  * Computes minimum vector from the \a a and \a b vectors and stores result
  * into \a out.
  *
@@ -145,6 +158,39 @@ void BH_Vec4fLerp(const float *a,
                   const float *b,
                   float t,
                   float *out);
+
+
+/**
+ * Projects \a a vector onto \a b vector and stores result into \a out.
+ *
+ * \param a    A 4D vector
+ * \param b    B 4D vector
+ * \param out  Output 4D vector
+ */
+void BH_Vec4fProject(const float *a,
+                     const float *b,
+                     float *out);
+
+
+/**
+ * Computes point from barycentric coordiantes \a v, \a w  and points \a a,
+ * \a b and \a c vectors.
+ *
+ * Output vector is calculated as A + v*(B-A) + w*(C-A).
+ *
+ * \param a    A 4D vector
+ * \param b    B 4D vector
+ * \param c    C 4D vector
+ * \param v    V barycentric coordinate
+ * \param w    W barycentric coordinate
+ * \param out  Output 4D vector
+ */
+void BH_Vec4fBarycentric(const float *a,
+                         const float *b,
+                         const float *c,
+                         float v,
+                         float w,
+                         float *out);
 
 
 /**
@@ -263,6 +309,19 @@ void BH_Vec3fNormal(const float *in,
 
 
 /**
+ * Computes normal vector from the \a in stores result into \a out and returns
+ * source length of the vector.
+ *
+ * \param in   Input 3D vector
+ * \param out  Output 3D vector
+ *
+ * \return Returns length prior to normalization
+ */
+float BH_Vec3fNormalEx(const float *in,
+                       float *out);
+
+
+/**
  * Computes minimum vector from the \a a and \a b vectors and stores result into
  * \a out.
  *
@@ -301,6 +360,39 @@ void BH_Vec3fLerp(const float *a,
                   const float *b,
                   float t,
                   float *out);
+
+
+/**
+ * Projects \a a vector onto \a b vector and stores result into \a out.
+ *
+ * \param a    A 3D vector
+ * \param b    B 3D vector
+ * \param out  Output 3D vector
+ */
+void BH_Vec3fProject(const float *a,
+                     const float *b,
+                     float *out);
+
+
+/**
+ * Computes point from barycentric coordiantes \a v, \a w  and points \a a,
+ * \a b and \a c vectors.
+ *
+ * Output vector is calculated as A + v*(B-A) + w*(C-A).
+ *
+ * \param a    A 3D vector
+ * \param b    B 3D vector
+ * \param c    C 3D vector
+ * \param v    V barycentric coordinate
+ * \param w    W barycentric coordinate
+ * \param out  Output 3D vector
+ */
+void BH_Vec3fBarycentric(const float *a,
+                         const float *b,
+                         const float *c,
+                         float v,
+                         float w,
+                         float *out);
 
 
 /**
@@ -417,6 +509,19 @@ void BH_Vec2fNormal(const float *in,
 
 
 /**
+ * Computes normal vector from the \a in stores result into \a out and returns
+ * source length of the vector.
+ *
+ * \param in   Input 2D vector
+ * \param out  Output 2D vector
+ *
+ * \return Returns length prior to normalization
+ */
+float BH_Vec2fNormalEx(const float *in,
+                       float *out);
+
+
+/**
  * Computes minimum vector from the \a a and \a b vectors and stores result into
  * \a out.
  *
@@ -455,6 +560,51 @@ void BH_Vec2fLerp(const float *a,
                   const float *b,
                   float t,
                   float *out);
+
+
+/**
+ * Projects \a a vector onto \a b vector and stores result into \a out.
+ *
+ * \param a    A 2D vector
+ * \param b    B 2D vector
+ * \param out  Output 2D vector
+ */
+void BH_Vec2fProject(const float *a,
+                     const float *b,
+                     float *out);
+
+
+/**
+ * Computes point from barycentric coordiantes \a v, \a w  and points \a a,
+ * \a b and \a c vectors.
+ *
+ * Output vector is calculated as A + v*(B-A) + w*(C-A).
+ *
+ * \param a    A 2D vector
+ * \param b    B 2D vector
+ * \param c    C 2D vector
+ * \param v    V barycentric coordinate
+ * \param w    W barycentric coordinate
+ * \param out  Output 2D vector
+ */
+void BH_Vec2fBarycentric(const float *a,
+                         const float *b,
+                         const float *c,
+                         float u,
+                         float v,
+                         float *out);
+
+
+/**
+ * Interpolates between \a a and \a b values by \a t amount and returns the
+ * result.
+ *
+ * \param a    A 2D vector
+ * \param b    B 2D vector
+ * \param t    Amount
+ * \param out  Output 2D vector
+ */
+float BH_Lerpf(float a, float b, float t);
 
 
 /**
@@ -1205,12 +1355,12 @@ void BH_Mat4fFromFrustum(float fov,
 /**
  * Computes camera view matrix and stores result into \a out.
  *
- * \param pos  Position vector
- * \param at   Target vector
- * \param up   Up vector
- * \param out  Output 4x4 matrix
+ * \param position  Position vector
+ * \param at        Target vector
+ * \param up        Up vector
+ * \param out       Output 4x4 matrix
  */
-void BH_Mat4fFromLookAt(const float *pos,
+void BH_Mat4fFromLookAt(const float *position,
                         const float *at,
                         const float *up,
                         float *out);
@@ -1396,5 +1546,350 @@ void BH_Mat3fApplyVec2f(float *a,
                         float *b,
                         float *out);
 
+
+/**
+ * Computes plane from points \a a, \a b, \a c and stores result into \a out.
+ *
+ * X, Y, Z components of the \a out vector are plane normal, W component is a
+ * distance from the origin (0,0,0) to the plane.
+ *
+ * It is assumed, that points provided in clockwise order.
+ *
+ * If points form degenerate triangle, this function will return error.
+ *
+ * \param a     A 3D vector
+ * \param b     B 3D vector
+ * \param c     C 3D vector
+ * \param out   Output 4D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error-code.
+ */
+int BH_PlaneFromPoints(const float *a,
+                       const float *b,
+                       const float *c,
+                       float *out);
+
+
+/**
+ * Computes distance from \a plane to the \a point and returns result.
+ *
+ * \param plane  Plane 4D vector
+ * \param point  Point 3D vector
+ *
+ * \return Returns distance from plane to point.
+ */
+float BH_PlaneDistance(const float *plane,
+                       const float *point);
+
+
+/**
+ * Computes closest point on the \a plane to the \a point and stores result
+ * into \a out.
+ *
+ * \param plane  Plane 4D vector
+ * \param point  Point 3D vector
+ * \param out    Output 3D vector
+ */
+void BH_PlaneClosestPoint(const float *plane,
+                          const float *point,
+                          float *out);
+
+
+/**
+ * Computes time of intersection \a t between ray (given \a start and
+ * \a direction) and \a plane and stores intersection point into \a out.
+ *
+ * The returned intersection time \a t is for the ray.
+ *
+ * \param start      Start 3D vector
+ * \param direction  Direction 3D vector
+ * \param plane      Plane 4D vector
+ * \param t          Time of intersection
+ * \param out        Output 3D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Ray3fIntersectPlane(const float *start,
+                           const float *direction,
+                           const float *plane,
+                           float *t,
+                           float *out);
+
+
+/**
+ * Computes time of intersection \a t between ray (given \a start and
+ * \a direction) and triangle formed by \a a, \a b, \a c points and intersection
+ * point into \a out.
+ *
+ * The returned intersection time \a t is for the ray.
+ *
+ * \param start      Start 3D vector
+ * \param direction  Direction 3D vector
+ * \param a          A 3D vector
+ * \param b          B 3D vector
+ * \param c          C 3D vector
+ * \param t          Time of intersection
+ * \param out        Output 3D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Ray3fIntersectTriangle(const float *start,
+                              const float *direction,
+                              const float *a,
+                              const float *b,
+                              const float *c,
+                              float *t,
+                              float *out);
+
+
+/**
+ * Computes time of intesection \a t between line segment (given \a a and \a b
+ * points) and \a plane and stores intersection point into \a out.
+ *
+ * The returned intersection time \a t is for the segment.
+ *
+ * \param a      A 3D vector
+ * \param b      B 3D vector
+ * \param plane  Plane 4D vector
+ * \param t      Time of intersection
+ * \param out    Output 3D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Segment3fIntersectPlane(const float *start,
+                               const float *end,
+                               const float *plane,
+                               float *t,
+                               float *out);
+
+
+/**
+ * Computes time of intersection \a t between segment (given \a start and
+ * \a end) and triangle formed by \a a, \a b, \a c points and intersection
+ * point into \a out.
+ *
+ * The returned intersection time \a t is for the segment.
+ *
+ * \param start      Start 3D vector
+ * \param direction  Direction 3D vector
+ * \param a          A 3D vector
+ * \param b          B 3D vector
+ * \param c          C 3D vector
+ * \param t          Time of intersection
+ * \param out        Output 3D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Segment3fIntersectTriangle(const float *start,
+                                  const float *end,
+                                  const float *a,
+                                  const float *b,
+                                  const float *c,
+                                  float *t,
+                                  float *out);
+
+
+/**
+ * Computes barycentric coordinates from \a point and triangle made of \a a,
+ * \a b, \a c points and stores result into \a out.
+ *
+ * \param a      A 3D vector
+ * \param b      B 3D vector
+ * \param c      C 3D vector
+ * \param point  Point 3D vector
+ * \param out    Output 3D vector
+ */
+void BH_Triangle3fBarycentric(const float *a,
+                              const float *b,
+                              const float *c,
+                              const float *point,
+                              float *out);
+
+
+/**
+ * Computes line from \a a and \a b points and stores result into \a out.
+ *
+ * \param a    A 2D vector
+ * \param b    B 2D vector
+ * \param out  Output 3D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_LineFromPoints(const float *a,
+                      const float *b,
+                      float *out);
+
+
+/**
+ * Computes distance from \a line to the \a point and returns result.
+ *
+ * \param line   Line 3D vector
+ * \param point  Point 2D vector
+ *
+ * \return Returns distance from plane to point.
+ */
+float BH_LineDistance(const float *line,
+                      const float *point);
+
+
+/**
+ * Computes closest point on the \a line to the \a point and stores result into
+ * \a out.
+ *
+ * \param line   Line 3D vector
+ * \param point  Point 2D vector
+ * \param out    Output 2D vector
+ */
+void BH_LineClosestPoint(const float *line,
+                         const float *point,
+                         float *out);
+
+
+/**
+ * Computes time of intersection \a t between ray (given \a start and
+ * \a direction) and \a line and stores intersection point into \a out.
+ *
+ * The returned intersection time \a t is for the ray.
+ *
+ * \param start      Start 2D vector
+ * \param direction  Direction 2D vector
+ * \param line       Line 3D vector
+ * \param t          Time of intersection
+ * \param out        Output 2D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Ray2fIntersectLine(const float *start,
+                          const float *direction,
+                          const float *line,
+                          float *t,
+                          float *out);
+
+
+/**
+ * Computes time of intersection \a time1 and \a time2 between one line (given
+ * \a startA and \a directionA) and other line (given \a startB and
+ * \a directionB).
+ *
+ * \param startA      A Start 2D vector
+ * \param directionA  A Direction 2D vector
+ * \param startB      B Start 2D vector
+ * \param directionB  B Direction 2D vector
+ * \param time1       Time of intersection of first line
+ * \param time2       Time of intersection of second line
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Ray2fIntersectTime(const float *startA,
+                          const float *directionA,
+                          const float *startB,
+                          const float *directionB,
+                          float *time1,
+                          float *time2);
+
+
+/**
+ * Computes time of intersection \a t between one ray (given \a startA and
+ * \a directionA) and other ray (given \a startB and \a directionB) and stores
+ * intersection point into \a out.
+ *
+ * The returned intersection time \a t is for the first ray.
+ *
+ * \param startA      A Start 2D vector
+ * \param directionA  A Direction 2D vector
+ * \param startB      B Start 2D vector
+ * \param directionB  B Direction 2D vector
+ * \param t           Time of intersection
+ * \param out         Output 2D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Ray2fIntersectRay(const float *startA,
+                         const float *directionA,
+                         const float *startB,
+                         const float *directionB,
+                         float *t,
+                         float *out);
+
+
+/**
+ * Computes time of intersection \a t between one ray (given \a startA and
+ * \a directionA) and segment (given \a startB and \a endB) and stores result
+ * into \a out.
+ *
+ * The returned intersection time \a t is for the ray.
+ *
+ * \param startA      A Start 2D vector
+ * \param directionA  A Direction 2D vector
+ * \param startB      B Start 2D vector
+ * \param endB        B End 2D vector
+ * \param t           Time of intersection
+ * \param out         Output 2D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Ray2fIntersectSegment(const float *startA,
+                             const float *directionA,
+                             const float *startB,
+                             const float *endB,
+                             float *t,
+                             float *out);
+
+
+/**
+ * Computes time of intersection \a t between segment (given \a start and
+ * \a end) and \a line and stores intersection point into \a out.
+ *
+ * The returned intersection time \a t is for the segment.
+ *
+ * \param start      Start 2D vector
+ * \param end        End 2D vector
+ * \param line       Line 3D vector
+ * \param t          Time of intersection
+ * \param out        Output 2D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Segment2fIntersectLine(const float *start,
+                              const float *end,
+                              const float *line,
+                              float *t,
+                              float *out);
+
+
+/**
+ * Computes time of intersection \a t between one segment (given \a startA and
+ * \a endA) and other sergment (given \a startB and \a endB) and stores
+ * intersection point into \a out.
+ *
+ * The returned intersection time \a t is for the first segment.
+ *
+ * \param startA     A Start 2D vector
+ * \param endA       A End 2D vector
+ * \param startB     B Start 2D vector
+ * \param endB       B End 2D vector
+ * \param t          Time of intersection
+ * \param out        Output 2D vector
+ *
+ * \return On success, returns zero.
+ * \return On failure, returns error code.
+ */
+int BH_Segment2fIntersectSegment(const float *startA,
+                                 const float *endA,
+                                 const float *startB,
+                                 const float *endB,
+                                 float *t,
+                                 float *out);
 
 #endif /* BH_MATH_H */
