@@ -24,7 +24,7 @@ foreach(TEST_FILENAME ${TEST_FILES})
     endif()
 
     # Enable coverage
-    if(COVERAGE)
+    if(ENABLE_COVERAGE)
         target_compile_options("${TEST_NAME}" PRIVATE -coverage)
         target_link_options("${TEST_NAME}" PRIVATE -coverage)
     endif()

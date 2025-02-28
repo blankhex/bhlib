@@ -47,22 +47,25 @@ include(CheckIncludeFile)
 include(CheckSymbolExists)
 
 # Unit testing and coverage configuration
-set(TESTING ON CACHE BOOL "Enable unit-testing")
-set(COVERAGE OFF CACHE BOOL "Enable coverage")
+set(ENABLE_TESTING ON CACHE BOOL "Enable unit-testing")
+set(ENABLE_COVERAGE OFF CACHE BOOL "Enable coverage")
+set(ENABLE_EXAMPLES ON CACHE BOOL "Enable building examples")
+set(ENABLE_LTO ON CACHE BOOL "Enable LTO support")
 
-# Check for IPO/LTO
-check_ipo_supported(RESULT LTO_SUPPORTED)
-
-if(LTO_SUPPORTED)
-    message(STATUS "IPO/LTO enabled")
-    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+# Enable IPO/LTO
+if(ENABLE_LTO)
+    check_ipo_supported(RESULT LTO_SUPPORTED)
+    if(LTO_SUPPORTED)
+        message(STATUS "IPO/LTO enabled")
+        set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+    endif()
 endif()
 
-if(TESTING)
-    # Enable testing
+# Enable testing
+if(ENABLE_TESTING)
     include(CTest)
     enable_testing()
-endif(TESTING)
+endif()
 
 # Set library code
 set(BH_SOURCE
@@ -87,6 +90,7 @@ set(BH_SOURCE
     src/Math/Vec4f.c
     src/Math/Vec4i.c
     src/Queue.c
+    src/Util.c
 )
 
 set(BH_HEADER
@@ -97,6 +101,7 @@ set(BH_HEADER
     include/BH/IO.h
     include/BH/Math.h
     include/BH/Queue.h
+    include/BH/Util.h
 )
 
 set(BH_INCLUDE_DIRS
@@ -141,13 +146,17 @@ else()
 endif()
 
 # Coverage
-if(COVERAGE)
+if(ENABLE_COVERAGE)
     target_compile_options(BHLib PRIVATE -coverage)
     target_link_options(BHLib PRIVATE -coverage)
 endif()
 
 # Tests
-if(TESTING)
+if(ENABLE_TESTING)
     add_subdirectory(unit)
     add_subdirectory(test)
+endif()
+
+if(ENABLE_EXAMPLES)
+    add_subdirectory(doc/Examples)
 endif()

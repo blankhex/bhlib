@@ -66,7 +66,7 @@ _deps
 .vscode/
 
 # Doxygen
-[Dd]ocs/[Hh]tml
+[Dd]oc/[Gg]enerated
 
 # Coverage
 [Cc]overage

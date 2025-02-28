@@ -385,6 +385,23 @@ BH_UNIT_TEST(InvalidLong)
 }
 
 
+BH_UNIT_TEST(Aesthetics)
+{
+    BH_ArgsOption options[] = {
+        {'a', "abc", 0, NULL},
+        {'b', "bcd", BH_ARGS_VALUE, "B option"},
+        {'i', "input", BH_ARGS_VALUE | BH_ARGS_OPTIONAL, "Input option"},
+        {1000, "long-option", 0, "Long options\nWith newline"},
+        {'p', NULL, 0, "P option"},
+        {0, NULL, 0, NULL},
+    };
+
+    BH_ArgsHelp(options, 0);
+    return 0;
+}
+
+
+
 int main(int argc, char **argv)
 {
     (void)argc;
@@ -398,6 +415,7 @@ int main(int argc, char **argv)
     BH_UNIT_ADD(Complex);
     BH_UNIT_ADD(InvalidShort);
     BH_UNIT_ADD(InvalidLong);
+    BH_UNIT_ADD(Aesthetics);
 
     return BH_UnitRun();
 }
