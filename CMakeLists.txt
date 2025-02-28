@@ -46,14 +46,14 @@ include(CheckIPOSupported)
 include(CheckIncludeFile)
 include(CheckSymbolExists)
 
-# Check for IPO/LTO
-check_ipo_supported(RESULT supported)
- 
 # Unit testing and coverage configuration
 set(TESTING ON CACHE BOOL "Enable unit-testing")
 set(COVERAGE OFF CACHE BOOL "Enable coverage")
 
-if(supported)
+# Check for IPO/LTO
+check_ipo_supported(RESULT LTO_SUPPORTED)
+
+if(LTO_SUPPORTED)
     message(STATUS "IPO/LTO enabled")
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif()
@@ -135,9 +135,9 @@ target_link_libraries(BHLib PUBLIC m)
 
 # Enable all compiler warnings
 if(MSVC)
-  target_compile_options(BHLib PRIVATE /W4 /WX)
+    target_compile_options(BHLib PRIVATE /W4 /WX)
 else()
-  target_compile_options(BHLib PRIVATE -Wall -Wextra -Wpedantic -Werror -fstrict-aliasing)
+    target_compile_options(BHLib PRIVATE -Wall -Wextra -Wpedantic -Werror -fstrict-aliasing)
 endif()
 
 # Coverage
