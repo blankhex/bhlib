@@ -10,12 +10,12 @@ Currently implemented features:
 - Geomtric primitives (vectors, matrices, quaternions, rays, boxes)
 - Intersection calculation (ray, boxes, segments, lines, planes, triangles)
 - Unit testing library (for internal usage)
+- Command-line interface utilities
 
 ## Planned features
 
 Currently planned features:
 
-- Command-line interface utilities
 - Thread support (thread, mutex, cv, atomics, etc.)
 - Image loading/processing/saving support
 - Polygon rasterization (possibly canvas)
