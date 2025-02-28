@@ -110,21 +110,21 @@ if(WIN32)
 
     # Add platform dependent files
     list(APPEND BH_SOURCE
-        src/win32/File.c
+        src/Platform/Win32/File.c
     )
 elseif(UNIX)
     message(STATUS "Platform: Unix (Linux/BSD/MacOS X)")
 
     # Add platform dependent files
     list(APPEND BH_SOURCE
-        src/posix/File.c
+        src/Platform/Posix/File.c
     )
 else()
     message(STATUS "Platform: Unknown")
 
     # Add platform dependent files
     list(APPEND BH_SOURCE
-        src/dummy/File.c
+        src/Platform/Dummy/File.c
     )
 endif()
 
