@@ -70,7 +70,22 @@ set(BH_SOURCE
     src/Args.c
     src/Hashmap.c
     src/IO.c
-    src/Math.c
+    src/Math/Box2f.c
+    src/Math/Box3f.c
+    src/Math/Line.c
+    src/Math/Mat3f.c
+    src/Math/Mat4f.c
+    src/Math/Misc.c
+    src/Math/Plane.c
+    src/Math/Quat4f.c
+    src/Math/Ray2f.c
+    src/Math/Ray3f.c
+    src/Math/Vec2f.c
+    src/Math/Vec2i.c
+    src/Math/Vec3f.c
+    src/Math/Vec3i.c
+    src/Math/Vec4f.c
+    src/Math/Vec4i.c
     src/Queue.c
 )
 
