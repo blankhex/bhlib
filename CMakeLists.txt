@@ -67,6 +67,7 @@ endif(TESTING)
 # Set library code
 set(BH_SOURCE
     src/Algo.c
+    src/Args.c
     src/Hashmap.c
     src/IO.c
     src/Math.c
@@ -76,6 +77,7 @@ set(BH_SOURCE
 set(BH_HEADER
     include/BH/Common.h
     include/BH/Algo.h
+    include/BH/Args.h
     include/BH/Hashmap.h
     include/BH/IO.h
     include/BH/Math.h
