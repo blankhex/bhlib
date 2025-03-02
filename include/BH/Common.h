@@ -15,11 +15,12 @@
 
 #define BH_UNUSED(x)    (void)(x)
 #define BH_PTR2INT(x)   ((intptr_t)(x))
-#define BH_INT2PTR(x)   ((void*)(x))
+#define BH_INT2PTR(x)   ((void*)((intptr_t)(x)))
 
 
 typedef int (*BH_EqualCallback)(const void *, const void *);
 typedef size_t (*BH_HashCallback)(const void *);
+typedef void (*BH_GenericCallback)(void *);
 
 #endif /* BH_COMMON_H */
 
