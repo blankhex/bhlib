@@ -51,6 +51,7 @@ set(ENABLE_TESTING ON CACHE BOOL "Enable unit-testing")
 set(ENABLE_COVERAGE OFF CACHE BOOL "Enable coverage")
 set(ENABLE_EXAMPLES ON CACHE BOOL "Enable building examples")
 set(ENABLE_LTO ON CACHE BOOL "Enable LTO support")
+set(ENABLE_MT ON CACHE BOOL "Enable multithreading support")
 
 # Enable IPO/LTO
 if(ENABLE_LTO)
@@ -102,6 +103,57 @@ set(BH_HEADER
     include/BH/Math.h
     include/BH/Queue.h
     include/BH/Util.h
+    include/BH/Thread.h
+)
+
+set(BH_SOURCE_DUMMY
+    src/Platform/Dummy/File.c
+)
+
+set(BH_SOURCE_WIN32
+    src/Platform/Win32/File.c
+)
+
+set(BH_SOURCE_POSIX
+    src/Platform/Posix/File.c
+)
+
+set(BH_SOURCE_WIN32_MT
+    src/Platform/Win32/Condition.c
+    src/Platform/Win32/Mutex.c
+    src/Platform/Win32/Semaphore.c
+    src/Platform/Win32/Thread.c
+    src/Platform/Win32/Tss.c
+    src/Platform/Spinlock.c
+)
+
+set(BH_HEADER_WIN32_MT
+    src/Platform/Win32/Thread.h
+)
+
+set(BH_SOURCE_POSIX_MT
+    src/Platform/Posix/Condition.c
+    src/Platform/Posix/Mutex.c
+    src/Platform/Posix/Semaphore.c
+    src/Platform/Posix/Thread.c
+    src/Platform/Posix/Tss.c
+    src/Platform/Spinlock.c
+)
+
+set(BH_HEADER_POSIX_MT
+    src/Platform/Posix/Thread.h
+)
+
+set(BH_SOURCE_DUMMY_MT
+    src/Platform/Dummy/Condition.c
+    src/Platform/Dummy/Mutex.c
+    src/Platform/Dummy/Semaphore.c
+    src/Platform/Dummy/Thread.c
+    src/Platform/Dummy/Tss.c
+)
+
+set(BH_HEADER_DUMMY_MT
+    src/Platform/Dummy/Thread.h
 )
 
 set(BH_INCLUDE_DIRS
@@ -114,23 +166,36 @@ if(WIN32)
     message(STATUS "Platform - Win32")
 
     # Add platform dependent files
-    list(APPEND BH_SOURCE
-        src/Platform/Win32/File.c
-    )
+    list(APPEND BH_SOURCE ${BH_SOURCE_WIN32})
+
+    # Add platform dependent multithreading support
+    if(ENABLE_MT)
+        list(APPEND BH_SOURCE ${BH_SOURCE_WIN32_MT})
+        list(APPEND BH_HEADER ${BH_HEADER_WIN32_MT})
+    else()
+        list(APPEND BH_SOURCE ${BH_SOURCE_DUMMY_MT})
+        list(APPEND BH_HEADER ${BH_HEADER_DUMMY_MT})
+    endif()
 elseif(UNIX)
     message(STATUS "Platform: Unix (Linux/BSD/MacOS X)")
 
     # Add platform dependent files
-    list(APPEND BH_SOURCE
-        src/Platform/Posix/File.c
-    )
+    list(APPEND BH_SOURCE BH_SOURCE_POSIX)
+
+    # Add platform dependent multithreading support
+    if(ENABLE_MT)
+        list(APPEND BH_SOURCE ${BH_SOURCE_POSIX_MT})
+        list(APPEND BH_HEADER ${BH_HEADER_POSIX_MT})
+    else()
+        list(APPEND BH_SOURCE ${BH_SOURCE_POSIX_MT})
+        list(APPEND BH_HEADER ${BH_HEADER_POSIX_MT})
+    endif()
 else()
     message(STATUS "Platform: Unknown")
 
     # Add platform dependent files
-    list(APPEND BH_SOURCE
-        src/Platform/Dummy/File.c
-    )
+    list(APPEND BH_SOURCE ${BH_SOURCE_DUMMY} ${BH_SOURCE_DUMMY_MT})
+    list(APPEND BH_HEADER ${BH_HEADER_DUMMY_MT})
 endif()
 
 # Library
