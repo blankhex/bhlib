@@ -14,7 +14,7 @@ struct BH_ThreadContext
 static void *BH_ThreadRun(void *context)
 {
     BH_ThreadCallback callback;
-    void *data, *result;
+    void *data;
 
     callback = ((struct BH_ThreadContext *)context)->callback;
     data = ((struct BH_ThreadContext *)context)->data;

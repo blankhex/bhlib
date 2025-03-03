@@ -180,7 +180,7 @@ elseif(UNIX)
     message(STATUS "Platform: Unix (Linux/BSD/MacOS X)")
 
     # Add platform dependent files
-    list(APPEND BH_SOURCE BH_SOURCE_POSIX)
+    list(APPEND BH_SOURCE ${BH_SOURCE_POSIX})
 
     # Add platform dependent multithreading support
     if(ENABLE_MT)
