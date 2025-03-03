@@ -1,6 +1,5 @@
 #include "Thread.h"
 
-#include <BH/Thread.h>
 #include <limits.h>
 #include <stdlib.h>
 

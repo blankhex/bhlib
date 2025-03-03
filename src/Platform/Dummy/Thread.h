@@ -2,6 +2,9 @@
 #define BH_PLATFORM_DUMMY_THREAD_H
 
 
+#include <BH/Thread.h>
+
+
 struct BH_Condition
 {
     int implement;

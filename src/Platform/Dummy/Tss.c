@@ -1,7 +1,5 @@
 #include "Thread.h"
 
-#include <BH/Thread.h>
-
 
 int BH_TssCreate(BH_GenericCallback callback)
 {

@@ -2,6 +2,7 @@
 #define BH_PLATFORM_POSIX_THREAD_H
 
 
+#include <BH/Thread.h>
 #include <pthread.h>
 #include <semaphore.h>
 

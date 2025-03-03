@@ -1,6 +1,5 @@
 #include "Thread.h"
 
-#include <BH/Thread.h>
 #include <process.h>
 
 

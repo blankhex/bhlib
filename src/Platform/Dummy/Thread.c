@@ -1,7 +1,5 @@
 #include "Thread.h"
 
-#include <BH/Thread.h>
-
 
 BH_Thread *BH_ThreadNew(size_t stack,
                         BH_ThreadCallback callback,

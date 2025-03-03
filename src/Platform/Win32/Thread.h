@@ -1,6 +1,8 @@
 #ifndef BH_PLATFORM_WIN32_THREAD_H
 #define BH_PLATFORM_WIN32_THREAD_H
 
+
+#include <BH/Thread.h>
 #include <windows.h>
 
 

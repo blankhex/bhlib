@@ -1,7 +1,5 @@
 #include "Thread.h"
 
-#include <BH/Thread.h>
-
 
 BH_Condition *BH_ConditionNew(void)
 {
