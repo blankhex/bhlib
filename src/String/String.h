@@ -25,7 +25,6 @@ typedef struct BH_Int1120
 int BH_Int1120Clz(const uint16_t value);
 
 
-
 /**
  * Compares big integers \a a and \a b.
  *
@@ -89,7 +88,7 @@ void BH_Int1120MulDigit(const BH_Int1120 *in,
 
 
 /**
- * Divides two big integers \a a and \a b and stores quotient into \a q and 
+ * Divides two big integers \a a and \a b and stores quotient into \a q and
  * remainder into \a r.
  *
  * \param a  A integer
@@ -136,7 +135,7 @@ void BH_Int1120Pow2(int exponent,
 
 
 /**
- * Left shifts big integer \a in by \a amount places and stores result into 
+ * Left shifts big integer \a in by \a amount places and stores result into
  * \a out.
  *
  * \param in      Input integer

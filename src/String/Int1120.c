@@ -26,8 +26,7 @@ static const uint8_t clzLookup[256] =
 };
 
 
-
-static const uint16_t pow10Data[] = 
+static const uint16_t pow10Data[] =
 {
     0x0001, 0x000A, 0x0064, 0x2710, 0xE100, 0x05F5, 0x0000, 0x6FC1,
     0x86F2, 0x0023, 0x0000, 0x0000, 0xEF81, 0x85AC, 0x415B, 0x2D6D,
@@ -46,13 +45,13 @@ static const uint16_t pow10Data[] =
 };
 
 
-static const int pow10Index[] = 
+static const int pow10Index[] =
 {
     0, 1, 2, 3, 4, 6, 10, 17, 31, 58,
 };
 
 
-static const int pow10Size[] = 
+static const int pow10Size[] =
 {
     1, 1, 1, 1, 2, 4, 7, 14, 27, 54,
 };
@@ -62,13 +61,13 @@ static void pow10Set(int index,
                      BH_Int1120 *out)
 {
     out->size = pow10Size[index];
-    memcpy(out->digits, pow10Data + pow10Index[index], out->size);
+    memcpy(out->digits, pow10Data + pow10Index[index], out->size * sizeof(uint16_t));
 }
 
 
 int BH_Int1120Clz(const uint16_t value)
-{   
-    
+{
+
 
     if (value & 0xFF00)
         return clzLookup[(value >> 8) & 0xFF];
@@ -79,14 +78,14 @@ int BH_Int1120Clz(const uint16_t value)
 
 int BH_Int1120Compare(const BH_Int1120 *a,
                       const BH_Int1120 *b)
-{    
+{
     int i, result;
 
     /* Compare by lengths */
     result = a->size - b->size;
     if (result)
         return result;
-    
+
     /* Compare by blocks */
     for (i = a->size; i; i--)
     {
@@ -107,7 +106,7 @@ void BH_Int1120Add(const BH_Int1120 *a,
     const BH_Int1120 *small, *big;
     uint32_t carry, tmp;
     int i;
-    
+
     small = b;
     big = a;
 
@@ -117,7 +116,7 @@ void BH_Int1120Add(const BH_Int1120 *a,
     /* Find smaller interger */
     if (a->size < b->size)
     {
-        small = a; 
+        small = a;
         big = b;
     }
 
@@ -141,7 +140,7 @@ void BH_Int1120Add(const BH_Int1120 *a,
     /* Handle carry */
     if (carry)
         out->digits[i++] = carry;
-        
+
     out->size = i;
 }
 
@@ -169,7 +168,7 @@ void BH_Int1120Sub(const BH_Int1120 *a,
         carry = (tmp >> 31) & 0x1;
         out->digits[i] = tmp & 0xFFFF;
     }
-    
+
     /* Truncate length on empty blocks */
     out->size = a->size;
     while(out->size && !out->digits[out->size - 1])
@@ -209,7 +208,7 @@ void BH_Int1120Mul(const BH_Int1120 *a,
             out->digits[i + j] = tmp & 0xFFFF;
         }
     }
-    
+
     out->size = a->size + b->size;
     if (!out->digits[out->size - 1])
         out->size--;
@@ -244,7 +243,7 @@ void BH_Int1120MulDigit(const BH_Int1120 *in,
         tmp = (uint32_t)out->digits[i] + carry;
         out->digits[i] = tmp & 0xFFFF;
     }
-    
+
     out->size = in->size + 1;
     if (!out->digits[out->size - 1])
         out->size--;
@@ -259,7 +258,7 @@ static uint16_t BH_Int1120DivGuess(const BH_Int1120 *a,
     /* Compare two values */
     if (BH_Int1120Compare(a, b) < 0)
         return 0;
-    
+
     /* Make a guess */
     tmp = a->digits[a->size - 1];
     if (a->size != b->size)
@@ -307,20 +306,20 @@ void BH_Int1120Div(const BH_Int1120 *a,
         /* If the guess was wrong - decrement guess and try again */
         while (BH_Int1120Compare(r, &tmp) < 0)
             BH_Int1120MulDigit(&right, --guess, &tmp);
-        
+
         /* Store digit in quotient */
         BH_Int1120Lsh(q, 16, q);
         q->digits[0] = guess;
         if (!q->size)
             q->size = 1;
-        
+
         /* Adjust remainder */
         BH_Int1120Sub(r, &tmp, r);
 
         /* Fetch next digit or exit */
         if (!left.size)
             break;
-        
+
         BH_Int1120Lsh(r, 16, r);
         r->digits[0] = left.digits[--left.size];
         if (!r->size)
@@ -350,7 +349,7 @@ void BH_Int1120MulPow10(const BH_Int1120 *in,
     BH_Int1120 *current, *next, *swap;
     BH_Int1120 tmp[2], factor;
     int index;
-    
+
     /* Make sure exponent is low, otherwise we get an overflow */
     assert(exponent < 512);
 
@@ -464,7 +463,7 @@ void BH_Int1120Rsh(const BH_Int1120 *in,
         /* Shift and copy parts of two blocks */
         low = in->digits[blocks] >> bits;
         high = in->digits[blocks + 1] << (16 - bits);
-        
+
         for (i = 0; i < in->size - blocks - 2; i++)
         {
             out->digits[i] = low | high;
