@@ -387,4 +387,3 @@ void *BH_HashmapIterValue(void *iter)
 {
     return ((BH_HashmapNode *)iter)->value;
 }
-

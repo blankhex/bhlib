@@ -105,7 +105,6 @@ uint32_t BH_Read32BEu(const char *buffer);
 int32_t BH_Read32BEs(const char *buffer);
 
 
-
 /**
  * Reads 64-bit unsigned integer from the \a buffer in big-endian format.
  *
@@ -134,7 +133,6 @@ int64_t BH_Read64BEs(const char *buffer);
  */
 void BH_Write16LEu(char *buffer,
                    uint16_t value);
-
 
 
 /**
@@ -177,7 +175,6 @@ void BH_Write64LEu(char *buffer,
                    uint64_t value);
 
 
-
 /**
  * Writes 64-bit signed integer to the \a buffer in little-endian format.
  *
@@ -206,7 +203,6 @@ void BH_Write16BEu(char *buffer,
  */
 void BH_Write16BEs(char *buffer,
                    int16_t value);
-
 
 
 /**

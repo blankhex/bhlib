@@ -221,4 +221,3 @@ void *BH_HashmapIterValue(void *iter);
 
 
 #endif /* BH_HASHMAP_H */
-

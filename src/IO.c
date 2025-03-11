@@ -135,6 +135,7 @@ int BH_IOWrite(BH_IO *io,
     return code;
 }
 
+
 int BH_IOPeek(BH_IO *io,
               char *buffer,
               size_t size,
@@ -225,7 +226,6 @@ int BH_IOClear(BH_IO *io)
     /* Call the IO device clear error handler */
     return io->cb(io + 1, BH_IO_CLEAR_CB, NULL, NULL);
 }
-
 
 
 BH_IO *BH_BufferNew(BH_IO *io)

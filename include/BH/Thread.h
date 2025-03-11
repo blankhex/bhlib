@@ -248,7 +248,6 @@ int BH_ConditionBroadcast(BH_Condition *condition);
 void BH_SpinlockLock(int *lock);
 
 
-
 /**
  * Tries to lock the \a spinlock.
  *

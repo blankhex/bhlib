@@ -31,6 +31,7 @@ static int NewFree(void)
     return 0;
 }
 
+
 static int GrowShrink(void)
 {
     BH_Hashmap *hashmap;
@@ -102,6 +103,7 @@ static int GrowShrink(void)
     return 0;
 }
 
+
 static int InsertRemove(void)
 {
     BH_Hashmap *hashmap;
@@ -138,6 +140,7 @@ static int InsertRemove(void)
     return 0;
 }
 
+
 static int Lookup(void)
 {
     BH_Hashmap *hashmap;
@@ -173,6 +176,7 @@ static int Lookup(void)
     return 0;
 }
 
+
 static int Clear(void)
 {
     BH_Hashmap *hashmap;
@@ -195,6 +199,7 @@ static int Clear(void)
     return 0;
 }
 
+
 static int Fields(void)
 {
     BH_Hashmap *hashmap;
@@ -216,6 +221,7 @@ static int Fields(void)
     BH_HashmapFree(hashmap);
     return 0;
 }
+
 
 int main(int argc, char **argv)
 {

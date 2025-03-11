@@ -155,6 +155,7 @@ int BH_Segment2fIntersectSegment(const float *aStart,
     return BH_OK;
 }
 
+
 int BH_Ray2fIntersectBox2f(const float *aStart,
                            const float *aDirection,
                            const float *bMin,

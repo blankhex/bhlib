@@ -401,7 +401,6 @@ BH_UNIT_TEST(Aesthetics)
 }
 
 
-
 int main(int argc, char **argv)
 {
     (void)argc;

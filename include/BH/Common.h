@@ -23,4 +23,3 @@ typedef size_t (*BH_HashCallback)(const void *);
 typedef void (*BH_GenericCallback)(void *);
 
 #endif /* BH_COMMON_H */
-

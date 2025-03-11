@@ -110,6 +110,7 @@ int16_t BH_Read16BEs(const char *buffer)
     return tmp.s;
 }
 
+
 uint32_t BH_Read32BEu(const char *buffer)
 {
     union I32 tmp;
@@ -120,6 +121,7 @@ uint32_t BH_Read32BEu(const char *buffer)
     return tmp.u;
 }
 
+
 int32_t BH_Read32BEs(const char *buffer)
 {
     union I32 tmp;
@@ -129,6 +131,7 @@ int32_t BH_Read32BEs(const char *buffer)
     tmp.u |= (uint32_t)((unsigned char)buffer[3]);
     return tmp.s;
 }
+
 
 uint64_t BH_Read64BEu(const char *buffer)
 {
@@ -143,6 +146,7 @@ uint64_t BH_Read64BEu(const char *buffer)
     tmp.u |= (uint64_t)((unsigned char)buffer[7]);
     return tmp.u;
 }
+
 
 int64_t BH_Read64BEs(const char *buffer)
 {
