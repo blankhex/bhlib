@@ -23,6 +23,37 @@ union I64
 };
 
 
+union F64
+{
+    double f;
+    uint64_t u64;
+};
+
+
+int BH_ClassifyDouble(double value)
+{
+    union F64 tmp;
+    uint64_t fract;
+    int exp, negative;
+
+    tmp.f = value;
+    exp = (tmp.u64 >> 52) & 0x7FF;
+    fract = (tmp.u64 & (((uint64_t)1 << 52) - 1));
+    negative = (tmp.u64 >> 63) ? (BH_FP_NEGATIVE) : (0);
+
+    if (exp == 0 && fract == 0)
+        return BH_FP_ZERO | negative;
+
+    if (exp == 2047 && fract == 0)
+        return BH_FP_INFINITE | negative;
+
+    if (exp == 2047 && fract)
+        return BH_FP_NAN;
+
+    return BH_FP_NORMAL | negative;
+}
+
+
 uint16_t BH_Read16LEu(const char *buffer)
 {
     union I16 tmp;

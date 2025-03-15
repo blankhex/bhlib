@@ -5,6 +5,24 @@
 #include "Common.h"
 
 
+#define BH_FP_NORMAL    0x0000
+#define BH_FP_INFINITE  0x0001
+#define BH_FP_NAN       0x0002
+#define BH_FP_ZERO      0x0010
+#define BH_FP_NEGATIVE  0x0020
+
+
+/**
+ * Classifies the floating point \a value.
+ *
+ * \param value  Value
+ *
+ * \return On success, returns BH_FP_NORMAL, BH_FP_ZERO, BH_FP_INFINITE,
+ *         BH_FP_NAN or BH_FP_NEGATIVE.
+ */
+int BH_ClassifyDouble(double value);
+
+
 /**
  * Reads 16-bit unsigned integer from the \a buffer in little-endian format.
  *

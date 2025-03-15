@@ -92,6 +92,9 @@ set(BH_SOURCE
     src/Math/Vec4i.c
     src/Queue.c
     src/Util.c
+    src/String/Int.c
+    src/String/Float.c
+    src/String/Core.c
 )
 
 set(BH_HEADER
@@ -104,6 +107,7 @@ set(BH_HEADER
     include/BH/Queue.h
     include/BH/Util.h
     include/BH/Thread.h
+    include 
 )
 
 set(BH_SOURCE_DUMMY
