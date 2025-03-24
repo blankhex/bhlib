@@ -1,6 +1,8 @@
 #include <BH/String.h>
+#include <BH/Util.h>
 #include <BH/Unit.h>
 #include <float.h>
+#include <limits.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,7 +20,7 @@ static int compareString(double value,
     result = strcmp(str, ref);
     if (result)
         printf("Value: %.17g\tReference: %s\tGot: %s\n", value, ref, str);
-    
+
     BH_StringFree(str);
 
     return result;
@@ -32,10 +34,10 @@ static int roundtripString(double value,
     char *str;
 
     str = BH_StringFromDouble(value, format, -1);
-    result = strtod(str, NULL);    
+    result = BH_StringToDouble(str, NULL);
     if (result != value)
         printf("Value: %.17g\tGot: %.17g\tStr: %s\n", value, result, str);
-    
+
     BH_StringFree(str);
 
     return result != value;
@@ -94,10 +96,6 @@ BH_UNIT_TEST(FixedRoundTrip)
 {
     BH_VERIFY(roundtripString(1.0, 'f') == 0);
     BH_VERIFY(roundtripString(-1.0, 'f') == 0);
-    BH_VERIFY(roundtripString(DBL_MIN, 'f') == 0);
-    BH_VERIFY(roundtripString(-DBL_MIN, 'f') == 0);
-    BH_VERIFY(roundtripString(DBL_MAX, 'f') == 0);
-    BH_VERIFY(roundtripString(-DBL_MAX, 'f') == 0);
     BH_VERIFY(roundtripString(0.0, 'f') == 0);
     BH_VERIFY(roundtripString(-0.0, 'f') == 0);
     BH_VERIFY(roundtripString(3.14159, 'f') == 0);
@@ -108,8 +106,12 @@ BH_UNIT_TEST(FixedRoundTrip)
     BH_VERIFY(roundtripString(-0.81, 'f') == 0);
     BH_VERIFY(roundtripString(0.81, 'f') == 0);
     BH_VERIFY(roundtripString(-0.81, 'f') == 0);
-    BH_VERIFY(roundtripString(144115188075855877, 'f') == 0);
-    BH_VERIFY(roundtripString(-144115188075855877, 'f') == 0);
+    BH_VERIFY(roundtripString(144115188075855877.0, 'f') == 0);
+    BH_VERIFY(roundtripString(-144115188075855877.0, 'f') == 0);
+    BH_VERIFY(roundtripString(DBL_MIN, 'f') == 0);
+    BH_VERIFY(roundtripString(-DBL_MIN, 'f') == 0);
+    BH_VERIFY(roundtripString(DBL_MAX, 'f') == 0);
+    BH_VERIFY(roundtripString(-DBL_MAX, 'f') == 0);
 
     return 0;
 }
@@ -206,8 +208,8 @@ BH_UNIT_TEST(ShortestFormat)
     BH_VERIFY(compareString(-1230000000.00123, 'g', 1, "-1e+09") == 0);
     BH_VERIFY(compareString(-1230000000.00123, 'g', 2, "-1.2e+09") == 0);
     BH_VERIFY(compareString(-1230000000.00123, 'g', 3, "-1.23e+09") == 0);
-    BH_VERIFY(compareString(144115188075855877, 'g', 17, "1.4411518807585587e+17") == 0);
-    BH_VERIFY(compareString(-144115188075855877, 'g', 17, "-1.4411518807585587e+17") == 0);
+    BH_VERIFY(compareString(144115188075855877.0, 'g', 17, "1.4411518807585587e+17") == 0);
+    BH_VERIFY(compareString(-144115188075855877.0, 'g', 17, "-1.4411518807585587e+17") == 0);
 
     return 0;
 }
@@ -217,10 +219,6 @@ BH_UNIT_TEST(ScientificRoundTrip)
 {
     BH_VERIFY(roundtripString(1.0, 'e') == 0);
     BH_VERIFY(roundtripString(-1.0, 'e') == 0);
-    BH_VERIFY(roundtripString(DBL_MIN, 'e') == 0);
-    BH_VERIFY(roundtripString(-DBL_MIN, 'e') == 0);
-    BH_VERIFY(roundtripString(DBL_MAX, 'e') == 0);
-    BH_VERIFY(roundtripString(-DBL_MAX, 'e') == 0);
     BH_VERIFY(roundtripString(0.0, 'e') == 0);
     BH_VERIFY(roundtripString(-0.0, 'e') == 0);
     BH_VERIFY(roundtripString(3.14159, 'e') == 0);
@@ -231,8 +229,12 @@ BH_UNIT_TEST(ScientificRoundTrip)
     BH_VERIFY(roundtripString(-0.81, 'e') == 0);
     BH_VERIFY(roundtripString(0.81, 'e') == 0);
     BH_VERIFY(roundtripString(-0.81, 'e') == 0);
-    BH_VERIFY(roundtripString(144115188075855877, 'e') == 0);
-    BH_VERIFY(roundtripString(-144115188075855877, 'e') == 0);
+    BH_VERIFY(roundtripString(144115188075855877.0, 'e') == 0);
+    BH_VERIFY(roundtripString(-144115188075855877.0, 'e') == 0);
+    BH_VERIFY(roundtripString(DBL_MIN, 'e') == 0);
+    BH_VERIFY(roundtripString(-DBL_MIN, 'e') == 0);
+    BH_VERIFY(roundtripString(DBL_MAX, 'e') == 0);
+    BH_VERIFY(roundtripString(-DBL_MAX, 'e') == 0);
 
     return 0;
 }
@@ -242,10 +244,6 @@ BH_UNIT_TEST(ShortestRoundTrip)
 {
     BH_VERIFY(roundtripString(1.0, 'g') == 0);
     BH_VERIFY(roundtripString(-1.0, 'g') == 0);
-    BH_VERIFY(roundtripString(DBL_MIN, 'g') == 0);
-    BH_VERIFY(roundtripString(-DBL_MIN, 'g') == 0);
-    BH_VERIFY(roundtripString(DBL_MAX, 'g') == 0);
-    BH_VERIFY(roundtripString(-DBL_MAX, 'g') == 0);
     BH_VERIFY(roundtripString(0.0, 'g') == 0);
     BH_VERIFY(roundtripString(-0.0, 'g') == 0);
     BH_VERIFY(roundtripString(3.14159, 'g') == 0);
@@ -256,8 +254,12 @@ BH_UNIT_TEST(ShortestRoundTrip)
     BH_VERIFY(roundtripString(-0.81, 'g') == 0);
     BH_VERIFY(roundtripString(0.81, 'g') == 0);
     BH_VERIFY(roundtripString(-0.81, 'g') == 0);
-    BH_VERIFY(roundtripString(144115188075855877, 'g') == 0);
-    BH_VERIFY(roundtripString(-144115188075855877, 'g') == 0);
+    BH_VERIFY(roundtripString(144115188075855877.0, 'g') == 0);
+    BH_VERIFY(roundtripString(-144115188075855877.0, 'g') == 0);
+    BH_VERIFY(roundtripString(DBL_MIN, 'g') == 0);
+    BH_VERIFY(roundtripString(-DBL_MIN, 'g') == 0);
+    BH_VERIFY(roundtripString(DBL_MAX, 'g') == 0);
+    BH_VERIFY(roundtripString(-DBL_MAX, 'g') == 0);
 
     return 0;
 }
@@ -292,12 +294,60 @@ BH_UNIT_TEST(Parity)
                 if (strcmp(str, output))
                 {
                     printf("(%.17g) (%d) %s vs %s\n", value, k, str, output);
-                    BH_FAIL("Not equal");
+                    BH_FAIL("Strings aren't equal");
                 }
                 BH_StringFree(str);
             }
         }
     }
+
+    return 0;
+}
+
+
+BH_UNIT_TEST(ToDouble)
+{
+    size_t size;
+
+    BH_VERIFY(BH_ClassifyDouble(BH_StringToDouble("  INFa  ", &size)) == BH_FP_INFINITE);
+    BH_VERIFY(size == 5);
+    BH_VERIFY(BH_ClassifyDouble(BH_StringToDouble("  INFINITYc  ", &size)) == BH_FP_INFINITE);
+    BH_VERIFY(size == 10);
+
+    BH_VERIFY(BH_ClassifyDouble(BH_StringToDouble("  -INFb  ", &size)) == (BH_FP_INFINITE | BH_FP_NEGATIVE));
+    BH_VERIFY(size == 6);
+    BH_VERIFY(BH_ClassifyDouble(BH_StringToDouble("  -INFINITYd  ", &size)) == (BH_FP_INFINITE | BH_FP_NEGATIVE));
+    BH_VERIFY(size == 11);
+
+    BH_VERIFY(BH_ClassifyDouble(BH_StringToDouble("  NANe  ", &size)) == BH_FP_NAN);
+    BH_VERIFY(size == 5);
+
+    BH_VERIFY_DELTA(BH_StringToDouble("  1234.0312f  ", &size), 1234.0312, 0.00001);
+    BH_VERIFY(size == 11);
+
+    BH_VERIFY_DELTA(BH_StringToDouble("  3.14159g  ", &size), 3.14159, 0.00001);
+    BH_VERIFY(size == 9);
+
+    BH_VERIFY(BH_StringToDouble("  h  ", &size) == 0.0);
+    BH_VERIFY(size == 0);
+
+    BH_VERIFY(BH_StringToDouble("  0  ", &size) == 0.0);
+    BH_VERIFY(size == 3);
+
+    BH_VERIFY(BH_StringToDouble("  0.0  ", &size) == 0.0);
+    BH_VERIFY(size == 5);
+
+    BH_VERIFY(BH_StringToDouble("  0.  ", &size) == 0.0);
+    BH_VERIFY(size == 4);
+
+    BH_VERIFY(BH_StringToDouble("  .0  ", &size) == 0.0);
+    BH_VERIFY(size == 4);
+
+    BH_VERIFY(BH_StringToDouble("  .Hello  ", &size) == 0.0);
+    BH_VERIFY(size == 0);
+
+    BH_VERIFY(BH_StringToDouble("  .E12  ", &size) == 0.0);
+    BH_VERIFY(size == 0);
 
     return 0;
 }
@@ -315,6 +365,7 @@ int main(int argc, char **argv)
     BH_UNIT_ADD(ShortestFormat);
     BH_UNIT_ADD(ShortestRoundTrip);
     BH_UNIT_ADD(Parity);
+    BH_UNIT_ADD(ToDouble);
 
     return BH_UnitRun();
 }

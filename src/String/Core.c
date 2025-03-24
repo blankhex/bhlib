@@ -12,7 +12,7 @@ void BH_StringFree(char *string)
 char *BH_StringCopy(const char *string)
 {
     char *result;
-    
+
     result = malloc(strlen(string) + 1);
     if (result)
         strcpy(result, string);

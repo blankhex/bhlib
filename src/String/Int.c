@@ -47,30 +47,30 @@ static void guessBase(const char **string,
                       size_t *size,
                       int *base)
 {
-    if (*base != 0) 
+    if (*base != 0)
         return;
 
     *base = 10;
-    if (**string != '0') 
+    if (**string != '0')
         return;
 
     (*string)++;
-    if (size) 
+    if (size)
         (*size)++;
 
     switch (**string)
     {
     case 'x': case 'X':
-        *base = 16; 
+        *base = 16;
         (*string)++;
-        if (size) 
+        if (size)
             (*size)++;
         break;
 
     case 'b': case 'B':
-        *base = 2; 
+        *base = 2;
         (*string)++;
-        if (size) 
+        if (size)
             (*size)++;
         break;
 

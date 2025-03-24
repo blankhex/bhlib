@@ -4,14 +4,17 @@
 #include <ctype.h>
 #include <float.h>
 #include <math.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 
+/* Common defines */
 #define MAX(a,b)    (((a)>(b))?(a):(b))
 #define MIN(a,b)    (((a)<(b))?(a):(b))
 #define BUFSIZE     309
-#define DIGITS      70
+#define DIGITS      80
+
+/* Modes */
 #define NORMAL      0
 #define ABSOLUTE    1
 #define RELATIVE    2
@@ -30,13 +33,13 @@ struct DragonState
     BInt mm;
     BInt mp;
     BInt tmp[5];
+    long k;
     int cutoff;
-    int k;
 };
 
 
 static const BInt BInt1 = {1, {1}};
-static const BInt BInt10 = {1, {10}};
+static const BInt BInt53 = {4, {0x0000, 0x0000, 0x0000, 0x0020}};
 
 
 static const uint8_t clzLookup[256] =
@@ -60,6 +63,30 @@ static const uint8_t clzLookup[256] =
 };
 
 
+static const BInt powLookup[] =
+{
+    {1, {0x000A}},
+    {1, {0x0064}},
+    {1, {0x2710}},
+    {2, {0xE100, 0x05F5}},
+    {4, {0x0000, 0x6FC1, 0x86F2, 0x0023}},
+    {7, {0x0000, 0x0000, 0xEF81, 0x85AC, 0x415B, 0x2D6D, 0x04EE}},
+    {14, {0x0000, 0x0000, 0x0000, 0x0000, 0x1F01, 0xBF6A, 0xED64, 0x6E38,
+          0x97ED, 0xDAA7, 0xF9F4, 0xE93F, 0x4F03, 0x0018}},
+    {27, {0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+          0x3E01, 0x2E95, 0x9909, 0x03DF, 0x38FD, 0x0F15, 0xE42F, 0x2374,
+          0xF5EC, 0xD3CF, 0xDC08, 0xC404, 0xB0DA, 0xBCCD, 0x7F19, 0xA633,
+          0x2603, 0xE91F, 0x024E}},
+    {54, {0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+          0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+          0x7C01, 0x982E, 0x875B, 0xBED3, 0x9F72, 0xD8D9, 0x2F87, 0x1215,
+          0x50C6, 0x6BDE, 0x6E70, 0xCF4A, 0xD80F, 0xD595, 0x716E, 0x26B2,
+          0x66B0, 0xADC6, 0x3624, 0x1D15, 0xD35A, 0x3C42, 0x540E, 0x63FF,
+          0x73C0, 0xCC55, 0xEF17, 0x65F9, 0x28F2, 0x55BC, 0xC7F7, 0x80DC,
+          0xEDDC, 0xF46E, 0xEFCE, 0x5FDC, 0x53F7, 0x0005}}
+};
+
+
 static int BIntClz(uint16_t value)
 {
     if (value & 0xFF00)
@@ -69,8 +96,22 @@ static int BIntClz(uint16_t value)
 }
 
 
+static int BIntLog2(const BInt *in)
+{
+    /* Preconditions */
+    assert(in != NULL);
+    assert(in->size != 0);
+    assert(in->data[in->size - 1] != 0);
+
+    return 15 - BIntClz(in->data[in->size - 1]) + 16 * (in->size - 1);
+}
+
+
 static void BIntTrim(BInt *in)
 {
+    /* Preconditions */
+    assert(in != NULL);
+
     while (in->size && !in->data[in->size - 1])
         in->size--;
 }
@@ -80,6 +121,9 @@ static int BIntCompare(const BInt *a,
                        const BInt *b)
 {
     int i;
+
+    /* Preconditions */
+    assert(a != NULL && b != NULL);
 
     /* Compare by lengths */
     i = a->size - b->size;
@@ -106,6 +150,8 @@ static void BIntAdd(const BInt *a,
     uint32_t carry;
     int i;
 
+    /* Preconditions */
+    assert(a != NULL && b != NULL && out != NULL);
     assert(a->size + 1 <= DIGITS);
     assert(b->size + 1 <= DIGITS);
 
@@ -117,7 +163,7 @@ static void BIntAdd(const BInt *a,
             carry += a->data[i];
         if (i < b->size)
             carry += b->data[i];
-        
+
         out->data[i] = carry & 0xFFFF;
         carry = (carry >> 16);
     }
@@ -137,6 +183,10 @@ static void BIntSub(const BInt *a,
     uint32_t carry;
     int i;
 
+    /* Preconditions */
+    assert(a != NULL && b != NULL && out != NULL);
+    assert(BIntCompare(a, b) >= 0);
+
     /* Main subtraction loop */
     carry = 0;
     for (i = 0; i < a->size || i < b->size; i++)
@@ -145,7 +195,7 @@ static void BIntSub(const BInt *a,
             carry += a->data[i];
         if (i < b->size)
             carry -= b->data[i];
-        
+
         out->data[i] = carry & 0xFFFF;
         carry = (carry & 0xFFFF0000) | (carry >> 16);
     }
@@ -163,6 +213,8 @@ static void BIntMul(const BInt *a,
     uint32_t carry;
     int i, j;
 
+    /* Preconditions */
+    assert(a != NULL && b != NULL && out != NULL);
     assert(a->size + b->size <= DIGITS);
 
     /* Zero out the result */
@@ -197,6 +249,8 @@ static void BIntMulDigit(const BInt *a,
     uint32_t carry;
     int i;
 
+    /* Preconditions */
+    assert(a != NULL && out != NULL);
     assert(a->size + 1 <= DIGITS);
 
     /* Multiplication loop */
@@ -215,6 +269,30 @@ static void BIntMulDigit(const BInt *a,
 }
 
 
+static void BIntPow10(const BInt *in,
+                      int exponent,
+                      BInt *out,
+                      BInt *tmp)
+{
+    int i, current;
+
+    /* Preconditions */
+    assert(in != NULL && out != NULL && tmp != NULL);
+    assert(exponent >= 0 && exponent < 512);
+
+    tmp[0] = *in;
+    for (current = 0, i = 0; exponent; i++, exponent >>= 1)
+    {
+        if (!(exponent & 0x1))
+            continue;
+
+        BIntMul(&tmp[current], &powLookup[i], &tmp[1 - current]);
+        current = 1 - current;
+    }
+    *out = tmp[current];
+}
+
+
 static void BIntLsh(const BInt *in,
                     int amount,
                     BInt *out)
@@ -222,11 +300,12 @@ static void BIntLsh(const BInt *in,
     int blocks, bits, i;
     uint16_t low, high;
 
+    /* Preconditions */
+    assert(in != NULL && out != NULL);
+    assert(amount >= 0 && in->size + (amount + 15) / 16 <= DIGITS);
+
     blocks = amount / 16;
     bits = amount % 16;
-
-    assert(in->size + blocks + (bits > 0) <= DIGITS);
-
     if (!in->size)
     {
         out->size = 0;
@@ -245,14 +324,14 @@ static void BIntLsh(const BInt *in,
         }
         out->data[i] = high;
         out->size = in->size + blocks + 1;
-    } 
+    }
     else
     {
         for (i = in->size; i; i--)
             out->data[i - 1 + blocks] = in->data[i - 1];
         out->size = in->size + blocks;
     }
-    
+
     /* Trim leading zeros and zero out lower blocks */
     BIntTrim(out);
     for (i = blocks; i; i--)
@@ -266,6 +345,10 @@ static void BIntRsh(const BInt *in,
 {
     int blocks, bits, i;
     uint16_t low, high;
+
+    /* Preconditions */
+    assert(in != NULL && out != NULL);
+    assert(amount >= 0);
 
     blocks = amount / 16;
     bits = amount % 16;
@@ -299,6 +382,10 @@ static uint16_t BIntGuess(const BInt *a,
 {
     uint32_t tmp;
 
+    /* Preconditions */
+    assert(a != NULL && b != NULL);
+    assert(a->size > 0 && b->size > 0);
+
     if (BIntCompare(a, b) < 0)
         return 0;
 
@@ -319,6 +406,10 @@ static void BIntDiv(const BInt *a,
     uint16_t digit;
     int shift;
 
+    /* Preconditions */
+    assert(a != NULL && b != NULL && q != NULL && r != NULL && tmp != NULL);
+    assert(b->size != 0);
+
     /* Handle case where a is less then b */
     if (BIntCompare(a, b) < 0)
     {
@@ -331,7 +422,7 @@ static void BIntDiv(const BInt *a,
     shift = BIntClz(b->data[b->size - 1]);
     BIntLsh(a, shift, &tmp[0]);
     BIntLsh(b, shift, &tmp[1]);
-    
+
     /* Prepare first step of the division */
     q->size = 0;
     r->size = 0;
@@ -377,8 +468,15 @@ static void BIntDiv(const BInt *a,
 static void dragonFixup(struct DragonState *state,
                         int precision,
                         int mode,
-                        uint64_t f)
+                        uint64_t f,
+                        int exp)
 {
+    /* Preconditions */
+    assert(state != NULL);
+    assert(mode == NORMAL || mode == ABSOLUTE || mode == RELATIVE);
+    assert(precision >= 0);
+
+    /* Account for unqual gaps */
     if (f == (((uint64_t)1) << 52))
     {
         BIntLsh(&state->mp, 1, &state->mp);
@@ -387,31 +485,37 @@ static void dragonFixup(struct DragonState *state,
     }
     state->k = 0;
 
-    BIntDiv(&state->s, &BInt10, &state->tmp[0], &state->tmp[1], state->tmp + 2);
-    if (state->tmp[1].size)
-        BIntAdd(&state->tmp[0], &BInt1, &state->tmp[0]);
+    /* Burger/Dybvig approach */
+    state->k = BIntClz((f >> 48) & 0xFFFF);
+    state->k += (state->k == 16) ? (BIntClz((f >> 32) & 0xFFFF)) : (0);
+    state->k += (state->k == 32) ? (BIntClz((f >> 16) & 0xFFFF)) : (0);
+    state->k += (state->k == 48) ? (BIntClz(f & 0xFFFF)) : (0);
 
-    while (BIntCompare(&state->r, &state->tmp[0]) < 0)
+    /* 77 / 256 is an approximation for Log(2) or 0.30102999 */
+    state->k = (63 - state->k + exp - 54) * 77;
+    if (state->k < 0)
+        state->k = (state->k / 256);
+    else
+        state->k = (state->k / 256) + ((state->k & 0xFF) > 0);
+
+    /* Scale numbers accordinaly */
+    if (state->k < 0)
     {
-        state->k -= 1;
-        BIntMulDigit(&state->r, 10, &state->r);
-        BIntMulDigit(&state->mm, 10, &state->mm);
-        BIntMulDigit(&state->mp, 10, &state->mp);
-        BIntDiv(&state->s, &BInt10, &state->tmp[0], &state->tmp[1], state->tmp + 2);
-        if (state->tmp[1].size)
-            BIntAdd(&state->tmp[0], &BInt1, &state->tmp[0]);
+        BIntPow10(&state->r, -state->k, &state->r, state->tmp);
+        BIntPow10(&state->mm, -state->k, &state->mm, state->tmp);
+        BIntPow10(&state->mp, -state->k, &state->mp, state->tmp);
     }
+    else if (state->k > 0)
+        BIntPow10(&state->s, state->k, &state->s, state->tmp);
 
-    BIntLsh(&state->r, 1, &state->tmp[0]);
-    BIntAdd(&state->tmp[0], &state->mp, &state->tmp[0]);
-    BIntLsh(&state->s, 1, &state->tmp[1]);
-    while (BIntCompare(&state->tmp[0], &state->tmp[1]) >= 0)
+    /* Scale S if we underestimated */
+    if (BIntCompare(&state->r, &state->s) >= 0)
     {
         state->k += 1;
         BIntMulDigit(&state->s, 10, &state->s);
-        BIntLsh(&state->s, 1, &state->tmp[1]);
     }
 
+    /* Find cutoff */
     if (mode == NORMAL)
         state->cutoff = state->k - BUFSIZE;
     else if (mode == RELATIVE)
@@ -431,6 +535,10 @@ static void dragonRound(struct DragonState *state,
 {
     int i;
 
+    /* Preconditions */
+    assert(state != NULL && buffer != NULL && k != NULL && size != NULL);
+    assert(s >= '0' && s <= '9');
+
     /* Check if rounding up required */
     if (high == low)
     {
@@ -446,7 +554,7 @@ static void dragonRound(struct DragonState *state,
     {
         for (i = *size; i && buffer[i - 1] == '9'; i--)
             buffer[i - 1] = '0';
-        
+
         if (i > 0)
             buffer[i - 1]++;
         else
@@ -458,7 +566,7 @@ static void dragonRound(struct DragonState *state,
 }
 
 
-static void dragon(double value, 
+static void dragon(double value,
                    int precision,
                    int mode,
                    char *buffer,
@@ -469,6 +577,11 @@ static void dragon(double value,
     int low, high, e;
     uint64_t f;
     char s;
+
+    /* Preconditions */
+    assert(buffer != NULL && size != NULL && k != NULL);
+    assert(mode == NORMAL || mode == ABSOLUTE || mode == RELATIVE);
+    assert(precision >= 0);
 
     *k = 0;
     *size = low = high = 0;
@@ -490,16 +603,16 @@ static void dragon(double value,
     BIntLsh(&BInt1, MAX(0, -(e - 53)), &state.s);
     BIntLsh(&BInt1, MAX(e - 53, 0), &state.mm);
     BIntLsh(&BInt1, MAX(e - 53, 0), &state.mp);
-    dragonFixup(&state, precision, mode, f);
+    dragonFixup(&state, precision, mode, f, e);
 
     /* Main digit generation loop */
     *k = state.k - 1;
-    while(1) 
+    while(1)
     {
         state.k -= 1;
         BIntMulDigit(&state.r, 10, &state.r);
-        BIntDiv(&state.r, &state.s, &state.tmp[0], &state.r, state.tmp + 1);
-        
+        BIntDiv(&state.r, &state.s, &state.tmp[0], &state.r, &state.tmp[1]);
+
         s = '0';
         if (state.tmp[0].size)
             s += state.tmp[0].data[0];
@@ -507,13 +620,13 @@ static void dragon(double value,
 
         if (mode == NORMAL)
         {
-            BIntLsh(&state.r, 1, &state.tmp[1]);
-            BIntLsh(&state.s, 1, &state.tmp[2]);
-            BIntSub(&state.tmp[2], &state.mp, &state.tmp[2]);
             BIntMulDigit(&state.mm, 10, &state.mm);
             BIntMulDigit(&state.mp, 10, &state.mp);
+            BIntLsh(&state.r, 1, &state.tmp[1]);
+            BIntLsh(&state.s, 1, &state.tmp[2]);
+            BIntAdd(&state.tmp[1], &state.mp, &state.tmp[3]);
             low = BIntCompare(&state.tmp[1], &state.mm) < 0;
-            high = BIntCompare(&state.tmp[1], &state.tmp[2]) > 0;
+            high = BIntCompare(&state.tmp[3], &state.tmp[2]) > 0;
             if (low || high || state.k == state.cutoff || *size >= BUFSIZE)
                 break;
         }
@@ -529,7 +642,7 @@ static void dragon(double value,
 }
 
 
-static char *formatF(char buffer[BUFSIZE],
+static char *formatF(char *buffer,
                      int precision,
                      int sign,
                      int k,
@@ -537,7 +650,11 @@ static char *formatF(char buffer[BUFSIZE],
 {
     char *result, *current;
     int i;
-    
+
+    /* Preconditions */
+    assert(buffer != NULL);
+    assert(size < BUFSIZE);
+
     result = malloc(MAX(0, k) + 5 + sign + precision);
     current = result;
     if (!result)
@@ -552,9 +669,9 @@ static char *formatF(char buffer[BUFSIZE],
     {
         *(current++) = '0';
 
-        if (precision > 0) 
+        if (precision > 0)
             *(current++) = '.';
-        
+
         for (i = 0; i < MIN(-k - 1, precision); i++)
             *(current++) = '0';
     }
@@ -576,7 +693,7 @@ static char *formatF(char buffer[BUFSIZE],
 }
 
 
-static char *formatE(char buffer[BUFSIZE],
+static char *formatE(char *buffer,
                      int precision,
                      int sign,
                      int k,
@@ -586,6 +703,12 @@ static char *formatE(char buffer[BUFSIZE],
     char *result, *current;
     int i;
 
+    /* Preconditions */
+    assert(buffer != NULL);
+    assert(size < BUFSIZE);
+    assert(sign == 0 || sign == 1);
+    assert(upper == 0 || upper == 1);
+
     result = malloc(9 + sign + precision);
     current = result;
     if (!result)
@@ -594,7 +717,7 @@ static char *formatE(char buffer[BUFSIZE],
     /* Add sign and digits */
     if (sign)
         *(current++) = '-';
-    
+
     for (i = 0; i < size; i++)
     {
         *(current++) = buffer[i];
@@ -605,7 +728,7 @@ static char *formatE(char buffer[BUFSIZE],
     /* Pad to specified precision */
     for (; i < precision + 1; i++)
         *(current++) = '0';
-    
+
     /* Add exponent symbol and sign */
     *(current++) = "eE"[upper];
     if (k < 0)
@@ -717,11 +840,11 @@ char *BH_StringFromDouble(double value,
     static const char *infStrings[] = { "inf", "-inf", "INF", "-INF" };
     static const char *nanStrings[] = { "nan", "NAN" };
     int sign, type, upper;
-    
+
     type = BH_ClassifyDouble(value);
     upper = isupper(format) > 0;
     sign = (type & BH_FP_NEGATIVE) != 0;
-    
+
     if (sign)
         value = fabs(value);
 
@@ -740,45 +863,87 @@ char *BH_StringFromDouble(double value,
 }
 
 
-double BH_StringToDouble(const char *string,
-                         size_t *size)
+static int caselessCompare(const char *src,
+                           const char *ref)
 {
-    int nsign, esign, e, dot;
-    const char *current;
-    char buffer[4];
-    size_t count;
+    /* Preconditions */
+    assert(src != NULL && ref != NULL);
 
-    nsign = 0; esign = 0; e = 0; count = 0; dot = 0;
+    for (; *src && *ref && tolower(*src) == tolower(*ref); src++, ref++);
+
+    if (*ref == 0)
+        return 0;
+
+    return *src - *ref;
+}
+
+
+static int parseFormat(const char *string,
+                       size_t *size,
+                       char *buffer,
+                       int *sign,
+                       int *e,
+                       int *type)
+{
+    const char *current;
+    int esign, dot, count;
+
+    /* Preconditions */
+    assert(string != NULL && buffer != NULL && sign != NULL && e != NULL && type != NULL);
+
+    *sign = *e = esign = count = dot = 0;
+    *type = BH_FP_ZERO;
     current = string;
-    
+
     /* Skip whitespace */
     while (isspace(*current))
         current++;
-    
+
+    /* Check for NaN */
+    if (caselessCompare(current, "nan") == 0)
+    {
+        *type = BH_FP_NAN; current += 3;
+        goto done;
+    }
+
     /* Leading sign */
     if (*current == '+' || *current == '-')
     {
         if (*current == '-')
-            nsign = 1;
+            *sign = 1;
         current++;
     }
-    
+
+    /* Check for infinity */
+    if (caselessCompare(current, "infinity") == 0)
+    {
+        *type = BH_FP_INFINITE; current += 8;
+        goto done;
+    }
+    else if (caselessCompare(current, "inf") == 0)
+    {
+        *type = BH_FP_INFINITE; current += 3;
+        goto done;
+    }
+
     /* Read integer part of the float */
     for (; isdigit(*current); current++)
     {
-        if (count < sizeof(buffer) && (count || *current != '0'))
+        *type = BH_FP_NORMAL;
+        if (count < 20 && (count || *current != '0'))
             buffer[count++] = *current;
-        else if (count >= sizeof(buffer))
+        else if (count >= 20)
             dot--;
     }
 
     /* Read fract part of the float */
     if (*current == '.')
         current++;
-    
+
     for (; isdigit(*current); current++)
     {
-        if ((count < sizeof(buffer)))
+        *type = BH_FP_NORMAL;
+        if ((count < 20))
         {
             dot++;
             if ((count || *current != '0'))
@@ -798,17 +963,134 @@ double BH_StringToDouble(const char *string,
         }
 
         for (; isdigit(*current); current++)
-            e = e * 10 + *current - '0';
+            *e = *e * 10 + *current - '0';
     }
 
     if (esign)
-        e = -e;
-    e -= dot;
+        *e = -*e;
+    *e -= dot;
 
+done:
     if (size)
         *size = current - string;
-    
-    BH_UNUSED(nsign);
-    BH_UNUSED(BIntMul);
-    return 0.0;
+
+    return count;
+}
+
+
+double BH_StringToDouble(const char *string,
+                         size_t *size)
+{
+    int type, e, sign, i, count, shift;
+    BInt r, s, tmp[5];
+    char buffer[20];
+    double result;
+    uint64_t f;
+
+    /* Preconditions */
+    assert(string != NULL);
+
+    /* Parse from string format */
+    count = parseFormat(string, size, buffer, &sign, &e, &type);
+
+    /* Handle special values */
+    if (type == BH_FP_INFINITE)
+    {
+        if (sign)
+            return -INFINITY;
+        return INFINITY;
+    }
+    else if (type == BH_FP_NAN)
+        return NAN;
+    else if (type == BH_FP_ZERO)
+    {
+        /* Hacky solution to indicate we haven't seen any digit */
+        if (size)
+            *size = 0;
+        return 0.0;
+    }
+
+    /* Handle zero input */
+    if (count == 0)
+    {
+        if (sign)
+            return -0.0;
+        return 0.0;
+    }
+
+    /* Exponent too low */
+    if (e < -329)
+    {
+        if (sign)
+            return -0.0;
+        return 0.0;
+    }
+
+    /* Exponent too high */
+    if (e > 292)
+    {
+        if (sign)
+            return -INFINITY;
+        return INFINITY;
+    }
+
+    /* Convert character buffer into integers */
+    tmp[0].size = 1;
+    r.size = 0;
+    s = BInt1;
+    for (i = 0; i < count; i++)
+    {
+        tmp[0].data[0] = buffer[i] - '0';
+        BIntMulDigit(&r, 10, &r);
+        BIntAdd(&r, &tmp[0], &r);
+    }
+
+    if (e >= 0)
+        BIntPow10(&r, e, &r, &tmp[0]);
+    else
+        BIntPow10(&s, -e, &s, &tmp[0]);
+
+    /* Calculate required shift */
+    shift = -52;
+    if (BIntCompare(&r, &s) >= 0)
+    {
+        BIntDiv(&r, &s, &tmp[0], &tmp[1], &tmp[2]);
+        shift += BIntLog2(&tmp[0]);
+    }
+    else
+    {
+        BIntDiv(&s, &r, &tmp[0], &tmp[1], &tmp[2]);
+        shift += -(BIntLog2(&tmp[0]) + 1);
+    }
+
+    /* Shift */
+    if (shift > 0)
+        BIntLsh(&s, shift, &s);
+    else if (shift < 0)
+        BIntLsh(&r, -shift, &r);
+
+    /* Calculate final exponent and 53 bit integer */
+    BIntDiv(&r, &s, &tmp[0], &tmp[1], &tmp[2]);
+    BIntRsh(&s, 1, &s);
+    if (BIntCompare(&tmp[1], &s) > 0 || (BIntCompare(&tmp[1], &s) == 0 && (tmp[0].data[0] & 0x1)))
+    {
+        BIntAdd(&tmp[0], &BInt1, &tmp[0]);
+        if (BIntCompare(&tmp[0], &BInt53) >= 0)
+        {
+            BIntRsh(&tmp[0], 1, &tmp[0]);
+            shift++;
+        }
+    }
+
+    /* Create double from integer and exponent */
+    f = (tmp[0].data[3] & 0x1F);
+    f = (f << 16) | tmp[0].data[2];
+    f = (f << 16) | tmp[0].data[1];
+    f = (f << 16) | tmp[0].data[0];
+
+    result = ldexp(f, shift);
+    if (sign)
+        result = -result;
+
+    return result;
 }
