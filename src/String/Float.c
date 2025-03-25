@@ -8,22 +8,18 @@
 #include <string.h>
 
 
+#include "BInt.h"
+
+
 /* Common defines */
 #define MAX(a,b)    (((a)>(b))?(a):(b))
 #define MIN(a,b)    (((a)<(b))?(a):(b))
 #define BUFSIZE     309
-#define DIGITS      80
 
 /* Modes */
 #define NORMAL      0
 #define ABSOLUTE    1
 #define RELATIVE    2
-
-
-typedef struct BInt {
-    int size;
-    uint16_t data[DIGITS];
-} BInt;
 
 
 struct DragonState
@@ -36,433 +32,6 @@ struct DragonState
     long k;
     int cutoff;
 };
-
-
-static const BInt BInt1 = {1, {1}};
-static const BInt BInt53 = {4, {0x0000, 0x0000, 0x0000, 0x0020}};
-
-
-static const uint8_t clzLookup[256] =
-{
-    8, 7, 6, 6, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 4, 4,
-    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-};
-
-
-static const BInt powLookup[] =
-{
-    {1, {0x000A}},
-    {1, {0x0064}},
-    {1, {0x2710}},
-    {2, {0xE100, 0x05F5}},
-    {4, {0x0000, 0x6FC1, 0x86F2, 0x0023}},
-    {7, {0x0000, 0x0000, 0xEF81, 0x85AC, 0x415B, 0x2D6D, 0x04EE}},
-    {14, {0x0000, 0x0000, 0x0000, 0x0000, 0x1F01, 0xBF6A, 0xED64, 0x6E38,
-          0x97ED, 0xDAA7, 0xF9F4, 0xE93F, 0x4F03, 0x0018}},
-    {27, {0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-          0x3E01, 0x2E95, 0x9909, 0x03DF, 0x38FD, 0x0F15, 0xE42F, 0x2374,
-          0xF5EC, 0xD3CF, 0xDC08, 0xC404, 0xB0DA, 0xBCCD, 0x7F19, 0xA633,
-          0x2603, 0xE91F, 0x024E}},
-    {54, {0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-          0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-          0x7C01, 0x982E, 0x875B, 0xBED3, 0x9F72, 0xD8D9, 0x2F87, 0x1215,
-          0x50C6, 0x6BDE, 0x6E70, 0xCF4A, 0xD80F, 0xD595, 0x716E, 0x26B2,
-          0x66B0, 0xADC6, 0x3624, 0x1D15, 0xD35A, 0x3C42, 0x540E, 0x63FF,
-          0x73C0, 0xCC55, 0xEF17, 0x65F9, 0x28F2, 0x55BC, 0xC7F7, 0x80DC,
-          0xEDDC, 0xF46E, 0xEFCE, 0x5FDC, 0x53F7, 0x0005}}
-};
-
-
-static int BIntClz(uint16_t value)
-{
-    if (value & 0xFF00)
-        return clzLookup[(value >> 8) & 0xFF];
-    else
-        return 8 + clzLookup[value & 0xFF];
-}
-
-
-static int BIntLog2(const BInt *in)
-{
-    /* Preconditions */
-    assert(in != NULL);
-    assert(in->size != 0);
-    assert(in->data[in->size - 1] != 0);
-
-    return 15 - BIntClz(in->data[in->size - 1]) + 16 * (in->size - 1);
-}
-
-
-static void BIntTrim(BInt *in)
-{
-    /* Preconditions */
-    assert(in != NULL);
-
-    while (in->size && !in->data[in->size - 1])
-        in->size--;
-}
-
-
-static int BIntCompare(const BInt *a,
-                       const BInt *b)
-{
-    int i;
-
-    /* Preconditions */
-    assert(a != NULL && b != NULL);
-
-    /* Compare by lengths */
-    i = a->size - b->size;
-    if (a->size - b->size)
-        return a->size - b->size;
-
-    /* Compare by blocks */
-    for (i = a->size; i; i--)
-    {
-        if (a->data[i - 1] < b->data[i - 1])
-            return -1;
-        else if (a->data[i - 1] > b->data[i - 1])
-            return 1;
-    }
-
-    return 0;
-}
-
-
-static void BIntAdd(const BInt *a,
-                    const BInt *b,
-                    BInt *out)
-{
-    uint32_t carry;
-    int i;
-
-    /* Preconditions */
-    assert(a != NULL && b != NULL && out != NULL);
-    assert(a->size + 1 <= DIGITS);
-    assert(b->size + 1 <= DIGITS);
-
-    /* Addition loop */
-    carry = 0;
-    for (i = 0; i < a->size || i < b->size; i++)
-    {
-        if (i < a->size)
-            carry += a->data[i];
-        if (i < b->size)
-            carry += b->data[i];
-
-        out->data[i] = carry & 0xFFFF;
-        carry = (carry >> 16);
-    }
-
-    /* Handle new digit */
-    if (carry)
-        out->data[i++] = carry;
-
-    out->size = i;
-}
-
-
-static void BIntSub(const BInt *a,
-                    const BInt *b,
-                    BInt *out)
-{
-    uint32_t carry;
-    int i;
-
-    /* Preconditions */
-    assert(a != NULL && b != NULL && out != NULL);
-    assert(BIntCompare(a, b) >= 0);
-
-    /* Main subtraction loop */
-    carry = 0;
-    for (i = 0; i < a->size || i < b->size; i++)
-    {
-        if (i < a->size)
-            carry += a->data[i];
-        if (i < b->size)
-            carry -= b->data[i];
-
-        out->data[i] = carry & 0xFFFF;
-        carry = (carry & 0xFFFF0000) | (carry >> 16);
-    }
-
-    /* Trim leading zeros */
-    out->size = a->size;
-    BIntTrim(out);
-}
-
-
-static void BIntMul(const BInt *a,
-                    const BInt *b,
-                    BInt *out)
-{
-    uint32_t carry;
-    int i, j;
-
-    /* Preconditions */
-    assert(a != NULL && b != NULL && out != NULL);
-    assert(a->size + b->size <= DIGITS);
-
-    /* Zero out the result */
-    memset(out->data, 0, sizeof(out->data));
-    for (i = 0; i < DIGITS; i++)
-        out->data[i] = 0;
-
-    /* Multiplication loop */
-    for (i = 0; i < a->size; i++)
-    {
-        carry = 0;
-        for (j = 0; j < b->size; j++)
-        {
-            carry += out->data[i + j];
-            carry += (uint32_t)a->data[i] * (uint32_t)b->data[j];
-            out->data[i + j] = carry & 0xFFFF;
-            carry = (carry >> 16);
-        }
-        out->data[i + j] += carry;
-    }
-
-    /* Trim leading zeros */
-    out->size = a->size + b->size;
-    BIntTrim(out);
-}
-
-
-static void BIntMulDigit(const BInt *a,
-                         uint16_t b,
-                         BInt *out)
-{
-    uint32_t carry;
-    int i;
-
-    /* Preconditions */
-    assert(a != NULL && out != NULL);
-    assert(a->size + 1 <= DIGITS);
-
-    /* Multiplication loop */
-    carry = 0;
-    for (i = 0; i < a->size; i++)
-    {
-        carry += (uint32_t)a->data[i] * b;
-        out->data[i] = carry & 0xFFFF;
-        carry = (carry >> 16);
-    }
-    out->data[i] = carry;
-
-    /* Trim leading zeros */
-    out->size = a->size + 1;
-    BIntTrim(out);
-}
-
-
-static void BIntPow10(const BInt *in,
-                      int exponent,
-                      BInt *out,
-                      BInt *tmp)
-{
-    int i, current;
-
-    /* Preconditions */
-    assert(in != NULL && out != NULL && tmp != NULL);
-    assert(exponent >= 0 && exponent < 512);
-
-    tmp[0] = *in;
-    for (current = 0, i = 0; exponent; i++, exponent >>= 1)
-    {
-        if (!(exponent & 0x1))
-            continue;
-
-        BIntMul(&tmp[current], &powLookup[i], &tmp[1 - current]);
-        current = 1 - current;
-    }
-    *out = tmp[current];
-}
-
-
-static void BIntLsh(const BInt *in,
-                    int amount,
-                    BInt *out)
-{
-    int blocks, bits, i;
-    uint16_t low, high;
-
-    /* Preconditions */
-    assert(in != NULL && out != NULL);
-    assert(amount >= 0 && in->size + (amount + 15) / 16 <= DIGITS);
-
-    blocks = amount / 16;
-    bits = amount % 16;
-    if (!in->size)
-    {
-        out->size = 0;
-        return;
-    }
-
-    /* Main shift loop */
-    if (bits)
-    {
-        high = 0;
-        for (i = in->size + blocks; i > blocks; i--)
-        {
-            low = in->data[i - blocks - 1] >> (16 - bits);
-            out->data[i] = low | high;
-            high = in->data[i - blocks - 1] << bits;
-        }
-        out->data[i] = high;
-        out->size = in->size + blocks + 1;
-    }
-    else
-    {
-        for (i = in->size; i; i--)
-            out->data[i - 1 + blocks] = in->data[i - 1];
-        out->size = in->size + blocks;
-    }
-
-    /* Trim leading zeros and zero out lower blocks */
-    BIntTrim(out);
-    for (i = blocks; i; i--)
-        out->data[i - 1] = 0;
-}
-
-
-static void BIntRsh(const BInt *in,
-                    int amount,
-                    BInt *out)
-{
-    int blocks, bits, i;
-    uint16_t low, high;
-
-    /* Preconditions */
-    assert(in != NULL && out != NULL);
-    assert(amount >= 0);
-
-    blocks = amount / 16;
-    bits = amount % 16;
-
-    /* Zero size input or shift is bigger then input */
-    if (in->size == 0 || in->size <= blocks)
-    {
-        out->size = 0;
-        return;
-    }
-
-    /* Shift and copy parts of two blocks */
-    low = in->data[blocks] >> bits;
-    high = 0;
-    for (i = 0; i < in->size - blocks - 1; i++)
-    {
-        high = in->data[i + blocks + 1] << (16 - bits);
-        out->data[i] = low | high;
-        low = in->data[i + blocks + 1] >> bits;
-    }
-    out->data[in->size - blocks - 1] = low;
-
-    /* Trim leading zeros */
-    out->size = in->size - blocks;
-    BIntTrim(out);
-}
-
-
-static uint16_t BIntGuess(const BInt *a,
-                          const BInt *b)
-{
-    uint32_t tmp;
-
-    /* Preconditions */
-    assert(a != NULL && b != NULL);
-    assert(a->size > 0 && b->size > 0);
-
-    if (BIntCompare(a, b) < 0)
-        return 0;
-
-    tmp = a->data[a->size - 1];
-    if (a->size != b->size)
-        tmp = tmp << 16 | a->data[a->size - 2];
-
-    return tmp / b->data[b->size - 1];
-}
-
-
-static void BIntDiv(const BInt *a,
-                    const BInt *b,
-                    BInt *q,
-                    BInt *r,
-                    BInt *tmp)
-{
-    uint16_t digit;
-    int shift;
-
-    /* Preconditions */
-    assert(a != NULL && b != NULL && q != NULL && r != NULL && tmp != NULL);
-    assert(b->size != 0);
-
-    /* Handle case where a is less then b */
-    if (BIntCompare(a, b) < 0)
-    {
-        *r = *a;
-        q->size = 0;
-        return;
-    }
-
-    /* Normilize input to reduce tries */
-    shift = BIntClz(b->data[b->size - 1]);
-    BIntLsh(a, shift, &tmp[0]);
-    BIntLsh(b, shift, &tmp[1]);
-
-    /* Prepare first step of the division */
-    q->size = 0;
-    r->size = 0;
-    while (BIntCompare(r, &tmp[1]) < 0)
-    {
-        BIntLsh(r, 16, r);
-        r->data[0] = tmp[0].data[--tmp[0].size];
-        r->size += !r->size;
-    }
-
-    while (1)
-    {
-        /* Make a guess and check */
-        digit = BIntGuess(r, &tmp[1]);
-        BIntMulDigit(&tmp[1], digit, &tmp[2]);
-        while (BIntCompare(r, &tmp[2]) < 0)
-        {
-            --digit;
-            BIntSub(&tmp[2], &tmp[1], &tmp[2]);
-        }
-
-        /* Store digit in quotient */
-        BIntSub(r, &tmp[2], r);
-        BIntLsh(q, 16, q);
-        q->data[0] = digit;
-        q->size += !q->size;
-
-        /* Fetch next digit or exit */
-        if (!tmp[0].size)
-            break;
-
-        BIntLsh(r, 16, r);
-        r->data[0] = tmp[0].data[--tmp[0].size];
-        if (!r->size)
-            r->size = 1;
-    }
-
-    /* Normilize remainder */
-    BIntRsh(r, shift, r);
-}
 
 
 static void dragonFixup(struct DragonState *state,
@@ -486,10 +55,15 @@ static void dragonFixup(struct DragonState *state,
     state->k = 0;
 
     /* Burger/Dybvig approach */
-    state->k = BIntClz((f >> 48) & 0xFFFF);
-    state->k += (state->k == 16) ? (BIntClz((f >> 32) & 0xFFFF)) : (0);
-    state->k += (state->k == 32) ? (BIntClz((f >> 16) & 0xFFFF)) : (0);
-    state->k += (state->k == 48) ? (BIntClz(f & 0xFFFF)) : (0);
+    #ifndef BH_TWEAK_SHORT_BINT
+    state->k = BIntClz((f >> 32) & BINT_MASK);
+    state->k += (state->k == 32) ? (BIntClz(f & BINT_MASK)) : (0);
+    #else
+    state->k = BIntClz((f >> 48) & BINT_MASK);
+    state->k += (state->k == 16) ? (BIntClz((f >> 32) & BINT_MASK)) : (0);
+    state->k += (state->k == 32) ? (BIntClz((f >> 16) & BINT_MASK)) : (0);
+    state->k += (state->k == 48) ? (BIntClz(f & BINT_MASK)) : (0);
+    #endif
 
     /* 77 / 256 is an approximation for Log(2) or 0.30102999 */
     state->k = (63 - state->k + exp - 54) * 77;
@@ -595,9 +169,18 @@ static void dragon(double value,
 
     /* Prepare dragon */
     f = frexp(value, &e) * ((uint64_t)1 << 53);
-    state.r.data[0] = f & 0xFFFF; state.r.data[1] = (f >> 16) & 0xFFFF;
-    state.r.data[2] = (f >> 32) & 0xFFFF; state.r.data[3] = (f >> 48) & 0xFFFF;
-    state.r.size = 4; BIntTrim(&state.r);
+    #ifndef BH_TWEAK_SHORT_BINT
+    state.r.data[0] = f & BINT_MASK;
+    state.r.data[1] = (f >> 32) & BINT_MASK;
+    state.r.size = 2;
+    #else
+    state.r.data[0] = f & BINT_MASK;
+    state.r.data[1] = (f >> 16) & BINT_MASK;
+    state.r.data[2] = (f >> 32) & BINT_MASK;
+    state.r.data[3] = (f >> 48) & BINT_MASK;
+    state.r.size = 4;
+    #endif
+    BIntTrim(&state.r);
 
     BIntLsh(&state.r, MAX(e - 53, 0), &state.r);
     BIntLsh(&BInt1, MAX(0, -(e - 53)), &state.s);
@@ -997,11 +580,11 @@ double BH_StringToDouble(const char *string,
     if (type == BH_FP_INFINITE)
     {
         if (sign)
-            return -INFINITY;
-        return INFINITY;
+            return -1.0 / 0.0;
+        return 1.0 / 0.0;
     }
     else if (type == BH_FP_NAN)
-        return NAN;
+        return 0.0 / 0.0;
     else if (type == BH_FP_ZERO)
     {
         /* Hacky solution to indicate we haven't seen any digit */
@@ -1030,8 +613,8 @@ double BH_StringToDouble(const char *string,
     if (e > 292)
     {
         if (sign)
-            return -INFINITY;
-        return INFINITY;
+            return -1.0 / 0.0;
+        return 1.0 / 0.0;
     }
 
     /* Convert character buffer into integers */
@@ -1083,10 +666,15 @@ double BH_StringToDouble(const char *string,
     }
 
     /* Create double from integer and exponent */
+    #ifndef BH_TWEAK_SHORT_BINT
+    f = (tmp[0].data[1] & 0x001FFFFFul);
+    f = (f << 32) | tmp[0].data[0];
+    #else
     f = (tmp[0].data[3] & 0x1F);
     f = (f << 16) | tmp[0].data[2];
     f = (f << 16) | tmp[0].data[1];
     f = (f << 16) | tmp[0].data[0];
+    #endif
 
     result = ldexp(f, shift);
     if (sign)
