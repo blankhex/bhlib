@@ -47,36 +47,36 @@ static void guessBase(const char **string,
                       size_t *size,
                       int *base)
 {
-    if (*base != 0)
+    if (*base != 0 && *base != 2 && *base != 8 && *base != 16)
         return;
 
-    *base = 10;
     if (**string != '0')
+    {
+        if (*base == 0)
+            *base = 10;
         return;
+    }
 
     (*string)++;
     if (size)
         (*size)++;
 
-    switch (**string)
+    if ((**string == 'x' || **string == 'X') && (*base == 0 || *base == 16))
     {
-    case 'x': case 'X':
         *base = 16;
         (*string)++;
         if (size)
             (*size)++;
-        break;
-
-    case 'b': case 'B':
+    }
+    else if ((**string == 'b' || **string == 'B') && (*base == 0 || *base == 2))
+    {
         *base = 2;
         (*string)++;
         if (size)
             (*size)++;
-        break;
-
-    default:
-        *base = 8;
     }
+    else if ((*base == 0 || *base == 8))
+        *base = 8;
 }
 
 
@@ -158,7 +158,7 @@ char *BH_StringFromInt64u(uint64_t value,
 
 #undef TEMPLATE_IMPL
 #define TEMPLATE_IMPL(type) \
-    type result = 0; int sign, flag = 0; char sym; *size = 0; \
+    type result = 0; int sign, flag = 0; char sym; if (size) *size = 0; \
     if (base != 0 && (base < 2 || base > 36)) { return 0; } \
     skipSpace(&string, size); handleSign(&string, size, &sign); \
     guessBase(&string, size, &base); while(*string) { sym = *(string++); \
