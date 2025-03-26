@@ -6,7 +6,7 @@
 
 
 static const char digits[] = "0123456789abcdefghijklmnopqrstuvwxyz";
-static const char lookup[] =
+static const signed char lookup[] =
 {
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -158,7 +158,7 @@ char *BH_StringFromInt64u(uint64_t value,
 
 #undef TEMPLATE_IMPL
 #define TEMPLATE_IMPL(type) \
-    type result = 0; int sign, flag = 0; char sym; if (size) *size = 0; \
+    type result = 0; int sign, flag = 0; signed char sym; if (size) *size = 0; \
     if (base != 0 && (base < 2 || base > 36)) { return 0; } \
     skipSpace(&string, size); handleSign(&string, size, &sign); \
     guessBase(&string, size, &base); while(*string) { sym = *(string++); \
