@@ -22,6 +22,13 @@
 #define RELATIVE    2
 
 
+struct Buffer
+{
+    char *data;
+    size_t size;
+};
+
+
 struct DragonState
 {
     BInt r;
@@ -100,9 +107,8 @@ static void dragonFixup(struct DragonState *state,
 
 
 static void dragonRound(struct DragonState *state,
-                        char *buffer,
+                        struct Buffer *buffer,
                         int *k,
-                        int *size,
                         int high,
                         int low,
                         char s)
@@ -110,7 +116,7 @@ static void dragonRound(struct DragonState *state,
     int i;
 
     /* Preconditions */
-    assert(state != NULL && buffer != NULL && k != NULL && size != NULL);
+    assert(state != NULL && buffer != NULL && k != NULL);
     assert(s >= '0' && s <= '9');
 
     /* Check if rounding up required */
@@ -126,14 +132,14 @@ static void dragonRound(struct DragonState *state,
     /* Perform rounding up */
     if (!low)
     {
-        for (i = *size; i && buffer[i - 1] == '9'; i--)
-            buffer[i - 1] = '0';
+        for (i = buffer->size; i && buffer->data[i - 1] == '9'; i--)
+            buffer->data[i - 1] = '0';
 
         if (i > 0)
-            buffer[i - 1]++;
+            buffer->data[i - 1]++;
         else
         {
-            buffer[0] = '1';
+            buffer->data[0] = '1';
             (*k)++;
         }
     }
@@ -143,8 +149,7 @@ static void dragonRound(struct DragonState *state,
 static void dragon(double value,
                    int precision,
                    int mode,
-                   char *buffer,
-                   int *size,
+                   struct Buffer *buffer,
                    int *k)
 {
     struct DragonState state;
@@ -153,17 +158,17 @@ static void dragon(double value,
     char s;
 
     /* Preconditions */
-    assert(buffer != NULL && size != NULL && k != NULL);
+    assert(buffer != NULL && k != NULL);
     assert(mode == NORMAL || mode == ABSOLUTE || mode == RELATIVE);
     assert(precision >= 0);
 
     *k = 0;
-    *size = low = high = 0;
+    buffer->size = low = high = 0;
 
     /* If value is zero - do nothing */
     if (!value)
     {
-        buffer[(*size)++] = '0';
+        buffer->data[buffer->size++] = '0';
         return;
     }
 
@@ -199,7 +204,7 @@ static void dragon(double value,
         s = '0';
         if (state.tmp[0].size)
             s += state.tmp[0].data[0];
-        buffer[(*size)++] = s;
+        buffer->data[buffer->size++] = s;
 
         if (mode == NORMAL)
         {
@@ -210,38 +215,40 @@ static void dragon(double value,
             BIntAdd(&state.tmp[1], &state.mp, &state.tmp[3]);
             low = BIntCompare(&state.tmp[1], &state.mm) < 0;
             high = BIntCompare(&state.tmp[3], &state.tmp[2]) > 0;
-            if (low || high || state.k == state.cutoff || *size >= BUFSIZE)
+            if (low || high || state.k == state.cutoff || buffer->size >= BUFSIZE)
                 break;
         }
         else
         {
-            if (!state.r.size || state.k == state.cutoff || *size >= BUFSIZE)
+            if (!state.r.size || state.k == state.cutoff || buffer->size >= BUFSIZE)
                 break;
         }
     }
 
     /* Round digits if required */
-    dragonRound(&state, buffer, k, size, high, low, s);
+    dragonRound(&state, buffer, k, high, low, s);
 }
 
 
-static char *formatF(char *buffer,
-                     int precision,
-                     int sign,
-                     int k,
-                     int size)
+static int formatF(struct Buffer *output,
+                   struct Buffer *input,
+                   int precision,
+                   int sign,
+                   int k,
+                   size_t *actual)
 {
-    char *result, *current;
+    char *current;
     int i;
 
     /* Preconditions */
-    assert(buffer != NULL);
-    assert(size < BUFSIZE);
+    assert(output != NULL && input != NULL);
+    assert(input->size < BUFSIZE);
+    assert(sign == 0 || sign == 1);
 
-    result = malloc(MAX(0, k) + 5 + sign + precision);
-    current = result;
-    if (!result)
-        return NULL;
+    /* Check that output buffer has enough space */
+    current = output->data;
+    if (output->size < (size_t)(MAX(0, k) + 4 + precision))
+        return BH_ERROR;
 
     /* Add sign */
     if (sign)
@@ -262,8 +269,8 @@ static char *formatF(char *buffer,
     /* Add digits */
     for (i = 0; k >= -precision; i++, k--)
     {
-        if (i < size)
-            *(current++) = buffer[i];
+        if (i < (int)input->size)
+            *(current++) = input->data[i];
         else
             *(current++) = '0';
 
@@ -272,38 +279,41 @@ static char *formatF(char *buffer,
     }
 
     *(current++) = 0;
-    return result;
+    if (actual)
+        *actual = current - output->data;
+
+    return BH_OK;
 }
 
 
-static char *formatE(char *buffer,
-                     int precision,
-                     int sign,
-                     int k,
-                     int size,
-                     int upper)
+static int formatE(struct Buffer *output,
+                   struct Buffer *input,
+                   int precision,
+                   int sign,
+                   int k,
+                   int upper,
+                   size_t *actual)
 {
-    char *result, *current;
+    char *current;
     int i;
 
     /* Preconditions */
-    assert(buffer != NULL);
-    assert(size < BUFSIZE);
+    assert(input != NULL && output != NULL);
+    assert(input->size < BUFSIZE);
     assert(sign == 0 || sign == 1);
     assert(upper == 0 || upper == 1);
 
-    result = malloc(9 + sign + precision);
-    current = result;
-    if (!result)
-        return NULL;
+    current = output->data;
+    if (output->size < (size_t)(9 + precision))
+        return BH_ERROR;
 
     /* Add sign and digits */
     if (sign)
         *(current++) = '-';
 
-    for (i = 0; i < size; i++)
+    for (i = 0; i < (int)input->size; i++)
     {
-        *(current++) = buffer[i];
+        *(current++) = input->data[i];
         if (i == 0 && precision > 0)
             *(current++) = '.';
     }
@@ -323,106 +333,137 @@ static char *formatE(char *buffer,
         *(current++) = '+';
 
     /* Convert exponent to digits and add them */
-    for (size = 0; k || size < 2; size++)
+    for (i = 0; k || i < 2; i++)
     {
-        buffer[size] = '0' + k % 10;
+        input->data[i] = '0' + k % 10;
         k = k / 10;
     }
-    for (; size; size--)
-        *(current++) = buffer[size - 1];
+    for (; i; i--)
+        *(current++) = input->data[i - 1];
 
-   *(current++) = 0;
-    return result;
+    *(current++) = 0;
+    if (actual)
+        *actual = current - output->data;
+
+    return BH_OK;
 }
 
 
-static char *generateF(double value,
-                       int precision,
-                       int sign)
+static int generateF(struct Buffer *output,
+                     double value,
+                     int precision,
+                     int sign,
+                     size_t *actual)
 {
     char buffer[BUFSIZE];
-    int size, k;
+    struct Buffer input;
+    int k;
+
+    input.data = buffer;
+    input.size = 0;
 
     /* Call Dragon4 and format the digits */
     if (precision < 0)
-        dragon(value, 0, NORMAL, buffer, &size, &k);
+        dragon(value, 0, NORMAL, &input, &k);
     else
-        dragon(value, precision, ABSOLUTE, buffer, &size, &k);
+        dragon(value, precision, ABSOLUTE, &input, &k);
 
     if (precision < 0)
-        precision = MAX(0, size - k - 1);
+        precision = MAX(0, (int)input.size - k - 1);
 
-    return formatF(buffer, precision, sign, k, size);
+    return formatF(output, &input, precision, sign, k, actual);
 }
 
 
-static char *generateE(double value,
-                       int precision,
-                       int upper,
-                       int sign)
+static int generateE(struct Buffer *output,
+                     double value,
+                     int precision,
+                     int upper,
+                     int sign,
+                     size_t *actual)
 {
     char buffer[BUFSIZE];
-    int size, k;
+    struct Buffer input;
+    int k;
+
+    input.data = buffer;
+    input.size = 0;
 
     /* Adjust precision and call Dragon4 to generate digits */
     if (precision < 0)
-        dragon(value, 0, NORMAL, buffer, &size, &k);
+        dragon(value, 0, NORMAL, &input, &k);
     else
-        dragon(value, (precision + 1), RELATIVE, buffer, &size, &k);
+        dragon(value, (precision + 1), RELATIVE, &input, &k);
 
     if (precision < 0)
-        precision = size - 1;
+        precision = input.size - 1;
 
-    return formatE(buffer, precision, sign, k, size, upper);
+    return formatE(output, &input, precision, sign, k, upper, actual);
 }
 
 
-static char *generateG(double value,
-                       int precision,
-                       int upper,
-                       int sign)
+static int generateG(struct Buffer *output,
+                     double value,
+                     int precision,
+                     int upper,
+                     int sign,
+                     size_t *actual)
 {
     char buffer[BUFSIZE];
-    int size, k, fixed;
+    struct Buffer input;
+    int k, fixed;
 
+    input.data = buffer;
+    input.size = 0;
     if (precision == 0)
         precision = 1;
 
     /* Call Dragon4 to generate digits */
     if (precision < 0)
     {
-        dragon(value, 0, NORMAL, buffer, &size, &k);
-        fixed = k >= -4 && k <= (size - 1);
+        dragon(value, 0, NORMAL, &input, &k);
+        fixed = k >= -4 && k <= (int)(input.size - 1);
     }
     else
     {
-        dragon(value, precision, RELATIVE, buffer, &size, &k);
+        dragon(value, precision, RELATIVE, &input, &k);
         fixed = k >= -4 && k < precision;
 
         /* Remove trailing zeros and adjust precision */
-        for (; size && precision > 0 && buffer[size - 1] == '0'; size--, precision--);
+        for (; input.size && precision > 0 && buffer[input.size - 1] == '0'; input.size--, precision--);
     }
 
     if (fixed)
     {
-        precision = MAX(0, size - k - 1);
-        return formatF(buffer, precision, sign, k, size);
+        precision = MAX(0, (int)input.size - k - 1);
+        return formatF(output, &input, precision, sign, k, actual);
     }
     else
     {
-        precision = MAX(0, size - 1);
-        return formatE(buffer, precision, sign, k, size, upper);
+        precision = MAX(0, (int)input.size - 1);
+        return formatE(output, &input, precision, sign, k, upper, actual);
     }
 }
 
 
-char *BH_StringFromDouble(double value,
-                          char format,
-                          int precision)
+int BH_StringFromDouble(char *string,
+                        size_t size,
+                        double value,
+                        char format,
+                        int precision,
+                        size_t *actual)
 {
     static const char *infStrings[] = { "inf", "-inf", "INF", "-INF" };
     static const char *nanStrings[] = { "nan", "NAN" };
     int sign, type, upper;
+    struct Buffer output;
+
+    output.data = string;
+    output.size = size;
+
+    /* Buffer is less then 5 characters */
+    if (size < 5)
+        return BH_ERROR;
 
     type = BH_ClassifyDouble(value);
     upper = isupper(format) > 0;
@@ -433,16 +474,27 @@ char *BH_StringFromDouble(double value,
 
     /* Handle NaN and Inf */
     if (type == BH_FP_INFINITE)
-        return BH_StringCopy(infStrings[upper * 2 + sign]);
+    {
+        memcpy(string, infStrings[upper * 2 + sign], 4 + sign);
+        if (actual)
+            *actual = 4 + sign;
+        return BH_OK;
+    }
     else if (type == BH_FP_NAN)
-        return BH_StringCopy(nanStrings[upper]);
+    {
+        memcpy(string, nanStrings[upper], 4);
+        if (actual)
+            *actual = 4;
+        return BH_OK;
+    }
 
+    /* Do the formating */
     if (format == 'g' || format == 'G')
-        return generateG(value, precision, upper, sign);
+        return generateG(&output, value, precision, upper, sign, actual);
     else if (format == 'e' || format == 'E')
-        return generateE(value, precision, upper, sign);
+        return generateE(&output, value, precision, upper, sign, actual);
     else
-        return generateF(value, precision, sign);
+        return generateF(&output, value, precision, sign, actual);
 }
 
 
@@ -593,16 +645,8 @@ double BH_StringToDouble(const char *string,
         return 0.0;
     }
 
-    /* Handle zero input */
-    if (count == 0)
-    {
-        if (sign)
-            return -0.0;
-        return 0.0;
-    }
-
-    /* Exponent too low */
-    if (e < -329)
+    /* Zero or exponent too low */
+    if (!count || e < -329)
     {
         if (sign)
             return -0.0;

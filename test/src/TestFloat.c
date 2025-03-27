@@ -13,15 +13,13 @@ static int compareString(double value,
                          int precision,
                          const char *ref)
 {
+    char str[2000];
     int result;
-    char *str;
 
-    str = BH_StringFromDouble(value, format, precision);
+    BH_VERIFY(BH_StringFromDouble(str, 2000, value, format, precision, NULL) == BH_OK);
     result = strcmp(str, ref);
     if (result)
         printf("Value: %.17g\tReference: %s\tGot: %s\n", value, ref, str);
-
-    BH_StringFree(str);
 
     return result;
 }
@@ -31,14 +29,12 @@ static int roundtripString(double value,
                            int format)
 {
     double result;
-    char *str;
+    char str[2000];
 
-    str = BH_StringFromDouble(value, format, -1);
+    BH_VERIFY(BH_StringFromDouble(str, 2000, value, format, -1, NULL) == BH_OK);
     result = BH_StringToDouble(str, NULL);
     if (result != value)
         printf("Value: %.17g\tGot: %.17g\tStr: %s\n", value, result, str);
-
-    BH_StringFree(str);
 
     return result != value;
 }
@@ -267,7 +263,7 @@ BH_UNIT_TEST(ShortestRoundTrip)
 
 BH_UNIT_TEST(Parity)
 {
-    char buffer[16], output[2000];
+    char buffer[2000], output[2000];
     uint64_t frac;
     double value;
     int i, j, k;
@@ -285,18 +281,15 @@ BH_UNIT_TEST(Parity)
 
             for (k = 0; k < 18; k++)
             {
-                char *str;
-
                 sprintf(buffer, "%%.%dg", k);
-                str = BH_StringFromDouble(value, 'g', k);
                 sprintf(output, buffer, value);
+                BH_VERIFY(BH_StringFromDouble(buffer, 2000, value, 'g', k, NULL) == BH_OK);
 
-                if (strcmp(str, output))
+                if (strcmp(buffer, output))
                 {
-                    printf("(%.17g) (%d) %s vs %s\n", value, k, str, output);
+                    printf("(%.17g) (%d) %s vs %s\n", value, k, buffer, output);
                     BH_FAIL("Strings aren't equal");
                 }
-                BH_StringFree(str);
             }
         }
     }
