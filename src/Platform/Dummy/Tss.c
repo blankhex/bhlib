@@ -3,13 +3,14 @@
 
 int BH_TssCreate(BH_GenericCallback callback)
 {
-
     BH_UNUSED(callback);
+    return 0;
 }
 
 
 void *BH_TssRead(int index)
 {
+    BH_UNUSED(index);
     return NULL;
 }
 

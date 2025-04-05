@@ -1,5 +1,5 @@
 #include <BH/IO.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 
 #define BUFFER_SIZE (sizeof(char *))
