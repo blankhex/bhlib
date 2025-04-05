@@ -389,4 +389,194 @@ uint64_t BH_StringToInt64u(const char *string,
                            int base);
 
 
+/**
+ * Converts unicode \a unit codepoint to lowercase.
+ *
+ * \param unit  Codepoint
+ *
+ * \return On success, returns lowercased codepoint.
+ * \return On failure, returns codepoint without a change.
+ */
+uint32_t BH_UnicodeLower(uint32_t unit);
+
+
+/**
+ * Converts unicode \a unit codepoint to uppercase.
+ *
+ * \param unit  Codepoint
+ *
+ * \return On success, returns uppercased codepoint.
+ * \return On failure, returns codepoint without a change.
+ */
+uint32_t BH_UnicodeUpper(uint32_t unit);
+
+
+/**
+ * Decodes a UTF-8 sequence from a \a string (with the given \a size), storing
+ * the result in a \a unit and returning the number of bytes read.
+ *
+ * Invalid UTF-8 sequences result in a -1 codepoint.
+ *
+ * \param string  String
+ * \param size    Size
+ * \param unit    Codepoint
+ *
+ * \return Returns readed amount of bytes
+ * \return Returns zero if the string contains only a portion of the sequence.
+ */
+size_t BH_UnicodeDecodeUtf8(const char *string,
+                            size_t size,
+                            uint32_t *unit);
+
+
+/**
+ * Encodes a Unicode \a unit to UTF-8 encoded bytes (stored in a \a string)
+ * and returns the number of bytes written.
+ *
+ * String are assumed to have 4 bytes of space.
+ *
+ * \param unit    Codepoint
+ * \param string  String
+ *
+ * \return On success, returns written amount of bytes.
+ * \return Of faulure, returns zero.
+ */
+size_t BH_UnicodeEncodeUtf8(uint32_t unit,
+                            char *string);
+
+
+/**
+ * Decodes a UTF-16LE sequence from a \a string (with the given \a size),
+ * storing the result in a \a unit and returning the number of bytes read.
+ *
+ * Invalid UTF-16 sequences result in a -1 codepoint.
+ *
+ * \param string  String
+ * \param size    Size
+ * \param unit    Codepoint
+ *
+ * \return Returns readed amount of bytes
+ * \return Returns zero if the string contains only a portion of the sequence.
+ */
+size_t BH_UnicodeDecodeUtf16LE(const char *string,
+                               size_t size,
+                               uint32_t *unit);
+
+
+/**
+ * Decodes a UTF-16BE sequence from a \a string (with the given \a size),
+ * storing the result in a \a unit and returning the number of bytes read.
+ *
+ * Invalid UTF-16 sequences result in a -1 codepoint.
+ *
+ * \param string  String
+ * \param size    Size
+ * \param unit    Codepoint
+ *
+ * \return Returns readed amount of bytes
+ * \return Returns zero if the string contains only a portion of the sequence.
+ */
+size_t BH_UnicodeDecodeUtf16BE(const char *string,
+                               size_t size,
+                               uint32_t *unit);
+
+
+/**
+ * Encodes a Unicode \a unit to UTF-16LE encoded bytes (stored in a \a string)
+ * and returns the number of bytes written.
+ *
+ * String are assumed to have 4 bytes of space.
+ *
+ * \param unit    Codepoint
+ * \param string  String
+ *
+ * \return On success, returns written amount of bytes.
+ * \return Of faulure, returns zero.
+ */
+size_t BH_UnicodeEncodeUtf16LE(uint32_t unit,
+                               char *string);
+
+
+/**
+ * Encodes a Unicode \a unit to UTF-16BE encoded bytes (stored in a \a string)
+ * and returns the number of bytes written.
+ *
+ * String are assumed to have 4 bytes of space.
+ *
+ * \param unit    Codepoint
+ * \param string  String
+ *
+ * \return On success, returns written amount of bytes.
+ * \return Of faulure, returns zero.
+ */
+size_t BH_UnicodeEncodeUtf16BE(uint32_t unit,
+                               char *string);
+
+
+/**
+ * Decodes a UTF-32LE symbol from a \a string (with the given \a size),
+ * storing the result in a \a unit and returning the number of bytes read.
+ *
+ * Invalid UTF-32 result in a -1 codepoint.
+ *
+ * \param string  String
+ * \param size    Size
+ * \param unit    Codepoint
+ *
+ * \return Returns readed amount of bytes
+ * \return Returns zero if the string contains only a portion of the sequence.
+ */
+size_t BH_UnicodeDecodeUtf32LE(const char *string,
+                               size_t size,
+                               uint32_t *unit);
+
+
+/**
+ * Decodes a UTF-32BE symbol from a \a string (with the given \a size),
+ * storing the result in a \a unit and returning the number of bytes read.
+ *
+ * Invalid UTF-32 result in a -1 codepoint.
+ *
+ * \param string  String
+ * \param size    Size
+ * \param unit    Codepoint
+ *
+ * \return Returns readed amount of bytes
+ * \return Returns zero if the string contains only a portion of the sequence.
+ */
+size_t BH_UnicodeDecodeUtf32BE(const char *string,
+                               size_t size,
+                               uint32_t *unit);
+
+
+/**
+ * Encodes a Unicode \a unit to UTF-32LE encoded bytes (stored in a \a string)
+ * and returns the number of bytes written.
+ *
+ * String are assumed to have 4 bytes of space.
+ *
+ * \param unit    Codepoint
+ * \param string  String
+ *
+ * \return On success, returns written amount of bytes.
+ * \return Of faulure, returns zero.
+ */
+size_t BH_UnicodeEncodeUtf32LE(uint32_t unit,
+                               char *string);
+
+/**
+ * Encodes a Unicode \a unit to UTF-32LE encoded bytes (stored in a \a string)
+ * and returns the number of bytes written.
+ *
+ * String are assumed to have 4 bytes of space.
+ *
+ * \param unit    Codepoint
+ * \param string  String
+ *
+ * \return On success, returns written amount of bytes.
+ * \return Of faulure, returns zero.
+ */
+size_t BH_UnicodeEncodeUtf32BE(uint32_t unit,
+                               char *string);
+
 #endif /* BH_STRING_H */

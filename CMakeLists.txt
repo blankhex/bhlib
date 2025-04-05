@@ -94,6 +94,7 @@ set(BH_SOURCE
     src/Util.c
     src/String/Int.c
     src/String/Float.c
+    src/String/Unicode.c
 )
 
 set(BH_HEADER

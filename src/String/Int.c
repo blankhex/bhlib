@@ -86,7 +86,7 @@ int BH_StringFromInt8s(char *string,
                        int base,
                        size_t *actual)
 {
-    #include "ToIntS.inl"
+    #include "Inline/Signed.h"
 }
 
 
@@ -96,7 +96,7 @@ int BH_StringFromInt16s(char *string,
                         int base,
                         size_t *actual)
 {
-    #include "ToIntS.inl"
+    #include "Inline/Signed.h"
 }
 
 
@@ -106,7 +106,7 @@ int BH_StringFromInt32s(char *string,
                         int base,
                         size_t *actual)
 {
-    #include "ToIntS.inl"
+    #include "Inline/Signed.h"
 }
 
 
@@ -116,7 +116,7 @@ int BH_StringFromInt64s(char *string,
                         int base,
                         size_t *actual)
 {
-    #include "ToIntS.inl"
+    #include "Inline/Signed.h"
 }
 
 
@@ -126,7 +126,7 @@ int BH_StringFromInt8u(char *string,
                        int base,
                        size_t *actual)
 {
-    #include "ToIntU.inl"
+    #include "Inline/Unsigned.h"
 }
 
 
@@ -136,7 +136,7 @@ int BH_StringFromInt16u(char *string,
                         int base,
                         size_t *actual)
 {
-    #include "ToIntU.inl"
+    #include "Inline/Unsigned.h"
 }
 
 
@@ -146,7 +146,7 @@ int BH_StringFromInt32u(char *string,
                         int base,
                         size_t *actual)
 {
-    #include "ToIntU.inl"
+    #include "Inline/Unsigned.h"
 }
 
 
@@ -156,7 +156,7 @@ int BH_StringFromInt64u(char *string,
                         int base,
                         size_t *actual)
 {
-    #include "ToIntU.inl"
+    #include "Inline/Unsigned.h"
 }
 
 
@@ -165,7 +165,7 @@ int8_t BH_StringToInt8s(const char *string,
                         int base)
 {
     int8_t result;
-    #include "FromInt.inl"
+    #include "Inline/Int.h"
 }
 
 
@@ -174,7 +174,7 @@ int16_t BH_StringToInt16s(const char *string,
                           int base)
 {
     int16_t result;
-    #include "FromInt.inl"
+    #include "Inline/Int.h"
 }
 
 
@@ -183,7 +183,7 @@ int32_t BH_StringToInt32s(const char *string,
                           int base)
 {
     int32_t result;
-    #include "FromInt.inl"
+    #include "Inline/Int.h"
 }
 
 
@@ -192,7 +192,7 @@ int64_t BH_StringToInt64s(const char *string,
                           int base)
 {
     int64_t result;
-    #include "FromInt.inl"
+    #include "Inline/Int.h"
 }
 
 
@@ -201,7 +201,7 @@ uint8_t BH_StringToInt8u(const char *string,
                          int base)
 {
     uint8_t result;
-    #include "FromInt.inl"
+    #include "Inline/Int.h"
 }
 
 
@@ -210,7 +210,7 @@ uint16_t BH_StringToInt16u(const char *string,
                            int base)
 {
     uint16_t result;
-    #include "FromInt.inl"
+    #include "Inline/Int.h"
 }
 
 
@@ -219,7 +219,7 @@ uint32_t BH_StringToInt32u(const char *string,
                            int base)
 {
     uint32_t result;
-    #include "FromInt.inl"
+    #include "Inline/Int.h"
 }
 
 
@@ -228,5 +228,5 @@ uint64_t BH_StringToInt64u(const char *string,
                            int base)
 {
     uint64_t result;
-    #include "FromInt.inl"
+    #include "Inline/Int.h"
 }

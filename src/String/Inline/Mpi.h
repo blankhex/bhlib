@@ -1,23 +1,23 @@
 /* Platform dependant definition */
 #ifndef BH_TWEAK_SHORT_BINT
-#define BINT_SIZE   40
-#define BINT_TYPE   uint32_t
-#define BINT_TTYPE  uint64_t
-#define BINT_BITS   32
-#define BINT_MASK   0xFFFFFFFFul
+#define MPI_SIZE   40
+#define MPI_TYPE   uint32_t
+#define MPI_TTYPE  uint64_t
+#define MPI_BITS   32
+#define MPI_MASK   0xFFFFFFFFul
 #else
-#define BINT_SIZE   80
-#define BINT_TYPE   uint16_t
-#define BINT_TTYPE  uint32_t
-#define BINT_BITS   16
-#define BINT_MASK   0xFFFFu
+#define MPI_SIZE   80
+#define MPI_TYPE   uint16_t
+#define MPI_TTYPE  uint32_t
+#define MPI_BITS   16
+#define MPI_MASK   0xFFFFu
 #endif
 
 
-typedef struct BInt {
+typedef struct Mpi {
     int size;
-    BINT_TYPE data[BINT_SIZE];
-} BInt;
+    MPI_TYPE data[MPI_SIZE];
+} Mpi;
 
 
 static const uint8_t clzLookup[256] =
@@ -42,11 +42,11 @@ static const uint8_t clzLookup[256] =
 
 
 #ifndef BH_TWEAK_SHORT_BINT
-static const BInt BInt1 = {1, {0x00000001ul}};
-static const BInt BInt53 = {2, {0x00000000ul, 0x00200000ul}};
+static const Mpi BInt1 = {1, {0x00000001ul}};
+static const Mpi BInt53 = {2, {0x00000000ul, 0x00200000ul}};
 
 
-static const BInt powLookup[] =
+static const Mpi powLookup[] =
 {
     {1, {0x0000000Aul}},
     {1, {0x00000064ul}},
@@ -68,7 +68,7 @@ static const BInt powLookup[] =
 };
 
 
-static int BIntClz(BINT_TYPE value)
+static int MpiClz(MPI_TYPE value)
 {
     if (value & 0xFF000000ul)
         return clzLookup[(value >> 24) & 0xFF];
@@ -80,11 +80,11 @@ static int BIntClz(BINT_TYPE value)
         return 24 + clzLookup[value & 0xFF];
 }
 #else
-static const BInt BInt1 = {1, {0x0001u}};
-static const BInt BInt53 = {4, {0x0000u, 0x0000u, 0x0000u, 0x0020u}};
+static const Mpi BInt1 = {1, {0x0001u}};
+static const Mpi BInt53 = {4, {0x0000u, 0x0000u, 0x0000u, 0x0020u}};
 
 
-static const BInt powLookup[] =
+static const Mpi powLookup[] =
 {
     {1, {0x000Au}},
     {1, {0x0064u}},
@@ -110,7 +110,7 @@ static const BInt powLookup[] =
 };
 
 
-static int BIntClz(BINT_TYPE value)
+static int MpiClz(MPI_TYPE value)
 {
     if (value & 0xFF00)
         return clzLookup[(value >> 8) & 0xFF];
@@ -120,18 +120,18 @@ static int BIntClz(BINT_TYPE value)
 #endif
 
 
-static int BIntLog2(const BInt *in)
+static int MpiLog2(const Mpi *in)
 {
     /* Preconditions */
     assert(in != NULL);
     assert(in->size != 0);
     assert(in->data[in->size - 1] != 0);
 
-    return (BINT_BITS - 1) - BIntClz(in->data[in->size - 1]) + BINT_BITS * (in->size - 1);
+    return (MPI_BITS - 1) - MpiClz(in->data[in->size - 1]) + MPI_BITS * (in->size - 1);
 }
 
 
-static void BIntTrim(BInt *in)
+static void MpiTrim(Mpi *in)
 {
     /* Preconditions */
     assert(in != NULL);
@@ -141,8 +141,8 @@ static void BIntTrim(BInt *in)
 }
 
 
-static int BIntCompare(const BInt *a,
-                       const BInt *b)
+static int MpiCompare(const Mpi *a,
+                      const Mpi *b)
 {
     int i;
 
@@ -167,17 +167,17 @@ static int BIntCompare(const BInt *a,
 }
 
 
-static void BIntAdd(const BInt *a,
-                    const BInt *b,
-                    BInt *out)
+static void MpiAdd(const Mpi *a,
+                   const Mpi *b,
+                   Mpi *out)
 {
-    BINT_TTYPE carry;
+    MPI_TTYPE carry;
     int i;
 
     /* Preconditions */
     assert(a != NULL && b != NULL && out != NULL);
-    assert(a->size + 1 <= BINT_SIZE);
-    assert(b->size + 1 <= BINT_SIZE);
+    assert(a->size + 1 <= MPI_SIZE);
+    assert(b->size + 1 <= MPI_SIZE);
 
     /* Addition loop */
     carry = 0;
@@ -188,8 +188,8 @@ static void BIntAdd(const BInt *a,
         if (i < b->size)
             carry += b->data[i];
 
-        out->data[i] = carry & BINT_MASK;
-        carry = (carry >> BINT_BITS);
+        out->data[i] = carry & MPI_MASK;
+        carry = (carry >> MPI_BITS);
     }
 
     /* Handle new digit */
@@ -200,16 +200,16 @@ static void BIntAdd(const BInt *a,
 }
 
 
-static void BIntSub(const BInt *a,
-                    const BInt *b,
-                    BInt *out)
+static void MpiSub(const Mpi *a,
+                   const Mpi *b,
+                   Mpi *out)
 {
-    BINT_TTYPE carry;
+    MPI_TTYPE carry;
     int i;
 
     /* Preconditions */
     assert(a != NULL && b != NULL && out != NULL);
-    assert(BIntCompare(a, b) >= 0);
+    assert(MpiCompare(a, b) >= 0);
 
     /* Main subtraction loop */
     carry = 0;
@@ -220,27 +220,27 @@ static void BIntSub(const BInt *a,
         if (i < b->size)
             carry -= b->data[i];
 
-        out->data[i] = carry & BINT_MASK;
-        carry = carry >> BINT_BITS;
-        carry |= (carry << BINT_BITS);
+        out->data[i] = carry & MPI_MASK;
+        carry = carry >> MPI_BITS;
+        carry |= (carry << MPI_BITS);
     }
 
     /* Trim leading zeros */
     out->size = a->size;
-    BIntTrim(out);
+    MpiTrim(out);
 }
 
 
-static void BIntMul(const BInt *a,
-                    const BInt *b,
-                    BInt *out)
+static void MpiMul(const Mpi *a,
+                   const Mpi *b,
+                   Mpi *out)
 {
-    BINT_TTYPE carry;
+    MPI_TTYPE carry;
     int i, j;
 
     /* Preconditions */
     assert(a != NULL && b != NULL && out != NULL);
-    assert(a->size + b->size <= BINT_SIZE);
+    assert(a->size + b->size <= MPI_SIZE);
 
     /* Zero out the result */
     memset(out->data, 0, sizeof(out->data));
@@ -252,50 +252,50 @@ static void BIntMul(const BInt *a,
         for (j = 0; j < b->size; j++)
         {
             carry += out->data[i + j];
-            carry += (BINT_TTYPE)a->data[i] * (BINT_TTYPE)b->data[j];
-            out->data[i + j] = carry & BINT_MASK;
-            carry = (carry >> BINT_BITS);
+            carry += (MPI_TTYPE)a->data[i] * (MPI_TTYPE)b->data[j];
+            out->data[i + j] = carry & MPI_MASK;
+            carry = (carry >> MPI_BITS);
         }
         out->data[i + j] += carry;
     }
 
     /* Trim leading zeros */
     out->size = a->size + b->size;
-    BIntTrim(out);
+    MpiTrim(out);
 }
 
 
-static void BIntMulDigit(const BInt *a,
-                         BINT_TYPE b,
-                         BInt *out)
+static void MpiMulDigit(const Mpi *a,
+                        MPI_TYPE b,
+                        Mpi *out)
 {
-    BINT_TTYPE carry;
+    MPI_TTYPE carry;
     int i;
 
     /* Preconditions */
     assert(a != NULL && out != NULL);
-    assert(a->size + 1 <= BINT_SIZE);
+    assert(a->size + 1 <= MPI_SIZE);
 
     /* Multiplication loop */
     carry = 0;
     for (i = 0; i < a->size; i++)
     {
-        carry += (BINT_TTYPE)a->data[i] * b;
-        out->data[i] = carry & BINT_MASK;
-        carry = (carry >> BINT_BITS);
+        carry += (MPI_TTYPE)a->data[i] * b;
+        out->data[i] = carry & MPI_MASK;
+        carry = (carry >> MPI_BITS);
     }
     out->data[i] = carry;
 
     /* Trim leading zeros */
     out->size = a->size + 1;
-    BIntTrim(out);
+    MpiTrim(out);
 }
 
 
-static void BIntPow10(const BInt *in,
-                      int exponent,
-                      BInt *out,
-                      BInt *tmp)
+static void MpiPow10(const Mpi *in,
+                     int exponent,
+                     Mpi *out,
+                     Mpi *tmp)
 {
     int i, current;
 
@@ -309,26 +309,26 @@ static void BIntPow10(const BInt *in,
         if (!(exponent & 0x1))
             continue;
 
-        BIntMul(&tmp[current], &powLookup[i], &tmp[1 - current]);
+        MpiMul(&tmp[current], &powLookup[i], &tmp[1 - current]);
         current = 1 - current;
     }
     *out = tmp[current];
 }
 
 
-static void BIntLsh(const BInt *in,
-                    int amount,
-                    BInt *out)
+static void MpiLsh(const Mpi *in,
+                   int amount,
+                   Mpi *out)
 {
     int blocks, bits, i;
-    BINT_TYPE low, high;
+    MPI_TYPE low, high;
 
     /* Preconditions */
     assert(in != NULL && out != NULL);
-    assert(amount >= 0 && in->size + (amount + BINT_BITS - 1) / BINT_BITS <= BINT_SIZE);
+    assert(amount >= 0 && in->size + (amount + MPI_BITS - 1) / MPI_BITS <= MPI_SIZE);
 
-    blocks = amount / BINT_BITS;
-    bits = amount % BINT_BITS;
+    blocks = amount / MPI_BITS;
+    bits = amount % MPI_BITS;
     if (!in->size)
     {
         out->size = 0;
@@ -341,7 +341,7 @@ static void BIntLsh(const BInt *in,
         high = 0;
         for (i = in->size + blocks; i > blocks; i--)
         {
-            low = in->data[i - blocks - 1] >> (BINT_BITS - bits);
+            low = in->data[i - blocks - 1] >> (MPI_BITS - bits);
             out->data[i] = low | high;
             high = in->data[i - blocks - 1] << bits;
         }
@@ -356,25 +356,25 @@ static void BIntLsh(const BInt *in,
     }
 
     /* Trim leading zeros and zero out lower blocks */
-    BIntTrim(out);
+    MpiTrim(out);
     for (i = blocks; i; i--)
         out->data[i - 1] = 0;
 }
 
 
-static void BIntRsh(const BInt *in,
-                    int amount,
-                    BInt *out)
+static void MpiRsh(const Mpi *in,
+                   int amount,
+                   Mpi *out)
 {
     int blocks, bits, i;
-    BINT_TYPE low, high;
+    MPI_TYPE low, high;
 
     /* Preconditions */
     assert(in != NULL && out != NULL);
     assert(amount >= 0);
 
-    blocks = amount / BINT_BITS;
-    bits = amount % BINT_BITS;
+    blocks = amount / MPI_BITS;
+    bits = amount % MPI_BITS;
 
     /* Zero size input or shift is bigger then input */
     if (in->size == 0 || in->size <= blocks)
@@ -390,7 +390,7 @@ static void BIntRsh(const BInt *in,
         high = 0;
         for (i = 0; i < in->size - blocks - 1; i++)
         {
-            high = in->data[i + blocks + 1] << (BINT_BITS - bits);
+            high = in->data[i + blocks + 1] << (MPI_BITS - bits);
             out->data[i] = low | high;
             low = in->data[i + blocks + 1] >> bits;
         }
@@ -404,38 +404,38 @@ static void BIntRsh(const BInt *in,
 
     /* Trim leading zeros */
     out->size = in->size - blocks;
-    BIntTrim(out);
+    MpiTrim(out);
 }
 
 
-static BINT_TTYPE BIntGuess(const BInt *a,
-                            const BInt *b)
+static MPI_TTYPE MpiGuess(const Mpi *a,
+                          const Mpi *b)
 {
-    BINT_TTYPE tmp;
+    MPI_TTYPE tmp;
 
     /* Preconditions */
     assert(a != NULL && b != NULL);
     assert(a->size > 0 && b->size > 0);
     assert((a->size == b->size) || ((a->size != b->size) && a->size > 1));
 
-    if (BIntCompare(a, b) < 0)
+    if (MpiCompare(a, b) < 0)
         return 0;
 
     tmp = a->data[a->size - 1];
     if (a->size != b->size)
-        tmp = (tmp << BINT_BITS) | a->data[a->size - 2];
+        tmp = (tmp << MPI_BITS) | a->data[a->size - 2];
 
     return tmp / b->data[b->size - 1];
 }
 
 
-static void BIntDiv(const BInt *a,
-                    const BInt *b,
-                    BInt *q,
-                    BInt *r,
-                    BInt *tmp)
+static void MpiDiv(const Mpi *a,
+                   const Mpi *b,
+                   Mpi *q,
+                   Mpi *r,
+                   Mpi *tmp)
 {
-    BINT_TTYPE digit;
+    MPI_TTYPE digit;
     int shift;
 
     /* Preconditions */
@@ -443,7 +443,7 @@ static void BIntDiv(const BInt *a,
     assert(b->size != 0);
 
     /* Handle case where a is less then b */
-    if (BIntCompare(a, b) < 0)
+    if (MpiCompare(a, b) < 0)
     {
         *r = *a;
         q->size = 0;
@@ -451,16 +451,16 @@ static void BIntDiv(const BInt *a,
     }
 
     /* Normilize input to reduce tries */
-    shift = BIntClz(b->data[b->size - 1]);
-    BIntLsh(a, shift, &tmp[0]);
-    BIntLsh(b, shift, &tmp[1]);
+    shift = MpiClz(b->data[b->size - 1]);
+    MpiLsh(a, shift, &tmp[0]);
+    MpiLsh(b, shift, &tmp[1]);
 
     /* Prepare first step of the division */
     q->size = 0;
     r->size = 0;
-    while (BIntCompare(r, &tmp[1]) < 0)
+    while (MpiCompare(r, &tmp[1]) < 0)
     {
-        BIntLsh(r, BINT_BITS, r);
+        MpiLsh(r, MPI_BITS, r);
         r->data[0] = tmp[0].data[--tmp[0].size];
         r->size += !r->size;
     }
@@ -468,19 +468,19 @@ static void BIntDiv(const BInt *a,
     while (1)
     {
         /* Make a guess and check */
-        digit = BIntGuess(r, &tmp[1]);
-        while (digit > BINT_MASK)
+        digit = MpiGuess(r, &tmp[1]);
+        while (digit > MPI_MASK)
             digit--;
-        BIntMulDigit(&tmp[1], digit, &tmp[2]);
-        while (BIntCompare(r, &tmp[2]) < 0)
+        MpiMulDigit(&tmp[1], digit, &tmp[2]);
+        while (MpiCompare(r, &tmp[2]) < 0)
         {
             --digit;
-            BIntSub(&tmp[2], &tmp[1], &tmp[2]);
+            MpiSub(&tmp[2], &tmp[1], &tmp[2]);
         }
 
         /* Store digit in quotient */
-        BIntSub(r, &tmp[2], r);
-        BIntLsh(q, BINT_BITS, q);
+        MpiSub(r, &tmp[2], r);
+        MpiLsh(q, MPI_BITS, q);
         q->data[0] = digit;
         q->size += !q->size;
 
@@ -488,12 +488,12 @@ static void BIntDiv(const BInt *a,
         if (!tmp[0].size)
             break;
 
-        BIntLsh(r, BINT_BITS, r);
+        MpiLsh(r, MPI_BITS, r);
         r->data[0] = tmp[0].data[--tmp[0].size];
         if (!r->size)
             r->size = 1;
     }
 
     /* Normilize remainder */
-    BIntRsh(r, shift, r);
+    MpiRsh(r, shift, r);
 }

@@ -8,9 +8,9 @@
 /**
  * Exchanges values between \a src and \a dest elements of sizze \a size.
  *
- * \param dest	Destination element pointer
- * \param src	Source element pointer
- * \param size	Element size in bytes
+ * \param dest  Destination element pointer
+ * \param src   Source element pointer
+ * \param size  Element size in bytes
  */
 void BH_Swap(void *dest,
              void *src,
