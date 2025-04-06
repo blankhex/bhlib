@@ -70,3 +70,6 @@ _deps
 
 # Coverage
 [Cc]overage
+
+# MacOS
+.DS_Store
