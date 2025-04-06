@@ -9,6 +9,9 @@ Here is a short list of implemented features:
 - Abstraction over input/output
 - Basic data structures and algorithms (hashmap, queue, heaps, partitions)
 - Geomtric primitives (vectors, matrices, quaternions, rays, boxes)
+- Thread support functions and structures (thread, mutex, cv, atomics, etc.)
+- Unicode support functions (BMP, UTF-8, UTF-16, UTF-32)
+- String conversion from/to numbers
 
 For more information about currently implemented and planned features checkout
 [this page](doc/Features.md)

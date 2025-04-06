@@ -11,15 +11,15 @@ Currently implemented features:
 - Intersection calculation (ray, boxes, segments, lines, planes, triangles)
 - Unit testing library (for internal usage)
 - Command-line interface utilities
+- Thread support (thread, mutex, cv, atomics, etc.)
+- Unicode support functions (BMP, UTF-8, UTF-16, UTF-32)
+- String conversion functions from/to numbers
 
 ## Planned features
 
 Currently planned features:
-
-- Thread support (thread, mutex, cv, atomics, etc.)
 - Image loading/processing/saving support
 - Polygon rasterization (possibly canvas)
-- UTF8 string support (BMP handling)
 - Font rendering
 - GUI (Windows GUI, X11)
 - Deflate/Inflate implementation

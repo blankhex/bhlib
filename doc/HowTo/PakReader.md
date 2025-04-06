@@ -323,7 +323,7 @@ static int CopyData(BH_IO *from,
 
         if (BH_IORead(from, tmp, length, &actual) || length != actual)
             return BH_ERROR;
-        
+
         if (BH_IOWrite(to, tmp, length, &actual) || length != actual)
             return BH_ERROR;
     }
@@ -344,7 +344,7 @@ static int ProcessPack(Config *config,
     /* Read header and seek to begging of the file table */
     if (ParseHeader(io, &header))
         return BH_ERROR;
-    
+
     if (BH_IOSeek(io, header.offset, BH_IO_SEEK_SET))
         return BH_ERROR;
 
@@ -362,7 +362,7 @@ static int ProcessPack(Config *config,
                 continue;
 
             output = BH_FileNew(config->output);
-            if (BH_IOOpen(output, BH_IO_WRITE) || 
+            if (BH_IOOpen(output, BH_IO_WRITE) ||
                 BH_IOSeek(io, entry.offset, BH_IO_SEEK_SET) ||
                 CopyData(io, output, entry.size))
             {
@@ -374,7 +374,7 @@ static int ProcessPack(Config *config,
             return BH_OK;
         }
     }
-    
+
     if (config->list)
         return BH_OK;
     return BH_ERROR;

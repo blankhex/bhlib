@@ -92,6 +92,9 @@ size_t BH_UnicodeEncodeUtf8(uint32_t unit,
 {
     size_t result;
 
+    if (unit > 0xD7FF && unit < 0xE000)
+        return 0;
+
     result = 0;
     if (unit < 0x80ul)
     {
@@ -199,6 +202,9 @@ size_t BH_UnicodeDecodeUtf16BE(const char *string,
 size_t BH_UnicodeEncodeUtf16LE(uint32_t unit,
                                char *string)
 {
+    if (unit > 0xD7FF && unit < 0xE000)
+        return 0;
+
     if (unit < 0x10000)
     {
         BH_Write16LEu(string, unit);
@@ -218,6 +224,9 @@ size_t BH_UnicodeEncodeUtf16LE(uint32_t unit,
 size_t BH_UnicodeEncodeUtf16BE(uint32_t unit,
                                char *string)
 {
+    if (unit > 0xD7FF && unit < 0xE000)
+        return 0;
+
     if (unit < 0x10000)
     {
         BH_Write16BEu(string, unit);
@@ -261,7 +270,7 @@ size_t BH_UnicodeDecodeUtf32BE(const char *string,
 size_t BH_UnicodeEncodeUtf32LE(uint32_t unit,
                                char *string)
 {
-    if (unit > 0x1FFFFF)
+    if (unit > 0x1FFFFF || (unit > 0xD7FF && unit < 0xE000))
         return 0;
 
     BH_Write32LEu(string, unit);
@@ -272,7 +281,7 @@ size_t BH_UnicodeEncodeUtf32LE(uint32_t unit,
 size_t BH_UnicodeEncodeUtf32BE(uint32_t unit,
                                char *string)
 {
-    if (unit > 0x1FFFFF)
+    if (unit > 0x1FFFFF || (unit > 0xD7FF && unit < 0xE000))
         return 0;
 
     BH_Write32BEu(string, unit);
