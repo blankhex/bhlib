@@ -2,13 +2,24 @@
 SET(CMAKE_SYSTEM_NAME      Windows)
 SET(CMAKE_SYSTEM_PROCESSOR i686)
 
-# which compilers to use for C and C++ and ASM-ATT
-SET(CMAKE_C_COMPILER       /usr/bin/i686-w64-mingw32-gcc)
-SET(CMAKE_CXX_COMPILER     /usr/bin/i686-w64-mingw32-g++)
-SET(CMAKE_ASM-ATT_COMPILER /usr/bin/i686-w64-mingw32-as)
+# Check path
+if(EXISTS /usr/bin/i686-w64-mingw32-gcc)
+    # which compilers to use for C and C++ and ASM-ATT
+    SET(CMAKE_C_COMPILER       /usr/bin/i686-w64-mingw32-gcc)
+    SET(CMAKE_CXX_COMPILER     /usr/bin/i686-w64-mingw32-g++)
+    SET(CMAKE_ASM-ATT_COMPILER /usr/bin/i686-w64-mingw32-as)
 
-# here is the target environment located
-SET(CMAKE_FIND_ROOT_PATH  /usr/i686-w64-mingw32)
+    # here is the target environment located
+    SET(CMAKE_FIND_ROOT_PATH  /usr/i686-w64-mingw32)
+elseif(EXISTS /usr/local/opt/mingw-w64/toolchain-i686/bin/i686-w64-mingw32-gcc)
+    # which compilers to use for C and C++ and ASM-ATT
+    SET(CMAKE_C_COMPILER       /usr/local/opt/mingw-w64/toolchain-i686/bin/i686-w64-mingw32-gcc)
+    SET(CMAKE_CXX_COMPILER     /usr/local/opt/mingw-w64/toolchain-i686/bin/i686-w64-mingw32-g++)
+    SET(CMAKE_ASM-ATT_COMPILER /usr/local/opt/mingw-w64/toolchain-i686/bin/i686-w64-mingw32-as)
+
+    # here is the target environment located
+    SET(CMAKE_FIND_ROOT_PATH  /usr/local/opt/mingw-w64/toolchain-i686/i686-w64-mingw32)
+endif()
 
 # adjust the default behaviour of the FIND_XXX() commands:
 # search headers and libraries in the target environment, search

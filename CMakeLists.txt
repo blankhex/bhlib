@@ -22,12 +22,12 @@ else()
 endif()
 
 set(CMAKE_C_FLAGS_ASAN
-    "${CMAKE_C_FLAGS_DEBUG} -fsanitize=address,undefined -fno-omit-frame-pointer" CACHE STRING
+    "${CMAKE_C_FLAGS_DEBUG} -fsanitize=address,undefined -fno-omit-frame-pointer -Wno-deprecated-declarations" CACHE STRING
     "Flags used by the C compiler for Asan build type or configuration." FORCE
 )
 
 set(CMAKE_CXX_FLAGS_ASAN
-    "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address,undefined -fno-omit-frame-pointer" CACHE STRING
+    "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address,undefined -fno-omit-frame-pointer -Wno-deprecated-declarations" CACHE STRING
     "Flags used by the C++ compiler for Asan build type or configuration." FORCE
 )
 
@@ -60,6 +60,14 @@ if(ENABLE_LTO)
         message(STATUS "IPO/LTO enabled")
         set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
     endif()
+
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        message(NOTICE "WARNING: IPO/LTO might cause issues while debugging")
+    endif()
+endif()
+
+if(ENABLE_MT)
+    message(STATUS "Multithreading enabled")
 endif()
 
 # Enable testing
@@ -91,22 +99,22 @@ set(BH_SOURCE
     src/Math/Vec4f.c
     src/Math/Vec4i.c
     src/Queue.c
-    src/Util.c
-    src/String/Int.c
     src/String/Float.c
+    src/String/Int.c
     src/String/Unicode.c
+    src/Util.c
 )
 
 set(BH_HEADER
-    include/BH/Common.h
     include/BH/Algo.h
     include/BH/Args.h
+    include/BH/Common.h
     include/BH/Hashmap.h
     include/BH/IO.h
     include/BH/Math.h
     include/BH/Queue.h
-    include/BH/Util.h
     include/BH/Thread.h
+    include/BH/Util.h
 )
 
 set(BH_SOURCE_DUMMY
@@ -122,12 +130,12 @@ set(BH_SOURCE_POSIX
 )
 
 set(BH_SOURCE_WIN32_MT
+    src/Platform/Spinlock.c
     src/Platform/Win32/Condition.c
     src/Platform/Win32/Mutex.c
     src/Platform/Win32/Semaphore.c
     src/Platform/Win32/Thread.c
     src/Platform/Win32/Tss.c
-    src/Platform/Spinlock.c
 )
 
 set(BH_HEADER_WIN32_MT

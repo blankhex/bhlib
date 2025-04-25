@@ -12,6 +12,8 @@ if [ ! -f $1 ]; then
     exit 1
 fi
 
+echo "Checking file" $1
+
 
 # Message about trailing space before EOL
 eolerrors=$(grep -n "\s$" "$1" | cut -f1 -d: | while read -r line; do
@@ -22,7 +24,7 @@ done)
 
 
 # Message about non-empty last-line
-linecount=$(($(wc -l "$1" | cut -f1 -d " ") + 1))
+linecount=$(($(wc -l "$1" | xargs | cut -f1 -d " ") + 1))
 lastline=$(tail -n "+$linecount" $1)
 
 llerrors=$(if [ "$lastline" ]; then

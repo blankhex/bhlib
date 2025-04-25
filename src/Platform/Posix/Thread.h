@@ -3,8 +3,8 @@
 
 
 #include <BH/Thread.h>
+#include <unistd.h>
 #include <pthread.h>
-#include <semaphore.h>
 
 
 struct BH_Condition
@@ -19,10 +19,22 @@ struct BH_Mutex
 };
 
 
+#if (_POSIX_SEMAPHORES >= 200112L)
+#include <semaphore.h>
+
 struct BH_Semaphore
 {
     sem_t handle;
 };
+#else
+struct BH_Semaphore
+{
+    int count;
+    int waiters;
+    pthread_mutex_t mutex;
+    pthread_cond_t condition;
+};
+#endif
 
 
 struct BH_Thread
