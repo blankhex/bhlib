@@ -5,231 +5,176 @@
 #define BUFFER_SIZE (sizeof(char *))
 
 
-struct BH_IO
-{
-    BH_IOCallback cb;
-};
-
-
-BH_IO *BH_IONew(BH_IOCallback cb,
-                void *data)
-{
-    size_t requested;
-    BH_IO *io;
-
-    /* Get information about IO device size */
-    if (cb(NULL, BH_IO_INFO_CB, &requested, NULL))
-        return NULL;
-
-    /* Allocate space for the IO device */
-    io = malloc(sizeof(*io) + requested);
-    if (!io)
-        return NULL;
-
-    /* Initialize IO device */
-    io->cb = cb;
-    if (cb(io + 1, BH_IO_INIT_CB, data, NULL))
-    {
-        free(io);
-        return NULL;
-    }
-
-    return io;
-}
-
-
-void BH_IOFree(BH_IO *io)
+void BH_IOFree(BH_IO *device)
 {
     /* Prevent working with NULL io */
-    if (!io)
+    if (!device)
         return;
 
-    /* Call the IO device destruction handler */
-    io->cb(io + 1, BH_IO_DESTROY_CB, NULL, NULL);
-
-    /* Deallocate object */
-    free(io);
+    /* Call the IO device destruction handler and deallocate */
+    device->callback(device, BH_IO_OP_DESTROY, NULL);
 }
 
 
-const char *BH_IOClassname(BH_IO *io)
-{
-    const char *name;
-
-    if (!io)
-        goto error;
-
-    if (io->cb(io + 1, BH_IO_INFO_CB, NULL, &name) != BH_OK)
-        goto error;
-
-    return name;
-
-error:
-    return NULL;
-}
-
-
-int BH_IOOpen(BH_IO *io,
-              int mode)
-{
-    /* Prevent working with NULL io */
-    if (!io)
-        return BH_ERROR;
-
-    /* Call the IO device open handler with specified mode */
-    return io->cb(io + 1, BH_IO_OPEN_CB, &mode, NULL);
-}
-
-
-int BH_IOClose(BH_IO *io)
-{
-    /* Prevent working with NULL io */
-    if (!io)
-        return BH_ERROR;
-
-    /* Call the IO device close handler */
-    return io->cb(io + 1, BH_IO_CLOSE_CB, NULL, NULL);
-}
-
-
-int BH_IORead(BH_IO *io,
+int BH_IORead(BH_IO *device,
               char *buffer,
               size_t size,
               size_t *actual)
 {
-    int code;
+    BH_IOReadInfo info;
 
     /* Prevent working with NULL io */
-    if (!io)
+    if (!device)
         return BH_ERROR;
 
-    /* Call the IO device read handler */
-    code = io->cb(io + 1, BH_IO_READ_CB, buffer, &size);
-
-    /* If caller wants to know actual read size - report it back */
-    if (actual)
-        *actual = size;
-
-    return code;
+    info.data = buffer;
+    info.size = size;
+    info.actual = actual;
+    return device->callback(device, BH_IO_OP_READ, &info);
 }
 
 
-int BH_IOWrite(BH_IO *io,
+int BH_IOWrite(BH_IO *device,
                const char *buffer,
                size_t size,
                size_t *actual)
 {
-    int code;
+    BH_IOWriteInfo info;
 
     /* Prevent working with NULL io */
-    if (!io)
+    if (!device)
         return BH_ERROR;
 
-    /* Call the IO device write handler */
-    code = io->cb(io + 1, BH_IO_WRITE_CB, (void *)buffer, &size);
+    info.data = buffer;
+    info.size = size;
+    info.actual = actual;
 
-    /* If caller wants to know actual written size - report it back */
-    if (actual)
-        *actual = size;
-
-    return code;
+    return device->callback(device, BH_IO_OP_WRITE, &info);
 }
 
 
-int BH_IOPeek(BH_IO *io,
+int BH_IOCtl(BH_IO *device,
+             int op,
+             void *arg)
+{
+    BH_IOCtlInfo info;
+
+    if (!device)
+        return BH_ERROR;
+
+    info.op = op;
+    info.arg = arg;
+    return device->callback(device, BH_IO_OP_CTL, &info);
+}
+
+
+int BH_IOCap(BH_IO *device,
+             int op)
+{
+    if (!device)
+        return BH_ERROR;
+
+    return device->callback(device, BH_IO_OP_CAP, &op);
+}
+
+
+int BH_IOPeek(BH_IO *device,
               char *buffer,
               size_t size,
               size_t *actual)
 {
-    int code;
+    BH_IOReadInfo readInfo;
+    BH_IOSeekInfo posInfo;
+    size_t readed;
 
-    /* Prevent working with NULL io */
-    if (!io)
-        return BH_ERROR;
+    readInfo.data = buffer;
+    readInfo.size = size;
+    readInfo.actual = actual;
 
-    /* Call the IO device peek handler */
-    code = io->cb(io + 1, BH_IO_PEEK_CB, (void *)buffer, &size);
+    if (BH_IOCap(device, BH_IO_CTL_PEEK))
+    {
+        if (BH_IOCap(device, BH_IO_CTL_SEEK))
+            return BH_NOIMPL;
 
-    /* If caller wants to know actual written size - report it back */
-    if (actual)
-        *actual = size;
+        if (BH_IORead(device, buffer, size, &readed))
+            return BH_ERROR;
 
-    return code;
+        posInfo.whence = BH_IO_SEEK_CUR;
+        posInfo.offset = -(int64_t)readed;
+        if (BH_IOCtl(device, BH_IO_CTL_SEEK, &posInfo))
+            return BH_ERROR;
+
+        if (actual)
+            *actual = readed;
+
+        return BH_OK;
+    }
+
+    return BH_IOCtl(device, BH_IO_CTL_PEEK, &readInfo);
 }
 
 
-int BH_IOTell(BH_IO *io,
-              int64_t *position)
+int BH_IOTell(BH_IO *device,
+              int64_t *offset)
 {
-    /* Prevent working with NULL io */
-    if (!io)
-        return BH_ERROR;
-
-    /* Call the IO device tell handler */
-    return io->cb(io + 1, BH_IO_TELL_CB, position, NULL);
+    return BH_IOCtl(device, BH_IO_CTL_TELL, offset);
 }
 
 
-int BH_IOSeek(BH_IO *io,
-              int64_t position,
-              int direction)
+int BH_IOSeek(BH_IO *device,
+              int64_t offset,
+              int whence)
 {
-    /* Prevent working with NULL io */
-    if (!io)
-        return BH_ERROR;
+    BH_IOSeekInfo info;
 
-    /* Call the IO device seek handler */
-    return io->cb(io + 1, BH_IO_SEEK_CB, &position, &direction);
+    info.offset = offset;
+    info.whence = whence;
+    return BH_IOCtl(device, BH_IO_CTL_SEEK, &info);
 }
 
 
-int BH_IOFlush(BH_IO *io)
+int BH_IOFlush(BH_IO *device)
 {
-    /* Prevent working with NULL io */
-    if (!io)
-        return BH_ERROR;
-
-    /* Call the IO device flush handler */
-    return io->cb(io + 1, BH_IO_FLUSH_CB, NULL, NULL);
+    return BH_IOCtl(device, BH_IO_CTL_FLUSH, NULL);
 }
 
 
-int BH_IOSize(BH_IO *io,
+int BH_IOSize(BH_IO *device,
               int64_t *size)
 {
-    /* Prevent working with NULL io */
-    if (!io)
+    return BH_IOCtl(device, BH_IO_CTL_SIZE, size);
+}
+
+
+int BH_IOFlags(BH_IO *device, int *flags)
+{
+    return BH_IOCtl(device, BH_IO_CTL_FLAGS, flags);
+}
+
+
+int BH_IOClear(BH_IO *device)
+{
+    return BH_IOCtl(device, BH_IO_CTL_CLEAR, NULL);
+}
+
+
+int BH_IOError(BH_IO *device)
+{
+    int flags;
+
+    if (BH_IOFlags(device, &flags))
         return BH_ERROR;
 
-    /* Call the IO device size handler */
-    return io->cb(io + 1, BH_IO_SIZE_CB, size, NULL);
+    return flags & BH_IO_FLAG_ERROR;
 }
 
 
-int BH_IOFlags(BH_IO *io)
+int BH_IOEndOfFile(BH_IO *device)
 {
-    /* Prevent working with NULL io */
-    if (!io)
-        return BH_IO_FLAG_ERROR;
+    int flags;
 
-    /* Call the IO device flags handler */
-    return io->cb(io + 1, BH_IO_FLAGS_CB, NULL, NULL);
-}
+    if (BH_IOFlags(device, &flags))
+        return BH_ERROR;
 
-
-int BH_IOClear(BH_IO *io)
-{
-    /* Prevent working with NULL io */
-    if (!io)
-        return BH_OK;
-
-    /* Call the IO device clear error handler */
-    return io->cb(io + 1, BH_IO_CLEAR_CB, NULL, NULL);
-}
-
-
-BH_IO *BH_BufferNew(BH_IO *io)
-{
-    (void)io;
-    return NULL;
+    return flags & BH_IO_FLAG_EOF;
 }

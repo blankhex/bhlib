@@ -21,37 +21,40 @@ To implement this utility, we are going to need to include the following headers
 ## Working with Files
 
 Working with files in BHLib is based around the IO device (called `BH_IO`).
-Firstly, you need to create an IO device with the `BH_FileNew` function.
-Secondly, you need to open the IO device with the `BH_IOOpen` function. While
-opening the IO device, you can specify in which mode it will work: reading
-(`BH_IO_READ`) or writing (`BH_IO_WRITE`). Additionally, we can specify whether
-the IO device (or in our case, the file) should exist before opening
-(`BH_IO_EXIST`), be truncated before opening (`BH_IO_TRUNCATE`), should it be
-created (`BH_IO_CREATE`), or opened in append mode (`BH_IO_APPEND`).
+Firstly, you need to create an IO file device with the `BH_FileNew` function.
+While doing so, you can specify in which mode it will work: reading
+(`BH_FILE_READ`) or writing (`BH_FILE_WRITE`). Additionally, we can specify
+whether the file should exist before opening (`BH_IO_EXIST`), be truncated
+before opening (`BH_IO_TRUNCATE`), should it be created (`BH_IO_CREATE`), or
+opened in append mode (`BH_IO_APPEND`).
 
 Here is an example for opening an existing file in read-only mode:
 
 ```c
-BH_IO *io = BH_FileNew("coolfile.dat");
-if (BH_IOOpen(io, BH_IO_READ | BH_IO_EXIST))
+BH_IO *io = BH_FileNew("coolfile.dat", BH_FILE_READ | BH_FILE_EXISTS, NULL);
+if (!io)
 {
     printf("Can't open file 'coolfile.dat'\n", config.file);
-    BH_IOFree(io);
     return -1;
 }
 ```
+
 
 ## Working with UTF-8
 
 Reading UTF-8/UTF-16/UTF-32 is based around simple loop:
 
 1. Read bytes from input (IO or memory) to some buffer.
-2. Call `BH_UnicodeDecodeUtf*`. If return value is 0 - we don't have enough data, so go to step 1. Otherwise remove result bytes from the front of the buffer.
-3. If readed codepoint equals -1 - we encountered an error, so replace it with the code 0xFFFD.
+2. Call `BH_UnicodeDecodeUtf*`. If return value is 0 - we don't have enough
+   data, so go to step 1. Otherwise remove result bytes from the front of the
+   buffer.
+3. If readed codepoint equals -1 - we encountered an error, so replace it with
+   the code 0xFFFD.
 
 Writing UTF-8/UTF-16/UTF-32 is straight forward:
 
-1. Call `BH_UnicodeEncodeUtf*`. If return value is 0 - we can't encode codepoint (either codepoint is surrogate pair or outside valid range).
+1. Call `BH_UnicodeEncodeUtf*`. If return value is 0 - we can't encode codepoint
+   (either codepoint is surrogate pair or outside valid range).
 2. Write data (to IO or memory).
 
 BH_UnicodeDecodeUtf8(inBuffer, inSize, &unit)
@@ -107,23 +110,25 @@ int main(int argc, char **argv)
     if (argc < 2)
         printUsage();
 
-    inFile = BH_FileNew(argv[1]);
-    outFile = BH_FileNew(argv[2]);
+    inFile = BH_FileNew(argv[1], BH_FILE_READ | BH_FILE_EXIST, NULL);
+    outFile = BH_FileNew(argv[2], BH_FILE_WRITE | BH_FILE_TRUNCATE, NULL);
 
-    if (!inFile || BH_IOOpen(inFile, BH_IO_READ | BH_IO_EXIST))
-        return -1;
-
-    if (!outFile || BH_IOOpen(outFile, BH_IO_WRITE | BH_IO_TRUNCATE))
+    if (!inFile || !outFile)
         return -1;
 
     inSize = 0;
-    while (!(BH_IOFlags(inFile) & BH_IO_FLAG_EOF))
+    while (1)
     {
         /* Read one byte and try to decode */
         if (!inSize || !(outSize = BH_UnicodeDecodeUtf8(inBuffer, inSize, &unit)))
         {
+            BH_IOPeek(inFile, inBuffer + inSize, 1, &outSize);
             BH_IORead(inFile, inBuffer + inSize, 1, &outSize);
             inSize += outSize;
+
+            if (!outSize)
+                break;
+
             continue;
         }
 

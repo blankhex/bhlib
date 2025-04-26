@@ -12,6 +12,9 @@
 #define BH_FOUND        0x0005
 #define BH_NOTFOUND     0x0006
 #define BH_TIMEOUT      0x0007
+#define BH_SHORT        0x0008
+#define BH_FULL         0x0009
+
 
 #define BH_UNUSED(x)    (void)(x)
 #define BH_PTR2INT(x)   ((intptr_t)(x))

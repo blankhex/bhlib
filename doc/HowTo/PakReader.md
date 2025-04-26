@@ -61,22 +61,20 @@ To implement this utility, we are going to need to include the following headers
 ## Working with Files
 
 Working with files in BHLib is based around the IO device (called `BH_IO`).
-Firstly, you need to create an IO device with the `BH_FileNew` function.
-Secondly, you need to open the IO device with the `BH_IOOpen` function. While
-opening the IO device, you can specify in which mode it will work: reading
-(`BH_IO_READ`) or writing (`BH_IO_WRITE`). Additionally, we can specify whether
-the IO device (or in our case, the file) should exist before opening
-(`BH_IO_EXIST`), be truncated before opening (`BH_IO_TRUNCATE`), should it be
-created (`BH_IO_CREATE`), or opened in append mode (`BH_IO_APPEND`).
+Firstly, you need to create an IO file device with the `BH_FileNew` function.
+While doing so, you can specify in which mode it will work: reading
+(`BH_FILE_READ`) or writing (`BH_FILE_WRITE`). Additionally, we can specify
+whether the file should exist before opening (`BH_IO_EXIST`), be truncated
+before opening (`BH_IO_TRUNCATE`), should it be created (`BH_IO_CREATE`), or
+opened in append mode (`BH_IO_APPEND`).
 
 Here is an example for opening an existing file in read-only mode:
 
 ```c
-BH_IO *io = BH_FileNew("coolfile.dat");
-if (BH_IOOpen(io, BH_IO_READ | BH_IO_EXIST))
+BH_IO *io = BH_FileNew("coolfile.dat", BH_FILE_READ | BH_FILE_EXISTS, NULL);
+if (!io)
 {
     printf("Can't open file 'coolfile.dat'\n", config.file);
-    BH_IOFree(io);
     return -1;
 }
 ```
@@ -206,6 +204,7 @@ Now, let's put everything together and implement `PakReader`.
 /* PAK header and entry structures and some constants */
 #define HEADER_SIZE  12
 #define ENTRY_SIZE   64
+
 
 typedef struct PakHeader
 {
@@ -361,9 +360,8 @@ static int ProcessPack(Config *config,
             if (strcmp(entry.name, config->input))
                 continue;
 
-            output = BH_FileNew(config->output);
-            if (BH_IOOpen(output, BH_IO_WRITE) ||
-                BH_IOSeek(io, entry.offset, BH_IO_SEEK_SET) ||
+            output = BH_FileNew(config->output, BH_FILE_WRITE | BH_FILE_TRUNCATE, NULL);
+            if (!output || BH_IOSeek(io, entry.offset, BH_IO_SEEK_SET) ||
                 CopyData(io, output, entry.size))
             {
                 BH_IOFree(output);
@@ -405,8 +403,7 @@ int main(int argc, char **argv)
     }
 
     /* Read and write */
-    io = BH_FileNew(config.file);
-    if (BH_IOOpen(io, BH_IO_READ | BH_IO_EXIST))
+    if ((io = BH_FileNew(config.file, BH_FILE_READ | BH_FILE_EXIST, NULL)) == NULL)
     {
         printf("Can't open file %s\n", config.file);
         BH_IOFree(io);

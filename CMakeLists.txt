@@ -80,6 +80,8 @@ endif()
 set(BH_SOURCE
     src/Algo.c
     src/Args.c
+    src/Buffer.c
+    src/Bytes.c
     src/Hashmap.c
     src/IO.c
     src/Math/Box2f.c

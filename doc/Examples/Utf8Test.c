@@ -21,23 +21,25 @@ int main(int argc, char **argv)
     if (argc < 2)
         printUsage();
 
-    inFile = BH_FileNew(argv[1]);
-    outFile = BH_FileNew(argv[2]);
+    inFile = BH_FileNew(argv[1], BH_FILE_READ | BH_FILE_EXIST, NULL);
+    outFile = BH_FileNew(argv[2], BH_FILE_WRITE | BH_FILE_TRUNCATE, NULL);
 
-    if (!inFile || BH_IOOpen(inFile, BH_IO_READ | BH_IO_EXIST))
-        return -1;
-
-    if (!outFile || BH_IOOpen(outFile, BH_IO_WRITE | BH_IO_TRUNCATE))
+    if (!inFile || !outFile)
         return -1;
 
     inSize = 0;
-    while (!(BH_IOFlags(inFile) & BH_IO_FLAG_EOF))
+    while (1)
     {
         /* Read one byte and try to decode */
         if (!inSize || !(outSize = BH_UnicodeDecodeUtf8(inBuffer, inSize, &unit)))
         {
+            BH_IOPeek(inFile, inBuffer + inSize, 1, &outSize);
             BH_IORead(inFile, inBuffer + inSize, 1, &outSize);
             inSize += outSize;
+
+            if (!outSize)
+                break;
+
             continue;
         }
 

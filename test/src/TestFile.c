@@ -26,13 +26,7 @@ static void cleanup(void)
  */
 static int checkNull(void)
 {
-    BH_IO *io;
-
     /* Check against NULL pointers */
-    BH_VERIFY(BH_FileNew(NULL) == NULL);
-    BH_VERIFY(BH_IOClassname(NULL) == NULL);
-    BH_VERIFY(BH_IOOpen(NULL, 0) != BH_OK);
-    BH_VERIFY(BH_IOClose(NULL) != BH_OK);
     BH_VERIFY(BH_IORead(NULL, NULL, 0, NULL) != BH_OK);
     BH_VERIFY(BH_IOWrite(NULL, NULL, 0, NULL) != BH_OK);
     BH_VERIFY(BH_IOPeek(NULL, NULL, 0, NULL) != BH_OK);
@@ -40,25 +34,13 @@ static int checkNull(void)
     BH_VERIFY(BH_IOSeek(NULL, 0, 0) != BH_OK);
     BH_VERIFY(BH_IOFlush(NULL) != BH_OK);
     BH_VERIFY(BH_IOSize(NULL, NULL) != BH_OK);
-    BH_VERIFY(BH_IOFlags(NULL) == BH_IO_FLAG_ERROR);
-    BH_VERIFY(BH_IOClear(NULL) == BH_OK);
+    BH_VERIFY(BH_IOFlags(NULL, NULL) != BH_OK);
+    BH_VERIFY(BH_IOClear(NULL) != BH_OK);
+    BH_VERIFY(BH_IOCtl(NULL, 0, NULL) != BH_OK);
+    BH_VERIFY(BH_IOCap(NULL, 0) != BH_OK);
+    BH_VERIFY(BH_IOEndOfFile(NULL) != BH_OK);
+    BH_VERIFY(BH_IOError(NULL) != BH_OK);
     BH_IOFree(NULL);
-
-    /* Check against NULL pointers and valid IO object */
-    BH_VERIFY((io = BH_FileNew(FILENAME1)) != NULL);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
-    BH_VERIFY(BH_IOOpen(io, 0) != BH_OK);
-    BH_VERIFY(BH_IOClose(io) != BH_OK);
-    BH_VERIFY(BH_IORead(io, NULL, 0, NULL) != BH_OK);
-    BH_VERIFY(BH_IOWrite(io, NULL, 0, NULL) != BH_OK);
-    BH_VERIFY(BH_IOPeek(io, NULL, 0, NULL) != BH_OK);
-    BH_VERIFY(BH_IOTell(io, NULL) != BH_OK);
-    BH_VERIFY(BH_IOSeek(io, 0, 0) != BH_OK);
-    BH_VERIFY(BH_IOFlush(io) != BH_OK);
-    BH_VERIFY(BH_IOSize(io, NULL) != BH_OK);
-    BH_VERIFY(BH_IOFlags(io) == BH_IO_FLAG_ERROR);
-    BH_VERIFY(BH_IOClear(io) == BH_OK);
-    BH_IOFree(io);
 
     return 0;
 }
@@ -75,13 +57,7 @@ static int checkNormal(void)
     BH_IO *io;
 
     /* Check operations for write only access */
-    BH_VERIFY((io = BH_FileNew(FILENAME1)) != NULL);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
-    BH_VERIFY(BH_IOOpen(io, BH_IO_WRITE) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
-
-    BH_VERIFY(BH_IOOpen(io, BH_IO_READ) != BH_OK);
-
+    BH_VERIFY((io = BH_FileNew(FILENAME1, BH_FILE_WRITE, NULL)) != NULL);
     BH_VERIFY(BH_IOWrite(io, "1234567890", 10, &actual) == BH_OK);
     BH_VERIFY(actual == 10);
 
@@ -97,12 +73,10 @@ static int checkNormal(void)
     BH_VERIFY(BH_IOSeek(io, 0, BH_IO_SEEK_END) == BH_OK);
     BH_VERIFY(BH_IOTell(io, &position) == BH_OK);
     BH_VERIFY(position == 20);
-    BH_IOClose(io);
+    BH_IOFree(io);
 
     /* Check operations for read only access */
-    BH_VERIFY(BH_IOOpen(io, BH_IO_READ) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
+    BH_VERIFY((io = BH_FileNew(FILENAME1, BH_FILE_READ, NULL)) != NULL);
     BH_VERIFY(BH_IORead(io, buffer, 10, &actual) == BH_OK);
     BH_VERIFY(actual == 10);
     BH_VERIFY(memcmp(buffer, "1234567890", 10) == 0);
@@ -124,10 +98,7 @@ static int checkNormal(void)
     BH_IOFree(io);
 
     /* Check operations for read and write access */
-    BH_VERIFY((io = BH_FileNew(FILENAME1)) != NULL);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
-    BH_VERIFY(BH_IOOpen(io, BH_IO_WRITE | BH_IO_READ) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
+    BH_VERIFY((io = BH_FileNew(FILENAME1, BH_FILE_READWRITE, NULL)) != NULL);
 
     BH_VERIFY(BH_IOWrite(io, "abcde", 5, &actual) == BH_OK);
     BH_VERIFY(actual == 5);
@@ -151,8 +122,6 @@ static int checkNormal(void)
     BH_VERIFY(BH_IORead(io, buffer, 35, &actual) == BH_OK);
     BH_VERIFY(actual == 35);
     BH_VERIFY(memcmp(buffer, "abcde12345678901234567890abcde67890", 35) == 0);
-    BH_IOClose(io);
-
     BH_IOFree(io);
     return 0;
 }
@@ -169,11 +138,7 @@ static int checkTruncate(void)
     BH_IO *io;
 
     /* Check operations for write only access */
-    BH_VERIFY((io = BH_FileNew(FILENAME1)) != NULL);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
-    BH_VERIFY(BH_IOOpen(io, BH_IO_WRITE | BH_IO_TRUNCATE) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
-
+    BH_VERIFY((io = BH_FileNew(FILENAME1, BH_FILE_WRITE | BH_FILE_TRUNCATE, NULL)) != NULL);
     BH_VERIFY(BH_IOWrite(io, "1234567890", 10, &actual) == BH_OK);
     BH_VERIFY(actual == 10);
 
@@ -189,11 +154,10 @@ static int checkTruncate(void)
     BH_VERIFY(BH_IOSeek(io, 0, BH_IO_SEEK_END) == BH_OK);
     BH_VERIFY(BH_IOTell(io, &position) == BH_OK);
     BH_VERIFY(position == 20);
-    BH_IOClose(io);
+    BH_IOFree(io);
 
     /* Check operations for read only access without truncate */
-    BH_VERIFY(BH_IOOpen(io, BH_IO_READ) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
+    BH_VERIFY((io = BH_FileNew(FILENAME1, BH_FILE_READ, NULL)) != NULL);
     BH_VERIFY(BH_IORead(io, buffer, 10, &actual) == BH_OK);
     BH_VERIFY(actual == 10);
     BH_VERIFY(memcmp(buffer, "1234567890", 10) == 0);
@@ -211,11 +175,10 @@ static int checkTruncate(void)
     BH_VERIFY(BH_IORead(io, buffer, 5, &actual) == BH_OK);
     BH_VERIFY(actual == 5);
     BH_VERIFY(memcmp(buffer, "67890", 5) == 0);
-    BH_IOClose(io);
+    BH_IOFree(io);
 
     /* Check operations for read only access */
-    BH_VERIFY(BH_IOOpen(io, BH_IO_READ | BH_IO_TRUNCATE) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
+    BH_VERIFY((io = BH_FileNew(FILENAME1, BH_FILE_READ | BH_FILE_TRUNCATE, NULL)) != NULL);
     BH_VERIFY(BH_IORead(io, buffer, 10, &actual) == BH_OK);
     BH_VERIFY(actual == 0);
 
@@ -229,11 +192,7 @@ static int checkTruncate(void)
     BH_IOFree(io);
 
     /* Check operations for read and write access */
-    BH_VERIFY((io = BH_FileNew(FILENAME1)) != NULL);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
-    BH_VERIFY(BH_IOOpen(io, BH_IO_WRITE | BH_IO_READ | BH_IO_TRUNCATE) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
-
+    BH_VERIFY((io = BH_FileNew(FILENAME1, BH_FILE_READWRITE | BH_FILE_TRUNCATE, NULL)) != NULL);
     BH_VERIFY(BH_IOWrite(io, "abcde", 5, &actual) == BH_OK);
     BH_VERIFY(actual == 5);
 
@@ -256,13 +215,11 @@ static int checkTruncate(void)
     BH_VERIFY(BH_IORead(io, buffer, 35, &actual) == BH_OK);
     BH_VERIFY(actual == 35);
     BH_VERIFY(memcmp(buffer, "abcde12345678901234567890abcde67890", 35) == 0);
-    BH_IOClose(io);
-
-    BH_VERIFY(BH_IOOpen(io, BH_IO_WRITE | BH_IO_TRUNCATE) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
-    BH_IOClose(io);
-
     BH_IOFree(io);
+
+    BH_VERIFY((io = BH_FileNew(FILENAME1, BH_FILE_WRITE | BH_FILE_TRUNCATE, NULL)) != NULL);
+    BH_IOFree(io);
+
     return 0;
 }
 
@@ -278,10 +235,7 @@ static int checkExist(void)
     BH_IO *io;
 
     /* Check operations for write only access */
-    BH_VERIFY((io = BH_FileNew(FILENAME1)) != NULL);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
-    BH_VERIFY(BH_IOOpen(io, BH_IO_WRITE | BH_IO_EXIST) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
+    BH_VERIFY((io = BH_FileNew(FILENAME1, BH_FILE_WRITE | BH_FILE_EXIST, NULL)) != NULL);
 
     BH_VERIFY(BH_IOWrite(io, "1234567890", 10, &actual) == BH_OK);
     BH_VERIFY(actual == 10);
@@ -298,11 +252,11 @@ static int checkExist(void)
     BH_VERIFY(BH_IOSeek(io, 0, BH_IO_SEEK_END) == BH_OK);
     BH_VERIFY(BH_IOTell(io, &position) == BH_OK);
     BH_VERIFY(position == 20);
-    BH_IOClose(io);
+    BH_IOFree(io);
 
     /* Check operations for read only access */
-    BH_VERIFY(BH_IOOpen(io, BH_IO_READ | BH_IO_EXIST) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
+    BH_VERIFY((io = BH_FileNew(FILENAME1,  BH_FILE_READ | BH_FILE_EXIST, NULL)) != NULL);
+
     BH_VERIFY(BH_IORead(io, buffer, 10, &actual) == BH_OK);
     BH_VERIFY(actual == 10);
     BH_VERIFY(memcmp(buffer, "1234567890", 10) == 0);
@@ -324,10 +278,7 @@ static int checkExist(void)
     BH_IOFree(io);
 
     /* Check operations for read and write access */
-    BH_VERIFY((io = BH_FileNew(FILENAME1)) != NULL);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
-    BH_VERIFY(BH_IOOpen(io, BH_IO_WRITE | BH_IO_READ | BH_IO_EXIST) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
+    BH_VERIFY((io = BH_FileNew(FILENAME1, BH_FILE_WRITE | BH_FILE_READ | BH_FILE_EXIST, NULL)) != NULL);
 
     BH_VERIFY(BH_IOWrite(io, "abcde", 5, &actual) == BH_OK);
     BH_VERIFY(actual == 5);
@@ -351,19 +302,12 @@ static int checkExist(void)
     BH_VERIFY(BH_IORead(io, buffer, 35, &actual) == BH_OK);
     BH_VERIFY(actual == 35);
     BH_VERIFY(memcmp(buffer, "abcde12345678901234567890abcde67890", 35) == 0);
-    BH_IOClose(io);
     BH_IOFree(io);
 
     /* Check against non existing files */
-    BH_VERIFY((io = BH_FileNew(FILENAME2)) != NULL);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
-    BH_VERIFY(BH_IOOpen(io, BH_IO_WRITE | BH_IO_EXIST) != BH_OK);
-    BH_VERIFY((BH_IOFlags(io) & BH_IO_FLAG_OPEN) == 0);
-    BH_VERIFY(BH_IOOpen(io, BH_IO_READ | BH_IO_EXIST) != BH_OK);
-    BH_VERIFY((BH_IOFlags(io) & BH_IO_FLAG_OPEN) == 0);
-    BH_VERIFY(BH_IOOpen(io, BH_IO_WRITE | BH_IO_READ | BH_IO_EXIST) != BH_OK);
-    BH_VERIFY((BH_IOFlags(io) & BH_IO_FLAG_OPEN) == 0);
-    BH_IOFree(io);
+    BH_VERIFY(BH_FileNew(FILENAME2, BH_FILE_WRITE | BH_FILE_EXIST, NULL) == NULL);
+    BH_VERIFY(BH_FileNew(FILENAME2, BH_FILE_READ | BH_FILE_EXIST, NULL) == NULL);
+    BH_VERIFY(BH_FileNew(FILENAME2, BH_FILE_READWRITE | BH_FILE_EXIST, NULL) == NULL);
     return 0;
 }
 
@@ -382,10 +326,7 @@ static int checkAppend(void)
     cleanup();
 
     /* Check operations for write only access */
-    BH_VERIFY((io = BH_FileNew(FILENAME1)) != NULL);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
-    BH_VERIFY(BH_IOOpen(io, BH_IO_WRITE | BH_IO_APPEND) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
+    BH_VERIFY((io = BH_FileNew(FILENAME1,  BH_FILE_WRITE | BH_FILE_APPEND, NULL)) != NULL);
 
     BH_VERIFY(BH_IOWrite(io, "1234567890", 10, &actual) == BH_OK);
     BH_VERIFY(actual == 10);
@@ -402,12 +343,11 @@ static int checkAppend(void)
     BH_VERIFY(BH_IOSeek(io, 0, BH_IO_SEEK_END) == BH_OK);
     BH_VERIFY(BH_IOTell(io, &position) == BH_OK);
     BH_VERIFY(position == 25);
-    BH_IOClose(io);
+    BH_IOFree(io);
 
     /* Check operations for read only access */
-    BH_VERIFY(BH_IOOpen(io, BH_IO_READ | BH_IO_APPEND) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
+    BH_VERIFY((io = BH_FileNew(FILENAME1,  BH_FILE_READ | BH_FILE_APPEND, NULL)) != NULL);
+
     BH_VERIFY(BH_IORead(io, buffer, 10, &actual) == BH_OK);
     BH_VERIFY(actual == 10);
     BH_VERIFY(memcmp(buffer, "1234567890", 10) == 0);
@@ -425,11 +365,10 @@ static int checkAppend(void)
     BH_VERIFY(BH_IORead(io, buffer, 5, &actual) == BH_OK);
     BH_VERIFY(actual == 5);
     BH_VERIFY(memcmp(buffer, "abcde", 5) == 0);
-    BH_IOClose(io);
+    BH_IOFree(io);
 
     /* Check operations for read and write access */
-    BH_VERIFY(BH_IOOpen(io, BH_IO_WRITE | BH_IO_READ | BH_IO_APPEND) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
+    BH_VERIFY((io = BH_FileNew(FILENAME1,  BH_FILE_READWRITE | BH_FILE_APPEND, NULL)) != NULL);
 
     BH_VERIFY(BH_IOWrite(io, "abcde", 5, &actual) == BH_OK);
     BH_VERIFY(actual == 5);
@@ -441,13 +380,12 @@ static int checkAppend(void)
     BH_VERIFY(BH_IORead(io, buffer, 40, &actual) == BH_OK);
     BH_VERIFY(actual == 40);
     BH_VERIFY(memcmp(buffer, "12345678901234567890abcdeabcde1234567890", 40) == 0);
-    BH_IOClose(io);
+    BH_IOFree(io);
 
-    BH_VERIFY(BH_IOOpen(io, BH_IO_WRITE | BH_IO_TRUNCATE) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
-    BH_IOClose(io);
+    BH_VERIFY((io = BH_FileNew(FILENAME1,  BH_FILE_WRITE | BH_FILE_TRUNCATE, NULL)) != NULL);
 
     BH_IOFree(io);
+
     return 0;
 }
 
@@ -460,31 +398,18 @@ static int checkCreate(void)
     BH_IO *io;
 
     /* Check for already existing file */
-    BH_VERIFY((io = BH_FileNew(FILENAME1)) != NULL);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
-    BH_VERIFY(BH_IOOpen(io, BH_IO_WRITE | BH_IO_CREATE) != BH_OK);
-    BH_VERIFY((BH_IOFlags(io) & BH_IO_FLAG_OPEN) == 0);
-    BH_IOFree(io);
+    BH_VERIFY(BH_FileNew(FILENAME1, BH_FILE_WRITE | BH_FILE_CREATE, NULL) == NULL);
 
     /* Check for new file with write access */
-    BH_VERIFY((io = BH_FileNew(FILENAME2)) != NULL);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
-    BH_VERIFY(BH_IOOpen(io, BH_IO_WRITE | BH_IO_CREATE) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
+    BH_VERIFY((io = BH_FileNew(FILENAME2,  BH_FILE_WRITE | BH_FILE_CREATE, NULL)) != NULL);
     BH_IOFree(io);
 
     /* Check for new file with read access */
-    BH_VERIFY((io = BH_FileNew(FILENAME3)) != NULL);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
-    BH_VERIFY(BH_IOOpen(io, BH_IO_READ | BH_IO_CREATE) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
+    BH_VERIFY((io = BH_FileNew(FILENAME3,  BH_FILE_READ | BH_FILE_CREATE, NULL)) != NULL);
     BH_IOFree(io);
 
     /* Check for new file with read/write access */
-    BH_VERIFY((io = BH_FileNew(FILENAME4)) != NULL);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
-    BH_VERIFY(BH_IOOpen(io, BH_IO_WRITE | BH_IO_READ | BH_IO_CREATE) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
+    BH_VERIFY((io = BH_FileNew(FILENAME4,  BH_FILE_READWRITE | BH_FILE_CREATE, NULL)) != NULL);
     BH_IOFree(io);
 
     return 0;
@@ -500,16 +425,12 @@ static int checkEOF(void)
     size_t actual;
     BH_IO *io;
 
-    BH_VERIFY((io = BH_FileNew(FILENAME1)) != NULL);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
-    BH_VERIFY(BH_IOOpen(io, BH_IO_READ | BH_IO_TRUNCATE) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
+    BH_VERIFY((io = BH_FileNew(FILENAME1,  BH_FILE_READ | BH_FILE_TRUNCATE, NULL)) != NULL);
 
     BH_VERIFY(BH_IORead(io, buffer, 128, &actual) == BH_OK);
     BH_VERIFY(actual == 0);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_EOF);
+    BH_VERIFY(BH_IOEndOfFile(io));
 
-    BH_IOClose(io);
     BH_IOFree(io);
 
     return 0;
@@ -524,17 +445,13 @@ static int checkError(void)
     size_t actual;
     BH_IO *io;
 
-    BH_VERIFY((io = BH_FileNew(FILENAME1)) != NULL);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
-    BH_VERIFY(BH_IOOpen(io, BH_IO_READ) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
+    BH_VERIFY((io = BH_FileNew(FILENAME1,  BH_FILE_READ, NULL)) != NULL);
 
     BH_VERIFY(BH_IOWrite(io, "12345", 5, &actual) != BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_ERROR);
+    BH_VERIFY(BH_IOError(io) != BH_OK);
     BH_VERIFY(BH_IOClear(io) == BH_OK);
-    BH_VERIFY((BH_IOFlags(io) & BH_IO_FLAG_ERROR) == 0);
+    BH_VERIFY(BH_IOError(io) == BH_OK);
 
-    BH_IOClose(io);
     BH_IOFree(io);
 
     return 0;
@@ -551,10 +468,7 @@ static int checkPeek(void)
     size_t actual;
     BH_IO *io;
 
-    BH_VERIFY((io = BH_FileNew(FILENAME1)) != NULL);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
-    BH_VERIFY(BH_IOOpen(io, BH_IO_WRITE | BH_IO_READ | BH_IO_TRUNCATE) == BH_OK);
-    BH_VERIFY(BH_IOFlags(io) & BH_IO_FLAG_OPEN);
+    BH_VERIFY((io = BH_FileNew(FILENAME1,  BH_FILE_READWRITE | BH_FILE_TRUNCATE, NULL)) != NULL);
 
     BH_VERIFY(BH_IOWrite(io, "1234567890", 10, &actual) == BH_OK);
     BH_VERIFY(actual == 10);
@@ -578,7 +492,6 @@ static int checkPeek(void)
     BH_VERIFY(memcmp(buffer, "12345678901234567890", 20) == 0);
     BH_VERIFY(previous == current);
 
-    BH_IOClose(io);
     BH_IOFree(io);
 
     return 0;
@@ -593,14 +506,11 @@ static int checkSize(void)
     BH_IO *io;
     int64_t size;
 
-    BH_VERIFY((io = BH_FileNew(FILENAME1)) != NULL);
-    BH_VERIFY(strcmp(BH_IOClassname(io), BH_FILE_CLASSNAME) == 0);
-    BH_VERIFY(BH_IOOpen(io, BH_IO_READ) == BH_OK);
+    BH_VERIFY((io = BH_FileNew(FILENAME1,  BH_FILE_READ, NULL)) != NULL);
 
     BH_VERIFY(BH_IOSize(io, &size) == BH_OK);
     BH_VERIFY(size == 20);
 
-    BH_IOClose(io);
     BH_IOFree(io);
     return 0;
 }

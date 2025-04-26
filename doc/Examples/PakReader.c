@@ -165,9 +165,8 @@ static int ProcessPack(Config *config,
             if (strcmp(entry.name, config->input))
                 continue;
 
-            output = BH_FileNew(config->output);
-            if (BH_IOOpen(output, BH_IO_WRITE) ||
-                BH_IOSeek(io, entry.offset, BH_IO_SEEK_SET) ||
+            output = BH_FileNew(config->output, BH_FILE_WRITE | BH_FILE_TRUNCATE, NULL);
+            if (!output || BH_IOSeek(io, entry.offset, BH_IO_SEEK_SET) ||
                 CopyData(io, output, entry.size))
             {
                 BH_IOFree(output);
@@ -209,8 +208,7 @@ int main(int argc, char **argv)
     }
 
     /* Read and write */
-    io = BH_FileNew(config.file);
-    if (BH_IOOpen(io, BH_IO_READ | BH_IO_EXIST))
+    if ((io = BH_FileNew(config.file, BH_FILE_READ | BH_FILE_EXIST, NULL)) == NULL)
     {
         printf("Can't open file %s\n", config.file);
         BH_IOFree(io);

@@ -10,166 +10,67 @@
 
 typedef struct BH_File
 {
-    char *path;
-    int mode;
+    BH_IO parent;
     int flags;
     int handle;
 } BH_File;
 
 
-static int BH_FileInfo(BH_File *file,
-                       size_t *size,
-                       const char **name);
-
-
-static int BH_FileInit(BH_File *file,
-                       const char *path);
-
-
-static int BH_FileDestroy(BH_File *file);
-
-
-static int BH_FileOpen(BH_File *file,
-                       int *mode);
-
-
-static int BH_FileClose(BH_File *file);
-
-
-static int BH_FileRead(BH_File *file,
-                       char *data,
-                       size_t *size);
-
-
-static int BH_FileWrite(BH_File *file,
-                        const char *data,
-                        size_t *size);
-
-
-static int BH_FilePeek(BH_File* file,
-                       char *data,
-                       size_t *size);
-
-
-static int BH_FileFlush(BH_File *file);
-
-
-static int BH_FileSeek(BH_File *file,
-                       int64_t *pos,
-                       int *dir);
-
-
-static int BH_FileTell(BH_File *file,
-                       int64_t *pos);
-
-
-static int BH_FileSize(BH_File *file,
-                       int64_t *size);
-
-
-static int BH_FileFlags(BH_File *file);
-
-
-static int BH_FileClear(BH_File *file);
-
-
-static int BH_FileInfo(BH_File *file,
-                       size_t *size,
-                       const char **name)
-{
-    static const char classname[] = BH_FILE_CLASSNAME;
-
-    if (size)
-        *size = sizeof(*file);
-    if (name)
-        *name = classname;
-    return BH_OK;
-}
-
-
-static int BH_FileInit(BH_File *file,
-                       const char *path)
-{
-    /* Check if path is valid */
-    if (!path)
-        return BH_ERROR;
-
-    /* Duplicate path string and initialize the file struct */
-    file->path = strdup(path);
-    file->mode = 0;
-    file->handle = -1;
-    file->flags = 0;
-
-    return BH_OK;
-}
-
-
-static int BH_FileDestroy(BH_File *file)
-{
-    /* Close the file handle on destruction */
-    if (file->handle != -1)
-        BH_FileClose(file);
-
-    /* Free path string */
-    free(file->path);
-
-    return BH_OK;
-}
-
-
-static int BH_FileOpenFlags(int mode)
+static int fileOpenFlags(int mode)
 {
     int flags = 0;
 
     /* Determine read/write flags */
-    if ((mode & BH_IO_READWRITE) == BH_IO_READWRITE)
+    if ((mode & BH_FILE_READWRITE) == BH_FILE_READWRITE)
         flags |= O_RDWR;
-    else if (mode & BH_IO_WRITE)
+    else if (mode & BH_FILE_WRITE)
         flags |= O_WRONLY;
-    else if (mode & BH_IO_READ)
+    else if (mode & BH_FILE_READ)
         flags |= O_RDONLY;
     else
         return -1;
 
     /* Check if existing file should be opened */
-    if (!(mode & BH_IO_EXIST))
+    if (!(mode & BH_FILE_EXIST))
     {
         flags |= O_CREAT;
 
         /* Check if file should be created */
-        if (mode & BH_IO_CREATE)
+        if (mode & BH_FILE_CREATE)
             flags |= O_EXCL;
     }
 
     /* Check if file should be opened in append mode */
-    if (mode & BH_IO_APPEND)
+    if (mode & BH_FILE_APPEND)
         flags |= O_APPEND;
 
     /* Check if file should be truncated */
-    if (mode & BH_IO_TRUNCATE)
+    if (mode & BH_FILE_TRUNCATE)
         flags |= O_TRUNC;
 
     return flags;
 }
 
 
-static int BH_FileOpen(BH_File *file,
-                       int *mode)
+static int fileInit(BH_File *file,
+                    const char *path,
+                    int mode)
 {
     static const mode_t open_mode = (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     int flags;
 
-    /* If file is already opened - report error */
-    if (file->handle != -1)
+    /* Check if path is valid */
+    if (!path)
         return BH_ERROR;
 
     /* Determine file open flags */
-    flags = BH_FileOpenFlags(*mode);
+    flags = fileOpenFlags(mode);
     if (flags == -1)
         return BH_ERROR;
 
     /* Open the file */
-    file->handle = open(file->path, flags, open_mode);
+    file->flags = 0;
+    file->handle = open(path, flags, open_mode);
     if (file->handle == -1)
         return BH_ERROR;
 
@@ -177,32 +78,22 @@ static int BH_FileOpen(BH_File *file,
 }
 
 
-static int BH_FileClose(BH_File *file)
+static int fileDestroy(BH_File *file)
 {
-    /* If file is closed - report error */
-    if (file->handle == -1)
-        return BH_ERROR;
-
-    /* Close and reset the file handle */
     close(file->handle);
-    file->handle = -1;
+    free(file);
 
     return BH_OK;
 }
 
 
-static int BH_FileRead(BH_File *file,
-                       char *data,
-                       size_t *size)
+static int fileRead(BH_File *file,
+                    BH_IOReadInfo *info)
 {
     ssize_t readed;
 
-    /* Check if file is open */
-    if (file->handle == -1)
-        goto error;
-
     /* Read data from the file */
-    readed = read(file->handle, data, *size);
+    readed = read(file->handle, info->data, info->size);
     if (readed < 0)
         goto error;
 
@@ -212,7 +103,8 @@ static int BH_FileRead(BH_File *file,
     else
         file->flags |= BH_IO_FLAG_EOF;
 
-    *size = readed;
+    if (info->actual)
+        *info->actual = readed;
     return BH_OK;
 
 error:
@@ -221,18 +113,13 @@ error:
 }
 
 
-static int BH_FileWrite(BH_File *file,
-                        const char *data,
-                        size_t *size)
+static int fileWrite(BH_File *file,
+                     BH_IOWriteInfo *info)
 {
     ssize_t written;
 
-    /* Check if file is open */
-    if (file->handle == -1)
-        goto error;
-
     /* Write data to the file */
-    written = write(file->handle, data, *size);
+    written = write(file->handle, info->data, info->size);
     if (written < 0)
         goto error;
 
@@ -242,7 +129,8 @@ static int BH_FileWrite(BH_File *file,
     else
         file->flags &= ~BH_IO_FLAG_EOF;
 
-    *size = written;
+    if (info->actual)
+        *info->actual = written;
     return BH_OK;
 
 error:
@@ -251,60 +139,19 @@ error:
 }
 
 
-static int BH_FilePeek(BH_File *file,
-                       char *data,
-                       size_t *size)
+static int fileFlush(BH_File *file)
 {
-    int64_t position;
-    int direction;
-
-    /* Check if file is open */
-    if (file->handle == -1)
-        goto error;
-
-    /* Read data from the file */
-    if (BH_FileRead(file, data, size))
-        goto error;
-
-    /* Backtrack by the read amount */
-    position = -((int64_t)*size);
-    direction = BH_IO_SEEK_CUR;
-    if (BH_FileSeek(file, &position, &direction))
-        goto error;
-
-    return BH_OK;
-
-error:
-    file->flags |= BH_IO_FLAG_ERROR;
-    return BH_ERROR;
-}
-
-
-static int BH_FileFlush(BH_File *file)
-{
-    /* Check if file is open */
-    if (file->handle == -1)
-    {
-        file->flags |= BH_IO_FLAG_ERROR;
-        return BH_ERROR;
-    }
-
     /* Flush the buffers */
     fsync(file->handle);
     return BH_OK;
 }
 
 
-static int BH_FileSeek(BH_File *file,
-                       int64_t *pos,
-                       int *dir)
+static int fileSeek(BH_File *file,
+                    BH_IOSeekInfo *info)
 {
-    /* Check if file is open */
-    if (file->handle == -1)
-        goto error;
-
     /* Seek to the specified position */
-    if (lseek(file->handle, *pos, *dir) == -1)
+    if (lseek(file->handle, info->offset, info->whence) == -1)
         goto error;
 
     return BH_OK;
@@ -315,13 +162,9 @@ error:
 }
 
 
-static int BH_FileTell(BH_File *file,
-                       int64_t *pos)
+static int fileTell(BH_File *file,
+                    int64_t *pos)
 {
-    /* Check if file is open */
-    if (file->handle == -1)
-        goto error;
-
     /* Get current offset in the file */
     if ((*pos = lseek(file->handle, 0, SEEK_CUR)) == -1)
         goto error;
@@ -334,14 +177,10 @@ error:
 }
 
 
-static int BH_FileSize(BH_File *file,
-                       int64_t *size)
+static int fileSize(BH_File *file,
+                    int64_t *size)
 {
     struct stat sb;
-
-    /* Check if file is open */
-    if (file->handle == -1)
-        goto error;
 
     /* Get file size from the OS */
     if (fstat(file->handle, &sb))
@@ -356,51 +195,114 @@ error:
 }
 
 
-static int BH_FileFlags(BH_File *file)
+static int fileFlags(BH_File *file,
+                     int *flags)
 {
-    /* If file handle is valid - append IO_OPEN flag */
-    if (file->handle != -1)
-        return file->flags | BH_IO_FLAG_OPEN;
-
-    return file->flags;
+    *flags = file->flags;
+    return BH_OK;
 }
 
 
-static int BH_FileClear(BH_File *file)
+static int fileClear(BH_File *file)
 {
-    /* Clear IO_ERROR flag */
+    /* Clear BH_IO_FLAG_ERROR flag */
     file->flags &= ~BH_IO_FLAG_ERROR;
     return BH_OK;
 }
 
 
-static int BH_FileCallback(BH_File *file,
-                           int type,
-                           void *arg1,
-                           void *arg2)
+static int fileCap(BH_File *file,
+                   int *op)
 {
+    BH_UNUSED(file);
+
+    /* Return operations supported by the file input/output device */
+    switch (*op)
+    {
+    case BH_IO_CTL_FLAGS:
+    case BH_IO_CTL_CLEAR:
+    case BH_IO_CTL_FLUSH:
+    case BH_IO_CTL_SIZE:
+    case BH_IO_CTL_TELL:
+    case BH_IO_CTL_SEEK:
+        return BH_OK;
+
+    default:
+        return BH_NOIMPL;
+    }
+}
+
+
+static int fileCtl(BH_File *file,
+                   BH_IOCtlInfo *info)
+{
+    /* Handle supported operations */
+    switch (info->op)
+    {
+    case BH_IO_CTL_FLAGS:
+        return fileFlags(file, (int *)info->arg);
+
+    case BH_IO_CTL_CLEAR:
+        return fileClear(file);
+
+    case BH_IO_CTL_FLUSH:
+        return fileFlush(file);
+
+    case BH_IO_CTL_SIZE:
+        return fileSize(file, (int64_t *)(info->arg));
+
+    case BH_IO_CTL_TELL:
+        return fileTell(file, (int64_t *)(info->arg));
+
+    case BH_IO_CTL_SEEK:
+        return fileSeek(file, (BH_IOSeekInfo *)(info->arg));
+
+    default:
+        return BH_NOIMPL;
+    }
+}
+
+
+static int fileCallback(BH_File *file,
+                        int type,
+                        void *arg)
+{
+    /* Handle basic input/output operations */
     switch (type)
     {
-    case BH_IO_INFO_CB:     return BH_FileInfo(file, (size_t *)arg1, (const char **)arg2);
-    case BH_IO_INIT_CB:     return BH_FileInit(file, (const char *)arg1);
-    case BH_IO_DESTROY_CB:  return BH_FileDestroy(file);
-    case BH_IO_OPEN_CB:     return BH_FileOpen(file, (int *)arg1);
-    case BH_IO_CLOSE_CB:    return BH_FileClose(file);
-    case BH_IO_READ_CB:     return BH_FileRead(file, (char *)arg1, (size_t *)arg2);
-    case BH_IO_WRITE_CB:    return BH_FileWrite(file, (const char *)arg1, (size_t *)arg2);
-    case BH_IO_PEEK_CB:     return BH_FilePeek(file, (char *)arg1, (size_t *)arg2);
-    case BH_IO_FLUSH_CB:    return BH_FileFlush(file);
-    case BH_IO_SEEK_CB:     return BH_FileSeek(file, (int64_t *)arg1, (int *)arg2);
-    case BH_IO_TELL_CB:     return BH_FileTell(file, (int64_t *)arg1);
-    case BH_IO_SIZE_CB:     return BH_FileSize(file, (int64_t *)arg1);
-    case BH_IO_FLAGS_CB:    return BH_FileFlags(file);
-    case BH_IO_CLEAR_CB:    return BH_FileClear(file);
+    case BH_IO_OP_DESTROY:  return fileDestroy(file);
+    case BH_IO_OP_READ:     return fileRead(file, (BH_IOReadInfo *)arg);
+    case BH_IO_OP_WRITE:    return fileWrite(file, (BH_IOWriteInfo *)arg);
+    case BH_IO_OP_CTL:      return fileCtl(file, (BH_IOCtlInfo *)arg);
+    case BH_IO_OP_CAP:      return fileCap(file, (int*)arg);
     default:                return BH_NOIMPL;
     }
 }
 
 
-BH_IO *BH_FileNew(const char *path)
+BH_IO *BH_FileNew(const char *path,
+                  int mode,
+                  int *result)
 {
-    return BH_IONew((BH_IOCallback)BH_FileCallback, (void *)path);
+    BH_File *file;
+    int code;
+
+    code = BH_OOM;
+
+    /* Allocate new file object and initialize it */
+    if ((file = malloc(sizeof(*file))))
+    {
+        file->parent.callback = (BH_IOCallback)fileCallback;
+        if ((code = fileInit(file, path, mode)))
+        {
+            free(file);
+            file = NULL;
+        }
+    }
+
+    /* Report error code */
+    if (result)
+        *result = code;
+
+    return (BH_IO*)file;
 }
