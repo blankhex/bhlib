@@ -7,15 +7,15 @@
 #define PI      3.14159265358979323846f
 
 
-void BH_Quat4fIdentity(float *out)
+void BH_Quat4fIdentity(float out[4])
 {
     static const float ident[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     memcpy(out, ident, sizeof(ident));
 }
 
 
-void BH_Quat4fConjugate(const float *in,
-                        float *out)
+void BH_Quat4fConjugate(const float in[4],
+                        float out[4])
 {
     out[0] = -in[0];
     out[1] = -in[1];
@@ -24,8 +24,8 @@ void BH_Quat4fConjugate(const float *in,
 }
 
 
-void BH_Quat4fInverse(const float *in,
-                      float *out)
+void BH_Quat4fInverse(const float in[4],
+                      float out[4])
 {
     float dot;
 
@@ -35,9 +35,9 @@ void BH_Quat4fInverse(const float *in,
 }
 
 
-void BH_Quat4fMul(const float *a,
-                  const float *b,
-                  float *out)
+void BH_Quat4fMul(const float a[4],
+                  const float b[4],
+                  float out[4])
 {
     float tmp1[4], tmp2[4], tmp3[4];
     float w;
@@ -52,10 +52,10 @@ void BH_Quat4fMul(const float *a,
 }
 
 
-void BH_Quat4fSlerp(const float *a,
-                    const float *b,
+void BH_Quat4fSlerp(const float a[4],
+                    const float b[4],
                     float t,
-                    float *out)
+                    float out[4])
 {
     float angle, denom;
     float from[4], to[4];
@@ -77,7 +77,7 @@ void BH_Quat4fSlerp(const float *a,
 void BH_Quat4fFromEuler(float roll,
                         float pitch,
                         float yaw,
-                        float *out)
+                        float out[4])
 {
     float cr, cp, cy, sr, sp, sy;
 
@@ -95,9 +95,9 @@ void BH_Quat4fFromEuler(float roll,
 }
 
 
-void BH_Quat4fFromAxis(const float *axis,
+void BH_Quat4fFromAxis(const float axis[3],
                        float angle,
-                       float *out)
+                       float out[4])
 {
     float c, s;
 
@@ -111,7 +111,7 @@ void BH_Quat4fFromAxis(const float *axis,
 }
 
 
-void BH_Quat4fToEuler(const float *in,
+void BH_Quat4fToEuler(const float in[4],
                       float *roll,
                       float *pitch,
                       float *yaw)
@@ -155,8 +155,8 @@ void BH_Quat4fToEuler(const float *in,
 }
 
 
-void BH_Quat4fToAxis(const float *in,
-                     float *axis,
+void BH_Quat4fToAxis(const float in[4],
+                     float axis[3],
                      float *angle)
 {
     *angle = 2.0f * acosf(in[3]);
@@ -179,8 +179,8 @@ void BH_Quat4fToAxis(const float *in,
 }
 
 
-void BH_Quat4fToMat4f(const float *in,
-                      float *out)
+void BH_Quat4fToMat4f(const float in[4],
+                      float out[16])
 {
     float xx, xy, xz, xw, yy, yz, yw, zz, zw;
 

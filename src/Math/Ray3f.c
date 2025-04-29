@@ -7,11 +7,11 @@
 #define PI      3.14159265358979323846f
 
 
-int BH_Ray3fIntersectPlane(const float *start,
-                           const float *direction,
-                           const float *plane,
+int BH_Ray3fIntersectPlane(const float start[3],
+                           const float direction[3],
+                           const float plane[4],
                            float *t,
-                           float *out)
+                           float out[3])
 {
     float tmp1[3];
     float denom, time;
@@ -32,13 +32,13 @@ int BH_Ray3fIntersectPlane(const float *start,
 }
 
 
-int BH_Ray3fIntersectTriangle(const float *start,
-                              const float *direction,
-                              const float *a,
-                              const float *b,
-                              const float *c,
+int BH_Ray3fIntersectTriangle(const float start[3],
+                              const float direction[3],
+                              const float a[3],
+                              const float b[3],
+                              const float c[3],
                               float *t,
-                              float *out)
+                              float out[3])
 {
     float plane[4];
     float tmp1[3], tmp2[3], tmp3[3];
@@ -78,11 +78,11 @@ int BH_Ray3fIntersectTriangle(const float *start,
 }
 
 
-int BH_Segment3fIntersectPlane(const float *start,
-                               const float *end,
-                               const float *plane,
+int BH_Segment3fIntersectPlane(const float start[3],
+                               const float end[3],
+                               const float plane[4],
                                float *t,
-                               float *out)
+                               float out[3])
 {
     float tmp[3];
     float denom, time;
@@ -104,13 +104,13 @@ int BH_Segment3fIntersectPlane(const float *start,
 }
 
 
-int BH_Segment3fIntersectTriangle(const float *start,
-                                  const float *end,
-                                  const float *a,
-                                  const float *b,
-                                  const float *c,
+int BH_Segment3fIntersectTriangle(const float start[3],
+                                  const float end[3],
+                                  const float a[3],
+                                  const float b[3],
+                                  const float c[3],
                                   float *t,
-                                  float *out)
+                                  float out[3])
 {
     float plane[4];
     float tmp1[3], tmp2[3], tmp3[3];
@@ -150,12 +150,12 @@ int BH_Segment3fIntersectTriangle(const float *start,
 }
 
 
-int BH_Ray3fIntersectBox3f(const float *aStart,
-                           const float *aDirection,
-                           const float *bMin,
-                           const float *bMax,
+int BH_Ray3fIntersectBox3f(const float aStart[3],
+                           const float aDirection[3],
+                           const float bMin[3],
+                           const float bMax[3],
                            float *t,
-                           float *out)
+                           float out[3])
 {
     float timeNear, timeFar, hitNear, hitFar, denom, tmp;
     int i;
@@ -210,12 +210,12 @@ int BH_Ray3fIntersectBox3f(const float *aStart,
 }
 
 
-int BH_Segment3fIntersectBox3f(const float *aStart,
-                               const float *aEnd,
-                               const float *bMin,
-                               const float *bMax,
+int BH_Segment3fIntersectBox3f(const float aStart[3],
+                               const float aEnd[3],
+                               const float bMin[3],
+                               const float bMax[3],
                                float *t,
-                               float *out)
+                               float out[3])
 {
     float tmp[3];
     float time;

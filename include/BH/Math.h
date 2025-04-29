@@ -12,9 +12,9 @@
  * \param b    B 4D vector
  * \param out  Output 4D vector
  */
-void BH_Vec4fAdd(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Vec4fAdd(const float a[4],
+                 const float b[4],
+                 float out[4]);
 
 
 /**
@@ -24,9 +24,9 @@ void BH_Vec4fAdd(const float *a,
  * \param b    B 4D vector
  * \param out  Output 4D vector
  */
-void BH_Vec4fSub(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Vec4fSub(const float a[4],
+                 const float b[4],
+                 float out[4]);
 
 
 /**
@@ -37,9 +37,9 @@ void BH_Vec4fSub(const float *a,
  * \param b    B 4D vector
  * \param out  Output 4D vector
  */
-void BH_Vec4fMul(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Vec4fMul(const float a[4],
+                 const float b[4],
+                 float out[4]);
 
 
 /**
@@ -49,9 +49,9 @@ void BH_Vec4fMul(const float *a,
  * \param b    B value
  * \param out  Output vector
  */
-void BH_Vec4fScale(const float *a,
+void BH_Vec4fScale(const float a[4],
                    float b,
-                   float *out);
+                   float out[4]);
 
 
 /**
@@ -62,10 +62,10 @@ void BH_Vec4fScale(const float *a,
  * \param c    C 4D vector
  * \param out  Output 4D vector
  */
-void BH_Vec4fMulAdd(const float *a,
-                    const float *b,
-                    const float *c,
-                    float *out);
+void BH_Vec4fMulAdd(const float a[4],
+                    const float b[4],
+                    const float c[4],
+                    float out[4]);
 
 
 /**
@@ -74,8 +74,8 @@ void BH_Vec4fMulAdd(const float *a,
  * \param in   Input 4D vector
  * \param out  Output 4D vector
  */
-void BH_Vec4fNegate(const float *in,
-                    float *out);
+void BH_Vec4fNegate(const float in[4],
+                    float out[4]);
 
 
 /**
@@ -84,8 +84,8 @@ void BH_Vec4fNegate(const float *in,
  * \param a  A 4D vector
  * \param b  B 4D vector
  */
-float BH_Vec4fDot(const float *a,
-                  const float *b);
+float BH_Vec4fDot(const float a[4],
+                  const float b[4]);
 
 
 /**
@@ -93,7 +93,7 @@ float BH_Vec4fDot(const float *a,
  *
  * \param in  Input 4D vector
  */
-float BH_Vec4fLength(const float *in);
+float BH_Vec4fLength(const float in[4]);
 
 
 /**
@@ -102,8 +102,8 @@ float BH_Vec4fLength(const float *in);
  * \param in   Input 4D vector
  * \param out  Output 4D vector
  */
-void BH_Vec4fNormal(const float *in,
-                    float *out);
+void BH_Vec4fNormal(const float in[4],
+                    float out[4]);
 
 
 /**
@@ -115,8 +115,8 @@ void BH_Vec4fNormal(const float *in,
  *
  * \return Returns length prior to normalization
  */
-float BH_Vec4fNormalEx(const float *in,
-                       float *out);
+float BH_Vec4fNormalEx(const float in[4],
+                       float out[4]);
 
 
 /**
@@ -127,9 +127,9 @@ float BH_Vec4fNormalEx(const float *in,
  * \param b    B 4D vector
  * \param out  Output 4D vector
  */
-void BH_Vec4fMin(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Vec4fMin(const float a[4],
+                 const float b[4],
+                 float out[4]);
 
 
 /**
@@ -140,9 +140,9 @@ void BH_Vec4fMin(const float *a,
  * \param b    B 4D vector
  * \param out  Output 4D vector
  */
-void BH_Vec4fMax(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Vec4fMax(const float a[4],
+                 const float b[4],
+                 float out[4]);
 
 
 /**
@@ -154,10 +154,10 @@ void BH_Vec4fMax(const float *a,
  * \param t    Amount
  * \param out  Output 4D vector
  */
-void BH_Vec4fLerp(const float *a,
-                  const float *b,
+void BH_Vec4fLerp(const float a[4],
+                  const float b[4],
                   float t,
-                  float *out);
+                  float out[4]);
 
 
 /**
@@ -167,9 +167,9 @@ void BH_Vec4fLerp(const float *a,
  * \param b    B 4D vector
  * \param out  Output 4D vector
  */
-void BH_Vec4fProject(const float *a,
-                     const float *b,
-                     float *out);
+void BH_Vec4fProject(const float a[4],
+                     const float b[4],
+                     float out[4]);
 
 
 /**
@@ -185,12 +185,12 @@ void BH_Vec4fProject(const float *a,
  * \param w    W barycentric coordinate
  * \param out  Output 4D vector
  */
-void BH_Vec4fBarycentric(const float *a,
-                         const float *b,
-                         const float *c,
+void BH_Vec4fBarycentric(const float a[4],
+                         const float b[4],
+                         const float c[4],
                          float v,
                          float w,
-                         float *out);
+                         float out[4]);
 
 
 /**
@@ -200,9 +200,9 @@ void BH_Vec4fBarycentric(const float *a,
  * \param b    B 3D vector
  * \param out  Output 3D vector
  */
-void BH_Vec3fAdd(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Vec3fAdd(const float a[3],
+                 const float b[3],
+                 float out[3]);
 
 
 /**
@@ -212,9 +212,9 @@ void BH_Vec3fAdd(const float *a,
  * \param b    B 3D vector
  * \param out  Output 3D vector
  */
-void BH_Vec3fSub(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Vec3fSub(const float a[3],
+                 const float b[3],
+                 float out[3]);
 
 
 /**
@@ -225,9 +225,9 @@ void BH_Vec3fSub(const float *a,
  * \param b    B 3D vector
  * \param out  Output 3D vector
  */
-void BH_Vec3fMul(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Vec3fMul(const float a[3],
+                 const float b[3],
+                 float out[3]);
 
 
 /**
@@ -237,9 +237,9 @@ void BH_Vec3fMul(const float *a,
  * \param b    B value
  * \param out  Output 3D vector
  */
-void BH_Vec3fScale(const float *a,
+void BH_Vec3fScale(const float a[3],
                    float b,
-                   float *out);
+                   float out[3]);
 
 
 /**
@@ -250,10 +250,10 @@ void BH_Vec3fScale(const float *a,
  * \param c    C 3D vector
  * \param out  Output 3D vector
  */
-void BH_Vec3fMulAdd(const float *a,
-                    const float *b,
-                    const float *c,
-                    float *out);
+void BH_Vec3fMulAdd(const float a[3],
+                    const float b[3],
+                    const float c[3],
+                    float out[3]);
 
 
 /**
@@ -263,8 +263,8 @@ void BH_Vec3fMulAdd(const float *a,
  * \param out  Output 3D vector
  *
  */
-void BH_Vec3fNegate(const float *in,
-                    float *out);
+void BH_Vec3fNegate(const float in[3],
+                    float out[3]);
 
 
 /**
@@ -273,8 +273,8 @@ void BH_Vec3fNegate(const float *in,
  * \param a  A 3D vector
  * \param b  B 3D vector
  */
-float BH_Vec3fDot(const float *a,
-                  const float *b);
+float BH_Vec3fDot(const float a[3],
+                  const float b[3]);
 
 
 /**
@@ -285,9 +285,9 @@ float BH_Vec3fDot(const float *a,
  * \param b    B 3D vector
  * \param out  Output 3D vector
  */
-void BH_Vec3fCross(const float *a,
-                   const float *b,
-                   float *out);
+void BH_Vec3fCross(const float a[3],
+                   const float b[3],
+                   float out[3]);
 
 
 /**
@@ -295,7 +295,7 @@ void BH_Vec3fCross(const float *a,
  *
  * \param in  Input 3D vector
  */
-float BH_Vec3fLength(const float *in);
+float BH_Vec3fLength(const float in[3]);
 
 
 /**
@@ -304,8 +304,8 @@ float BH_Vec3fLength(const float *in);
  * \param in   Input 3D vector
  * \param out  Output 3D vector
  */
-void BH_Vec3fNormal(const float *in,
-                    float *out);
+void BH_Vec3fNormal(const float in[3],
+                    float out[3]);
 
 
 /**
@@ -317,8 +317,8 @@ void BH_Vec3fNormal(const float *in,
  *
  * \return Returns length prior to normalization
  */
-float BH_Vec3fNormalEx(const float *in,
-                       float *out);
+float BH_Vec3fNormalEx(const float in[3],
+                       float out[3]);
 
 
 /**
@@ -329,9 +329,9 @@ float BH_Vec3fNormalEx(const float *in,
  * \param b    B 3D vector
  * \param out  Output 3D vector
  */
-void BH_Vec3fMin(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Vec3fMin(const float a[3],
+                 const float b[3],
+                 float out[3]);
 
 
 /**
@@ -342,9 +342,9 @@ void BH_Vec3fMin(const float *a,
  * \param b    B 3D vector
  * \param out  Output 3D vector
  */
-void BH_Vec3fMax(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Vec3fMax(const float a[3],
+                 const float b[3],
+                 float out[3]);
 
 
 /**
@@ -356,10 +356,10 @@ void BH_Vec3fMax(const float *a,
  * \param t    Amount
  * \param out  Output 3D vector
  */
-void BH_Vec3fLerp(const float *a,
-                  const float *b,
+void BH_Vec3fLerp(const float a[3],
+                  const float b[3],
                   float t,
-                  float *out);
+                  float out[3]);
 
 
 /**
@@ -369,9 +369,9 @@ void BH_Vec3fLerp(const float *a,
  * \param b    B 3D vector
  * \param out  Output 3D vector
  */
-void BH_Vec3fProject(const float *a,
-                     const float *b,
-                     float *out);
+void BH_Vec3fProject(const float a[3],
+                     const float b[3],
+                     float out[3]);
 
 
 /**
@@ -387,12 +387,12 @@ void BH_Vec3fProject(const float *a,
  * \param w    W barycentric coordinate
  * \param out  Output 3D vector
  */
-void BH_Vec3fBarycentric(const float *a,
-                         const float *b,
-                         const float *c,
+void BH_Vec3fBarycentric(const float a[3],
+                         const float b[3],
+                         const float c[3],
                          float v,
                          float w,
-                         float *out);
+                         float out[3]);
 
 
 /**
@@ -402,9 +402,9 @@ void BH_Vec3fBarycentric(const float *a,
  * \param b    B 2D vector
  * \param out  Output 2D vector
  */
-void BH_Vec2fAdd(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Vec2fAdd(const float a[2],
+                 const float b[2],
+                 float out[2]);
 
 
 /**
@@ -414,9 +414,9 @@ void BH_Vec2fAdd(const float *a,
  * \param b    B 2D vector
  * \param out  Output 2D vector
  */
-void BH_Vec2fSub(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Vec2fSub(const float a[2],
+                 const float b[2],
+                 float out[2]);
 
 
 /**
@@ -427,9 +427,9 @@ void BH_Vec2fSub(const float *a,
  * \param b    B 2D vector
  * \param out  Output 2D vector
  */
-void BH_Vec2fMul(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Vec2fMul(const float a[2],
+                 const float b[2],
+                 float out[2]);
 
 
 /**
@@ -439,9 +439,9 @@ void BH_Vec2fMul(const float *a,
  * \param b    B value
  * \param out  Output 2D vector
  */
-void BH_Vec2fScale(const float *a,
+void BH_Vec2fScale(const float a[2],
                    float b,
-                   float *out);
+                   float out[2]);
 
 
 /**
@@ -452,10 +452,10 @@ void BH_Vec2fScale(const float *a,
  * \param c    C 2D vector
  * \param out  Output 2D vector
  */
-void BH_Vec2fMulAdd(const float *a,
-                    const float *b,
-                    const float *c,
-                    float *out);
+void BH_Vec2fMulAdd(const float a[2],
+                    const float b[2],
+                    const float c[2],
+                    float out[2]);
 
 
 /**
@@ -465,8 +465,8 @@ void BH_Vec2fMulAdd(const float *a,
  * \param out  Output 2D vector
  *
  */
-void BH_Vec2fNegate(const float *in,
-                    float *out);
+void BH_Vec2fNegate(const float in[2],
+                    float out[2]);
 
 
 /**
@@ -475,8 +475,8 @@ void BH_Vec2fNegate(const float *in,
  * \param a  A 2D vector
  * \param b  B 2D vector
  */
-float BH_Vec2fDot(const float *a,
-                  const float *b);
+float BH_Vec2fDot(const float a[2],
+                  const float b[2]);
 
 
 /**
@@ -485,8 +485,8 @@ float BH_Vec2fDot(const float *a,
  * \param a    A 2D vector
  * \param b    B 2D vector
  */
-float BH_Vec2fCross(const float *a,
-                    const float *b);
+float BH_Vec2fCross(const float a[2],
+                    const float b[2]);
 
 
 /**
@@ -494,7 +494,7 @@ float BH_Vec2fCross(const float *a,
  *
  * \param in  Input 2D vector
  */
-float BH_Vec2fLength(const float *in);
+float BH_Vec2fLength(const float in[2]);
 
 
 /**
@@ -504,8 +504,8 @@ float BH_Vec2fLength(const float *in);
  * \param in   Input 2D vector
  * \param out  Output 2D vector
  */
-void BH_Vec2fNormal(const float *in,
-                    float *out);
+void BH_Vec2fNormal(const float in[2],
+                    float out[2]);
 
 
 /**
@@ -517,8 +517,8 @@ void BH_Vec2fNormal(const float *in,
  *
  * \return Returns length prior to normalization
  */
-float BH_Vec2fNormalEx(const float *in,
-                       float *out);
+float BH_Vec2fNormalEx(const float in[2],
+                       float out[2]);
 
 
 /**
@@ -529,9 +529,9 @@ float BH_Vec2fNormalEx(const float *in,
  * \param b    B 2D vector
  * \param out  Output 2D vector
  */
-void BH_Vec2fMin(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Vec2fMin(const float a[2],
+                 const float b[2],
+                 float out[2]);
 
 
 /**
@@ -542,9 +542,9 @@ void BH_Vec2fMin(const float *a,
  * \param b    B 2D vector
  * \param out  Output 2D vector
  */
-void BH_Vec2fMax(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Vec2fMax(const float a[2],
+                 const float b[2],
+                 float out[2]);
 
 
 /**
@@ -556,10 +556,10 @@ void BH_Vec2fMax(const float *a,
  * \param t    Amount
  * \param out  Output 2D vector
  */
-void BH_Vec2fLerp(const float *a,
-                  const float *b,
+void BH_Vec2fLerp(const float a[2],
+                  const float b[2],
                   float t,
-                  float *out);
+                  float out[2]);
 
 
 /**
@@ -569,9 +569,9 @@ void BH_Vec2fLerp(const float *a,
  * \param b    B 2D vector
  * \param out  Output 2D vector
  */
-void BH_Vec2fProject(const float *a,
-                     const float *b,
-                     float *out);
+void BH_Vec2fProject(const float a[2],
+                     const float b[2],
+                     float out[2]);
 
 
 /**
@@ -587,12 +587,12 @@ void BH_Vec2fProject(const float *a,
  * \param w    W barycentric coordinate
  * \param out  Output 2D vector
  */
-void BH_Vec2fBarycentric(const float *a,
-                         const float *b,
-                         const float *c,
-                         float u,
+void BH_Vec2fBarycentric(const float a[2],
+                         const float b[2],
+                         const float c[2],
                          float v,
-                         float *out);
+                         float w,
+                         float out[2]);
 
 
 /**
@@ -614,9 +614,9 @@ float BH_Lerpf(float a, float b, float t);
  * \param b    B 4D vector
  * \param out  Output 4D vector
  */
-void BH_Vec4iAdd(const int *a,
-                 const int *b,
-                 int *out);
+void BH_Vec4iAdd(const int a[4],
+                 const int b[4],
+                 int out[4]);
 
 
 /**
@@ -626,9 +626,9 @@ void BH_Vec4iAdd(const int *a,
  * \param b    B 4D vector
  * \param out  Output 4D vector
  */
-void BH_Vec4iSub(const int *a,
-                 const int *b,
-                 int *out);
+void BH_Vec4iSub(const int a[4],
+                 const int b[4],
+                 int out[4]);
 
 
 /**
@@ -638,9 +638,9 @@ void BH_Vec4iSub(const int *a,
  * \param b    B 4D vector
  * \param out  Output vector
  */
-void BH_Vec4iMul(const int *a,
-                 const int *b,
-                 int *out);
+void BH_Vec4iMul(const int a[4],
+                 const int b[4],
+                 int out[4]);
 
 
 /**
@@ -650,9 +650,9 @@ void BH_Vec4iMul(const int *a,
  * \param b    B value
  * \param out  Output 4D vector
  */
-void BH_Vec4iScale(const int *a,
+void BH_Vec4iScale(const int a[4],
                    int b,
-                   int *out);
+                   int out[4]);
 
 
 /**
@@ -663,10 +663,10 @@ void BH_Vec4iScale(const int *a,
  * \param c    C 4D vector
  * \param out  Output 4D vector
  */
-void BH_Vec4iMulAdd(const int *a,
-                    const int *b,
-                    const int *c,
-                    int *out);
+void BH_Vec4iMulAdd(const int a[4],
+                    const int b[4],
+                    const int c[4],
+                    int out[4]);
 
 
 /**
@@ -675,8 +675,8 @@ void BH_Vec4iMulAdd(const int *a,
  * \param in   Input 4D vector
  * \param out  Output 4D vector
  */
-void BH_Vec4iNegate(const int *in,
-                    int *out);
+void BH_Vec4iNegate(const int in[4],
+                    int out[4]);
 
 
 /**
@@ -687,9 +687,9 @@ void BH_Vec4iNegate(const int *in,
  * \param b    B 4D vector
  * \param out  Output 4D vector
  */
-void BH_Vec4iMin(const int *a,
-                 const int *b,
-                 int *out);
+void BH_Vec4iMin(const int a[4],
+                 const int b[4],
+                 int out[4]);
 
 
 /**
@@ -700,9 +700,9 @@ void BH_Vec4iMin(const int *a,
  * \param b    B 4D vector
  * \param out  Output 4D vector
  */
-void BH_Vec4iMax(const int *a,
-                 const int *b,
-                 int *out);
+void BH_Vec4iMax(const int a[4],
+                 const int b[4],
+                 int out[4]);
 
 
 /**
@@ -712,9 +712,9 @@ void BH_Vec4iMax(const int *a,
  * \param b    B 3D vector
  * \param out  Output 3D vector
  */
-void BH_Vec3iAdd(const int *a,
-                 const int *b,
-                 int *out);
+void BH_Vec3iAdd(const int a[3],
+                 const int b[3],
+                 int out[3]);
 
 
 /**
@@ -724,9 +724,9 @@ void BH_Vec3iAdd(const int *a,
  * \param b    B 3D vector
  * \param out  Output 3D vector
  */
-void BH_Vec3iSub(const int *a,
-                 const int *b,
-                 int *out);
+void BH_Vec3iSub(const int a[3],
+                 const int b[3],
+                 int out[3]);
 
 
 /**
@@ -736,9 +736,9 @@ void BH_Vec3iSub(const int *a,
  * \param b    B 3D vector
  * \param out  Output 3D vector
  */
-void BH_Vec3iMul(const int *a,
-                 const int *b,
-                 int *out);
+void BH_Vec3iMul(const int a[3],
+                 const int b[3],
+                 int out[3]);
 
 
 /**
@@ -748,9 +748,9 @@ void BH_Vec3iMul(const int *a,
  * \param b    B value
  * \param out  Output 3D vector
  */
-void BH_Vec3iScale(const int *a,
+void BH_Vec3iScale(const int a[3],
                    int b,
-                   int *out);
+                   int out[3]);
 
 
 /**
@@ -761,10 +761,10 @@ void BH_Vec3iScale(const int *a,
  * \param c    C 3D vector
  * \param out  Output 3D vector
  */
-void BH_Vec3iMulAdd(const int *a,
-                    const int *b,
-                    const int *c,
-                    int *out);
+void BH_Vec3iMulAdd(const int a[3],
+                    const int b[3],
+                    const int c[3],
+                    int out[3]);
 
 
 /**
@@ -774,8 +774,8 @@ void BH_Vec3iMulAdd(const int *a,
  * \param out  Output 3D vector
  *
  */
-void BH_Vec3iNegate(const int *in,
-                    int *out);
+void BH_Vec3iNegate(const int in[3],
+                    int out[3]);
 
 
 /**
@@ -786,9 +786,9 @@ void BH_Vec3iNegate(const int *in,
  * \param b    B 3D vector
  * \param out  Output 3D vector
  */
-void BH_Vec3iMin(const int *a,
-                 const int *b,
-                 int *out);
+void BH_Vec3iMin(const int a[3],
+                 const int b[3],
+                 int out[3]);
 
 
 /**
@@ -799,9 +799,9 @@ void BH_Vec3iMin(const int *a,
  * \param b    B 3D vector
  * \param out  Output 3D vector
  */
-void BH_Vec3iMax(const int *a,
-                 const int *b,
-                 int *out);
+void BH_Vec3iMax(const int a[3],
+                 const int b[3],
+                 int out[3]);
 
 
 /**
@@ -811,9 +811,9 @@ void BH_Vec3iMax(const int *a,
  * \param b    B 2D vector
  * \param out  Output 2D vector
  */
-void BH_Vec2iAdd(const int *a,
-                 const int *b,
-                 int *out);
+void BH_Vec2iAdd(const int a[2],
+                 const int b[2],
+                 int out[2]);
 
 
 /**
@@ -823,9 +823,9 @@ void BH_Vec2iAdd(const int *a,
  * \param b    B 2D vector
  * \param out  Output 2D vector
  */
-void BH_Vec2iSub(const int *a,
-                 const int *b,
-                 int *out);
+void BH_Vec2iSub(const int a[2],
+                 const int b[2],
+                 int out[2]);
 
 
 /**
@@ -835,9 +835,9 @@ void BH_Vec2iSub(const int *a,
  * \param b    B 2D vector
  * \param out  Output 2D vector
  */
-void BH_Vec2iMul(const int *a,
-                 const int *b,
-                 int *out);
+void BH_Vec2iMul(const int a[2],
+                 const int b[2],
+                 int out[2]);
 
 
 /**
@@ -847,9 +847,9 @@ void BH_Vec2iMul(const int *a,
  * \param b    B 2D value
  * \param out  Output 2D vector
  */
-void BH_Vec2iScale(const int *a,
+void BH_Vec2iScale(const int a[2],
                    int b,
-                   int *out);
+                   int out[2]);
 
 
 /**
@@ -860,10 +860,10 @@ void BH_Vec2iScale(const int *a,
  * \param c    C 2D vector
  * \param out  Output 2D vector
  */
-void BH_Vec2iMulAdd(const int *a,
-                    const int *b,
-                    const int *c,
-                    int *out);
+void BH_Vec2iMulAdd(const int a[2],
+                    const int b[2],
+                    const int c[2],
+                    int out[2]);
 
 
 /**
@@ -873,8 +873,8 @@ void BH_Vec2iMulAdd(const int *a,
  * \param out  Output 2D vector
  *
  */
-void BH_Vec2iNegate(const int *in,
-                    int *out);
+void BH_Vec2iNegate(const int in[2],
+                    int out[2]);
 
 
 /**
@@ -885,9 +885,9 @@ void BH_Vec2iNegate(const int *in,
  * \param b    B 2D vector
  * \param out  Output 2D vector
  */
-void BH_Vec2iMin(const int *a,
-                 const int *b,
-                 int *out);
+void BH_Vec2iMin(const int a[2],
+                 const int b[2],
+                 int out[2]);
 
 
 /**
@@ -898,9 +898,9 @@ void BH_Vec2iMin(const int *a,
  * \param b    B 2D vector
  * \param out  Output 2D vector
  */
-void BH_Vec2iMax(const int *a,
-                 const int *b,
-                 int *out);
+void BH_Vec2iMax(const int a[2],
+                 const int b[2],
+                 int out[2]);
 
 
 /**
@@ -994,7 +994,7 @@ void BH_Vec2iMax(const int *a,
  *
  * \param out  Output quaternion.
  */
-void BH_Quat4fIdentity(float *out);
+void BH_Quat4fIdentity(float out[4]);
 
 
 /**
@@ -1003,8 +1003,8 @@ void BH_Quat4fIdentity(float *out);
  * \param in   Input quaternion
  * \param out  Output quaternion
  */
-void BH_Quat4fConjugate(const float *in,
-                        float *out);
+void BH_Quat4fConjugate(const float in[4],
+                        float out[4]);
 
 
 /**
@@ -1013,8 +1013,8 @@ void BH_Quat4fConjugate(const float *in,
  * \param in   Input quaternion
  * \param out  Output quaternion
  */
-void BH_Quat4fInverse(const float *in,
-                      float *out);
+void BH_Quat4fInverse(const float in[4],
+                      float out[4]);
 
 
 /**
@@ -1024,9 +1024,9 @@ void BH_Quat4fInverse(const float *in,
  * \param b    B quaternion
  * \param out  Output quaternion
  */
-void BH_Quat4fMul(const float *a,
-                  const float *b,
-                  float *out);
+void BH_Quat4fMul(const float a[4],
+                  const float b[4],
+                  float out[4]);
 
 
 /**
@@ -1038,10 +1038,10 @@ void BH_Quat4fMul(const float *a,
  * \param t    Amount
  * \param out  Output quaternion
  */
-void BH_Quat4fSlerp(const float *a,
-                    const float *b,
+void BH_Quat4fSlerp(const float a[4],
+                    const float b[4],
                     float t,
-                    float *out);
+                    float out[4]);
 
 
 /**
@@ -1058,7 +1058,7 @@ void BH_Quat4fSlerp(const float *a,
 void BH_Quat4fFromEuler(float roll,
                         float pitch,
                         float yaw,
-                        float *out);
+                        float out[4]);
 
 
 /**
@@ -1069,9 +1069,9 @@ void BH_Quat4fFromEuler(float roll,
  * \param angle  Angle
  * \param out    Output quaternion
  */
-void BH_Quat4fFromAxis(const float *axis,
+void BH_Quat4fFromAxis(const float axis[3],
                        float angle,
-                       float *out);
+                       float out[4]);
 
 
 /**
@@ -1085,7 +1085,7 @@ void BH_Quat4fFromAxis(const float *axis,
  * \param pitch  Output pitch
  * \param yaw    Output yaw
  */
-void BH_Quat4fToEuler(const float *in,
+void BH_Quat4fToEuler(const float in[4],
                       float *roll,
                       float *pitch,
                       float *yaw);
@@ -1099,8 +1099,8 @@ void BH_Quat4fToEuler(const float *in,
  * \param axis   Output axis 3D vector
  * \param angle  Output angle
  */
-void BH_Quat4fToAxis(const float *in,
-                     float *axis,
+void BH_Quat4fToAxis(const float in[4],
+                     float axis[3],
                      float *angle);
 
 
@@ -1111,8 +1111,8 @@ void BH_Quat4fToAxis(const float *in,
  * \param in     Input quaternion
  * \param out    Output 4x4 matrix
  */
-void BH_Quat4fToMat4f(const float *in,
-                      float *out);
+void BH_Quat4fToMat4f(const float in[4],
+                      float out[16]);
 
 
 /**
@@ -1120,7 +1120,7 @@ void BH_Quat4fToMat4f(const float *in,
  *
  * \param out  Output 4x4 matrix.
  */
-void BH_Mat4fIdentity(float *out);
+void BH_Mat4fIdentity(float out[16]);
 
 
 /**
@@ -1130,9 +1130,9 @@ void BH_Mat4fIdentity(float *out);
  * \param b    B 4x4 matrix
  * \param out  Output 4x4 matrix
  */
-void BH_Mat4fAdd(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Mat4fAdd(const float a[16],
+                 const float b[16],
+                 float out[16]);
 
 
 /**
@@ -1143,9 +1143,9 @@ void BH_Mat4fAdd(const float *a,
  * \param b    B 4x4 matrix
  * \param out  Output 4x4 matrix
  */
-void BH_Mat4fSub(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Mat4fSub(const float a[16],
+                 const float b[16],
+                 float out[16]);
 
 
 /**
@@ -1156,9 +1156,9 @@ void BH_Mat4fSub(const float *a,
  * \param b    B 4x4 matrix
  * \param out  Output 4x4 matrix
  */
-void BH_Mat4fMul(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Mat4fMul(const float a[16],
+                 const float b[16],
+                 float out[16]);
 
 
 /**
@@ -1168,9 +1168,9 @@ void BH_Mat4fMul(const float *a,
  * \param b    B value
  * \param out  Output 4x4 matrix
  */
-void BH_Mat4fScale(const float *a,
+void BH_Mat4fScale(const float a[16],
                    float b,
-                   float *out);
+                   float out[16]);
 
 
 /**
@@ -1179,8 +1179,8 @@ void BH_Mat4fScale(const float *a,
  * \param in   Input 4x4 matrix
  * \param out  Output 4x4 matrix
  */
-void BH_Mat4fTranspose(const float *in,
-                       float *out);
+void BH_Mat4fTranspose(const float in[16],
+                       float out[16]);
 
 
 /**
@@ -1188,7 +1188,7 @@ void BH_Mat4fTranspose(const float *in,
  *
  * \param in  Input 4x4 matrix
  */
-float BH_Mat4fTrace(const float *in);
+float BH_Mat4fTrace(const float in[16]);
 
 
 /**
@@ -1196,7 +1196,7 @@ float BH_Mat4fTrace(const float *in);
  *
  * \param in  Input 4x4 matrix
  */
-float BH_Mat4fDet(const float *in);
+float BH_Mat4fDet(const float in[16]);
 
 
 /**
@@ -1208,8 +1208,8 @@ float BH_Mat4fDet(const float *in);
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Mat4fInverse(const float *in,
-                    float *out);
+int BH_Mat4fInverse(const float in[16],
+                    float out[16]);
 
 
 /**
@@ -1224,7 +1224,7 @@ int BH_Mat4fInverse(const float *in,
 void BH_Mat4fFromScale(float x,
                        float y,
                        float z,
-                       float *out);
+                       float out[16]);
 
 
 /**
@@ -1239,7 +1239,7 @@ void BH_Mat4fFromScale(float x,
 void BH_Mat4fFromTranslation(float x,
                              float y,
                              float z,
-                             float *out);
+                             float out[16]);
 
 
 /**
@@ -1250,7 +1250,7 @@ void BH_Mat4fFromTranslation(float x,
  * \param out    Output 4x4 matrix
  */
 void BH_Mat4fFromRotationX(float angle,
-                           float *out);
+                           float out[16]);
 
 
 /**
@@ -1261,7 +1261,7 @@ void BH_Mat4fFromRotationX(float angle,
  * \param out    Output 4x4 matrix
  */
 void BH_Mat4fFromRotationY(float angle,
-                           float *out);
+                           float out[16]);
 
 
 /**
@@ -1272,7 +1272,7 @@ void BH_Mat4fFromRotationY(float angle,
  * \param out    Output 4x4 matrix
  */
 void BH_Mat4fFromRotationZ(float angle,
-                           float *out);
+                           float out[16]);
 
 
 /**
@@ -1283,9 +1283,9 @@ void BH_Mat4fFromRotationZ(float angle,
  * \param angle  Angle
  * \param out    Output 4x4 matrix
  */
-void BH_Mat4fFromAxis(const float *axis,
+void BH_Mat4fFromAxis(const float axis[3],
                       float angle,
-                      float *out);
+                      float out[16]);
 
 
 /**
@@ -1302,7 +1302,7 @@ void BH_Mat4fFromAxis(const float *axis,
 void BH_Mat4fFromEuler(float roll,
                        float pitch,
                        float yaw,
-                       float *out);
+                       float out[16]);
 
 
 /**
@@ -1312,8 +1312,8 @@ void BH_Mat4fFromEuler(float roll,
  * \param in     Input quaternion
  * \param out    Output 4x4 matrix
  */
-void BH_Mat4fFromQuat4f(const float *in,
-                        float *out);
+void BH_Mat4fFromQuat4f(const float in[4],
+                        float out[16]);
 
 
 /**
@@ -1333,7 +1333,7 @@ void BH_Mat4fFromOrtho(float xMin,
                        float yMax,
                        float zMin,
                        float zMax,
-                       float *out);
+                       float out[16]);
 
 
 /**
@@ -1349,7 +1349,7 @@ void BH_Mat4fFromFrustum(float fov,
                          float aspect,
                          float zMin,
                          float zMax,
-                         float *out);
+                         float out[16]);
 
 
 /**
@@ -1360,10 +1360,10 @@ void BH_Mat4fFromFrustum(float fov,
  * \param up        Up vector
  * \param out       Output 4x4 matrix
  */
-void BH_Mat4fFromLookAt(const float *position,
-                        const float *at,
-                        const float *up,
-                        float *out);
+void BH_Mat4fFromLookAt(const float position[3],
+                        const float at[3],
+                        const float up[3],
+                        float out[16]);
 
 
 /**
@@ -1373,9 +1373,9 @@ void BH_Mat4fFromLookAt(const float *position,
  * \param b    B 4D vector
  * \param out  Output 4D vector
  */
-void BH_Mat4fApplyVec4f(const float *a,
-                        const float *b,
-                        float *out);
+void BH_Mat4fApplyVec4f(const float a[16],
+                        const float b[4],
+                        float out[4]);
 
 
 /**
@@ -1385,9 +1385,9 @@ void BH_Mat4fApplyVec4f(const float *a,
  * \param b    B 3D vector
  * \param out  Output 3D vector
  */
-void BH_Mat4fApplyVec3f(const float *a,
-                        const float *b,
-                        float *out);
+void BH_Mat4fApplyVec3f(const float a[16],
+                        const float b[3],
+                        float out[3]);
 
 
 /**
@@ -1395,7 +1395,7 @@ void BH_Mat4fApplyVec3f(const float *a,
  *
  * \param out  Output 3x3 matrix.
  */
-void BH_Mat3fIdentity(float *out);
+void BH_Mat3fIdentity(float out[9]);
 
 
 /**
@@ -1405,9 +1405,9 @@ void BH_Mat3fIdentity(float *out);
  * \param b    B 3x3 matrix
  * \param out  Output 3x3 matrix
  */
-void BH_Mat3fAdd(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Mat3fAdd(const float a[9],
+                 const float b[9],
+                 float out[9]);
 
 
 /**
@@ -1418,9 +1418,9 @@ void BH_Mat3fAdd(const float *a,
  * \param b    B 3x3 matrix
  * \param out  Output 3x3 matrix
  */
-void BH_Mat3fSub(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Mat3fSub(const float a[9],
+                 const float b[9],
+                 float out[9]);
 
 
 /**
@@ -1431,9 +1431,9 @@ void BH_Mat3fSub(const float *a,
  * \param b    B 3x3 matrix
  * \param out  Output 3x3 matrix
  */
-void BH_Mat3fMul(const float *a,
-                 const float *b,
-                 float *out);
+void BH_Mat3fMul(const float a[9],
+                 const float b[9],
+                 float out[9]);
 
 
 /**
@@ -1443,9 +1443,9 @@ void BH_Mat3fMul(const float *a,
  * \param b    B value
  * \param out  Output 3x3 matrix
  */
-void BH_Mat3fScale(const float *a,
+void BH_Mat3fScale(const float a[9],
                    float b,
-                   float *out);
+                   float out[9]);
 
 
 /**
@@ -1454,8 +1454,8 @@ void BH_Mat3fScale(const float *a,
  * \param in   Input 3x3 matrix
  * \param out  Output 3x3 matrix
  */
-void BH_Mat3fTranspose(const float *in,
-                       float *out);
+void BH_Mat3fTranspose(const float in[9],
+                       float out[9]);
 
 
 /**
@@ -1463,7 +1463,7 @@ void BH_Mat3fTranspose(const float *in,
  *
  * \param in  Input 3x3 matrix
  */
-float BH_Mat3fTrace(const float *in);
+float BH_Mat3fTrace(const float in[9]);
 
 
 /**
@@ -1471,7 +1471,7 @@ float BH_Mat3fTrace(const float *in);
  *
  * \param in  Input 3x3 matrix
  */
-float BH_Mat3fDet(const float *in);
+float BH_Mat3fDet(const float in[9]);
 
 
 /**
@@ -1483,8 +1483,8 @@ float BH_Mat3fDet(const float *in);
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Mat3fInverse(const float *in,
-                    float *out);
+int BH_Mat3fInverse(const float in[9],
+                    float out[9]);
 
 
 /**
@@ -1497,7 +1497,7 @@ int BH_Mat3fInverse(const float *in,
  */
 void BH_Mat3fFromScale(float x,
                        float y,
-                       float *out);
+                       float out[9]);
 
 
 /**
@@ -1510,7 +1510,7 @@ void BH_Mat3fFromScale(float x,
  */
 void BH_Mat3fFromTranslation(float x,
                              float y,
-                             float *out);
+                             float out[9]);
 
 
 /**
@@ -1520,7 +1520,7 @@ void BH_Mat3fFromTranslation(float x,
  * \param out    Output 3x3 matrix
  */
 void BH_Mat3fFromRotation(float angle,
-                          float *out);
+                          float out[9]);
 
 
 /**
@@ -1530,9 +1530,9 @@ void BH_Mat3fFromRotation(float angle,
  * \param b    B 3D vector
  * \param out  Output 3D vector
  */
-void BH_Mat3fApplyVec3f(float *a,
-                        float *b,
-                        float *out);
+void BH_Mat3fApplyVec3f(float a[9],
+                        float b[3],
+                        float out[3]);
 
 
 /**
@@ -1542,9 +1542,9 @@ void BH_Mat3fApplyVec3f(float *a,
  * \param b    B 2D vector
  * \param out  Output 2D vector
  */
-void BH_Mat3fApplyVec2f(float *a,
-                        float *b,
-                        float *out);
+void BH_Mat3fApplyVec2f(float a[9],
+                        float b[2],
+                        float out[2]);
 
 
 /**
@@ -1565,10 +1565,10 @@ void BH_Mat3fApplyVec2f(float *a,
  * \return On success, returns zero.
  * \return On failure, returns error-code.
  */
-int BH_PlaneFromPoints(const float *a,
-                       const float *b,
-                       const float *c,
-                       float *out);
+int BH_PlaneFromPoints(const float a[3],
+                       const float b[3],
+                       const float c[3],
+                       float out[4]);
 
 
 /**
@@ -1579,8 +1579,8 @@ int BH_PlaneFromPoints(const float *a,
  *
  * \return Returns distance from plane to point.
  */
-float BH_PlaneDistance(const float *plane,
-                       const float *point);
+float BH_PlaneDistance(const float plane[4],
+                       const float point[3]);
 
 
 /**
@@ -1591,9 +1591,9 @@ float BH_PlaneDistance(const float *plane,
  * \param point  Point 3D vector
  * \param out    Output 3D vector
  */
-void BH_PlaneClosestPoint(const float *plane,
-                          const float *point,
-                          float *out);
+void BH_PlaneClosestPoint(const float plane[4],
+                          const float point[3],
+                          float out[3]);
 
 
 /**
@@ -1611,11 +1611,11 @@ void BH_PlaneClosestPoint(const float *plane,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Ray3fIntersectPlane(const float *start,
-                           const float *direction,
-                           const float *plane,
+int BH_Ray3fIntersectPlane(const float start[3],
+                           const float direction[3],
+                           const float plane[4],
                            float *t,
-                           float *out);
+                           float out[3]);
 
 
 /**
@@ -1636,13 +1636,13 @@ int BH_Ray3fIntersectPlane(const float *start,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Ray3fIntersectTriangle(const float *start,
-                              const float *direction,
-                              const float *a,
-                              const float *b,
-                              const float *c,
+int BH_Ray3fIntersectTriangle(const float start[3],
+                              const float direction[3],
+                              const float a[3],
+                              const float b[3],
+                              const float c[3],
                               float *t,
-                              float *out);
+                              float out[3]);
 
 
 /**
@@ -1660,11 +1660,11 @@ int BH_Ray3fIntersectTriangle(const float *start,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Segment3fIntersectPlane(const float *start,
-                               const float *end,
-                               const float *plane,
+int BH_Segment3fIntersectPlane(const float start[3],
+                               const float end[3],
+                               const float plane[4],
                                float *t,
-                               float *out);
+                               float out[3]);
 
 
 /**
@@ -1685,13 +1685,13 @@ int BH_Segment3fIntersectPlane(const float *start,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Segment3fIntersectTriangle(const float *start,
-                                  const float *end,
-                                  const float *a,
-                                  const float *b,
-                                  const float *c,
+int BH_Segment3fIntersectTriangle(const float start[3],
+                                  const float end[3],
+                                  const float a[3],
+                                  const float b[3],
+                                  const float c[3],
                                   float *t,
-                                  float *out);
+                                  float out[3]);
 
 
 /**
@@ -1704,11 +1704,11 @@ int BH_Segment3fIntersectTriangle(const float *start,
  * \param point  Point 3D vector
  * \param out    Output 3D vector
  */
-void BH_Triangle3fBarycentric(const float *a,
-                              const float *b,
-                              const float *c,
-                              const float *point,
-                              float *out);
+void BH_Triangle3fBarycentric(const float a[3],
+                              const float b[3],
+                              const float c[3],
+                              const float point[3],
+                              float out[3]);
 
 
 /**
@@ -1721,9 +1721,9 @@ void BH_Triangle3fBarycentric(const float *a,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_LineFromPoints(const float *a,
-                      const float *b,
-                      float *out);
+int BH_LineFromPoints(const float a[2],
+                      const float b[2],
+                      float out[3]);
 
 
 /**
@@ -1734,8 +1734,8 @@ int BH_LineFromPoints(const float *a,
  *
  * \return Returns distance from plane to point.
  */
-float BH_LineDistance(const float *line,
-                      const float *point);
+float BH_LineDistance(const float line[3],
+                      const float point[2]);
 
 
 /**
@@ -1746,9 +1746,9 @@ float BH_LineDistance(const float *line,
  * \param point  Point 2D vector
  * \param out    Output 2D vector
  */
-void BH_LineClosestPoint(const float *line,
-                         const float *point,
-                         float *out);
+void BH_LineClosestPoint(const float line[3],
+                         const float point[2],
+                         float out[2]);
 
 
 /**
@@ -1766,11 +1766,11 @@ void BH_LineClosestPoint(const float *line,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Ray2fIntersectLine(const float *start,
-                          const float *direction,
-                          const float *line,
+int BH_Ray2fIntersectLine(const float start[2],
+                          const float direction[2],
+                          const float line[3],
                           float *t,
-                          float *out);
+                          float out[2]);
 
 
 /**
@@ -1788,10 +1788,10 @@ int BH_Ray2fIntersectLine(const float *start,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Ray2fIntersectTime(const float *aStart,
-                          const float *aDirection,
-                          const float *bStart,
-                          const float *bDirection,
+int BH_Ray2fIntersectTime(const float aStart[2],
+                          const float aDirection[2],
+                          const float bStart[2],
+                          const float bDirection[2],
                           float *time1,
                           float *time2);
 
@@ -1813,12 +1813,12 @@ int BH_Ray2fIntersectTime(const float *aStart,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Ray2fIntersectRay(const float *aStart,
-                         const float *aDirection,
-                         const float *bStart,
-                         const float *bDirection,
+int BH_Ray2fIntersectRay(const float aStart[2],
+                         const float aDirection[2],
+                         const float bStart[2],
+                         const float bDirection[2],
                          float *t,
-                         float *out);
+                         float out[2]);
 
 
 /**
@@ -1838,12 +1838,12 @@ int BH_Ray2fIntersectRay(const float *aStart,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Ray2fIntersectSegment(const float *aStart,
-                             const float *aDirection,
-                             const float *bStart,
-                             const float *bEnd,
+int BH_Ray2fIntersectSegment(const float aStart[2],
+                             const float aDirection[2],
+                             const float bStart[2],
+                             const float bEnd[2],
                              float *t,
-                             float *out);
+                             float out[2]);
 
 
 /**
@@ -1861,11 +1861,11 @@ int BH_Ray2fIntersectSegment(const float *aStart,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Segment2fIntersectLine(const float *start,
-                              const float *end,
-                              const float *line,
+int BH_Segment2fIntersectLine(const float start[2],
+                              const float end[2],
+                              const float line[3],
                               float *t,
-                              float *out);
+                              float out[2]);
 
 
 /**
@@ -1885,12 +1885,12 @@ int BH_Segment2fIntersectLine(const float *start,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Segment2fIntersectSegment(const float *aStart,
-                                 const float *aEnd,
-                                 const float *bStart,
-                                 const float *bEnd,
+int BH_Segment2fIntersectSegment(const float aStart[2],
+                                 const float aEnd[2],
+                                 const float bStart[2],
+                                 const float bEnd[2],
                                  float *t,
-                                 float *out);
+                                 float out[2]);
 
 
 /**
@@ -1904,12 +1904,12 @@ int BH_Segment2fIntersectSegment(const float *aStart,
  * \param outMin  Output minimal 3D vector
  * \param outMax  Output maximal 3D vector
  */
-void BH_Box3fUnion(const float *aMin,
-                   const float *aMax,
-                   const float *bMin,
-                   const float *bMax,
-                   float *outMin,
-                   float *outMax);
+void BH_Box3fUnion(const float aMin[3],
+                   const float aMax[3],
+                   const float bMin[3],
+                   const float bMax[3],
+                   float outMin[3],
+                   float outMax[3]);
 
 
 /**
@@ -1927,12 +1927,12 @@ void BH_Box3fUnion(const float *aMin,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Box3fIntersect(const float *aMin,
-                      const float *aMax,
-                      const float *bMin,
-                      const float *bMax,
-                      float *outMin,
-                      float *outMax);
+int BH_Box3fIntersect(const float aMin[3],
+                      const float aMax[3],
+                      const float bMin[3],
+                      const float bMax[3],
+                      float outMin[3],
+                      float outMax[3]);
 
 
 /**
@@ -1946,9 +1946,9 @@ int BH_Box3fIntersect(const float *aMin,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Box3fContains(const float *aMin,
-                     const float *aMax,
-                     const float *point);
+int BH_Box3fContains(const float aMin[3],
+                     const float aMax[3],
+                     const float point[3]);
 
 
 /**
@@ -1965,8 +1965,8 @@ int BH_Box3fContains(const float *aMin,
  */
 int BH_Box3fEnclose(const float *points,
                     size_t size,
-                    float *outMin,
-                    float *outMax);
+                    float outMin[3],
+                    float outMax[3]);
 
 
 /**
@@ -1980,12 +1980,12 @@ int BH_Box3fEnclose(const float *points,
  * \param outMin  Output minimal 2D vector
  * \param outMax  Output maximal 2D vector
  */
-void BH_Box2fUnion(const float *aMin,
-                   const float *aMax,
-                   const float *bMin,
-                   const float *bMax,
-                   float *outMin,
-                   float *outMax);
+void BH_Box2fUnion(const float aMin[2],
+                   const float aMax[2],
+                   const float bMin[2],
+                   const float bMax[2],
+                   float outMin[2],
+                   float outMax[2]);
 
 
 /**
@@ -2003,12 +2003,12 @@ void BH_Box2fUnion(const float *aMin,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Box2fIntersect(const float *aMin,
-                      const float *aMax,
-                      const float *bMin,
-                      const float *bMax,
-                      float *outMin,
-                      float *outMax);
+int BH_Box2fIntersect(const float aMin[2],
+                      const float aMax[2],
+                      const float bMin[2],
+                      const float bMax[2],
+                      float outMin[2],
+                      float outMax[2]);
 
 
 /**
@@ -2022,9 +2022,9 @@ int BH_Box2fIntersect(const float *aMin,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Box2fContains(const float *aMin,
-                     const float *aMax,
-                     const float *point);
+int BH_Box2fContains(const float aMin[2],
+                     const float aMax[2],
+                     const float point[2]);
 
 
 /**
@@ -2041,8 +2041,8 @@ int BH_Box2fContains(const float *aMin,
  */
 int BH_Box2fEnclose(const float *points,
                     size_t size,
-                    float *outMin,
-                    float *outMax);
+                    float outMin[2],
+                    float outMax[2]);
 
 
 /**
@@ -2062,12 +2062,12 @@ int BH_Box2fEnclose(const float *points,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Ray3fIntersectBox3f(const float *aStart,
-                           const float *aDirection,
-                           const float *bMin,
-                           const float *bMax,
+int BH_Ray3fIntersectBox3f(const float aStart[3],
+                           const float aDirection[3],
+                           const float bMin[3],
+                           const float bMax[3],
                            float *t,
-                           float *out);
+                           float out[3]);
 
 
 /**
@@ -2087,12 +2087,12 @@ int BH_Ray3fIntersectBox3f(const float *aStart,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Segment3fIntersectBox3f(const float *aStart,
-                               const float *aEnd,
-                               const float *bMin,
-                               const float *bMax,
+int BH_Segment3fIntersectBox3f(const float aStart[3],
+                               const float aEnd[3],
+                               const float bMin[3],
+                               const float bMax[3],
                                float *t,
-                               float *out);
+                               float out[3]);
 
 
 /**
@@ -2112,12 +2112,12 @@ int BH_Segment3fIntersectBox3f(const float *aStart,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Ray2fIntersectBox2f(const float *aStart,
-                           const float *aDirection,
-                           const float *bMin,
-                           const float *bMax,
+int BH_Ray2fIntersectBox2f(const float aStart[2],
+                           const float aDirection[2],
+                           const float bMin[2],
+                           const float bMax[2],
                            float *t,
-                           float *out);
+                           float out[2]);
 
 
 /**
@@ -2137,12 +2137,12 @@ int BH_Ray2fIntersectBox2f(const float *aStart,
  * \return On success, returns zero.
  * \return On failure, returns error code.
  */
-int BH_Segment2fIntersectBox2f(const float *aStart,
-                               const float *aEnd,
-                               const float *bMin,
-                               const float *bMax,
+int BH_Segment2fIntersectBox2f(const float aStart[2],
+                               const float aEnd[2],
+                               const float bMin[2],
+                               const float bMax[2],
                                float *t,
-                               float *out);
+                               float out[2]);
 
 
 #endif /* BH_MATH_H */

@@ -6,24 +6,24 @@
 #define PI      3.14159265358979323846f
 
 
-void BH_Box2fUnion(const float *aMin,
-                   const float *aMax,
-                   const float *bMin,
-                   const float *bMax,
-                   float *outMin,
-                   float *outMax)
+void BH_Box2fUnion(const float aMin[2],
+                   const float aMax[2],
+                   const float bMin[2],
+                   const float bMax[2],
+                   float outMin[2],
+                   float outMax[2])
 {
     BH_Vec2fMin(aMin, bMin, outMin);
     BH_Vec2fMax(aMax, bMax, outMax);
 }
 
 
-int BH_Box2fIntersect(const float *aMin,
-                      const float *aMax,
-                      const float *bMin,
-                      const float *bMax,
-                      float *outMin,
-                      float *outMax)
+int BH_Box2fIntersect(const float aMin[2],
+                      const float aMax[2],
+                      const float bMin[2],
+                      const float bMax[2],
+                      float outMin[2],
+                      float outMax[2])
 {
     BH_Vec2fMax(aMin, bMin, outMin);
     BH_Vec2fMin(aMax, bMax, outMax);
@@ -35,9 +35,9 @@ int BH_Box2fIntersect(const float *aMin,
 }
 
 
-int BH_Box2fContains(const float *aMin,
-                     const float *aMax,
-                     const float *point)
+int BH_Box2fContains(const float aMin[2],
+                     const float aMax[2],
+                     const float point[2])
 {
     if (point[0] < aMin[0] || point[1] < aMin[1])
         return BH_ERROR;
@@ -51,8 +51,8 @@ int BH_Box2fContains(const float *aMin,
 
 int BH_Box2fEnclose(const float *points,
                     size_t size,
-                    float *outMin,
-                    float *outMax)
+                    float outMin[2],
+                    float outMax[2])
 {
     float tmp1[2], tmp2[2];
     size_t i;

@@ -6,10 +6,10 @@
 #define PI      3.14159265358979323846f
 
 
-int BH_PlaneFromPoints(const float *a,
-                       const float *b,
-                       const float *c,
-                       float *out)
+int BH_PlaneFromPoints(const float a[3],
+                       const float b[3],
+                       const float c[3],
+                       float out[4])
 {
     float tmp1[3], tmp2[3];
 
@@ -25,16 +25,16 @@ int BH_PlaneFromPoints(const float *a,
 }
 
 
-float BH_PlaneDistance(const float *plane,
-                       const float *point)
+float BH_PlaneDistance(const float plane[4],
+                       const float point[3])
 {
     return BH_Vec3fDot(plane, point) - plane[3];
 }
 
 
-void BH_PlaneClosestPoint(const float *plane,
-                          const float *point,
-                          float *out)
+void BH_PlaneClosestPoint(const float plane[4],
+                          const float point[3],
+                          float out[3])
 {
     float tmp[3];
 

@@ -6,24 +6,24 @@
 #define PI      3.14159265358979323846f
 
 
-void BH_Box3fUnion(const float *aMin,
-                   const float *aMax,
-                   const float *bMin,
-                   const float *bMax,
-                   float *outMin,
-                   float *outMax)
+void BH_Box3fUnion(const float aMin[3],
+                   const float aMax[3],
+                   const float bMin[3],
+                   const float bMax[3],
+                   float outMin[3],
+                   float outMax[3])
 {
     BH_Vec3fMin(aMin, bMin, outMin);
     BH_Vec3fMax(aMax, bMax, outMax);
 }
 
 
-int BH_Box3fIntersect(const float *aMin,
-                      const float *aMax,
-                      const float *bMin,
-                      const float *bMax,
-                      float *outMin,
-                      float *outMax)
+int BH_Box3fIntersect(const float aMin[3],
+                      const float aMax[3],
+                      const float bMin[3],
+                      const float bMax[3],
+                      float outMin[3],
+                      float outMax[3])
 {
     BH_Vec3fMax(aMin, bMin, outMin);
     BH_Vec3fMin(aMax, bMax, outMax);
@@ -35,9 +35,9 @@ int BH_Box3fIntersect(const float *aMin,
 }
 
 
-int BH_Box3fContains(const float *aMin,
-                     const float *aMax,
-                     const float *point)
+int BH_Box3fContains(const float aMin[3],
+                     const float aMax[3],
+                     const float point[3])
 {
     if (point[0] < aMin[0] || point[1] < aMin[1] || point[2] < aMin[2])
         return BH_ERROR;
@@ -51,8 +51,8 @@ int BH_Box3fContains(const float *aMin,
 
 int BH_Box3fEnclose(const float *points,
                     size_t size,
-                    float *outMin,
-                    float *outMax)
+                    float outMin[3],
+                    float outMax[3])
 {
     float tmp1[3], tmp2[3];
     size_t i;

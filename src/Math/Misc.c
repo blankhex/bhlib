@@ -7,11 +7,11 @@ float BH_Lerpf(float a, float b, float t)
 }
 
 
-void BH_Triangle3fBarycentric(const float *a,
-                              const float *b,
-                              const float *c,
-                              const float *point,
-                              float *out)
+void BH_Triangle3fBarycentric(const float a[3],
+                              const float b[3],
+                              const float c[3],
+                              const float point[3],
+                              float out[3])
 {
     float tmp1[3], tmp2[3], tmp3[3];
     float t11, t12, t22, t31, t32, denom;

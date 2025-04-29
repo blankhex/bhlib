@@ -7,7 +7,7 @@
 #define PI      3.14159265358979323846f
 
 
-void BH_Mat4fIdentity(float *out)
+void BH_Mat4fIdentity(float out[16])
 {
     const float ident[16] =
     {
@@ -21,9 +21,9 @@ void BH_Mat4fIdentity(float *out)
 }
 
 
-void BH_Mat4fAdd(const float *a,
-                 const float *b,
-                 float *out)
+void BH_Mat4fAdd(const float a[16],
+                 const float b[16],
+                 float out[16])
 {
     BH_Vec4fAdd(&a[0], &b[0], &out[0]);
     BH_Vec4fAdd(&a[4], &b[4], &out[4]);
@@ -32,9 +32,9 @@ void BH_Mat4fAdd(const float *a,
 }
 
 
-void BH_Mat4fSub(const float *a,
-                 const float *b,
-                 float *out)
+void BH_Mat4fSub(const float a[16],
+                 const float b[16],
+                 float out[16])
 {
     BH_Vec4fSub(&a[0], &b[0], &out[0]);
     BH_Vec4fSub(&a[4], &b[4], &out[4]);
@@ -43,9 +43,9 @@ void BH_Mat4fSub(const float *a,
 }
 
 
-void BH_Mat4fMul(const float *a,
-                 const float *b,
-                 float *out)
+void BH_Mat4fMul(const float a[16],
+                 const float b[16],
+                 float out[16])
 {
     float tmp[16], row[4];
 
@@ -73,9 +73,9 @@ void BH_Mat4fMul(const float *a,
 }
 
 
-void BH_Mat4fScale(const float *a,
+void BH_Mat4fScale(const float a[16],
                    float b,
-                   float *out)
+                   float out[16])
 {
     BH_Vec4fScale(&a[0], b, &out[0]);
     BH_Vec4fScale(&a[4], b, &out[4]);
@@ -84,8 +84,8 @@ void BH_Mat4fScale(const float *a,
 }
 
 
-void BH_Mat4fTranspose(const float *in,
-                       float *out)
+void BH_Mat4fTranspose(const float in[16],
+                       float out[16])
 {
     float tmp[16];
 
@@ -98,13 +98,13 @@ void BH_Mat4fTranspose(const float *in,
 }
 
 
-float BH_Mat4fTrace(const float *in)
+float BH_Mat4fTrace(const float in[16])
 {
     return in[0] + in[5] + in[10] + in[15];
 }
 
 
-float BH_Mat4fDet(const float *in)
+float BH_Mat4fDet(const float in[16])
 {
     float a, b, c, d, e, f, result;
 
@@ -125,8 +125,8 @@ float BH_Mat4fDet(const float *in)
 }
 
 
-int BH_Mat4fInverse(const float *in,
-                    float *out)
+int BH_Mat4fInverse(const float in[16],
+                    float out[16])
 {
     float a, b, c, d, e, f, det;
     float tmp[16];
@@ -189,7 +189,7 @@ int BH_Mat4fInverse(const float *in,
 void BH_Mat4fFromScale(float x,
                        float y,
                        float z,
-                       float *out)
+                       float out[16])
 {
     BH_Mat4fIdentity(out);
     out[0] = x;
@@ -201,7 +201,7 @@ void BH_Mat4fFromScale(float x,
 void BH_Mat4fFromTranslation(float x,
                              float y,
                              float z,
-                             float *out)
+                             float out[16])
 {
     BH_Mat4fIdentity(out);
     out[12] = x;
@@ -211,7 +211,7 @@ void BH_Mat4fFromTranslation(float x,
 
 
 void BH_Mat4fFromRotationX(float angle,
-                           float *out)
+                           float out[16])
 {
     float c, s;
 
@@ -227,7 +227,7 @@ void BH_Mat4fFromRotationX(float angle,
 
 
 void BH_Mat4fFromRotationY(float angle,
-                           float *out)
+                           float out[16])
 {
     float c, s;
 
@@ -243,7 +243,7 @@ void BH_Mat4fFromRotationY(float angle,
 
 
 void BH_Mat4fFromRotationZ(float angle,
-                           float *out)
+                           float out[16])
 {
     float c, s;
 
@@ -258,9 +258,9 @@ void BH_Mat4fFromRotationZ(float angle,
 }
 
 
-void BH_Mat4fFromAxis(const float *axis,
+void BH_Mat4fFromAxis(const float axis[3],
                       float angle,
-                      float *out)
+                      float out[16])
 {
     float x, y, z, length;
     float c, s, moc, xx, xy, xz, yy, yz, zz;
@@ -303,7 +303,7 @@ void BH_Mat4fFromAxis(const float *axis,
 void BH_Mat4fFromEuler(float roll,
                        float pitch,
                        float yaw,
-                       float *out)
+                       float out[16])
 {
     float rs, rc, ys, yc, ps, pc;
 
@@ -327,8 +327,8 @@ void BH_Mat4fFromEuler(float roll,
 }
 
 
-void BH_Mat4fFromQuat4f(const float *in,
-                        float *out)
+void BH_Mat4fFromQuat4f(const float in[4],
+                        float out[16])
 {
     BH_Quat4fToMat4f(in, out);
 }
@@ -340,7 +340,7 @@ void BH_Mat4fFromOrtho(float xMin,
                        float yMax,
                        float zMin,
                        float zMax,
-                       float *out)
+                       float out[16])
 {
     float dx, dy, dz;
 
@@ -363,7 +363,7 @@ void BH_Mat4fFromFrustum(float fov,
                          float aspect,
                          float zMin,
                          float zMax,
-                         float *out)
+                         float out[16])
 {
     float t, dz;
 
@@ -381,10 +381,10 @@ void BH_Mat4fFromFrustum(float fov,
 }
 
 
-void BH_Mat4fFromLookAt(const float *position,
-                        const float *at,
-                        const float *up,
-                        float *out)
+void BH_Mat4fFromLookAt(const float position[3],
+                        const float at[3],
+                        const float up[3],
+                        float out[16])
 {
     float cameraDir[3], cameraRight[3], cameraUp[3];
 
@@ -416,9 +416,9 @@ void BH_Mat4fFromLookAt(const float *position,
 }
 
 
-void BH_Mat4fApplyVec4f(const float *a,
-                        const float *b,
-                        float *out)
+void BH_Mat4fApplyVec4f(const float a[16],
+                        const float b[4],
+                        float out[4])
 {
     float tmp[4], row[4];
 
@@ -431,9 +431,9 @@ void BH_Mat4fApplyVec4f(const float *a,
 }
 
 
-void BH_Mat4fApplyVec3f(const float *a,
-                        const float *b,
-                        float *out)
+void BH_Mat4fApplyVec3f(const float a[16],
+                        const float b[3],
+                        float out[3])
 {
     float tmp[4], row[4];
 

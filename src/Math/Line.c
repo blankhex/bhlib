@@ -6,9 +6,9 @@
 #define PI      3.14159265358979323846f
 
 
-int BH_LineFromPoints(const float *a,
-                      const float *b,
-                      float *out)
+int BH_LineFromPoints(const float a[2],
+                      const float b[2],
+                      float out[3])
 {
     float tmp[2];
 
@@ -23,16 +23,16 @@ int BH_LineFromPoints(const float *a,
 }
 
 
-float BH_LineDistance(const float *line,
-                      const float *point)
+float BH_LineDistance(const float line[3],
+                      const float point[2])
 {
     return BH_Vec2fDot(line, point) - line[2];
 }
 
 
-void BH_LineClosestPoint(const float *line,
-                         const float *point,
-                         float *out)
+void BH_LineClosestPoint(const float line[3],
+                         const float point[2],
+                         float out[2])
 {
     float tmp[2];
 

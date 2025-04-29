@@ -6,11 +6,11 @@
 #define PI      3.14159265358979323846f
 
 
-int BH_Ray2fIntersectLine(const float *start,
-                          const float *direction,
-                          const float *line,
+int BH_Ray2fIntersectLine(const float start[2],
+                          const float direction[2],
+                          const float line[3],
                           float *t,
-                          float *out)
+                          float out[2])
 {
     float tmp1[2];
     float denom, time;
@@ -31,10 +31,10 @@ int BH_Ray2fIntersectLine(const float *start,
 }
 
 
-int BH_Ray2fIntersectTime(const float *aStart,
-                          const float *aDirection,
-                          const float *bStart,
-                          const float *bDirection,
+int BH_Ray2fIntersectTime(const float aStart[2],
+                          const float aDirection[2],
+                          const float bStart[2],
+                          const float bDirection[2],
                           float *time1,
                           float *time2)
 {
@@ -58,12 +58,12 @@ int BH_Ray2fIntersectTime(const float *aStart,
 }
 
 
-int BH_Ray2fIntersectRay(const float *aStart,
-                         const float *aDirection,
-                         const float *bStart,
-                         const float *bDirection,
+int BH_Ray2fIntersectRay(const float aStart[2],
+                         const float aDirection[2],
+                         const float bStart[2],
+                         const float bDirection[2],
                          float *t,
-                         float *out)
+                         float out[2])
 {
     float tmp[2];
     float time1, time2;
@@ -81,12 +81,12 @@ int BH_Ray2fIntersectRay(const float *aStart,
 }
 
 
-int BH_Ray2fIntersectSegment(const float *aStart,
-                             const float *aDirection,
-                             const float *bStart,
-                             const float *bEnd,
+int BH_Ray2fIntersectSegment(const float aStart[2],
+                             const float aDirection[2],
+                             const float bStart[2],
+                             const float bEnd[2],
                              float *t,
-                             float *out)
+                             float out[2])
 {
     float tmp[2];
     float time1, time2;
@@ -105,11 +105,11 @@ int BH_Ray2fIntersectSegment(const float *aStart,
 }
 
 
-int BH_Segment2fIntersectLine(const float *start,
-                              const float *end,
-                              const float *line,
+int BH_Segment2fIntersectLine(const float start[2],
+                              const float end[2],
+                              const float line[3],
                               float *t,
-                              float *out)
+                              float out[2])
 {
     float tmp[2];
     float denom, time;
@@ -131,12 +131,12 @@ int BH_Segment2fIntersectLine(const float *start,
 }
 
 
-int BH_Segment2fIntersectSegment(const float *aStart,
-                                 const float *aEnd,
-                                 const float *bStart,
-                                 const float *bEnd,
+int BH_Segment2fIntersectSegment(const float aStart[2],
+                                 const float aEnd[2],
+                                 const float bStart[2],
+                                 const float bEnd[2],
                                  float *t,
-                                 float *out)
+                                 float out[2])
 {
     float tmp1[2], tmp2[2];
     float time1, time2;
@@ -156,12 +156,12 @@ int BH_Segment2fIntersectSegment(const float *aStart,
 }
 
 
-int BH_Ray2fIntersectBox2f(const float *aStart,
-                           const float *aDirection,
-                           const float *bMin,
-                           const float *bMax,
+int BH_Ray2fIntersectBox2f(const float aStart[2],
+                           const float aDirection[2],
+                           const float bMin[2],
+                           const float bMax[2],
                            float *t,
-                           float *out)
+                           float out[2])
 {
     float timeNear, timeFar, hitNear, hitFar, denom, tmp;
     int i;
@@ -215,12 +215,12 @@ int BH_Ray2fIntersectBox2f(const float *aStart,
 }
 
 
-int BH_Segment2fIntersectBox2f(const float *aStart,
-                               const float *aEnd,
-                               const float *bMin,
-                               const float *bMax,
+int BH_Segment2fIntersectBox2f(const float aStart[2],
+                               const float aEnd[2],
+                               const float bMin[2],
+                               const float bMax[2],
                                float *t,
-                               float *out)
+                               float out[2])
 {
     float tmp[3];
     float time;
