@@ -1,4 +1,7 @@
-#include <BH/Math.h>
+#include <BH/Math/Ray2f.h>
+#include <BH/Math/Vec2f.h>
+#include <BH/Math/Box2f.h>
+#include <BH/Math/Line.h>
 #include <BH/Unit.h>
 
 

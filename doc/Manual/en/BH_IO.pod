@@ -1,0 +1,510 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_IO - I/O subsystem
+
+
+=head1 SYNOPSIS
+
+ #include <BH/io.h>
+
+ BH_IO *io = BH_FileNew("input.txt", BH_FILE_WRITE | BH_FILE_TRUNCATE, NULL);
+ BH_IOWrite(io, "Hello, world!", 13, NULL);
+ BH_IOFree(io);
+
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+BH_IO provides a subsystem that allows you to work with various objects (files,
+sockets, memory) via a single I/O interface. This allows you to write code that
+is not tied to a specific input/output system.
+
+It is guaranteed that any BH_IO object supports the following operations:
+L</BH_IORead>, L</BH_IOWrite>, L</BH_IOCtl> и L</BH_IOCap>.
+
+Depending on the implementation of a particular BH_IO object, additional
+operations may be available: L</BH_IOFlags>, L</BH_IOClear>, L</BH_IOFlush>,
+L</BH_IOSize>, L</BH_IOTell>, L</BH_IOSeek>, L</BH_IOPeek> and others.
+
+By default, the I/O subsystem allows you to work with files (L</BH_FileNew>) or
+RAM (L</BH_BytesNew>), as well as buffer I/O (L</BH_BufferNew>).
+
+
+=head1 EXTENSIONS
+
+BH_IO provides the developer with the ability to create custom implementations
+of I/O devices. Example:
+
+ typedef struct BH_MyIO
+ {
+     BH_IO parent;
+     int flags;
+ };
+
+ static int ioDestroy(BH_MyIO *io)
+ {
+     /* Ommitted for the example */
+ }
+
+ static int ioRead(BH_MyIO *io,
+                   BH_IOReadInfo *info)
+ {
+     /* Ommitted for the example */
+ }
+
+ static int ioWrite(BH_MyIO *io,
+                    BH_IOWriteInfo *info)
+ {
+     /* Ommited for the example */
+ }
+
+ static int ioFlags(BH_MyIO *io,
+                    int *flags)
+ {
+     *flags = io->flags;
+     return BH_OK;
+ }
+
+ static int ioCap(BH_MyIO *io,
+                  int *op)
+ {
+     BH_UNUSED(io);
+
+     switch (*op)
+     {
+     case BH_IO_CTL_FLAGS:
+         return BH_OK;
+
+     default:
+         return BH_NOIMPL;
+     }
+ }
+
+ static int ioCtl(BH_MyIO *io,
+                  BH_IOCtlInfo *info)
+ {
+     switch (info->op)
+     {
+     case BH_IO_CTL_FLAGS:
+         return ioFlags(io, (int *)info->arg);
+
+     default:
+         return BH_NOIMPL;
+     }
+ }
+
+ static int ioCallback(BH_MyIO *io,
+                       int type,
+                       void *arg)
+ {
+     switch (type)
+     {
+     case BH_IO_OP_DESTROY:  return ioDestroy(io);
+     case BH_IO_OP_READ:     return ioRead(io, (BH_IOReadInfo *)arg);
+     case BH_IO_OP_WRITE:    return ioWrite(io, (BH_IOWriteInfo *)arg);
+     case BH_IO_OP_CTL:      return ioCtl(io, (BH_IOCtlInfo *)arg);
+     case BH_IO_OP_CAP:      return ioCap(io, (int*)arg);
+     default:                return BH_NOIMPL;
+     }
+ }
+
+ BH_IO *BH_MyIONew(int *result)
+ {
+     BH_MyIO *io;
+     int code;
+
+     code = BH_OOM;
+     if ((io = malloc(sizeof(*io))))
+     {
+         io->parent.callback = (BH_IOCallback)ioCallback;
+         io->flags = 0;
+     }
+
+     if (result)
+         *result = code;
+
+     return (BH_IO*)io;
+ }
+
+
+=head1 API CALLS
+
+
+=head2 BH_FileNew
+
+ BH_IO *BH_FileNew(const char *path,
+                   int mode,
+                   int *result);
+
+Creates an I/O device for working with the file using the I<path>.
+
+The I<mode> parameter can take a combination of the following values:
+
+=over
+
+=item B<BH_FILE_READ>
+
+Opens the file for reading
+
+=item B<BH_FILE_WRTIE>
+
+Opens the file for writing
+
+=item B<BH_FILE_APPEND>
+
+Opens the file in append mode
+
+=item B<BH_FILE_TRUNCATE>
+
+Truncates the file
+
+=item B<BH_FILE_CREATE>
+
+The file must be created
+
+=item B<BH_FILE_EXIST>
+
+The file must exist
+
+=back
+
+The optional parameter I<result> returns 0 or an error code.
+
+This function returns a pointer to a new BH_IO object or NULL.
+
+
+=head2 BH_BufferNew
+
+ BH_IO *BH_BufferNew(BH_IO *device,
+                     size_t size,
+                     int *result);
+
+Creates an I/O device to buffer data to another I<device>.
+
+The I<size> parameter is responsible for the size of the read and write buffers.
+
+The optional parameter I<result> returns 0 or an error code.
+
+If successful, this function returns a pointer to the new BH_IO object or
+NULL in case of an error.
+
+
+=head2 BH_BytesNew
+
+ BH_IO *BH_BytesNew(char *data,
+                    size_t size,
+                    int *result);
+
+Creates an I/O device for the memory region I<data> with the size I<size>.
+
+The optional parameter I<result> returns 0 or an error code.
+
+If successful, this function returns a pointer to the new BH_IO object or
+NULL in case of an error.
+
+
+=head2 BH_IOFree
+
+ void BH_IOFree(BH_IO *device);
+
+Destroys the I/O device.
+
+
+=head2 BH_IORead
+
+ int BH_IORead(BH_IO *device,
+               char *buffer,
+               size_t size,
+               size_t *actual);
+
+Reads up to I<size> bytes from the I/O device and writes data to
+I<buffer>.
+
+The optional parameter I<actual> returns the number of bytes that was read.
+
+If successful, this function returns 0 or an error code.
+
+
+=head2 BH_IOWrite
+
+ int BH_IOWrite(BH_IO *io,
+                const char *buffer,
+                size_t size,
+                size_t *actual);
+
+Writes up to I<size> bytes to the I/O device from I<buffer>.
+
+The optional parameter I<actual> returns the number of bytes that was written.
+
+If successful, this function returns 0 or an error code.
+
+
+=head2 BH_IOCtl
+
+ int BH_IOCtl(BH_IO *device,
+              int op,
+              void *arg);
+
+Manipulates the parameters of the I/O device using the I<op> command and
+the I<arg> argument.
+
+Possible values of I<op>:
+
+=over
+
+=item B<BH_IO_CTL_FLAGS>
+
+Argument: int *
+
+Return the I/O device flags.
+
+=item B<BH_IO_CTL_CLEAR>
+
+Reset the I/O device errors.
+
+=item B<BH_IO_CTL_PEEK>
+
+Argument: L<BH_IOReadInfo *|/BH_IOReadInfo>
+
+Reads data from an I/O device without extracting it.
+
+=item B<BH_IO_CTL_FLUSH>
+
+Write buffered data to the I/O device.
+
+=item B<BH_IO_CTL_SIZE>
+
+Argument: int64_t *
+
+Get the size of the I/O device.
+
+=item B<BH_IO_CTL_TELL>
+
+Argument: int64_t *
+
+Reads the current offset of the I/O device reader pointer.
+
+=item B<BH_IO_CTL_SEEK>
+
+Argument: L<BH_IOSeekInfo *|/BH_IOSeekInfo>
+
+Changes the current position of the I/O reader pointer.
+
+=item B<BH_IO_CTL_GET_IO>
+
+Argument: L<BH_IO **|/BH_IO>|void *
+
+Gets the device I/O object used in the implementation.
+
+=item B<BH_IO_CTL_SET_IO>
+
+Argument: L<BH_IO *|/BH_IO>|void *
+
+Sets the device I/O object to be used in the implementation.
+
+=back
+
+If successful, this function returns 0 or an error code.
+
+
+=head2 BH_IOCap
+
+ int BH_IOCap(BH_IO *device,
+              int op);
+
+Checks whether the I<op> command can be executed on the I/O device.
+
+If successful, this function returns 0 or an error code.
+
+
+=head2 BH_IOFlags
+
+ int BH_IOFlags(BH_IO *device,
+                int *flags);
+
+Returns the current I<flags> flags of the I/O device.
+
+Possible flags (and their combinations):
+
+=over
+
+=item B<BH_IO_FLAG_ERROR>
+
+An error occurred during the execution.
+
+=item B<BH_IO_FLAG_EOF>
+
+The device has reached the end of the file.
+
+=back
+
+If successful, this function returns 0 or an error code.
+
+
+=head2 BH_IOClear
+
+ int BH_IOClear(BH_IO *device);
+
+Cleans the I/O device from errors.
+
+If successful, this function returns 0 or an error code.
+
+
+=head2 BH_IOPeek
+
+ int BH_IOPeek(BH_IO *device,
+               char *buffer,
+               size_t size,
+               size_t *actual);
+
+Reads up to I<size> bytes from the I/O device without extraction and writes
+the data to I<buffer>.
+
+The optional parameter I<actual> returns the number of bytes that was actually
+read.
+
+If successful, this function returns 0 or an error code.
+
+
+=head2 BH_IOFlush
+
+ int BH_IOFlush(BH_IO *device);
+
+Writes buffered values to the I/O device.
+
+If successful, this function returns 0 or an error code.
+
+
+=head2 BH_IOSize
+
+ int BH_IOSize(BH_IO *device,
+               int64_t *size);
+
+Reads the current size of the I/O device in bytes and writes the value to
+I<size>.
+
+For different types of I/O devices, this value can mean different things (for
+example: the current file size, the size of the memory allocated for I/O, etc.).
+
+If successful, this function returns 0 or an error code.
+
+
+=head2 BH_IOTell
+
+ int BH_IOTell(BH_IO *device,
+               int64_t *offset);
+
+Reads the current offset of the I/O reader pointer relative
+to the start and writes the value to I<offset>.
+
+If successful, this function returns 0 or an error code.
+
+
+=head2 BH_IOSeek
+
+ int BH_IOSeek(BH_IO *device,
+               int64_t offset,
+               int whence);
+
+Changes the current position of the I/O reader pointer, taking into account
+the offset I<offset> and the initial position I<whence>.
+
+Possible values of the initial position I<whence>:
+
+=over
+
+=item B<BH_IO_SEEK_SET>
+
+Offset relative to the beginning of the device.
+
+=item B<BH_IO_SEEK_CUR>
+
+Offset relative to the current position of the device.
+
+=item B<BH_IO_SEEK_END>
+
+Offset relative to the end of the device.
+
+=back
+
+If successful, this function returns 0 or an error code.
+
+
+=head2 BH_IOError
+
+ int BH_IOError(BH_IO *device);
+
+Checks whether the I/O device is in an error state.
+
+This function is equivalent to the following code:
+
+ (BH_IOFlags(device) & BH_IO_FLAG_ERROR)
+
+
+=head2 BH_IOEndOfFile
+
+ int BH_IOEndOfFile(BH_IO *device);
+
+Checks whether the I/O device has reached the end.
+
+This function is equivalent to the following code:
+
+ (BH_IOFlags(device) & BH_IO_FLAG_EOF)
+
+
+=head1 STRUCTURES
+
+
+=head2 BH_IO
+
+ typedef struct BH_IO
+ {
+     BH_IOCallback callback;
+ } BH_IO;
+
+
+=head2 BH_IOReadInfo
+
+ typedef struct BH_IOReadInfo
+ {
+     char *data;
+     size_t size;
+     size_t *actual;
+ } BH_IOReadInfo;
+
+
+=head2 BH_IOWriteInfo
+
+ typedef struct BH_IOWriteInfo
+ {
+     const char *data;
+     size_t size;
+     size_t *actual;
+ } BH_IOWriteInfo;
+
+
+=head2 BH_IOCtlInfo
+
+ typedef struct BH_IOCtlInfo
+ {
+     int op;
+     void *arg;
+ } BH_IOCtlInfo;
+
+
+=head2 BH_IOSeekInfo
+
+ typedef struct BH_IOSeekInfo
+ {
+     int64_t offset;
+     int whence;
+ } BH_IOSeekInfo;
+
+
+=head1 SEE ALSO
+
+L<BH>

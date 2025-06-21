@@ -1,0 +1,98 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Box2f - two-dimensional bounding box
+
+
+=head1 SYNTAX
+
+ #include <BH/Math/Box2f.h>
+
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Box2f module provides functions for working with two-dimensional bounding
+boxes. It includes operations for union, intersection, checking if a point is 
+inside a rectangle, and calculating the bounding box for a set of points.
+
+
+=head1 API CALLS
+
+
+=head2 BH_Box2fUnion
+
+ void BH_Box2fUnion(const float aMin[2],
+                    const float aMax[2],
+                    const float bMin[2],
+                    const float bMax[2],
+                    float outMin[2],
+                    float outMax[2]);
+
+Combines two bounding boxes A and B.
+
+The parameters I<aMin> and I<aMax> describe the bounding box A.
+
+The parameters I<bMin> and I<bMax> describe the bounding box B.
+
+The parameters I<outMin> and I<outMax> describe the resulting bounding box.
+
+
+=head2 BH_Box2fIntersect
+
+ int BH_Box2fIntersect(const float aMin[2],
+                       const float aMax[2],
+                       const float bMin[2],
+                       const float bMax[2],
+                       float outMin[2],
+                       float outMax[2]);
+
+Calculates the intersection of two bounding boxes A and B.
+
+The parameters I<aMin> and I<aMax> describe the bounding box A.
+
+The parameters I<bMin> and I<bMax> describe the bounding box B.
+
+The parameters I<outMin> and I<outMax> describe the resulting bounding box.
+
+Returns 0 in case of successful intersection or an error code.
+
+
+=head2 BH_Box2fContains
+
+ int BH_Box2fContains(const float aMin[2],
+                      const float aMax[2],
+                      const float point[2]);
+
+Checks if the point is inside the bounding box.
+
+The parameters I<aMin> and I<aMax> describe the bounding box.
+
+The parameter I<point> describes the point.
+
+Returns 0 if the point is inside the rectangle, or an error code.
+
+
+=head2 BH_Box2fEnclose
+
+ int BH_Box2fEnclose(const float *points,
+                     size_t size,
+                     float outMin[2],
+                     float outMax[2]);
+
+Calculates the bounding box for the given points.
+
+The parameters I<points> and I<size> describe the input array of points.
+
+The parameters I<outMin> and I<outMax> describe the resulting bounding box.
+
+Returns 0 in case of successful calculation or an error code.
+
+
+=head1 SEE ALSO
+
+L<BH>,
+L<BH_Box3f>

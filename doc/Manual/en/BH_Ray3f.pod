@@ -1,0 +1,162 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Ray3f, BH_Segment3f - ray/segment in space
+
+
+=head1 SYNTAX
+
+ #include <BH/Math/Ray3f.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+This module provides functions for working with rays and segments in 
+three-dimensional space. It includes methods for checking intersections of rays 
+and segments with planes, triangles, and bounding boxes.
+
+
+=head1 API CALLS
+
+
+=head2 BH_Ray3fIntersectPlane
+
+ int BH_Ray3fIntersectPlane(const float start[3],
+                            const float direction[3],
+                            const float plane[4],
+                            float *t,
+                            float out[3]);
+
+Checks the intersection between a ray and a plane.
+
+The parameters I<start> and I<direction> describe the ray.
+
+The parameter I<plane> describes the plane.
+
+The parameter I<t> describes the resulting time of the ray's intersection.
+
+The parameter I<out> describes the resulting point of intersection.
+
+In case of success, the function returns 0, in case of an error - an error code.
+
+
+=head2 BH_Ray3fIntersectTriangle
+
+ int BH_Ray3fIntersectTriangle(const float start[3],
+                               const float direction[3],
+                               const float a[3],
+                               const float b[3],
+                               const float c[3],
+                               float *t,
+                               float out[3]);
+
+Checks the intersection between a ray and a triangle.
+
+The parameters I<start> and I<direction> describe the ray.
+
+The parameters I<a>, I<b>, I<c> describe the points of the triangle.
+
+The parameter I<t> describes the resulting time of the ray's intersection.
+
+The parameter I<out> describes the resulting point of intersection.
+
+In case of success, the function returns 0, in case of an error - an error code.
+
+
+=head2 BH_Segment3fIntersectPlane
+
+ int BH_Segment3fIntersectPlane(const float start[3],
+                                const float end[3],
+                                const float plane[4],
+                                float *t,
+                                float out[3]);
+
+Checks the intersection between a segment and a plane.
+
+The parameters I<start> and I<end> describe the segment.
+
+The parameter I<plane> describes the plane.
+
+The parameter I<t> describes the resulting time of the segment's intersection.
+
+The parameter I<out> describes the resulting point of intersection.
+
+In case of success, the function returns 0, in case of an error - an error code.
+
+
+=head2 BH_Segment3fIntersectTriangle
+
+ int BH_Segment3fIntersectTriangle(const float start[3],
+                                   const float end[3],
+                                   const float a[3],
+                                   const float b[3],
+                                   const float c[3],
+                                   float *t,
+                                   float out[3]);
+
+Checks the intersection between a segment and a triangle.
+
+The parameters I<start> and I<end> describe the segment.
+
+The parameters I<a>, I<b>, I<c> describe the points of the triangle.
+
+The parameter I<t> describes the resulting time of the ray's intersection.
+
+The parameter I<out> describes the resulting point of intersection.
+
+In case of success, the function returns 0, in case of an error - an error code.
+
+
+=head2 BH_Ray3fIntersectBox3f
+
+ int BH_Ray3fIntersectBox3f(const float aStart[3],
+                            const float aDirection[3],
+                            const float bMin[3],
+                            const float bMax[3],
+                            float *t,
+                            float out[3]);
+
+Checks the intersection between a ray and a bounding box.
+
+The parameters I<aStart> and I<aDirection> describe the ray.
+
+The parameters I<bMin> and I<bMax> describe the bounding box.
+
+The parameter I<t> describes the resulting time of the first segment's 
+intersection.
+
+The parameter I<out> describes the resulting point of intersection.
+
+In case of success, the function returns 0, in case of an error - an error code.
+
+
+=head2 BH_Segment3fIntersectBox3f
+
+ int BH_Segment3fIntersectBox3f(const float aStart[3],
+                                const float aEnd[3],
+                                const float bMin[3],
+                                const float bMax[3],
+                                float *t,
+                                float out[3]);
+
+Checks the intersection between a segment and a bounding box.
+
+The parameters I<aStart> and I<aEnd> describe the segment.
+
+The parameters I<bMin> and I<bMax> describe the bounding box.
+
+The parameter I<t> describes the resulting time of the first segment's 
+intersection.
+
+The parameter I<out> describes the resulting point of intersection.
+
+In case of success, the function returns 0, in case of an error - an error code.
+
+
+=head1 SEE ALSO
+
+L<BH>

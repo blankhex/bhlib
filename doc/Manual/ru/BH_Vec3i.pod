@@ -1,0 +1,115 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_Vec3i - трёхмерный целочисленный вектор
+
+
+=head1 СИНТАКСИС
+
+ #include <BH/Math.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+Модуль BH_Vec3i предоставляет набор функций для работы с трёхмерными
+целочисленными векторами.
+
+
+=head1 API ВЫЗОВЫ
+
+
+=head2 BH_Vec3iAdd
+
+ void BH_Vec3iAdd(const int a[3],
+                  const int b[3],
+                  int out[3]);
+
+Вычисляет сумму двух векторов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec3iSub
+
+ void BH_Vec3iSub(const int a[3],
+                  const int b[3],
+                  int out[3]);
+
+Вычисляет разность двух векторов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec3iMul
+
+ void BH_Vec3iMul(const int a[3],
+                  const int b[3],
+                  int out[3]);
+
+Вычисляет результат перемножения двух векторов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec3iScale
+
+ void BH_Vec3iScale(const int a[3],
+                    int b,
+                    int out[3]);
+
+Вычисляет результат умножения вектора I<a> на значение I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec3iMulAdd
+
+ void BH_Vec3iMulAdd(const int a[3],
+                     const int b[3],
+                     const int c[3],
+                     int out[3]);
+
+Вычисляет результат суммы I<c> и результата перемножения векторов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec3iNegate
+
+ void BH_Vec3iNegate(const int in[3],
+                     int out[3]);
+
+Вычисляет противоположный вектор от вектора I<in>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec3iMin
+
+ void BH_Vec3iMin(const int a[3],
+                  const int b[3],
+                  int out[3]);
+
+Вычисляет поэлементный минимум двух векторов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec3iMax
+
+ void BH_Vec3iMax(const int a[3],
+                  const int b[3],
+                  int out[3]);
+
+Вычисляет поэлементный максимум двух векторов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

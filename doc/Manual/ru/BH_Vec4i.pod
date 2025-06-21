@@ -1,0 +1,115 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_Vec4i - четырёхмерный целочисленный вектор
+
+
+=head1 СИНТАКСИС
+
+ #include <BH/Math.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+Модуль BH_Vec4i предоставляет набор функций для работы с четырёхмерными 
+целочисленными векторами.
+
+
+=head1 API ВЫЗОВЫ
+
+
+=head2 BH_Vec4iAdd
+
+ void BH_Vec4iAdd(const int a[4],
+                  const int b[4],
+                  int out[4]);
+
+Вычисляет сумму двух векторов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec4iSub
+
+ void BH_Vec4iSub(const int a[4],
+                  const int b[4],
+                  int out[4]);
+
+Вычисляет разность двух векторов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec4iMul
+
+ void BH_Vec4iMul(const int a[4],
+                  const int b[4],
+                  int out[4]);
+
+Вычисляет результат перемножения двух векторов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec4iScale
+
+ void BH_Vec4iScale(const int a[4],
+                    int b,
+                    int out[4]);
+
+Вычисляет результат умножения вектора I<a> на значение I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec4iMulAdd
+
+ void BH_Vec4iMulAdd(const int a[4],
+                     const int b[4],
+                     const int c[4],
+                     int out[4]);
+
+Вычисляет результат суммы I<c> и результата перемножения векторов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec4iNegate
+
+ void BH_Vec4iNegate(const int in[4],
+                     int out[4]);
+
+Вычисляет противоположный вектор от вектора I<in>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec4iMin
+
+ void BH_Vec4iMin(const int a[4],
+                  const int b[4],
+                  int out[4]);
+
+Вычисляет поэлементный минимум двух векторов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec4iMax
+
+ void BH_Vec4iMax(const int a[4],
+                  const int b[4],
+                  int out[4]);
+
+Вычисляет поэлементный максимум двух векторов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

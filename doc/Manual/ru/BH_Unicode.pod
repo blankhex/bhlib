@@ -1,0 +1,184 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_Unicode - Работа с Unicode и UTF кодировками
+
+
+=head1 СИНТАКСИС
+
+ #include <BH/Math.h>
+
+ cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+Библиотека BH_Unicode предоставляет набор функций для работы с различными
+кодировками Unicode, включая UTF-8, UTF-16 и UTF-32. Она позволяет
+преобразовывать символы в верхний и нижний регистр, а также кодировать и
+декодировать строки в указанных кодировках.
+
+
+=head1 API ВЫЗОВЫ
+
+
+=head2 BH_UnicodeLower
+
+ uint32_t BH_UnicodeLower(uint32_t unit);
+
+Преобразует Unicode-код I<unit> в нижний регистр.
+
+Преобразование выполняется для символов в Basic Multilingual Plane (т. е. первые
+65 536 кодов).
+
+
+=head2 BH_UnicodeUpper
+
+ uint32_t BH_UnicodeUpper(uint32_t unit);
+
+Преобразует Unicode-код I<unit> в верхний регистр.
+
+Преобразование выполняется для символов в Basic Multilingual Plane (т. е. первые
+65 536 кодов).
+
+
+=head2 BH_UnicodeDecodeUtf8
+
+ size_t BH_UnicodeDecodeUtf8(const char *string,
+                             size_t size,
+                             uint32_t *unit);
+
+Декодирует UTF-8 последовательность из I<string> (с заданной длиной I<size>) и
+записывает код в I<unit>.
+
+Недопустимые последовательности UTF-8 будут преобразованы к коду -1.
+
+В случае успеха функция возвращает количество прочитанных байтов или 0, если
+I<string> содержит только часть последовательности.
+
+
+=head2 BH_UnicodeEncodeUtf8
+
+ size_t BH_UnicodeEncodeUtf8(uint32_t unit,
+                             char *string);
+
+Кодирует UTF-8 последовательность в I<string> из кода I<unit>.
+
+Предполагается, что строка содержит 4 байта свободного места.
+
+В случае успеха функция возвращает количество записанных байтов или 0.
+
+
+=head2 BH_UnicodeDecodeUtf16LE
+
+ size_t BH_UnicodeDecodeUtf16LE(const char *string,
+                                size_t size,
+                                uint32_t *unit);
+
+Декодирует UTF-16LE последовательность из I<string> (с заданной длиной I<size>)
+и записывает код в I<unit>.
+
+Недопустимые последовательности UTF-16LE будут преобразованы к коду -1.
+
+В случае успеха функция возвращает количество прочитанных байтов или 0, если
+I<string> содержит только часть последовательности.
+
+
+=head2 BH_UnicodeDecodeUtf16BE
+
+ size_t BH_UnicodeDecodeUtf16BE(const char *string,
+                                size_t size,
+                                uint32_t *unit);
+
+Декодирует UTF-16BE последовательность из I<string> (с заданной длиной I<size>)
+и записывает код в I<unit>.
+
+Недопустимые последовательности UTF-16BE будут преобразованы к коду -1.
+
+В случае успеха функция возвращает количество прочитанных байтов или 0, если
+I<string> содержит только часть последовательности.
+
+
+=head2 BH_UnicodeEncodeUtf16LE
+
+ size_t BH_UnicodeEncodeUtf16LE(uint32_t unit,
+                                char *string);
+
+Кодирует UTF-16LE последовательность в I<string> из кода I<unit>.
+
+Предполагается, что строка содержит 4 байта свободного места.
+
+В случае успеха функция возвращает количество записанных байтов или 0.
+
+
+=head2 BH_UnicodeEncodeUtf16BE
+
+ size_t BH_UnicodeEncodeUtf16BE(uint32_t unit,
+                                char *string);
+
+Кодирует UTF-16BE последовательность в I<string> из кода I<unit>.
+
+Предполагается, что строка содержит 4 байта свободного места.
+
+В случае успеха функция возвращает количество записанных байтов или 0.
+
+
+=head2 BH_UnicodeDecodeUtf32LE
+
+ size_t BH_UnicodeDecodeUtf32LE(const char *string,
+                                size_t size,
+                                uint32_t *unit);
+
+Декодирует UTF-32LE последовательность из I<string> (с заданной длиной I<size>)
+и записывает код в I<unit>.
+
+Недопустимые последовательности UTF-32LE будут преобразованы к коду -1.
+
+В случае успеха функция возвращает количество прочитанных байтов или 0, если
+I<string> содержит только часть последовательности.
+
+
+=head2 BH_UnicodeDecodeUtf32BE
+
+ size_t BH_UnicodeDecodeUtf32BE(const char *string,
+                                size_t size,
+                                uint32_t *unit);
+
+Декодирует UTF-32BE последовательность из I<string> (с заданной длиной I<size>)
+и записывает код в I<unit>.
+
+Недопустимые последовательности UTF-32BE будут преобразованы к коду -1.
+
+В случае успеха функция возвращает количество прочитанных байтов или 0, если
+I<string> содержит только часть последовательности.
+
+
+=head2 BH_UnicodeEncodeUtf32LE
+
+ size_t BH_UnicodeEncodeUtf32LE(uint32_t unit,
+                                char *string);
+
+Кодирует UTF-32LE последовательность в I<string> из кода I<unit>.
+
+Предполагается, что строка содержит 4 байта свободного места.
+
+В случае успеха функция возвращает количество записанных байтов или 0.
+
+
+=head2 BH_UnicodeEncodeUtf32BE
+
+ size_t BH_UnicodeEncodeUtf32BE(uint32_t unit,
+                                char *string);
+
+Кодирует UTF-32BE последовательность в I<string> из кода I<unit>.
+
+Предполагается, что строка содержит 4 байта свободного места.
+
+В случае успеха функция возвращает количество записанных байтов или 0.
+
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

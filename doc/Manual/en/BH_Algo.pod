@@ -1,0 +1,162 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Algo - General algorithms
+
+
+=head1 SYNTAX
+
+ #include <BH/Algo.h>
+
+ int data[4] = {5, 2, 3, 1};
+ int value, i;
+
+ value = 4;
+ BH_Partition(&value, data, 4, sizeof(int), intEqual);
+ BH_Sort(data, 4, sizeof(int), intEqual);
+ BH_HeapMake(data, 4, sizeof(int), intEqual);
+
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Algo library provides a set of algorithms for working with data:
+
+=over
+
+=item * 
+
+Value swapping (L</BH_Swap>)
+
+=item *
+
+Array partitioning (L</BH_Partition>)
+
+=item * 
+
+Sorting (L</BH_Sort>)
+
+=item * 
+
+Heap operations (L</BH_HeapMake>, L</BH_HeapRemove>, L</BH_HeapInsert>,
+L</BH_HeapReplace>)
+
+=back
+
+These algorithms allow you to efficiently perform various operations on arrays 
+and other data structures.
+
+
+=head1 API CALLS
+
+
+=head2 BH_Swap
+
+ void BH_Swap(void *dest,
+              void *src,
+              size_t size);
+
+Swaps the values between the variables I<dest> and I<src> of the specified size
+I<size>.
+
+
+=head2 BH_Partition
+
+ void *BH_Partition(void *pivot,
+                    void *array,
+                    size_t size,
+                    size_t element,
+                    BH_EqualCallback equal);
+
+Partitions the array of elements I<array> (with the number of elements I<size>
+and the size of the element I<element>) into two groups relative to the pivot 
+element I<pivot>.
+
+The I<equal> parameter takes a pointer to a function that compares two elements.
+
+The I<pivot> parameter can refer to an element of the array being partitioned.
+
+The function returns a pointer to the first element of the array that belongs to
+the second group.
+
+
+=head2 BH_Sort
+
+ void BH_Sort(void *array,
+              size_t size,
+              size_t element,
+              BH_EqualCallback equal);
+
+Sorts the array of elements I<array> (with the number of elements I<size> and 
+the size of the element I<element>).
+
+The I<equal> parameter takes a pointer to a function that compares two elements.
+
+
+=head2 BH_HeapMake
+
+ void BH_HeapMake(void *array,
+                  size_t size,
+                  size_t element,
+                  BH_EqualCallback equal);
+
+Creates a heap in the array I<array> (with the number of elements I<size> and 
+the size of the element I<element>).
+
+The I<equal> parameter takes a pointer to a function that compares two elements.
+
+
+=head2 BH_HeapRemove
+
+ void BH_HeapRemove(void *array,
+                    size_t size,
+                    size_t element,
+                    BH_EqualCallback equal);
+
+Extracts the top element of the heap in the array I<array> (with the number of 
+elements I<size> and the size of the element I<element>).
+
+The I<equal> parameter takes a pointer to a function that compares two elements.
+
+
+=head2 BH_HeapInsert
+
+ void BH_HeapInsert(void *value,
+                    void *array,
+                    size_t size,
+                    size_t element,
+                    BH_EqualCallback equal);
+
+Adds the element I<value> to the heap in the array I<array> (with the number of
+elements I<size> and the size of the element I<element>).
+
+If I<value> is NULL, it is assumed that the new value is at the end of the 
+array.
+
+The I<equal> parameter takes a pointer to a function that compares two elements.
+
+
+=head2 BH_HeapReplace
+
+ void BH_HeapReplace(void *value,
+                     void *array,
+                     size_t size,
+                     size_t element,
+                     BH_EqualCallback equal);
+
+Extracts the top element of the heap in the array I<array> (with the number of 
+elements I<size> and the size of the element I<element>) and adds the element 
+I<value> to it.
+
+If I<value> is NULL, it is assumed that the new value is at the end of the 
+array.
+
+The I<equal> parameter takes a pointer to a function that compares two elements.
+
+
+=head1 SEE ALSO
+
+L<BH>

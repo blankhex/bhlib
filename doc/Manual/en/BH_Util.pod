@@ -1,0 +1,241 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Util - Utility Functions
+
+
+=head1 SYNTAX
+
+ #include <BH/Math.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Util library provides a set of functions for working with numbers in 
+little-endian and big-endian formats, as well as for classifying floating-point 
+values.
+
+
+=head1 API CALLS
+
+
+=head2 BH_ClassifyDouble
+
+ int BH_ClassifyDouble(double value);
+
+Classifies a floating-point value.
+
+This function returns a combination of the following values:
+
+=over
+
+=item B<BH_FP_NORMAL>
+
+The value is normal or subnormal.
+
+=item B<BH_FP_ZERO>
+
+The value is positive or negative zero.
+
+=item B<BH_FP_INFINITE>
+
+The value is positive or negative infinity.
+
+=item B<BH_FP_NAN>
+
+The value is not a number (NaN).
+
+=item B<BH_FP_NEGATIVE>
+
+The value is negative.
+
+=back
+
+
+=head2 BH_Read16LEu
+
+ uint16_t BH_Read16LEu(const char *buffer);
+
+Reads an unsigned 16-bit little-endian integer from the buffer.
+
+
+=head2 BH_Read16LEs
+
+ int16_t BH_Read16LEs(const char *buffer);
+
+Reads a signed 16-bit little-endian integer from the buffer.
+
+
+=head2 BH_Read32LEu
+
+ uint32_t BH_Read32LEu(const char *buffer);
+
+Reads an unsigned 32-bit little-endian integer from the buffer.
+
+
+=head2 BH_Read32LEs
+
+ int32_t BH_Read32LEs(const char *buffer);
+
+Reads a signed 32-bit little-endian integer from the buffer.
+
+
+=head2 BH_Read64LEu
+
+ uint64_t BH_Read64LEu(const char *buffer);
+
+Reads an unsigned 64-bit little-endian integer from the buffer.
+
+
+=head2 BH_Read64LEs
+
+ int64_t BH_Read64LEs(const char *buffer);
+
+Reads a signed 64-bit little-endian integer from the buffer.
+
+
+=head2 BH_Read16BEu
+
+ uint16_t BH_Read16BEu(const char *buffer);
+
+Reads an unsigned 16-bit big-endian integer from the buffer.
+
+
+=head2 BH_Read16BEs
+
+ int16_t BH_Read16BEs(const char *buffer);
+
+Reads a signed 16-bit big-endian integer from the buffer.
+
+
+=head2 BH_Read32BEu
+
+ uint32_t BH_Read32BEu(const char *buffer);
+
+Reads an unsigned 32-bit big-endian integer from the buffer.
+
+
+=head2 BH_Read32BEs
+
+ int32_t BH_Read32BEs(const char *buffer);
+
+Reads a signed 32-bit big-endian integer from the buffer.
+
+
+=head2 BH_Read64BEu
+
+ uint64_t BH_Read64BEu(const char *buffer);
+
+Reads an unsigned 64-bit big-endian integer from the buffer.
+
+
+=head2 BH_Read64BEs
+
+ int64_t BH_Read64BEs(const char *buffer);
+
+Reads a signed 64-bit big-endian integer from the buffer.
+
+
+=head2 BH_Write16LEu
+
+ void BH_Write16LEu(char *buffer, 
+                    uint16_t value);
+
+Writes an unsigned 16-bit little-endian integer to the buffer.
+
+
+=head2 BH_Write16LEs
+
+ void BH_Write16LEs(char *buffer,
+                    int16_t value);
+
+Writes a signed 16-bit little-endian integer to the buffer.
+
+
+=head2 BH_Write32LEu
+
+ void BH_Write32LEu(char *buffer, 
+                    uint32_t value);
+
+Writes an unsigned 32-bit little-endian integer to the buffer.
+
+
+=head2 BH_Write32LEs
+
+ void BH_Write32LEs(char *buffer, 
+                    int32_t value);
+
+Writes a signed 32-bit little-endian integer to the buffer.
+
+
+=head2 BH_Write64LEu
+
+ void BH_Write64LEu(char *buffer,
+                    uint64_t value);
+
+Writes an unsigned 64-bit little-endian integer to the buffer.
+
+
+=head2 BH_Write64LEs
+
+ void BH_Write64LEs(char *buffer,
+                    int64_t value);
+
+Writes a signed 64-bit little-endian integer to the buffer.
+
+
+=head2 BH_Write16BEu
+
+ void BH_Write16BEu(char *buffer,
+                    uint16_t value);
+
+Writes an unsigned 16-bit big-endian integer to the buffer.
+
+
+=head2 BH_Write16BEs
+
+ void BH_Write16BEs(char *buffer,
+                    int16_t value);
+
+Writes a signed 16-bit big-endian integer to the buffer.
+
+
+=head2 BH_Write32BEu
+
+ void BH_Write32BEu(char *buffer, 
+                    uint32_t value);
+
+Writes an unsigned 32-bit big-endian integer to the buffer.
+
+
+=head2 BH_Write32BEs
+
+ void BH_Write32BEs(char *buffer, 
+                    int32_t value);
+
+Writes a signed 32-bit big-endian integer to the buffer.
+
+
+=head2 BH_Write64BEu
+
+ void BH_Write64BEu(char *buffer, 
+                    uint64_t value);
+
+Writes an unsigned 64-bit big-endian integer to the buffer.
+
+
+=head2 BH_Write64BEs
+
+ void BH_Write64BEs(char *buffer, 
+                    int64_t value);
+
+Writes a signed 64-bit big-endian integer to the buffer.
+
+
+=head1 SEE ALSO
+
+L<BH>

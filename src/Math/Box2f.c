@@ -1,4 +1,5 @@
-#include <BH/Math.h>
+#include <BH/Math/Box2f.h>
+#include <BH/Math/Vec2f.h>
 #include <string.h>
 
 

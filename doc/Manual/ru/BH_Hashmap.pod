@@ -1,0 +1,198 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_Hashmap - неупорядочный ассоциативный массив
+
+
+=head1 СИНТАКСИС
+
+ #include <BH/Hashmap.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+Библиотека BH_Hashmap предоставляет реализацию неупорядоченного ассоциативного
+массива, основанного на хэш-таблице. Она позволяет эффективно хранить и 
+извлекать данные по ключу.
+
+
+=head1 API ВЫЗОВЫ
+
+
+=head2 BH_HashmapNew
+
+ BH_Hashmap *BH_HashmapNew(BH_EqualCallback equal,
+                           BH_HashCallback hash);
+
+Создаёт ассоциативный массив.
+
+Параметр I<equal> принимает указатель на функцию, которая сравнивает два 
+элемента.
+
+Параметр I<hash> принимает указатель на функцию, вычисляющую хэш-значение 
+элемента.
+
+В случае успеха функция возвращает указатель на новый объект BH_Hashmap или NULL
+в случае ошибки.
+
+
+=head2 BH_HashmapFree
+
+ void BH_HashmapFree(BH_Hashmap *hashmap);
+
+Уничтожает ассоциативный массив.
+
+
+=head2 BH_HashmapClear
+
+ void BH_HashmapClear(BH_Hashmap *hashmap);
+
+Очищает ассоциативный массив.
+
+
+=head2 BH_HashmapReserve
+
+ int BH_HashmapReserve(BH_Hashmap *hashmap,
+                       size_t size);
+
+Резервирует место как минимум для I<size> элементов.
+
+Вызов этой функции делает существующие итераторы недействительными.
+
+В случае успеха функция возвращает 0, в случае ошибки - код ошибки.
+
+
+=head2 BH_HashmapInsert
+
+ int BH_HashmapInsert(BH_Hashmap *hashmap,
+                      void *key,
+                      void *value);
+
+Вставляет элемент, представленный парой ключ-значение I<key> и I<value>.
+
+Функция позволяет вставлять несколько элементов с одинаковым значением ключа.
+
+Вызов этой функции делает существующие итераторы недействительными.
+
+В случае успеха функция возвращает 0, в случае ошибки - код ошибки.
+
+
+=head2 BH_HashmapRemove
+
+ void BH_HashmapRemove(BH_Hashmap *hashmap,
+                       void *key);
+
+Удаляет элемент с заданным значением ключа I<key>.
+
+Если ассоциативный массив содержит несколько элементов с одинаковым значением 
+ключа, функция удалит только одну пару ключ-значение.
+
+Вызов этой функции делает существующие итераторы недействительными.
+
+
+=head2 BH_HashmapAt
+
+ int BH_HashmapAt(BH_Hashmap *hashmap,
+                  void *key,
+                  void **value);
+
+Проверяет наличие элемента с заданным ключом I<key>.
+
+Опциональный параметр I<value> возвращает значение элемента с заданным ключом.
+
+В случае успеха функция возвращает 0, в случае ошибки - код ошибки.
+
+
+=head2 BH_HashmapEmpty
+
+ int BH_HashmapEmpty(BH_Hashmap *hashmap);
+
+Проверяет, является ли ассоциативный массив пустым.
+
+
+=head2 BH_HashmapSize
+
+ size_t BH_HashmapSize(BH_Hashmap *hashmap);
+
+Возвращает количество элементов.
+
+
+=head2 BH_HashmapCapacity
+
+ size_t BH_HashmapCapacity(BH_Hashmap *hashmap);
+
+Возвращает ёмкость.
+
+
+=head2 BH_HashmapFactor
+
+ float BH_HashmapFactor(BH_Hashmap *hashmap);
+
+Возвращает максимальный коэффициент загрузки.
+
+
+=head2 BH_HashmapSetFactor
+
+ void BH_HashmapSetFactor(BH_Hashmap *hashmap,
+                          float factor);
+
+Задаёт максимальный коэффициент загрузки I<factor>.
+
+Новое значение максимального коэффициента загрузки будет применено при следующем
+вызове функции
+L</BH_HashmapInsert> или L</BH_HashmapReserve>.
+
+
+=head2 BH_HashmapIterAt
+
+ void *BH_HashmapIterAt(BH_Hashmap *hashmap,
+                        void *key);
+
+Возвращает итератор на элемент с заданным ключом I<key>.
+
+В случае успеха функция возвращает итератор или NULL.
+
+
+=head2 BH_HashmapIterNext
+
+ void *BH_HashmapIterNext(BH_Hashmap *hashmap,
+                          void *iter);
+
+Возвращает итератор на следующий элемент.
+
+Опциональный параметр I<iter> принимает итератор на текущий элемент.
+
+В случае успеха функция возвращает итератор или NULL.
+
+
+=head2 BH_HashmapIterRemove
+
+ void BH_HashmapIterRemove(BH_Hashmap *hashmap,
+                           void *iter);
+
+Удаляет элемент по заданному итератору I<iter>.
+
+Вызов этой функции делает существующие итераторы недействительными.
+
+
+=head2 BH_HashmapIterKey
+
+ void *BH_HashmapIterKey(void *iter);
+
+Возвращает ключ элемента, указываемый итератором I<iter>.
+
+
+=head2 BH_HashmapIterValue
+
+ void *BH_HashmapIterValue(void *iter);
+
+Возвращает значение элемента, указываемое итератором I<iter>.
+
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

@@ -1,0 +1,168 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Mat3f - a real 3x3 matrix
+
+
+=head1 SYNTAX
+
+ #include <BH/Math/Mat3f.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Mat3f module provides a set of functions for working with real 3x3 
+matrices.
+
+
+=head1 API CALLS
+
+
+=head2 BH_Mat3fIdentity
+
+ void BH_Mat3fIdentity(float out[9]);
+
+Writes an identity matrix to I<out>.
+
+
+=head2 BH_Mat3fAdd
+
+ void BH_Mat3fAdd(const float a[9],
+                  const float b[9],
+                  float out[9]);
+
+Calculates the sum of two matrices I<a> and I<b>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat3fSub
+
+ void BH_Mat3fSub(const float a[9],
+                  const float b[9],
+                  float out[9]);
+
+Calculates the difference between two matrices I<a> and I<b>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat3fMul
+
+ void BH_Mat3fMul(const float a[9],
+                  const float b[9],
+                  float out[9]);
+
+Calculates the result of multiplying two matrices I<a> and I<b>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat3fScale
+
+ void BH_Mat3fScale(const float a[9],
+                    float b,
+                    float out[9]);
+
+Calculates the result of multiplying matrix I<a> by value I<b>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat3fTranspose
+
+ void BH_Mat3fTranspose(const float in[9],
+                        float out[9]);
+
+Transposes matrix I<in>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat3fTrace
+
+ float BH_Mat3fTrace(const float in[9]);
+
+Calculates the sum of the elements of the main diagonal of matrix I<in>.
+
+
+=head2 BH_Mat3fDet
+
+ float BH_Mat3fDet(const float in[9]);
+
+Calculates the determinant of matrix I<in>.
+
+
+=head2 BH_Mat3fInverse
+
+ int BH_Mat3fInverse(const float in[9],
+                     float out[9]);
+
+Calculates the inverse matrix for I<in>.
+
+The I<out> parameter describes the resulting matrix.
+
+If successful, the function returns 0, otherwise it returns an error code.
+
+
+=head2 BH_Mat3fFromScale
+
+ void BH_Mat3fFromScale(float x,
+                        float y,
+                        float out[9]);
+
+Calculates a scaling matrix with scales I<x> and I<y>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat3fFromTranslation
+
+ void BH_Mat3fFromTranslation(float x,
+                              float y,
+                              float out[9]);
+
+Calculates a translation matrix with values I<x> and I<y>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat3fFromRotation
+
+ void BH_Mat3fFromRotation(float angle,
+                           float out[9]);
+
+Calculates a rotation matrix with a given I<angle>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat3fApplyVec3f
+
+ void BH_Mat3fApplyVec3f(float a[9],
+                         float b[3],
+                         float out[3]);
+
+Calculates the result of multiplying matrix I<a> by vector I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Mat3fApplyVec2f
+
+ void BH_Mat3fApplyVec2f(float a[9],
+                         float b[2],
+                         float out[2]);
+
+Calculates the result of multiplying matrix I<a> by vector I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head1 SEE ALSO
+
+L<BH>

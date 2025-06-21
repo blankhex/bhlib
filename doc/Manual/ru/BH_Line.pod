@@ -1,0 +1,60 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_Line - прямая на плоскости.
+
+
+=head1 СИНТАКСИС
+
+ #include <BH/Math.h>
+
+ cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+Модуль BH_Line предоставляет функции для работы с прямыми на плоскости. Он 
+позволяет вычислять коэффициенты прямой по двум точкам, находить расстояние от 
+точки до прямой и определять ближайшую точку на прямой к заданной точке.
+
+
+=head1 API ВЫЗОВЫ
+
+
+=head2 BH_LineFromPoints
+
+ int BH_LineFromPoints(const float a[2],
+                       const float b[2],
+                       float out[3]);
+
+Вычисляет коэффициенты прямой на плоскости по двум точкам I<a> и I<b>.
+
+Параметр I<out> описывает результирующую прямую на плоскости.
+
+В случае успеха функция возвращает 0, в противном случае - код ошибки.
+
+
+=head2 BH_LineDistance
+
+ float BH_LineDistance(const float line[3],
+                       const float point[2]);
+
+Вычисляет расстояние от точки I<point> до прямой I<line>.
+
+
+=head2 BH_LineClosestPoint
+
+ void BH_LineClosestPoint(const float line[3],
+                          const float point[2],
+                          float out[2]);
+
+Вычисляет ближайшую точку на прямой I<line> к другой точке I<point>.
+
+Параметр I<out> описывает результирующую точку.
+
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

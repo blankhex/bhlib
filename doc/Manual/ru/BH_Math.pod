@@ -1,0 +1,48 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_Math - Математические функции
+
+
+=head1 СИНТАКСИС
+
+ #include <BH/Math.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+Библиотека BH_Math предоставляет набор математических функций для различных 
+вычислений.
+
+
+=head1 API ВЫЗОВЫ
+
+
+=head2 BH_Lerpf
+
+ float BH_Lerpf(float a, float b, float t);
+
+Интерполирует значение между I<a> и I<b> с заданным коэффициентом I<t>.
+
+
+=head2 BH_Triangle3fBarycentric
+
+ void BH_Triangle3fBarycentric(const float a[3],
+                               const float b[3],
+                               const float c[3],
+                               const float point[3],
+                               float out[3]);
+
+Вычисляет барицентрические координаты точки I<point> относительно треугольника, 
+заданного точками I<a>, I<b>, I<c>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

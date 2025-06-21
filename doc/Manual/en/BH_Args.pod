@@ -1,0 +1,164 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Args - command line argument processing
+
+
+=head1 SYNTAX
+
+ #include <BH/Args.h>
+
+ static BH_ArgsOption options[] =
+ {
+     {'h', "help", 0, "Display this help"},
+     {1000, "list", 0, "List files"},
+     {'i', "input", BH_ARGS_VALUE, "Input file"},
+     {'o', "output", BH_ARGS_VALUE | BH_ARGS_OPTIONAL, "Output file"},
+     {0, NULL, 0, NULL}
+ };
+
+ static int OptionsCallback(int key,
+                            char *arg,
+                            void *data)
+ {
+     switch (key)
+     {
+         case BH_ARGS_UNKNOWN:
+             /* Unknown options */
+             break;
+
+         case BH_ARGS_ARGUMENT:
+             /* Regular argument in arg */
+             break;
+
+         case 'h':
+             /* Named option without argument */
+             break;
+
+         case 1000:
+             /* Long-only option without argument */
+             break;
+
+         case 'i':
+             /* Option with argument in arg */
+             break;
+
+         case 'o':
+             /* Option with optional argument in arg */
+             break;
+     }
+
+     return BH_OK;
+ }
+
+ BH_ArgsParse(argc, argv, options, OptionsCallback, NULL);
+ BH_ArgsHelp(options, 0);
+
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Args library is designed for convenient handling of command line 
+arguments in programs. It allows you to define a set of options that can be 
+specified when starting a program and provides mechanisms for their analysis and
+processing.
+
+Argument parsing follows these rules:
+
+=over
+
+=item *
+
+If the "--" argument is specified, subsequent argument parsing is stopped.
+
+=item *
+
+If the "-" argument is specified, it is processed as is.
+
+=item *
+
+For long argument values, the string after the equal sign or the next argument
+("--define=value" or "--define value") will be used.
+
+=item *
+
+For short argument values, the remainder of the string after the parameter
+character or the next argument ("-dvalue" or "-d value") will be used.
+
+=back
+
+
+=head1 API CALLS
+
+
+=head2 BH_ArgsParse
+
+ int BH_ArgsParse(int argc,
+                  char **argv,
+                  BH_ArgsOption *options,
+                  BH_ArgsCallback callback,
+                  void *data);
+
+Parses the command line arguments I<options> (specified in I<argc> and I<argv>)
+and calls the specified handler I<callback> (with user data I<data>).
+
+The I<options> parameter refers to a null-terminated array.
+
+If successful, this function returns 0, otherwise it returns an error code.
+
+
+=head2 BH_ArgsHelp
+
+ void BH_ArgsHelp(BH_ArgsOption *options,
+                  int padding);
+
+Prints help information for the arguments I<options> to F<stdout> (with the
+specified alignment I<padding>).
+
+If the I<padding> parameter is 0, the default value (30) will be used.
+
+
+=head1 STRUCTURES
+
+
+=head2 BH_ArgsOption
+
+ typedef struct BH_ArgsOption
+ {
+     int key;
+     const char *name;
+     int flags;
+     const char *description;
+ } BH_ArgsOption;
+
+The I<key> field contains the option identifier. If the I<key> identifier is a
+printable ASCII character, it will be used as a short argument.
+
+The optional I<name> field contains a string that will be used as a long 
+argument.
+
+The I<flags> field contains argument flags. A combination of the following flags
+is possible:
+
+=over
+
+=item B<BH_ARGS_VALUE>
+
+The argument accepts a value.
+
+=item B<BH_ARGS_OPTIONAL>
+
+The argument value is optional.
+
+=back
+
+The I<description> field contains a string that will be used when displaying 
+help information using the L</BH_ArgsHelp> function.
+
+
+=head1 SEE ALSO
+
+L<BH>

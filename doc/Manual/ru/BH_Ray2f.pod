@@ -1,0 +1,202 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_Ray2f, BH_Segment2f - Луч/сегмент на плоскости
+
+
+=head1 СИНТАКСИС
+
+ #include <BH/Math/Ray2f.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+Данный модуль предоставляет функции для работы с лучами и сегментами на 
+плоскости. Он включает в себя функции для проверки пересечений между лучами, 
+сегментами, прямыми и ограничивающими прямоугольниками.
+
+
+=head1 API ВЫЗОВЫ
+
+
+=head2 BH_Ray2fIntersectLine
+
+ int BH_Ray2fIntersectLine(const float start[2],
+                           const float direction[2],
+                           const float line[3],
+                           float *t,
+                           float out[2]);
+
+Проверяет пересечение между лучом и прямой.
+
+Параметры I<start> и I<direction> описывают луч.
+
+Параметр I<line> описывает прямую.
+
+Параметр I<t> описывает результирующее время пересечения луча.
+
+Параметр I<out> описывает результирующую точку пересечения.
+
+В случае успеха функция возвращает 0, в противном случае - код ошибки.
+
+
+=head2 BH_Ray2fIntersectTime
+
+ int BH_Ray2fIntersectTime(const float aStart[2],
+                           const float aDirection[2],
+                           const float bStart[2],
+                           const float bDirection[2],
+                           float *time1,
+                           float *time2);
+
+Вычисляет время пересечения между двумя лучами.
+
+Параметры I<aStart> и I<aDirection> описывают первый луч.
+
+Параметры I<bStart> и I<bDirection> описывают второй луч.
+
+Параметр I<time1> описывает результирующее время пересечения первого луча.
+
+Параметр I<time2> описывает результирующее время пересечения второго луча.
+
+В случае успеха функция возвращает 0, в противном случае - код ошибки.
+
+
+=head2 BH_Ray2fIntersectRay
+
+ int BH_Ray2fIntersectRay(const float aStart[2],
+                          const float aDirection[2],
+                          const float bStart[2],
+                          const float bDirection[2],
+                          float *t,
+                          float out[2]);
+
+Проверяет пересечение между двумя лучами.
+
+Параметры I<aStart> и I<aDirection> описывают первый луч.
+
+Параметры I<bStart> и I<bDirection> описывают второй луч.
+
+Параметр I<t> описывает результирующее время пересечения первого луча.
+
+Параметр I<out> описывает результирующую точку пересечения.
+
+В случае успеха функция возвращает 0, в противном случае - код ошибки.
+
+
+=head2 BH_Ray2fIntersectSegment
+
+ int BH_Ray2fIntersectSegment(const float aStart[2],
+                              const float aDirection[2],
+                              const float bStart[2],
+                              const float bEnd[2],
+                              float *t,
+                              float out[2]);
+
+Проверяет пересечение между лучом и сегментом.
+
+Параметры I<aStart> и I<aDirection> описывают луч.
+
+Параметры I<bStart> и I<bEnd> описывают сегмент.
+
+Параметр I<t> описывает результирующее время пересечения луча.
+
+Параметр I<out> описывает результирующую точку пересечения.
+
+В случае успеха функция возвращает 0, в противном случае - код ошибки.
+
+
+=head2 BH_Segment2fIntersectLine
+
+ int BH_Segment2fIntersectLine(const float start[2],
+                               const float end[2],
+                               const float line[3],
+                               float *t,
+                               float out[2]);
+
+Проверяет пересечение между сегментом и прямой.
+
+Параметры I<start> и I<end> описывают сегмент.
+
+Параметр I<line> описывают прямую.
+
+Параметр I<t> описывает результирующее время пересечения сегмента.
+
+Параметр I<out> описывает результирующую точку пересечения.
+
+В случае успеха функция возвращает 0, в противном случае - код ошибки.
+
+
+=head2 BH_Segment2fIntersectSegment
+
+ int BH_Segment2fIntersectSegment(const float aStart[2],
+                                  const float aEnd[2],
+                                  const float bStart[2],
+                                  const float bEnd[2],
+                                  float *t,
+                                  float out[2]);
+
+Проверяет пересечение между двумя сегментами.
+
+Параметры I<aStart> и I<aEnd> описывают первый сегмент.
+
+Параметры I<bStart> и I<bEnd> описывают второй сегмент.
+
+Параметр I<t> описывает результирующее время пересечения первого сегмента.
+
+Параметр I<out> описывает результирующую точку пересечения.
+
+В случае успеха функция возвращает 0, в противном случае - код ошибки.
+
+
+=head2 BH_Ray2fIntersectBox2f
+
+ int BH_Ray2fIntersectBox2f(const float aStart[2],
+                            const float aDirection[2],
+                            const float bMin[2],
+                            const float bMax[2],
+                            float *t,
+                            float out[2]);
+
+Проверяет пересечение между лучом и ограничивающим прямоугольником.
+
+Параметры I<aStart> и I<aDirection> описывают луч.
+
+Параметры I<bMin> и I<bMax> описывают ограничивающий прямоугольник.
+
+Параметр I<t> описывает результирующее время пересечения луча.
+
+Параметр I<out> описывает результирующую точку пересечения.
+
+В случае успеха функция возвращает 0, в противном случае - код ошибки.
+
+
+=head2 BH_Segment2fIntersectBox2f
+
+ int BH_Segment2fIntersectBox2f(const float aStart[2],
+                                const float aEnd[2],
+                                const float bMin[2],
+                                const float bMax[2],
+                                float *t,
+                                float out[2]);
+
+Проверяет пересечение между сегментом и ограничивающим прямоугольником.
+
+Параметры I<aStart> и I<aEnd> описывают сегмент.
+
+Параметры I<bMin> и I<bMax> описывают ограничивающий прямоугольник.
+
+Параметр I<t> описывает результирующее время пересечения сегмента.
+
+Параметр I<out> описывает результирующую точку пересечения.
+
+В случае успеха функция возвращает 0, в противном случае - код ошибки.
+
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

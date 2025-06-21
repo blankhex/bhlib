@@ -1,0 +1,168 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_Mat3f - вещественная матрица 3x3
+
+
+=head1 СИНТАКСИС
+
+ #include <BH/Math/Mat3f.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+Модуль BH_Mat3f предоставляет набор функций для работы с вещественными матрицами
+размером 3x3.
+
+
+=head1 API ВЫЗОВЫ
+
+
+=head2 BH_Mat3fIdentity
+
+ void BH_Mat3fIdentity(float out[9]);
+
+Записывает единичную матрицу в I<out>.
+
+
+=head2 BH_Mat3fAdd
+
+ void BH_Mat3fAdd(const float a[9],
+                  const float b[9],
+                  float out[9]);
+
+Вычисляет сумму двух матриц I<a> и I<b>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat3fSub
+
+ void BH_Mat3fSub(const float a[9],
+                  const float b[9],
+                  float out[9]);
+
+Вычисляет разность двух матриц I<a> и I<b>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat3fMul
+
+ void BH_Mat3fMul(const float a[9],
+                  const float b[9],
+                  float out[9]);
+
+Вычисляет результат перемножения двух матриц I<a> и I<b>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat3fScale
+
+ void BH_Mat3fScale(const float a[9],
+                    float b,
+                    float out[9]);
+
+Вычисляет результат умножения матрицы I<a> на значение I<b>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat3fTranspose
+
+ void BH_Mat3fTranspose(const float in[9],
+                        float out[9]);
+
+Транспонирует матрицу I<in>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat3fTrace
+
+ float BH_Mat3fTrace(const float in[9]);
+
+Вычисляет сумму элементов главной диагонали матрицы I<in>.
+
+
+=head2 BH_Mat3fDet
+
+ float BH_Mat3fDet(const float in[9]);
+
+Вычисляет определитель матрицы I<in>.
+
+
+=head2 BH_Mat3fInverse
+
+ int BH_Mat3fInverse(const float in[9],
+                     float out[9]);
+
+Вычисляет обратную матрицу для I<in>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+В случае успеха функция возвращает 0, в противном случае - код ошибки.
+
+
+=head2 BH_Mat3fFromScale
+
+ void BH_Mat3fFromScale(float x,
+                        float y,
+                        float out[9]);
+
+Вычисляет масштабирующую матрицу с масштабами I<x> и I<y>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat3fFromTranslation
+
+ void BH_Mat3fFromTranslation(float x,
+                              float y,
+                              float out[9]);
+
+Вычисляет матрицу смещения со значениями I<x> и I<y>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat3fFromRotation
+
+ void BH_Mat3fFromRotation(float angle,
+                           float out[9]);
+
+Вычисляет матрицу вращения с заданным углом I<angle>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat3fApplyVec3f
+
+ void BH_Mat3fApplyVec3f(float a[9],
+                         float b[3],
+                         float out[3]);
+
+Вычисляет результат перемножения матрицы I<a> и вектора I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Mat3fApplyVec2f
+
+ void BH_Mat3fApplyVec2f(float a[9],
+                         float b[2],
+                         float out[2]);
+
+Вычисляет результат перемножения матрицы I<a> и вектора I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

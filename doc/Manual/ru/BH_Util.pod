@@ -1,0 +1,241 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_Util - Вспомогательные функции
+
+
+=head1 СИНТАКСИС
+
+ #include <BH/Math.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+Библиотека BH_Util предоставляет набор функций для работы с числами в форматах 
+little-endian и big-endian, а также для классификации значений с плавающей 
+точкой.
+
+
+=head1 API ВЫЗОВЫ
+
+
+=head2 BH_ClassifyDouble
+
+ int BH_ClassifyDouble(double value);
+
+Классифицирует значение с плавающей точкой.
+
+Данная функция возвращает комбинацию из следующих значений:
+
+=over
+
+=item B<BH_FP_NORMAL>
+
+Значение является нормальным или субнормальным.
+
+=item B<BH_FP_ZERO>
+
+Значение является положительным или отрицательным нулём.
+
+=item B<BH_FP_INFINITE>
+
+Значение является положительной или отрицательной бесконечностью.
+
+=item B<BH_FP_NAN>
+
+Значение не является числом (NaN).
+
+=item B<BH_FP_NEGATIVE>
+
+Значение является отрицательным.
+
+=back
+
+
+=head2 BH_Read16LEu
+
+ uint16_t BH_Read16LEu(const char *buffer);
+
+Считывает целое 16-битное беззнаковое little-endian число из буфера.
+
+
+=head2 BH_Read16LEs
+
+ int16_t BH_Read16LEs(const char *buffer);
+
+Считывает целое 16-битное знаковое little-endian число из буфера.
+
+
+=head2 BH_Read32LEu
+
+ uint32_t BH_Read32LEu(const char *buffer);
+
+Считывает целое 32-битное беззнаковое little-endian число из буфера.
+
+
+=head2 BH_Read32LEs
+
+ int32_t BH_Read32LEs(const char *buffer);
+
+Считывает целое 32-битное знаковое little-endian число из буфера.
+
+
+=head2 BH_Read64LEu
+
+ uint64_t BH_Read64LEu(const char *buffer);
+
+Считывает целое 64-битное беззнаковое little-endian число из буфера.
+
+
+=head2 BH_Read64LEs
+
+ int64_t BH_Read64LEs(const char *buffer);
+
+Считывает целое 64-битное знаковое little-endian число из буфера.
+
+
+=head2 BH_Read16BEu
+
+ uint16_t BH_Read16BEu(const char *buffer);
+
+Считывает целое 16-битное беззнаковое big-endian число из буфера.
+
+
+=head2 BH_Read16BEs
+
+ int16_t BH_Read16BEs(const char *buffer);
+
+Считывает целое 16-битное знаковое big-endian число из буфера.
+
+
+=head2 BH_Read32BEu
+
+ uint32_t BH_Read32BEu(const char *buffer);
+
+Считывает целое 32-битное беззнаковое big-endian число из буфера.
+
+
+=head2 BH_Read32BEs
+
+ int32_t BH_Read32BEs(const char *buffer);
+
+Считывает целое 32-битное знаковое big-endian число из буфера.
+
+
+=head2 BH_Read64BEu
+
+ uint64_t BH_Read64BEu(const char *buffer);
+
+Считывает целое 64-битное беззнаковое big-endian число из буфера.
+
+
+=head2 BH_Read64BEs
+
+ int64_t BH_Read64BEs(const char *buffer);
+
+Считывает целое 64-битное знаковое big-endian число из буфера.
+
+
+=head2 BH_Write16LEu
+
+ void BH_Write16LEu(char *buffer, 
+                    uint16_t value);
+
+Записывает целое 16-битное беззнаковое little-endian число в буфер.
+
+
+=head2 BH_Write16LEs
+
+ void BH_Write16LEs(char *buffer, 
+                    int16_t value);
+
+Записывает целое 16-битное знаковое little-endian число в буфер.
+
+
+=head2 BH_Write32LEu
+
+ void BH_Write32LEu(char *buffer, 
+                    uint32_t value);
+
+Записывает целое 32-битное беззнаковое little-endian число в буфер.
+
+
+=head2 BH_Write32LEs
+
+ void BH_Write32LEs(char *buffer, 
+                    int32_t value);
+
+Записывает целое 32-битное знаковое little-endian число в буфер.
+
+
+=head2 BH_Write64LEu
+
+ void BH_Write64LEu(char *buffer, 
+                    uint64_t value);
+
+Записывает целое 64-битное беззнаковое little-endian число в буфер.
+
+
+=head2 BH_Write64LEs
+
+ void BH_Write64LEs(char *buffer, 
+                    int64_t value);
+
+Записывает целое 64-битное знаковое little-endian число в буфер.
+
+
+=head2 BH_Write16BEu
+
+ void BH_Write16BEu(char *buffer, 
+                    uint16_t value);
+
+Записывает целое 16-битное беззнаковое big-endian число в буфер.
+
+
+=head2 BH_Write16BEs
+
+ void BH_Write16BEs(char *buffer, 
+                    int16_t value);
+
+Записывает целое 16-битное знаковое big-endian число в буфер.
+
+
+=head2 BH_Write32BEu
+
+ void BH_Write32BEu(char *buffer, 
+                    uint32_t value);
+
+Записывает целое 32-битное беззнаковое big-endian число в буфер.
+
+
+=head2 BH_Write32BEs
+
+ void BH_Write32BEs(char *buffer, 
+                    int32_t value);
+
+Записывает целое 32-битное знаковое big-endian число в буфер.
+
+
+=head2 BH_Write64BEu
+
+ void BH_Write64BEu(char *buffer, 
+                    uint64_t value);
+
+Записывает целое 64-битное беззнаковое big-endian число в буфер.
+
+
+=head2 BH_Write64BEs
+
+ void BH_Write64BEs(char *buffer, 
+                    int64_t value);
+
+Записывает целое 64-битное знаковое big-endian число в буфер.
+
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

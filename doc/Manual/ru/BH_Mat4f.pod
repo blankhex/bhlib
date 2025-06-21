@@ -1,0 +1,290 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_Mat4f - вещественная матрица 4x4
+
+
+=head1 СИНТАКСИС
+
+ #include <BH/Math/Mat4f.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+Модуль BH_Mat4f предоставляет набор функций для работы с вещественными матрицами
+размером 4x4. Эти функции позволяют выполнять различные операции над матрицами,
+такие как сложение, вычитание, умножение, транспонирование, вычисление 
+определителя и другие.
+
+
+=head1 API ВЫЗОВЫ
+
+
+=head2 BH_Mat4fIdentity
+
+ void BH_Mat4fIdentity(float out[16]);
+
+Записывает единичную матрицу в I<out>.
+
+
+=head2 BH_Mat4fAdd
+
+ void BH_Mat4fAdd(const float a[16],
+                  const float b[16],
+                  float out[16]);
+
+Вычисляет сумму двух матриц I<a> и I<b>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat4fSub
+
+ void BH_Mat4fSub(const float a[16],
+                  const float b[16],
+                  float out[16]);
+
+Вычисляет разность двух матриц I<a> и I<b>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat4fMul
+
+ void BH_Mat4fMul(const float a[16],
+                  const float b[16],
+                  float out[16]);
+
+Вычисляет результат перемножения двух матриц I<a> и I<b>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat4fScale
+
+ void BH_Mat4fScale(const float a[16],
+                    float b,
+                    float out[16]);
+
+Вычисляет результат умножения матрицы I<a> на значение I<b>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat4fTranspose
+
+ void BH_Mat4fTranspose(const float in[16],
+                        float out[16]);
+
+Транспонирует матрицу I<in>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat4fTrace
+
+ float BH_Mat4fTrace(const float in[16]);
+
+Вычисляет сумму элементов главной диагонали матрицы I<in>.
+
+
+=head2 BH_Mat4fDet
+
+ float BH_Mat4fDet(const float in[16]);
+
+Вычисляет определитель матрицы I<in>.
+
+
+=head2 BH_Mat4fInverse
+
+ int BH_Mat4fInverse(const float in[16],
+                     float out[16]);
+
+Вычисляет обратную матрицу для I<in>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+В случае успеха функция возвращает 0, в противном случае - код ошибки.
+
+
+=head2 BH_Mat4fFromScale
+
+ void BH_Mat4fFromScale(float x,
+                        float y,
+                        float z,
+                        float out[16]);
+
+Вычисляет масштабирующую матрицу с масштабами I<x>, I<y> и I<z>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat4fFromTranslation
+
+ void BH_Mat4fFromTranslation(float x,
+                              float y,
+                              float z,
+                              float out[16]);
+
+Вычисляет матрицу смещения со значениями I<x>, I<y> и I<z>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat4fFromRotationX
+
+ void BH_Mat4fFromRotationX(float angle,
+                            float out[16]);
+
+Вычисляет матрицу вращения относительно оси X с заданным углом I<angle>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat4fFromRotationY
+
+ void BH_Mat4fFromRotationY(float angle,
+                            float out[16]);
+
+Вычисляет матрицу вращения относительно оси Y с заданным углом I<angle>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat4fFromRotationZ
+
+ void BH_Mat4fFromRotationZ(float angle,
+                            float out[16]);
+
+Вычисляет матрицу вращения относительно оси Z с заданным углом I<angle>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat4fFromAxis
+
+ void BH_Mat4fFromAxis(const float axis[3],
+                       float angle,
+                       float out[16]);
+
+Вычисляет матрицу вращения относительно оси I<axis> с заданным углом I<angle>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat4fFromEuler
+
+ void BH_Mat4fFromEuler(float roll,
+                        float pitch,
+                        float yaw,
+                        float out[16]);
+
+Вычисляет матрицу вращения из углов связанной системы координат I<roll>,
+I<pitch> и I<yaw>.
+
+Порядок применения вращения ZYX (yaw, pitch, roll).
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat4fFromQuat4f
+
+ void BH_Mat4fFromQuat4f(const float in[4],
+                         float out[16]);
+
+Вычисляет матрицу вращения из кватерниона I<in>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat4fFromOrtho
+
+ void BH_Mat4fFromOrtho(float xMin,
+                        float xMax,
+                        float yMin,
+                        float yMax,
+                        float zMin,
+                        float zMax,
+                        float out[16]);
+
+Вычисляет матрицу ортографической проекции.
+
+Параметры I<xMin> и I<xMax> определяют допустимый диапазон значений X
+координат.
+
+Параметры I<yMin> и I<yMax> определяют допустимый диапазон значений Y
+координат.
+
+Параметры I<zMin> и I<zMax> определяют допустимый диапазон значений Z
+координат.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat4fFromFrustum
+
+ void BH_Mat4fFromFrustum(float fov,
+                          float aspect,
+                          float zMin,
+                          float zMax,
+                          float out[16]);
+
+Вычисляет матрицу перспективной проекции.
+
+Параметр I<fov> определяет угол обзора.
+
+Параметр I<aspect> определяет соотношение сторон.
+
+Параметры I<zMin> и I<zMax> определяют допустимый диапазон значений Z
+координат.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat4fFromLookAt
+
+ void BH_Mat4fFromLookAt(const float position[3],
+                         const float at[3],
+                         const float up[3],
+                         float out[16]);
+
+Вычисляет видовую матрицу камеры.
+
+Параметр I<position> определяет положение камеры в пространстве.
+
+Параметр I<at> определяет точку, куда направлена камера.
+
+Параметр I<up> определяет «верх» камеры.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head2 BH_Mat4fApplyVec4f
+
+ void BH_Mat4fApplyVec4f(const float a[16],
+                         const float b[4],
+                         float out[4]);
+
+Вычисляет результат перемножения матрицы I<a> и вектора I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Mat4fApplyVec3f
+
+ void BH_Mat4fApplyVec3f(const float a[16],
+                         const float b[3],
+                         float out[3]);
+
+Вычисляет результат перемножения матрицы I<a> и вектора I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

@@ -1,0 +1,219 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_Quat - Кватернион
+
+
+=head1 СИНТАКСИС
+
+#include <BH/Math/Quat.h>
+
+cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+Данный модуль предоставляет набор функций для работы с кватернионами. 
+Кватернионы используются для представления вращений в трёхмерном пространстве и 
+обладают преимуществами перед другими методами, такими как матрицы вращения или 
+углы Эйлера, в части устойчивости к накоплению ошибок при многократных операциях
+вращения.
+
+
+=head1 API ВЫЗОВЫ
+
+
+=head2 BH_Quat4fAdd
+
+ #define BH_Quat4fAdd(a, b, out) \
+     BH_Vec4fAdd(a, b, out)
+
+Вычисляет сумму двух кватернионов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий кватернион.
+
+
+=head2 BH_Quat4fSub
+
+ #define BH_Quat4fSub(a, b, out) \
+     BH_Vec4fSub(a, b, out)
+
+Вычисляет разность двух кватернионов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий кватернион.
+
+
+=head2 BH_Quat4fScale
+
+ #define BH_Quat4fScale(a, b, out) \
+     BH_Vec4fScale(a, b, out)
+
+Вычисляет результат умножения кватерниона I<a> на значение I<b>.
+
+Параметр I<out> описывает результирующий кватернион.
+
+
+=head2 BH_Quat4fNegate
+
+ #define BH_Quat4fNegate(in, out) \
+     BH_Vec4fNegate(in, out)
+
+Вычисляет противоположный кватернион от кватерниона I<in>.
+
+Параметр I<out> описывает результирующий кватернион.
+
+
+=head2 BH_Quat4fDot
+
+ #define BH_Quat4fDot(a, b) \
+     BH_Vec4fDot(a, b)
+
+Вычисляет скалярное произведение кватернионов I<a> и I<b>.
+
+
+=head2 BH_Quat4fLength
+
+ #define BH_Quat4fLength(in) \
+     BH_Vec4fLength(in)
+
+float BH_Vec4fLength(const float in[4]);
+
+Вычисляет длину кватерниона I<in>.
+
+
+=head2 BH_Quat4fNormal
+
+ #define BH_Quat4fNormal(in, out) \
+     BH_Vec4fNormal(in, out)
+
+Вычисляет нормализованную форму кватерниона I<in>.
+
+Параметр I<out> описывает результирующий кватернион.
+
+
+=head2 BH_Quat4fLerp
+
+ #define BH_Quat4fLerp(a, b, t, out) \
+     BH_Vec4fLerp(a, b, t, out)
+
+Выполняет линейную интерполяцию между двумя кватернионами I<a> и I<b> с 
+параметром I<t>.
+
+Параметр I<out> описывает результирующий кватернион.
+
+
+=head2 BH_Quat4fIdentity
+
+ void BH_Quat4fIdentity(float out[4]);
+
+Записывает единичный кватернион в I<out>.
+
+
+=head2 BH_Quat4fConjugate
+
+ void BH_Quat4fConjugate(const float in[4],
+                         float out[4]);
+
+Вычисляет сопряжённый кватернион из I<in>.
+
+Параметр I<out> описывает результирующий кватернион.
+
+
+=head2 BH_Quat4fInverse
+
+ void BH_Quat4fInverse(const float in[4],
+                       float out[4]);
+
+Вычисляет обратный кватернион из I<in>.
+
+Параметр I<out> описывает результирующий кватернион.
+
+
+=head2 BH_Quat4fMul
+
+ void BH_Quat4fMul(const float a[4],
+                   const float b[4],
+                   float out[4]);
+
+Вычисляет результат перемножения двух кватернионов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий кватернион.
+
+
+=head2 BH_Quat4fSlerp
+
+ void BH_Quat4fSlerp(const float a[4],
+                     const float b[4],
+                     float t,
+                     float out[4]);
+
+Выполняет сферическую линейную интерполяцию между двумя кватернионами I<a> и
+I<b> с параметром I<t>.
+
+Параметр I<out> описывает результирующий кватернион.
+
+
+=head2 BH_Quat4fFromEuler
+
+ void BH_Quat4fFromEuler(float roll,
+                         float pitch,
+                         float yaw,
+                         float out[4]);
+
+Вычисляет кватернион из углов связанной системы координат I<roll>, I<pitch> и
+I<yaw>.
+
+Порядок применения вращения ZYX (yaw, pitch, roll).
+
+Параметр I<out> описывает результирующий кватернион.
+
+
+=head2 BH_Quat4fFromAxis
+
+ void BH_Quat4fFromAxis(const float axis[3],
+                        float angle,
+                        float out[4]);
+
+Вычисляет кватернион из вращения относительно оси I<axis> с заданным углом
+I<angle>.
+
+Параметр I<out> описывает результирующий кватернион.
+
+
+=head2 BH_Quat4fToEuler
+
+ void BH_Quat4fToEuler(const float in[4],
+                       float *roll,
+                       float *pitch,
+                       float *yaw);
+
+Вычисляет углы связанной системы координат I<roll>, I<pitch> и I<yaw> из
+кватерниона I<in>.
+
+Порядок применения вращения ZYX (yaw, pitch, roll).
+
+
+=head2 BH_Quat4fToAxis
+
+ void BH_Quat4fToAxis(const float in[4],
+                      float axis[3],
+                      float *angle);
+
+Вычисляет ось вращения I<axis> и угол I<angle> из кватерниона I<in>.
+
+
+=head2 BH_Quat4fToMat4f
+
+ void BH_Quat4fToMat4f(const float in[4],
+                       float out[16]);
+
+Вычисляет матрицу вращения из кватерниона I<in>.
+
+Параметр I<out> описывает результирующую матрицу.
+
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

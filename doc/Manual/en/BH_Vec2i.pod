@@ -1,0 +1,116 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Vec2i - two-dimensional integer vector
+
+
+=head1 SYNTAX
+
+ #include <BH/Math.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Vec2i module provides a set of functions for working with two-dimensional
+integer vectors.
+
+
+=head1 API CALLS
+
+
+=head2 BH_Vec2iAdd
+
+ void BH_Vec2iAdd(const int a[2],
+                  const int b[2],
+                  int out[2]);
+
+Calculates the sum of two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec2iSub
+
+ void BH_Vec2iSub(const int a[2],
+                  const int b[2],
+                  int out[2]);
+
+Calculates the difference between two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec2iMul
+
+ void BH_Vec2iMul(const int a[2],
+                  const int b[2],
+                  int out[2]);
+
+Calculates the result of multiplying two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec2iScale
+
+ void BH_Vec2iScale(const int a[2],
+                    int b,
+                    int out[2]);
+
+Calculates the result of multiplying vector I<a> by value I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec2iMulAdd
+
+ void BH_Vec2iMulAdd(const int a[2],
+                     const int b[2],
+                     const int c[2],
+                     int out[2]);
+
+Calculates the result of the sum I<c> and the result of multiplying vectors I<a>
+and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec2iNegate
+
+ void BH_Vec2iNegate(const int in[2],
+                     int out[2]);
+
+Calculates the opposite vector from vector I<in>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec2iMin
+
+ void BH_Vec2iMin(const int a[2],
+                  const int b[2],
+                  int out[2]);
+
+Calculates the element-wise minimum of two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec2iMax
+
+ void BH_Vec2iMax(const int a[2],
+                  const int b[2],
+                  int out[2]);
+
+Calculates the element-wise maximum of two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head1 SEE ALSO
+
+L<BH>

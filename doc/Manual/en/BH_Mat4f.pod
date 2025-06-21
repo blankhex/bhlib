@@ -1,0 +1,286 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Mat4f - real 4x4 matrix
+
+
+=head1 SYNTAX
+
+ #include <BH/Math/Mat4f.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Mat4f module provides a set of functions for working with real 4x4 
+matrices. These functions allow you to perform various operations on matrices, 
+such as addition, subtraction, multiplication, transposition, determinant 
+calculation, and others.
+
+
+=head1 API CALLS
+
+
+=head2 BH_Mat4fIdentity
+
+ void BH_Mat4fIdentity(float out[16]);
+
+Writes an identity matrix to I<out>.
+
+
+=head2 BH_Mat4fAdd
+
+ void BH_Mat4fAdd(const float a[16],
+                  const float b[16],
+                  float out[16]);
+
+Calculates the sum of two matrices I<a> and I<b>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat4fSub
+
+ void BH_Mat4fSub(const float a[16],
+                  const float b[16],
+                  float out[16]);
+
+Calculates the difference between two matrices I<a> and I<b>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat4fMul
+
+ void BH_Mat4fMul(const float a[16],
+                  const float b[16],
+                  float out[16]);
+
+Calculates the result of multiplying two matrices I<a> and I<b>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat4fScale
+
+ void BH_Mat4fScale(const float a[16],
+                    float b,
+                    float out[16]);
+
+Calculates the result of multiplying matrix I<a> by value I<b>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat4fTranspose
+
+ void BH_Mat4fTranspose(const float in[16],
+                        float out[16]);
+
+Transposes matrix I<in>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat4fTrace
+
+ float BH_Mat4fTrace(const float in[16]);
+
+Calculates the sum of the elements of the main diagonal of matrix I<in>.
+
+
+=head2 BH_Mat4fDet
+
+ float BH_Mat4fDet(const float in[16]);
+
+Calculates the determinant of matrix I<in>.
+
+
+=head2 BH_Mat4fInverse
+
+ int BH_Mat4fInverse(const float in[16],
+                     float out[16]);
+
+Calculates the inverse matrix for I<in>.
+
+The I<out> parameter describes the resulting matrix.
+
+If successful, the function returns 0, otherwise it returns an error code.
+
+
+=head2 BH_Mat4fFromScale
+
+ void BH_Mat4fFromScale(float x,
+                        float y,
+                        float z,
+                        float out[16]);
+
+Calculates a scaling matrix with scales I<x>, I<y>, and I<z>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat4fFromTranslation
+
+ void BH_Mat4fFromTranslation(float x,
+                              float y,
+                              float z,
+                              float out[16]);
+
+Calculates a translation matrix with values I<x>, I<y>, and I<z>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat4fFromRotationX
+
+ void BH_Mat4fFromRotationX(float angle,
+                            float out[16]);
+
+Calculates a rotation matrix around the X axis with a given I<angle>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat4fFromRotationY
+
+ void BH_Mat4fFromRotationY(float angle,
+                            float out[16]);
+
+Calculates a rotation matrix around the Y axis with a given I<angle>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat4fFromRotationZ
+
+ void BH_Mat4fFromRotationZ(float angle,
+                            float out[16]);
+
+Calculates a rotation matrix around the Z axis with a given I<angle>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat4fFromAxis
+
+ void BH_Mat4fFromAxis(const float axis[3],
+                       float angle,
+                       float out[16]);
+
+Calculates a rotation matrix around the axis I<axis> with a given I<angle>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat4fFromEuler
+
+ void BH_Mat4fFromEuler(float roll,
+                        float pitch,
+                        float yaw,
+                        float out[16]);
+
+Calculates a rotation matrix from the angles of the associated coordinate system
+I<roll>, I<pitch>, and I<yaw>.
+
+The order of rotation application is ZYX (yaw, pitch, roll).
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat4fFromQuat4f
+
+ void BH_Mat4fFromQuat4f(const float in[4],
+                         float out[16]);
+
+Calculates a rotation matrix from quaternion I<in>.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat4fFromOrtho
+
+ void BH_Mat4fFromOrtho(float xMin,
+                        float xMax,
+                        float yMin,
+                        float yMax,
+                        float zMin,
+                        float zMax,
+                        float out[16]);
+
+Calculates an orthographic projection matrix.
+
+The I<xMin> and I<xMax> parameters define the valid range of X coordinates.
+
+The I<yMin> and I<yMax> parameters define the valid range of Y coordinates.
+
+The I<zMin> and I<zMax> parameters define the valid range of Z coordinates.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat4fFromFrustum
+
+ void BH_Mat4fFromFrustum(float fov,
+                          float aspect,
+                          float zMin,
+                          float zMax,
+                          float out[16]);
+
+Calculates a perspective projection matrix.
+
+The I<fov> parameter defines the field of view.
+
+The I<aspect> parameter defines the aspect ratio.
+
+The I<zMin> and I<zMax> parameters define the valid range of Z coordinates.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat4fFromLookAt
+
+ void BH_Mat4fFromLookAt(const float position[3],
+                         const float at[3],
+                         const float up[3],
+                         float out[16]);
+
+Calculates the camera view matrix.
+
+The I<position> parameter defines the position of the camera in space.
+
+The I<at> parameter defines the point where the camera is aimed.
+
+The I<up> parameter defines the "up" direction of the camera.
+
+The I<out> parameter describes the resulting matrix.
+
+
+=head2 BH_Mat4fApplyVec4f
+
+ void BH_Mat4fApplyVec4f(const float a[16],
+                         const float b[4],
+                         float out[4]);
+
+Calculates the result of multiplying matrix I<a> by vector I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Mat4fApplyVec3f
+
+ void BH_Mat4fApplyVec3f(const float a[16],
+                         const float b[3],
+                         float out[3]);
+
+Calculates the result of multiplying matrix I<a> by vector I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head1 SEE ALSO
+
+L<BH>

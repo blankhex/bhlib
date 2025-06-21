@@ -1,0 +1,201 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_Vec2f - двухмерный вещественный вектор
+
+
+=head1 СИНТАКСИС
+
+ #include <BH/Math/Vec2f.h>
+
+ cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+Модуль BH_Vec2f предоставляет набор функций для работы с двухмерными
+векторами. Он включает в себя операции сложения, вычитания, умножения,
+масштабирования, вычисления скалярного и векторного произведения, а также
+нормализации векторов.
+
+
+=head1 API ВЫЗОВЫ
+
+
+=head2 BH_Vec2fAdd
+
+ void BH_Vec2fAdd(const float a[2],
+                  const float b[2],
+                  float out[2]);
+
+Вычисляет сумму двух векторов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec2fSub
+
+ void BH_Vec2fSub(const float a[2],
+                  const float b[2],
+                  float out[2]);
+
+Вычисляет разность двух векторов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec2fMul
+
+ void BH_Vec2fMul(const float a[2],
+                  const float b[2],
+                  float out[2]);
+
+Вычисляет результат перемножения двух векторов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec2fScale
+
+ void BH_Vec2fScale(const float a[2],
+                    float b,
+                    float out[2]);
+
+Вычисляет результат умножения вектора I<a> на значение I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec2fMulAdd
+
+ void BH_Vec2fMulAdd(const float a[2],
+                     const float b[2],
+                     const float c[2],
+                     float out[2]);
+
+Вычисляет результат суммы I<c> и произведения векторов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec2fNegate
+
+ void BH_Vec2fNegate(const float in[2],
+                     float out[2]);
+
+Вычисляет противоположный вектор от вектора I<in>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec2fDot
+
+ float BH_Vec2fDot(const float a[2],
+                   const float b[2]);
+
+Вычисляет скалярное произведение векторов I<a> и I<b>.
+
+
+=head2 BH_Vec2fCross
+
+ float BH_Vec2fCross(const float a[2],
+                     const float b[2]);
+
+Вычисляет векторное произведение векторов I<a> и I<b>.
+
+
+=head2 BH_Vec2fLength
+
+ float BH_Vec2fLength(const float in[2]);
+
+Вычисляет длину вектора I<in>.
+
+
+=head2 BH_Vec2fNormal
+
+ void BH_Vec2fNormal(const float in[2],
+                     float out[2]);
+
+Вычисляет нормализованную форму вектора I<in>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec2fNormalEx
+
+ float BH_Vec2fNormalEx(const float in[2],
+                        float out[2]);
+
+Вычисляет нормализованную форму вектора I<in> и возвращает его исходную длину.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec2fMin
+
+ void BH_Vec2fMin(const float a[2],
+                  const float b[2],
+                  float out[2]);
+
+Вычисляет поэлементный минимум двух векторов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec2fMax
+
+ void BH_Vec2fMax(const float a[2],
+                  const float b[2],
+                  float out[2]);
+
+Вычисляет поэлементный максимум двух векторов I<a> и I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec2fLerp
+
+ void BH_Vec2fLerp(const float a[2],
+                   const float b[2],
+                   float t,
+                   float out[2]);
+
+Выполняет линейную интерполяцию между двумя векторами I<a> и I<b> с параметром
+I<t>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec2fProject
+
+ void BH_Vec2fProject(const float a[2],
+                      const float b[2],
+                      float out[2]);
+
+Вычисляет результат проекции вектора I<a> на вектор I<b>.
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head2 BH_Vec2fBarycentric
+
+ void BH_Vec2fBarycentric(const float a[2],
+                          const float b[2],
+                          const float c[2],
+                          float v,
+                          float w,
+                          float out[2]);
+
+Вычисляет вектор из барицентрических координат I<v>, I<w> и векторов точек I<a>,
+I<b>, I<c>.
+
+Вычисление происходит по формуле A + v*(B-A) + w*(C-A).
+
+Параметр I<out> описывает результирующий вектор.
+
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

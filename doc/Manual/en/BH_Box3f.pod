@@ -1,0 +1,98 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Box3f - three-dimensional bounding box
+
+
+=head1 SYNTAX
+
+ #include <BH/Math/Box3f.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Box3f module provides functions for working with three-dimensional 
+bounding boxes. It includes operations for union, intersection, checking if a 
+point is inside a box, and calculating the bounding box for a set of points.
+
+
+=head1 API CALLS
+
+
+=head2 BH_Box3fUnion
+
+ void BH_Box3fUnion(const float aMin[3],
+                    const float aMax[3],
+                    const float bMin[3],
+                    const float bMax[3],
+                    float outMin[3],
+                    float outMax[3]);
+
+Combines two bounding boxes I<A> and I<B>.
+
+The parameters I<aMin> and I<aMax> describe the bounding box A.
+
+The parameters I<bMin> and I<bMax> describe the bounding box B.
+
+The parameters I<outMin> and I<outMax> describe the resulting bounding box.
+
+
+=head2 BH_Box3fIntersect
+
+ int BH_Box3fIntersect(const float aMin[3],
+                       const float aMax[3],
+                       const float bMin[3],
+                       const float bMax[3],
+                       float outMin[3],
+                       float outMax[3]);
+
+Calculates the intersection of two bounding boxes A and B.
+
+The parameters I<aMin> and I<aMax> describe the bounding box A.
+
+The parameters I<bMin> and I<bMax> describe the bounding box B.
+
+The parameters I<outMin> and I<outMax> describe the resulting bounding box.
+
+Returns 0 in case of successful intersection or an error code.
+
+
+=head2 BH_Box3fContains
+
+ int BH_Box3fContains(const float aMin[3],
+                      const float aMax[3],
+                      const float point[3]);
+
+Checks if the point is inside the bounding box.
+
+The parameters I<aMin> and I<aMax> describe the bounding box.
+
+The parameter I<point> describes the point.
+
+Returns 0 if the point is inside the bounding box, or an error code.
+
+
+=head2 BH_Box3fEnclose
+
+ int BH_Box3fEnclose(const float *points,
+                     size_t size,
+                     float outMin[3],
+                     float outMax[3]);
+
+Calculates the bounding box for the given points.
+
+The parameters I<points> and I<size> describe the input array of points.
+
+The parameters I<outMin> and I<outMax> describe the resulting bounding box.
+
+Returns 0 in case of success or an error code.
+
+
+=head1 SEE ALSO
+
+L<BH>,
+L<BH_Box2f>

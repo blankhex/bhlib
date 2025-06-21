@@ -1,4 +1,4 @@
-#include <BH/Math.h>
+#include <BH/Math/Vec3i.h>
 #include <BH/Unit.h>
 
 

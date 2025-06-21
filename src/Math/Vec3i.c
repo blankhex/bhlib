@@ -1,4 +1,4 @@
-#include <BH/Math.h>
+#include <BH/Math/Vec3i.h>
 
 
 void BH_Vec3iAdd(const int a[3],

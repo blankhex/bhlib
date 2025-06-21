@@ -1,0 +1,197 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Hashmap - unordered associative array
+
+
+=head1 SYNTAX
+
+ #include <BH/Hashmap.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Hashmap library provides an implementation of an unordered associative 
+array based on a hash table. It allows you to store and retrieve data by key 
+efficiently.
+
+
+=head1 API CALLS
+
+
+=head2 BH_HashmapNew
+
+ BH_Hashmap *BH_HashmapNew(BH_EqualCallback equal,
+                           BH_HashCallback hash);
+
+Creates an associative array.
+
+The I<equal> parameter takes a pointer to a function that compares two elements.
+
+The I<hash> parameter takes a pointer to a function that calculates the hash
+value of an element.
+
+If successful, the function returns a pointer to a new BH_Hashmap object or NULL
+in case of an error.
+
+
+=head2 BH_HashmapFree
+
+ void BH_HashmapFree(BH_Hashmap *hashmap);
+
+Destroys the associative array.
+
+
+=head2 BH_HashmapClear
+
+ void BH_HashmapClear(BH_Hashmap *hashmap);
+
+Clears the associative array.
+
+
+=head2 BH_HashmapReserve
+
+ int BH_HashmapReserve(BH_Hashmap *hashmap,
+                       size_t size);
+
+Reserves space for at least I<size> elements.
+
+Calling this function invalidates existing iterators.
+
+If successful, the function returns 0; otherwise, it returns an error code.
+
+
+=head2 BH_HashmapInsert
+
+ int BH_HashmapInsert(BH_Hashmap *hashmap,
+                      void *key,
+                      void *value);
+
+Inserts an element represented by the key-value pair I<key> and I<value>.
+
+The function allows inserting multiple elements with the same key value.
+
+Calling this function invalidates existing iterators.
+
+If successful, the function returns 0; otherwise, it returns an error code.
+
+
+=head2 BH_HashmapRemove
+
+ void BH_HashmapRemove(BH_Hashmap *hashmap,
+                       void *key);
+
+Removes the element with the given key value I<key>.
+
+If the associative array contains multiple elements with the same key value, the
+function will remove only one key-value pair.
+
+Calling this function invalidates existing iterators.
+
+
+=head2 BH_HashmapAt
+
+ int BH_HashmapAt(BH_Hashmap *hashmap,
+                  void *key,
+                  void **value);
+
+Checks if there is an element with the given key I<key>.
+
+The optional I<value> parameter returns the value of the element with the given
+key.
+
+If successful, the function returns 0; otherwise, it returns an error code.
+
+
+=head2 BH_HashmapEmpty
+
+ int BH_HashmapEmpty(BH_Hashmap *hashmap);
+
+Checks if the associative array is empty.
+
+
+=head2 BH_HashmapSize
+
+ size_t BH_HashmapSize(BH_Hashmap *hashmap);
+
+Returns the number of elements.
+
+
+=head2 BH_HashmapCapacity
+
+ size_t BH_HashmapCapacity(BH_Hashmap *hashmap);
+
+Returns the capacity.
+
+
+=head2 BH_HashmapFactor
+
+ float BH_HashmapFactor(BH_Hashmap *hashmap);
+
+Returns the maximum load factor.
+
+
+=head2 BH_HashmapSetFactor
+
+ void BH_HashmapSetFactor(BH_Hashmap *hashmap,
+                          float factor);
+
+Sets the maximum load factor I<factor>.
+
+The new value of the maximum load factor will be applied on the next call to 
+L</BH_HashmapInsert> or L</BH_HashmapReserve>.
+
+
+=head2 BH_HashmapIterAt
+
+ void *BH_HashmapIterAt(BH_Hashmap *hashmap,
+                        void *key);
+
+Returns an iterator to the element with the given key I<key>.
+
+If successful, the function returns an iterator or NULL.
+
+
+=head2 BH_HashmapIterNext
+
+ void *BH_HashmapIterNext(BH_Hashmap *hashmap,
+                          void *iter);
+
+Returns an iterator to the next element.
+
+The optional I<iter> parameter takes an iterator to the current element.
+
+If successful, the function returns an iterator or NULL.
+
+
+=head2 BH_HashmapIterRemove
+
+ void BH_HashmapIterRemove(BH_Hashmap *hashmap,
+                           void *iter);
+
+Removes the element by the given iterator I<iter>.
+
+Calling this function invalidates existing iterators.
+
+
+=head2 BH_HashmapIterKey
+
+ void *BH_HashmapIterKey(void *iter);
+
+Returns the key of the element pointed to by the iterator I<iter>.
+
+
+=head2 BH_HashmapIterValue
+
+ void *BH_HashmapIterValue(void *iter);
+
+Returns the value of the element pointed to by the iterator I<iter>.
+
+
+=head1 SEE ALSO
+
+L<BH>

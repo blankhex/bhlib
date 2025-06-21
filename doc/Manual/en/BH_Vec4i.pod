@@ -1,0 +1,116 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Vec4i - four-dimensional integer vector
+
+
+=head1 SYNTAX
+
+ #include <BH/Math.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Vec4i module provides a set of functions for working with 
+four-dimensional integer vectors.
+
+
+=head1 API CALLS
+
+
+=head2 BH_Vec4iAdd
+
+ void BH_Vec4iAdd(const int a[4],
+                  const int b[4],
+                  int out[4]);
+
+Calculates the sum of two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4iSub
+
+ void BH_Vec4iSub(const int a[4],
+                  const int b[4],
+                  int out[4]);
+
+Calculates the difference between two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4iMul
+
+ void BH_Vec4iMul(const int a[4],
+                  const int b[4],
+                  int out[4]);
+
+Calculates the result of multiplying two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4iScale
+
+ void BH_Vec4iScale(const int a[4],
+                    int b,
+                    int out[4]);
+
+Calculates the result of multiplying vector I<a> by value I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4iMulAdd
+
+ void BH_Vec4iMulAdd(const int a[4],
+                     const int b[4],
+                     const int c[4],
+                     int out[4]);
+
+Calculates the result of the sum I<c> and the result of multiplying vectors I<a>
+and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4iNegate
+
+ void BH_Vec4iNegate(const int in[4],
+                     int out[4]);
+
+Calculates the opposite vector from vector I<in>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4iMin
+
+ void BH_Vec4iMin(const int a[4],
+                  const int b[4],
+                  int out[4]);
+
+Calculates the element-wise minimum of two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4iMax
+
+ void BH_Vec4iMax(const int a[4],
+                  const int b[4],
+                  int out[4]);
+
+Calculates the element-wise maximum of two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head1 SEE ALSO
+
+L<BH>

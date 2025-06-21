@@ -1,0 +1,184 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Unicode - Working with Unicode and UTF encodings
+
+
+=head1 SYNTAX
+
+ #include <BH/Math.h>
+
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Unicode library provides a set of functions for working with various
+Unicode encodings, including UTF-8, UTF-16, and UTF-32. It allows you to
+convert characters to uppercase and lowercase, as well as encode and decode
+strings in the specified encodings.
+
+
+=head1 API CALLS
+
+
+=head2 BH_UnicodeLower
+
+ uint32_t BH_UnicodeLower(uint32_t unit);
+
+Converts the Unicode code I<unit> to lowercase.
+
+The conversion is performed for characters in the Basic Multilingual Plane 
+(i.e., the first 65,536 codes).
+
+
+=head2 BH_UnicodeUpper
+
+ uint32_t BH_UnicodeUpper(uint32_t unit);
+
+Converts the Unicode code I<unit> to uppercase.
+
+The conversion is performed for characters in the Basic Multilingual Plane 
+(i.e., the first 65,536 codes).
+
+
+=head2 BH_UnicodeDecodeUtf8
+
+ size_t BH_UnicodeDecodeUtf8(const char *string,
+                             size_t size,
+                             uint32_t *unit);
+
+Decodes the UTF-8 sequence from I<string> (with the specified length I<size>) 
+and writes the code to I<unit>.
+
+Invalid UTF-8 sequences will be converted to code -1.
+
+If successful, the function returns the number of bytes read or 0 if I<string> 
+contains only part of the sequence.
+
+
+=head2 BH_UnicodeEncodeUtf8
+
+ size_t BH_UnicodeEncodeUtf8(uint32_t unit,
+                             char *string);
+
+Encodes the UTF-8 sequence into I<string> from the code I<unit>.
+
+It is assumed that the string contains 4 bytes of free space.
+
+If successful, the function returns the number of bytes written or 0.
+
+
+=head2 BH_UnicodeDecodeUtf16LE
+
+ size_t BH_UnicodeDecodeUtf16LE(const char *string,
+                                size_t size,
+                                uint32_t *unit);
+
+Decodes the UTF-16LE sequence from I<string> (with the specified length I<size>)
+and writes the code to I<unit>.
+
+Invalid UTF-16LE sequences will be converted to code -1.
+
+If successful, the function returns the number of bytes read or 0 if I<string> 
+contains only part of the sequence.
+
+
+=head2 BH_UnicodeDecodeUtf16BE
+
+ size_t BH_UnicodeDecodeUtf16BE(const char *string,
+                                size_t size,
+                                uint32_t *unit);
+
+Decodes the UTF-16BE sequence from I<string> (with the specified length I<size>)
+and writes the code to I<unit>.
+
+Invalid UTF-16BE sequences will be converted to code -1.
+
+If successful, the function returns the number of bytes read or 0 if I<string> 
+contains only part of the sequence.
+
+
+=head2 BH_UnicodeEncodeUtf16LE
+
+ size_t BH_UnicodeEncodeUtf16LE(uint32_t unit,
+                                char *string);
+
+Encodes the UTF-16LE sequence into I<string> from the code I<unit>.
+
+It is assumed that the string contains 4 bytes of free space.
+
+If successful, the function returns the number of bytes written or 0.
+
+
+=head2 BH_UnicodeEncodeUtf16BE
+
+ size_t BH_UnicodeEncodeUtf16BE(uint32_t unit,
+                                char *string);
+
+Encodes the UTF-16BE sequence into I<string> from the code I<unit>.
+
+It is assumed that the string contains 4 bytes of free space.
+
+If successful, the function returns the number of bytes written or 0.
+
+
+=head2 BH_UnicodeDecodeUtf32LE
+
+ size_t BH_UnicodeDecodeUtf32LE(const char *string,
+                                size_t size,
+                                uint32_t *unit);
+
+Decodes the UTF-32LE sequence from I<string> (with the specified length I<size>)
+and writes the code to I<unit>.
+
+Invalid UTF-32LE sequences will be converted to code -1.
+
+If successful, the function returns the number of bytes read or 0 if I<string> 
+contains only part of the sequence.
+
+
+=head2 BH_UnicodeDecodeUtf32BE
+
+ size_t BH_UnicodeDecodeUtf32BE(const char *string,
+                                size_t size,
+                                uint32_t *unit);
+
+Decodes the UTF-32BE sequence from I<string> (with the specified length I<size>)
+and writes the code to I<unit>.
+
+Invalid UTF-32BE sequences will be converted to code -1.
+
+If successful, the function returns the number of bytes read or 0 if I<string> 
+contains only part of the sequence.
+
+
+=head2 BH_UnicodeEncodeUtf32LE
+
+ size_t BH_UnicodeEncodeUtf32LE(uint32_t unit,
+                                char *string);
+
+Encodes the UTF-32LE sequence into I<string> from the code I<unit>.
+
+It is assumed that the string contains 4 bytes of free space.
+
+If successful, the function returns the number of bytes written or 0.
+
+
+=head2 BH_UnicodeEncodeUtf32BE
+
+ size_t BH_UnicodeEncodeUtf32BE(uint32_t unit,
+                                char *string);
+
+Encodes the UTF-32BE sequence into I<string> from the code I<unit>.
+
+It is assumed that the string contains 4 bytes of free space.
+
+If successful, the function returns the number of bytes written or 0.
+
+
+=head1 SEE ALSO
+
+L<BH>

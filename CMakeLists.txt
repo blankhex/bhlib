@@ -113,7 +113,22 @@ set(BH_HEADER
     include/BH/Common.h
     include/BH/Hashmap.h
     include/BH/IO.h
-    include/BH/Math.h
+    include/BH/Math/Box2f.h
+    include/BH/Math/Box3f.h
+    include/BH/Math/Line.h
+    include/BH/Math/Mat3f.h
+    include/BH/Math/Mat4f.h
+    include/BH/Math/Misc.h
+    include/BH/Math/Plane.h
+    include/BH/Math/Quat.h
+    include/BH/Math/Ray2f.h
+    include/BH/Math/Ray3f.h
+    include/BH/Math/Vec2f.h
+    include/BH/Math/Vec2i.h
+    include/BH/Math/Vec3f.h
+    include/BH/Math/Vec3i.h
+    include/BH/Math/Vec4f.h
+    include/BH/Math/Vec4i.h
     include/BH/Queue.h
     include/BH/Thread.h
     include/BH/Util.h

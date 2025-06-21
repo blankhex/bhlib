@@ -1,0 +1,382 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_String - Working with strings
+
+
+=head1 SYNTAX
+
+ #include <BH/Math.h>
+
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_String library provides a set of functions for working with strings, 
+including converting numbers to strings and back.
+
+
+=head1 DEFINING THE BASE
+
+The functions of the I<StringToInt> family have an algorithm for determining the 
+base of a number by string prefixes:
+
+=over
+
+=item * 
+
+If the prefix I<0b>, then base 2
+
+=item *
+
+If the prefix I<0>, then base 8
+
+=item *
+
+If the prefix I<0x>, then base 16
+
+=item *
+
+Otherwise, base 10.
+
+=back
+
+
+=head1 API CALLS
+
+
+=head2 BH_StringFromDouble
+
+ int BH_StringFromDouble(char *string,
+                         size_t size,
+                         double value,
+                         char format,
+                         int precision,
+                         size_t *actual);
+
+
+Formats a real number I<value> into a null-terminated string I<string>
+(with a length limit of I<size>).
+
+The I<format> parameter specifies the format for converting a number to a 
+string. Acceptable formats:
+
+=over
+
+=item B<f>, B<F>
+
+Fixed format: [-]ddd.ddd
+
+=item B<e>, B<E>
+
+Scientific format: [-]d.dddedd
+
+=item B<g>, B<G>
+
+Fixed or scientific format, depending on which one is shorter.
+
+=back
+
+The I<precision> parameter sets the precision of converting a number to a 
+string. If the accuracy value is negative, the conversion will be performed with 
+the minimum required accuracy so that the reverse conversion results in the 
+original number.
+
+The optional parameter I<actual> returns the length of the recorded string.
+
+This function follows the IEEE 754 rule of rounding to an even number.
+
+If successful, it returns 0 or an error code.
+
+
+=head2 BH_StringFromInt8s
+
+ int BH_StringFromInt8s(char *string,
+                        size_t size,
+                        int8_t value,
+                        int base,
+                        size_t *actual);
+
+Formats an 8-bit signed integer I<value> into a null-terminated string 
+I<string> (with a length limit of I<size>). 
+
+The I<base> parameter sets the base for the conversion.
+
+The optional parameter I<actual> returns the length of the recorded string.
+
+If successful, it returns 0 or an error code.
+
+
+=head2 BH_StringFromInt16s
+
+ int BH_StringFromInt16s(char *string,
+                         size_t size,
+                         int16_t value,
+                         int base,
+                         size_t *actual);
+
+Formats a 16-bit signed integer I<value> into a null-terminated string I<string> 
+(with a length limit of I<size>). 
+
+The I<base> parameter sets the base for the conversion.
+
+The optional parameter I<actual> returns the length of the recorded string.
+
+If successful, it returns 0 or an error code.
+
+
+=head2 BH_StringFromInt32s
+
+ int BH_StringFromInt32s(char *string,
+                         size_t size,
+                         int32_t value,
+                         int base,
+                         size_t *actual);
+
+Formats a 32-bit signed integer I<value> into a null-terminated string I<string>
+(with a length limit of I<size>). 
+
+The I<base> parameter sets the base for the conversion.
+
+The optional parameter I<actual> returns the length of the recorded string.
+
+If successful, it returns 0 or an error code.
+
+
+=head2 BH_StringFromInt64s
+
+ int BH_StringFromInt64s(char *string,
+                         size_t size,
+                         int64_t value,
+                         int base,
+                         size_t *actual);
+
+Formats a 64-bit signed integer I<value> into a null-terminated string I<string>
+(with a length limit of I<size>). 
+
+The I<base> parameter sets the base for the conversion.
+
+The optional parameter I<actual> returns the length of the recorded string.
+
+If successful, it returns 0 or an error code.
+
+
+=head2 BH_StringFromInt8u
+
+ int BH_StringFromInt8u(char *string,
+                        size_t size,
+                        uint8_t value,
+                        int base,
+                        size_t *actual);
+
+Formats an 8-bit unsigned integer I<value> into a null-terminated string 
+I<string> (with a length limit of I<size>). 
+
+The I<base> parameter sets the base for the conversion.
+
+The optional parameter I<actual> returns the length of the recorded string.
+
+If successful, it returns 0 or an error code.
+
+
+=head2 BH_StringFromInt16u
+
+ int BH_StringFromInt16u(char *string,
+                         size_t size,
+                         uint16_t value,
+                         int base,
+                         size_t *actual);
+
+Formats a 16-bit unsigned integer I<value> into a null-terminated string 
+I<string> (with a length limit of I<size>). 
+
+The I<base> parameter sets the base for the conversion.
+
+The optional parameter I<actual> returns the length of the recorded string.
+
+If successful, it returns 0 or an error code.
+
+
+=head2 BH_StringFromInt32u
+
+ int BH_StringFromInt32u(char *string,
+                         size_t size,
+                         uint32_t value,
+                         int base,
+                         size_t *actual);
+
+Formats a 32-bit unsigned integer I<value> into a null-terminated string 
+I<string> (with a length limit of I<size>). 
+
+The I<base> parameter sets the base for the conversion.
+
+The optional parameter I<actual> returns the length of the recorded string.
+
+If successful, it returns 0 or an error code.
+
+
+=head2 BH_StringFromInt64u
+
+ int BH_StringFromInt64u(char *string,
+                         size_t size,
+                         uint64_t value,
+                         int base,
+                         size_t *actual);
+
+Formats a 64-bit unsigned integer I<value> into a null-terminated string 
+I<string> (with a length limit of I<size>). 
+
+The I<base> parameter sets the base for the conversion.
+
+The optional parameter I<actual> returns the length of the recorded string.
+
+If successful, it returns 0 or an error code.
+
+
+=head2 BH_StringToDouble
+
+ double BH_StringToDouble(const char *string,
+                          size_t *size);
+
+Converts the string I<string> to a real number.
+
+The optional parameter I<size> returns the number of characters read from the 
+string. 
+
+If successful, it returns the converted number or 0.
+
+
+=head2 BH_StringToInt8s
+
+ int8_t BH_StringToInt8s(const char *string,
+                         size_t *size,
+                         int base);
+
+Converts the string I<string> to an 8-bit signed integer.
+
+The optional parameter I<size> returns the number of characters read from the 
+string. 
+
+The optional parameter I<base> specifies the base of the number.
+
+If successful, it returns the converted number or 0.
+
+
+=head2 BH_StringToInt16s
+
+ int16_t BH_StringToInt16s(const char *string,
+                           size_t *size,
+                           int base);
+
+Converts the string I<string> to a signed 16-bit integer.
+
+The optional parameter I<size> returns the number of characters read from the 
+string. 
+
+The optional parameter I<base> specifies the base of the number.
+
+If successful, it returns the converted number or 0.
+
+
+=head2 BH_StringToInt32s
+
+ int32_t BH_StringToInt32s(const char *string,
+                           size_t *size,
+                           int base);
+
+Converts the string I<string> to a signed 32-bit integer.
+
+The optional parameter I<size> returns the number of characters read from the 
+string. 
+
+The optional parameter I<base> specifies the base of the number.
+
+If successful, it returns the converted number or 0.
+
+
+=head2 BH_StringToInt64s
+
+ int64_t BH_StringToInt64s(const char *string,
+                           size_t *size,
+                           int base);
+
+Converts the string I<string> to a signed 64-bit integer.
+
+The optional parameter I<size> returns the number of characters read from the
+string. 
+
+The optional parameter I<base> specifies the base of the number.
+
+If successful, it returns the converted number or 0.
+
+
+=head2 BH_StringToInt8u
+
+ uint8_t BH_StringToInt8u(const char *string,
+                          size_t *size,
+                          int base);
+
+Converts the string I<string> to an unsigned 8-bit integer.
+
+The optional parameter I<size> returns the number of characters read from the
+string. 
+
+The optional parameter I<base> specifies the base of the number.
+
+If successful, it returns the converted number or 0.
+
+
+=head2 BH_StringToInt16u
+
+ uint16_t BH_StringToInt16u(const char *string,
+                            size_t *size,
+                            int base);
+
+Converts the string I<string> to an unsigned 16-bit integer.
+
+The optional parameter I<size> returns the number of characters read from the
+string. 
+
+The optional parameter I<base> specifies the base of the number.
+
+If successful, it returns the converted number or 0.
+
+
+=head2 BH_StringToInt32u
+
+ uint32_t BH_StringToInt32u(const char *string,
+                            size_t *size,
+                            int base);
+
+Converts the string I<string> to an unsigned 32-bit integer.
+
+The optional parameter I<size> returns the number of characters read from the
+string. 
+
+The optional parameter I<base> specifies the base of the number.
+
+If successful, it returns the converted number or 0.
+
+
+=head2 BH_StringToInt64u
+
+ uint64_t BH_StringToInt64u(const char *string,
+                            size_t *size,
+                            int base);
+
+Converts the string I<string> to an unsigned 64-bit integer.
+
+The optional parameter I<size> returns the number of characters read from the
+string. 
+
+The optional parameter I<base> specifies the base of the number.
+
+If successful, it returns the converted number or 0.
+
+
+=head1 SEE ALSO
+
+L<BH>

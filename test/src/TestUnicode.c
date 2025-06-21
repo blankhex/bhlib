@@ -1,5 +1,5 @@
 #include <BH/Unit.h>
-#include <BH/String.h>
+#include <BH/Unicode.h>
 #include <BH/IO.h>
 #include <stdlib.h>
 

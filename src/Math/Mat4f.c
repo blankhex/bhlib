@@ -1,4 +1,7 @@
-#include <BH/Math.h>
+#include <BH/Math/Mat4f.h>
+#include <BH/Math/Vec4f.h>
+#include <BH/Math/Vec3f.h>
+#include <BH/Math/Quat.h>
 #include <string.h>
 #include <math.h>
 

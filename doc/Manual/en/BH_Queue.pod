@@ -1,0 +1,138 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Queue - queue container
+
+
+=head1 SYNTAX
+
+ #include <BH/Queue.h>
+
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Queue module provides an implementation of a queue container that allows
+adding elements to the end and removing them from the beginning. The queue is
+based on a dynamic array, which ensures efficient memory usage and fast access 
+to elements.
+
+
+=head1 API CALLS
+
+
+=head2 BH_QueueNew
+
+ BH_Queue *BH_QueueNew(void);
+
+Creates a queue.
+
+If successful, the function returns a pointer to a new BH_Queue object, or NULL 
+in case of an error.
+
+
+=head2 BH_QueueFree
+
+ void BH_QueueFree(BH_Queue *queue);
+
+Destroys the queue.
+
+
+=head2 BH_QueueClear
+
+ void BH_QueueClear(BH_Queue *queue);
+
+Clears the queue.
+
+
+=head2 BH_QueueReserve
+
+ int BH_QueueReserve(BH_Queue *queue, 
+                     size_t size);
+
+Reserves space for at least I<size> elements.
+
+Calling this function invalidates existing iterators.
+
+If successful, the function returns 0; otherwise, it returns an error code.
+
+
+=head2 BH_QueueInsert
+
+ int BH_QueueInsert(BH_Queue *queue, 
+                    void *value);
+
+Inserts an element I<value>.
+
+Calling this function invalidates existing iterators.
+
+If successful, the function returns 0; otherwise, it returns an error code.
+
+
+=head2 BH_QueueRemove
+
+ void BH_QueueRemove(BH_Queue *queue);
+
+Removes the first element from the queue.
+
+Calling this function invalidates existing iterators.
+
+
+=head2 BH_QueueFront
+
+ int BH_QueueFront(BH_Queue *queue, 
+                   void **value);
+
+Returns the first element of the queue.
+
+The I<value> parameter returns the value of the element.
+
+If successful, the function returns 0; otherwise, it returns an error code.
+
+
+=head2 BH_QueueEmpty
+
+ int BH_QueueEmpty(BH_Queue *queue);
+
+Checks if the queue is empty.
+
+
+=head2 BH_QueueSize
+
+ size_t BH_QueueSize(BH_Queue *queue);
+
+Returns the number of elements.
+
+
+=head2 BH_QueueCapacity
+
+ size_t BH_QueueCapacity(BH_Queue *queue);
+
+Returns the capacity.
+
+
+=head2 BH_QueueIterNext
+
+ void *BH_QueueIterNext(BH_Queue *queue, 
+                        void *iter);
+
+Returns an iterator to the next element.
+
+The optional I<iter> parameter accepts an iterator to the current element.
+
+If successful, the function returns an iterator or NULL.
+
+
+=head2 BH_QueueIterValue
+
+ void *BH_QueueIterValue(void *iter);
+
+Returns the value of the element pointed to by the iterator.
+
+
+=head1 SEE ALSO
+
+L<BH>

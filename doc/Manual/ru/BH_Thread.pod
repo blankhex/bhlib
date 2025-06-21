@@ -1,0 +1,289 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_Thread - многопоточность и примитивы синхронизации
+
+
+=head1 СИНТАКСИС
+
+ #include <BH/Thread.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+Библиотека BH_Thread предоставляет набор функций для работы с многопоточностью
+и синхронизацией потоков. Она включает в себя функции для создания и управления
+потоками, работы с мьютексами, семафорами, условными переменными и спинлоками.
+
+
+=head1 API ВЫЗОВЫ
+
+
+=head2 BH_ThreadNew
+
+ BH_Thread *BH_ThreadNew(size_t stack,
+                         BH_ThreadCallback callback,
+                         void *data);
+
+Создаёт поток с заданным размером стека I<stack>, исполняемой функцией
+I<callback> и данными I<data>.
+
+В случае успеха возвращает указатель на объект потока, иначе NULL.
+
+
+=head2 BH_ThreadJoin
+
+ int BH_ThreadJoin(BH_Thread *thread);
+
+Блокирует исполнение текущего потока до завершения другого потока.
+
+По завершении выполнения потока ресурсы I<thread> освобождаются.
+
+В случае успеха возвращает 0, иначе код ошибки.
+
+
+=head2 BH_ThreadDetach
+
+ int BH_ThreadDetach(BH_Thread *thread);
+
+Отсоединяет поток от текущего процесса.
+
+По завершении выполнения потока ресурсы I<thread> освобождаются.
+
+В случае успеха возвращает 0, иначе код ошибки.
+
+
+=head2 BH_MutexNew
+
+ BH_Mutex *BH_MutexNew(void);
+
+Создаёт мьютекс.
+
+В случае успеха возвращает указатель на объект мьютекса, иначе NULL.
+
+
+=head2 BH_MutexFree
+
+ void BH_MutexFree(BH_Mutex *mutex);
+
+Уничтожает мьютекс.
+
+Если мьютекс захвачен, поведение не определено.
+
+
+=head2 BH_MutexLock
+
+ int BH_MutexLock(BH_Mutex *mutex);
+
+Захватывает мьютекс.
+
+Если мьютекс уже был захвачен, поведение не определено.
+
+В случае успеха возвращает 0, иначе код ошибки.
+
+
+=head2 BH_MutexUnlock
+
+ int BH_MutexUnlock(BH_Mutex *mutex);
+
+Отпускает мьютекс.
+
+Если мьютекс захвачен другим потоком, поведение не определено.
+
+В случае успеха возвращает 0, иначе код ошибки.
+
+
+=head2 BH_MutexLockTry
+
+ int BH_MutexLockTry(BH_Mutex *mutex);
+
+Производит попытку захвата мьютекса.
+
+В случае успеха возвращает 0, иначе код ошибки.
+
+
+=head2 BH_SemaphoreNew
+
+ BH_Semaphore *BH_SemaphoreNew(int value);
+
+Создаёт семафор с заданным изначальным значением I<value>.
+
+В случае успеха возвращает указатель на объект семафора, иначе NULL.
+
+
+=head2 BH_SemaphoreFree
+
+ void BH_SemaphoreFree(BH_Semaphore *semaphore);
+
+Уничтожает семафор.
+
+
+=head2 BH_SemaphorePost
+
+ int BH_SemaphorePost(BH_Semaphore *semaphore);
+
+Увеличивает значение семафора на 1.
+
+В случае успеха возвращает 0, иначе код ошибки.
+
+
+=head2 BH_SemaphoreWait
+
+ int BH_SemaphoreWait(BH_Semaphore *semaphore);
+
+Уменьшает значение семафора на 1.
+
+Если значение семафора равно 0, блокирует выполнение текущего потока до тех пор,
+пока значение семафора не станет больше 0.
+
+В случае успеха возвращает 0, иначе код ошибки.
+
+
+=head2 BH_SemaphoreWaitTry
+
+ int BH_SemaphoreWaitTry(BH_Semaphore *semaphore);
+
+Пытается уменьшить значение семафора на 1.
+
+В случае успеха возвращает 0, иначе код ошибки.
+
+
+=head2 BH_SemaphoreWaitFor
+
+ int BH_SemaphoreWaitFor(BH_Semaphore *semaphore,
+                         uint32_t timeout);
+
+Пытается уменьшить значение семафора на 1 в пределах заданного времени
+I<timeout>.
+
+Параметр I<timeout> задаёт время ожидания в миллисекундах.
+
+В случае успеха возвращает 0, иначе код ошибки.
+
+
+=head2 BH_ConditionNew
+
+ BH_Condition *BH_ConditionNew(void);
+
+Создаёт новую условную переменную.
+
+В случае успеха возвращает указатель на объект условной переменной, иначе NULL.
+
+
+=head2 BH_ConditionFree
+
+ void BH_ConditionFree(BH_Condition *condition);
+
+Уничтожает условную переменную.
+
+Если условная переменная используется другими потоками, поведение не определено.
+
+
+=head2 BH_ConditionWait
+
+ int BH_ConditionWait(BH_Condition *condition,
+                      BH_Mutex *mutex);
+
+Блокирует исполнение текущего потока до тех пор, пока другой поток не 
+просигнализирует об изменении условия.
+
+В некоторых ситуациях сигнал об изменении условия может быть ложным.
+
+Параметр I<mutex> определяет мьютекс, который используется совместно с условной
+переменной.
+
+В случае успеха возвращает 0, иначе код ошибки.
+
+
+=head2 BH_ConditionWaitFor
+
+ int BH_ConditionWaitFor(BH_Condition *condition,
+                         BH_Mutex *mutex,
+                         uint32_t timeout);
+
+Пытается заблокировать исполнение текущего потока до тех пор, пока другой поток
+не просигнализирует об изменении условия в пределах заданного времени 
+I<timeout>.
+
+В некоторых ситуациях сигнал об изменении условия может быть ложным.
+
+Параметр I<mutex> определяет мьютекс, который используется совместно с условной
+переменной.
+
+Параметр I<timeout> задаёт время ожидания в миллисекундах.
+
+В случае успеха возвращает 0, иначе код ошибки.
+
+
+=head2 BH_ConditionSignal
+
+ int BH_ConditionSignal(BH_Condition *condition);
+
+Сигнализирует одному ожидающему потоку об изменении условия.
+
+В случае успеха возвращает 0, иначе код ошибки.
+
+
+=head2 BH_ConditionBroadcast
+
+ int BH_ConditionBroadcast(BH_Condition *condition);
+
+Сигнализирует всем ожидающим потокам об изменении условия.
+
+В случае успеха возвращает 0, иначе код ошибки.
+
+
+=head2 BH_SpinlockLock
+
+ void BH_SpinlockLock(int *lock);
+
+Блокирует спинлок.
+
+
+=head2 BH_SpinlockLockTry
+
+ int BH_SpinlockLockTry(int *lock);
+
+Пытается заблокировать спинлок.
+
+В случае успеха возвращает 0, иначе код ошибки.
+
+
+=head2 BH_SpinlockUnlock
+
+ void BH_SpinlockUnlock(int *lock);
+
+Разблокирует спинлок.
+
+
+=head2 BH_TssCreate
+
+ int BH_TssCreate(BH_GenericCallback callback);
+
+Создаёт новый TSS/TLS индекс с функцией очистки I<callback>.
+
+В случае успеха возвращает TSS/TLS индекс, иначе код ошибки.
+
+
+=head2 BH_TssRead
+
+ void *BH_TssRead(int index);
+
+Читает данные из слота TSS/TLS.
+
+
+=head2 BH_TssWrite
+
+ void BH_TssWrite(int index,
+                  void *value);
+
+Записывает данные I<value> в слот TSS/TLS.
+
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

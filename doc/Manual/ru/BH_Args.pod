@@ -1,0 +1,165 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_Args - обработка аргументов командной строки
+
+
+=head1 СИНТАКСИС
+
+ #include <BH/Args.h>
+
+ static BH_ArgsOption options[] =
+ {
+     {'h', "help", 0, "Display this help"},
+     {1000, "list", 0, "List files"},
+     {'i', "input", BH_ARGS_VALUE, "Input file"},
+     {'o', "output", BH_ARGS_VALUE | BH_ARGS_OPTIONAL, "Output file"},
+     {0, NULL, 0, NULL}
+ };
+
+ static int OptionsCallback(int key,
+                            char *arg,
+                            void *data)
+ {
+     switch (key)
+     {
+         case BH_ARGS_UNKNOWN:
+             /* Unknown options */
+             break;
+
+         case BH_ARGS_ARGUMENT:
+             /* Regular argument in arg */
+             break;
+
+         case 'h':
+             /* Named option without argument */
+             break;
+
+         case 1000:
+             /* Long-only option without argument */
+             break;
+
+         case 'i':
+             /* Option with argument in arg */
+             break;
+
+         case 'o':
+             /* Option with optional argument in arg */
+             break;
+     }
+
+     return BH_OK;
+ }
+
+ BH_ArgsParse(argc, argv, options, OptionsCallback, NULL);
+ BH_ArgsHelp(options, 0);
+
+ cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+Библиотека BH_Args предназначена для удобной обработки аргументов командной
+строки в программах. Она позволяет определить набор опций, которые могут быть
+указаны при запуске программы, и предоставляет механизмы для их анализа и
+обработки.
+
+Разбор аргументов происходит с учётом следующих правил:
+
+=over
+
+=item *
+
+Если указан аргумент "--", последующий разбор аргументов прекращается.
+
+=item *
+
+Если указан аргумент "-", он обрабатывается как есть.
+
+=item *
+
+Для значений длинных аргументов будет использоваться строка после знака равно
+или следующий аргумент ("--define=value" или "--define value").
+
+=item *
+
+Для значений коротких аргументов будет использоваться остаток строки после
+символа параметра или следующий аргумент ("-dvalue" или "-d value").
+
+=back
+
+
+=head1 API ВЫЗОВЫ
+
+
+=head2 BH_ArgsParse
+
+ int BH_ArgsParse(int argc,
+                  char **argv,
+                  BH_ArgsOption *options,
+                  BH_ArgsCallback callback,
+                  void *data);
+
+Разбирает аргументы I<options> командной строки (заданные в I<argc> и I<argv>) и
+вызывает указанный обработчик I<callback> (с пользовательскими данными I<data>).
+
+Параметр I<options> ссылается на нуль-терминированный массив.
+
+В случае успеха данная функция возвращает 0, в противном случае - код ошибки.
+
+
+=head2 BH_ArgsHelp
+
+ void BH_ArgsHelp(BH_ArgsOption *options,
+                  int padding);
+
+Выводит в F<stdout> справочную информацию для аргументов I<options> (с указанным
+выравниванием I<padding>).
+
+В случае если параметр I<padding> равен 0, то будет использовано значение
+по умолчанию (30).
+
+
+=head1 СТРУКТУРЫ
+
+
+=head2 BH_ArgsOption
+
+ typedef struct BH_ArgsOption
+ {
+     int key;
+     const char *name;
+     int flags;
+     const char *description;
+ } BH_ArgsOption;
+
+Поле I<key> содержит идентификатор опции. В случае если идентификатор I<key>
+является печатным символом ASCII, то он будет использоваться в качестве
+короткого аргумента.
+
+Опциональное поле I<name> содержит строку, которая будет использоваться в
+качестве длинного аргумента.
+
+Поле I<flags> содержит флаги аргумента. Возможна комбинация из следующих флагов:
+
+=over
+
+=item B<BH_ARGS_VALUE>
+
+Аргумент принимает значение.
+
+=item B<BH_ARGS_OPTIONAL>
+
+Значение аргумента опционально.
+
+=back
+
+Поле I<description> содержит строку, которая будет использоваться при выводе
+справочной информации при помощи функции L</BH_ArgsHelp>.
+
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

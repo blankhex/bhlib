@@ -73,3 +73,8 @@ _deps
 
 # MacOS
 .DS_Store
+
+# Exclude docs artifacts
+*.html
+*.3
+*.zip

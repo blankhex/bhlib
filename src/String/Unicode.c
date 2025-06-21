@@ -1,4 +1,4 @@
-#include <BH/String.h>
+#include <BH/Unicode.h>
 #include <BH/Util.h>
 
 #include "Inline/Unicode.h"

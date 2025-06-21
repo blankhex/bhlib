@@ -1,0 +1,289 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Thread - multithreading and synchronization primitives
+
+
+=head1 SYNTAX
+
+ #include <BH/Thread.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Thread library provides a set of functions for working with 
+multithreading and thread synchronization. It includes functions for creating 
+and managing threads, working with mutexes, semaphores, condition variables, and
+spinlocks.
+
+
+=head1 API CALLS
+
+
+=head2 BH_ThreadNew
+
+ BH_Thread *BH_ThreadNew(size_t stack,
+                         BH_ThreadCallback callback,
+                         void *data);
+
+Creates a thread with a specified stack size I<stack>, execution function
+I<callback>, and data I<data>.
+
+Returns a pointer to the thread object on success, otherwise NULL.
+
+
+=head2 BH_ThreadJoin
+
+ int BH_ThreadJoin(BH_Thread *thread);
+
+Blocks the execution of the current thread until another thread completes.
+
+Upon completion of the thread, the resources of the I<thread> are freed.
+
+Returns 0 on success, otherwise an error code.
+
+
+=head2 BH_ThreadDetach
+
+ int BH_ThreadDetach(BH_Thread *thread);
+
+Detaches the thread from the current process.
+
+Upon completion of the thread, the resources of the I<thread> are freed.
+
+Returns 0 on success, otherwise an error code.
+
+
+=head2 BH_MutexNew
+
+ BH_Mutex *BH_MutexNew(void);
+
+Creates a mutex.
+
+Returns a pointer to the mutex object on success, otherwise NULL.
+
+
+=head2 BH_MutexFree
+
+ void BH_MutexFree(BH_Mutex *mutex);
+
+Destroys the mutex.
+
+If the mutex is locked, the behavior is undefined.
+
+
+=head2 BH_MutexLock
+
+ int BH_MutexLock(BH_Mutex *mutex);
+
+Locks the mutex.
+
+If the mutex is already locked, the behavior is undefined.
+
+Returns 0 on success, otherwise an error code.
+
+
+=head2 BH_MutexUnlock
+
+ int BH_MutexUnlock(BH_Mutex *mutex);
+
+Unlocks the mutex.
+
+If the mutex is locked by another thread, the behavior is undefined.
+
+Returns 0 on success, otherwise an error code.
+
+
+=head2 BH_MutexLockTry
+
+ int BH_MutexLockTry(BH_Mutex *mutex);
+
+Attempts to lock the mutex.
+
+Returns 0 on success, otherwise an error code.
+
+
+=head2 BH_SemaphoreNew
+
+ BH_Semaphore *BH_SemaphoreNew(int value);
+
+Creates a semaphore with a specified initial value I<value>.
+
+Returns a pointer to the semaphore object on success, otherwise NULL.
+
+
+=head2 BH_SemaphoreFree
+
+ void BH_SemaphoreFree(BH_Semaphore *semaphore);
+
+Destroys the semaphore.
+
+
+=head2 BH_SemaphorePost
+
+ int BH_SemaphorePost(BH_Semaphore *semaphore);
+
+Increases the semaphore value by 1.
+
+Returns 0 on success, otherwise an error code.
+
+
+=head2 BH_SemaphoreWait
+
+ int BH_SemaphoreWait(BH_Semaphore *semaphore);
+
+Decreases the semaphore value by 1.
+
+If the semaphore value is 0, blocks the execution of the current thread until
+the semaphore value becomes greater than 0.
+
+Returns 0 on success, otherwise an error code.
+
+
+=head2 BH_SemaphoreWaitTry
+
+ int BH_SemaphoreWaitTry(BH_Semaphore *semaphore);
+
+Attempts to decrease the semaphore value by 1.
+
+Returns 0 on success, otherwise an error code.
+
+
+=head2 BH_SemaphoreWaitFor
+
+ int BH_SemaphoreWaitFor(BH_Semaphore *semaphore,
+                         uint32_t timeout);
+
+Attempts to decrease the semaphore value by 1 within a specified time
+I<timeout>.
+
+The I<timeout> parameter specifies the waiting time in milliseconds.
+
+Returns 0 on success, otherwise an error code.
+
+
+=head2 BH_ConditionNew
+
+ BH_Condition *BH_ConditionNew(void);
+
+Creates a new condition variable.
+
+Returns a pointer to the condition variable object on success, otherwise NULL.
+
+
+=head2 BH_ConditionFree
+
+ void BH_ConditionFree(BH_Condition *condition);
+
+Destroys the condition variable.
+
+If the condition variable is used by other threads, the behavior is undefined.
+
+
+=head2 BH_ConditionWait
+
+ int BH_ConditionWait(BH_Condition *condition,
+                      BH_Mutex *mutex);
+
+Blocks the execution of the current thread until another thread signals
+a change in the condition.
+
+In some situations, the signal of a condition change may be false.
+
+The I<mutex> parameter specifies the mutex used in conjunction with the 
+condition variable.
+
+Returns 0 on success, otherwise an error code.
+
+
+=head2 BH_ConditionWaitFor
+
+ int BH_ConditionWaitFor(BH_Condition *condition,
+                         BH_Mutex *mutex,
+                         uint32_t timeout);
+
+Attempts to block the execution of the current thread until another thread
+signals a change in the condition within a specified time I<timeout>.
+
+In some situations, the signal of a condition change may be false.
+
+The I<mutex> parameter specifies the mutex used in conjunction with the 
+condition variable.
+
+The I<timeout> parameter specifies the waiting time in milliseconds.
+
+Returns 0 on success, otherwise an error code.
+
+
+=head2 BH_ConditionSignal
+
+ int BH_ConditionSignal(BH_Condition *condition);
+
+Signals one waiting thread about a change in the condition.
+
+Returns 0 on success, otherwise an error code.
+
+
+=head2 BH_ConditionBroadcast
+
+ int BH_ConditionBroadcast(BH_Condition *condition);
+
+Signals all waiting threads about a change in the condition.
+
+Returns 0 on success, otherwise an error code.
+
+
+=head2 BH_SpinlockLock
+
+ void BH_SpinlockLock(int *lock);
+
+Locks the spinlock.
+
+
+=head2 BH_SpinlockLockTry
+
+ int BH_SpinlockLockTry(int *lock);
+
+Attempts to lock the spinlock.
+
+Returns 0 on success, otherwise an error code.
+
+
+=head2 BH_SpinlockUnlock
+
+ void BH_SpinlockUnlock(int *lock);
+
+Unlocks the spinlock.
+
+
+=head2 BH_TssCreate
+
+ int BH_TssCreate(BH_GenericCallback callback);
+
+Creates a new TSS/TLS index with a cleanup function I<callback>.
+
+Returns the TSS/TLS index on success, otherwise an error code.
+
+
+=head2 BH_TssRead
+
+ void *BH_TssRead(int index);
+
+Reads data from the TSS/TLS slot.
+
+
+=head2 BH_TssWrite
+
+ void BH_TssWrite(int index,
+                  void *value);
+
+Writes data I<value> to the TSS/TLS slot.
+
+
+=head1 SEE ALSO
+
+L<BH>

@@ -1,4 +1,7 @@
-#include <BH/Math.h>
+#include <BH/Math/Ray3f.h>
+#include <BH/Math/Vec3f.h>
+#include <BH/Math/Box3f.h>
+#include <BH/Math/Plane.h>
 #include <string.h>
 #include <math.h>
 

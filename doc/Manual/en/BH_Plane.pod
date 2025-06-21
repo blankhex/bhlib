@@ -1,0 +1,66 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Plane - Plane in space
+
+
+=head1 SYNTAX
+
+ #include <BH/Math.h>
+ 
+ cc prog.c -o prog -lbh
+ 
+
+=head1 DESCRIPTION
+
+The BH_Plane module provides functions for working with planes in 
+three-dimensional space. It allows you to calculate the coefficients of a plane 
+from three points, determine the distance from a point to a plane, and find the 
+closest point on the plane to a given point.
+
+
+=head1 API CALLS
+
+
+=head2 BH_PlaneFromPoints
+
+ int BH_PlaneFromPoints(const float a[3],
+                        const float b[3],
+                        const float c[3],
+                        float out[4]);
+
+Calculates the coefficients of a plane from three points I<a>, I<b>, I<c>.
+
+It is assumed that the points are arranged in a clockwise order.
+
+If the points form a degenerate triangle, the function will return an error.
+
+The I<out> parameter defines the resulting plane.
+
+If successful, the function returns 0, otherwise it returns an error code.
+
+
+=head2 BH_PlaneDistance
+
+ float BH_PlaneDistance(const float plane[4],
+                        const float point[3]);
+
+Calculates the distance from the I<point> to the I<plane>.
+
+
+=head2 BH_PlaneClosestPoint
+
+ void BH_PlaneClosestPoint(const float plane[4],
+                           const float point[3],
+                           float out[3]);
+
+Calculates the closest point on the I<plane> to another I<point>.
+
+The I<out> parameter describes the resulting point.
+
+
+=head1 SEE ALSO
+
+L<BH>

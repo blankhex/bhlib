@@ -16,7 +16,7 @@ To do this we would run the following command:
 To implement this utility, we are going to need to include the following headers:
 
 - `BH/IO.h` to work with files (or input/output devices)
-- `BH/String.h` to work with UTF-8 sequences
+- `BH/Unicode.h` to work with UTF-8 sequences
 
 ## Working with Files
 
@@ -88,7 +88,7 @@ while (...)
 
 ```c
 #include <BH/IO.h>
-#include <BH/String.h>
+#include <BH/Unicode.h>
 #include <stdlib.h>
 #include <stdio.h>
 

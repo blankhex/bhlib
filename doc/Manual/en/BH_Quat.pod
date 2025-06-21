@@ -1,0 +1,219 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Quat - Quaternion
+
+
+=head1 SYNTAX
+
+ #include <BH/Math/Quat.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+This module provides a set of functions for working with quaternions. 
+Quaternions are used to represent rotations in three-dimensional space and have 
+advantages over other methods, such as rotation matrices or Euler angles, in 
+terms of stability against error accumulation during multiple rotation 
+operations.
+
+
+=head1 API CALLS
+
+
+=head2 BH_Quat4fAdd
+
+ #define BH_Quat4fAdd(a, b, out) \
+     BH_Vec4fAdd(a, b, out)
+
+Calculates the sum of two quaternions I<a> and I<b>.
+
+The parameter I<out> describes the resulting quaternion.
+
+
+=head2 BH_Quat4fSub
+
+ #define BH_Quat4fSub(a, b, out) \
+     BH_Vec4fSub(a, b, out)
+
+Calculates the difference between two quaternions I<a> and I<b>.
+
+The parameter I<out> describes the resulting quaternion.
+
+
+=head2 BH_Quat4fScale
+
+ #define BH_Quat4fScale(a, b, out) \
+     BH_Vec4fScale(a, b, out)
+
+Calculates the result of multiplying quaternion I<a> by value I<b>.
+
+The parameter I<out> describes the resulting quaternion.
+
+
+=head2 BH_Quat4fNegate
+
+ #define BH_Quat4fNegate(in, out) \
+     BH_Vec4fNegate(in, out)
+
+Calculates the opposite quaternion from quaternion I<in>.
+
+The parameter I<out> describes the resulting quaternion.
+
+
+=head2 BH_Quat4fDot
+
+ #define BH_Quat4fDot(a, b) \
+     BH_Vec4fDot(a, b)
+
+Calculates the dot product of quaternions I<a> and I<b>.
+
+
+=head2 BH_Quat4fLength
+
+ #define BH_Quat4fLength(in) \
+     BH_Vec4fLength(in)
+
+float BH_Vec4fLength(const float in[4]);
+
+Calculates the length of quaternion I<in>.
+
+
+=head2 BH_Quat4fNormal
+
+ #define BH_Quat4fNormal(in, out) \
+     BH_Vec4fNormal(in, out)
+
+Calculates the normalized form of quaternion I<in>.
+
+The parameter I<out> describes the resulting quaternion.
+
+
+=head2 BH_Quat4fLerp
+
+ #define BH_Quat4fLerp(a, b, t, out) \
+     BH_Vec4fLerp(a, b, t, out)
+
+Performs linear interpolation between two quaternions I<a> and I<b> with 
+parameter I<t>.
+
+The parameter I<out> describes the resulting quaternion.
+
+
+=head2 BH_Quat4fIdentity
+
+ void BH_Quat4fIdentity(float out[4]);
+
+Writes the identity quaternion to I<out>.
+
+
+=head2 BH_Quat4fConjugate
+
+ void BH_Quat4fConjugate(const float in[4],
+                         float out[4]);
+
+Calculates the conjugate quaternion from I<in>.
+
+The parameter I<out> describes the resulting quaternion.
+
+
+=head2 BH_Quat4fInverse
+
+ void BH_Quat4fInverse(const float in[4],
+                       float out[4]);
+
+Calculates the inverse quaternion from I<in>.
+
+The parameter I<out> describes the resulting quaternion.
+
+
+=head2 BH_Quat4fMul
+
+ void BH_Quat4fMul(const float a[4],
+                   const float b[4],
+                   float out[4]);
+
+Calculates the result of multiplying two quaternions I<a> and I<b>.
+
+The parameter I<out> describes the resulting quaternion.
+
+
+=head2 BH_Quat4fSlerp
+
+ void BH_Quat4fSlerp(const float a[4],
+                     const float b[4],
+                     float t,
+                     float out[4]);
+
+Performs spherical linear interpolation between two quaternions I<a> and I<b> 
+with parameter I<t>.
+
+The parameter I<out> describes the resulting quaternion.
+
+
+=head2 BH_Quat4fFromEuler
+
+ void BH_Quat4fFromEuler(float roll,
+                         float pitch,
+                         float yaw,
+                         float out[4]);
+
+Calculates the quaternion from the angles of the associated coordinate system
+I<roll>, I<pitch>, and I<yaw>.
+
+The order of rotation application is ZYX (yaw, pitch, roll).
+
+The parameter I<out> describes the resulting quaternion.
+
+
+=head2 BH_Quat4fFromAxis
+
+ void BH_Quat4fFromAxis(const float axis[3],
+                        float angle,
+                        float out[4]);
+
+Calculates the quaternion from rotation around the I<axis> with the given 
+I<angle>.
+
+The parameter I<out> describes the resulting quaternion.
+
+
+=head2 BH_Quat4fToEuler
+
+ void BH_Quat4fToEuler(const float in[4],
+                       float *roll,
+                       float *pitch,
+                       float *yaw);
+
+Calculates the angles of the associated coordinate system I<roll>, I<pitch>,
+and I<yaw> from quaternion I<in>.
+
+The order of rotation application is ZYX (yaw, pitch, roll).
+
+
+=head2 BH_Quat4fToAxis
+
+ void BH_Quat4fToAxis(const float in[4],
+                      float axis[3],
+                      float *angle);
+
+Calculates the rotation I<axis> and I<angle> from quaternion I<in>.
+
+
+=head2 BH_Quat4fToMat4f
+
+ void BH_Quat4fToMat4f(const float in[4],
+                       float out[16]);
+
+Calculates the rotation matrix from quaternion I<in>.
+
+The parameter I<out> describes the resulting matrix.
+
+
+=head1 SEE ALSO
+
+L<BH>

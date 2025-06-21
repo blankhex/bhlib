@@ -1,4 +1,5 @@
-#include <BH/Math.h>
+#include <BH/Math/Misc.h>
+#include <BH/Math/Vec3f.h>
 
 
 float BH_Lerpf(float a, float b, float t)

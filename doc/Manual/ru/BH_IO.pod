@@ -1,0 +1,514 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_IO - Подсистема ввода-вывода
+
+
+=head1 СИНТАКСИС
+
+ #include <BH/io.h>
+
+ BH_IO *io = BH_FileNew("input.txt", BH_FILE_WRITE | BH_FILE_TRUNCATE, NULL);
+ BH_IOWrite(io, "Hello, world!", 13, NULL);
+ BH_IOFree(io);
+
+ cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+BH_IO предоставляет подсистему, позволяющей работать с различными объектами
+(файлы, сокеты, память) через единый интерфейс ввода-вывода. Это позволяет
+писать код, непривязанный к конкретной системе ввода-вывода.
+
+Гарантируется, что любой объект BH_IO поддерживает следующие операции:
+L</BH_IORead>, L</BH_IOWrite>, L</BH_IOCtl> и L</BH_IOCap>.
+
+В зависимости от реализации того или иного объекта BH_IO, могут быть доступны
+дополнительные операции: L</BH_IOFlags>, L</BH_IOClear>, L</BH_IOFlush>,
+L</BH_IOSize>, L</BH_IOTell>, L</BH_IOSeek>, L</BH_IOPeek> и другие.
+
+По-умолчанию подсистема ввода-вывода позволяет работать с файлами
+(L</BH_FileNew>) или оперативной памятью (L</BH_BytesNew>), а также
+буферизировать ввод-вывод (L</BH_BufferNew>).
+
+
+=head1 РАСШИРЕНИЕ
+
+BH_IO предоставляет разработчику возможность создавать собственные реализации
+устройств ввода-вывода. Пример:
+
+ typedef struct BH_MyIO
+ {
+     BH_IO parent;
+     int flags;
+ };
+
+ static int ioDestroy(BH_MyIO *io)
+ {
+     /* Ommitted for the example */
+ }
+
+ static int ioRead(BH_MyIO *io,
+                   BH_IOReadInfo *info)
+ {
+     /* Ommitted for the example */
+ }
+
+ static int ioWrite(BH_MyIO *io,
+                    BH_IOWriteInfo *info)
+ {
+     /* Ommited for the example */
+ }
+
+ static int ioFlags(BH_MyIO *io,
+                    int *flags)
+ {
+     *flags = io->flags;
+     return BH_OK;
+ }
+
+ static int ioCap(BH_MyIO *io,
+                  int *op)
+ {
+     BH_UNUSED(io);
+
+     switch (*op)
+     {
+     case BH_IO_CTL_FLAGS:
+         return BH_OK;
+
+     default:
+         return BH_NOIMPL;
+     }
+ }
+
+ static int ioCtl(BH_MyIO *io,
+                  BH_IOCtlInfo *info)
+ {
+     switch (info->op)
+     {
+     case BH_IO_CTL_FLAGS:
+         return ioFlags(io, (int *)info->arg);
+
+     default:
+         return BH_NOIMPL;
+     }
+ }
+
+ static int ioCallback(BH_MyIO *io,
+                       int type,
+                       void *arg)
+ {
+     switch (type)
+     {
+     case BH_IO_OP_DESTROY:  return ioDestroy(io);
+     case BH_IO_OP_READ:     return ioRead(io, (BH_IOReadInfo *)arg);
+     case BH_IO_OP_WRITE:    return ioWrite(io, (BH_IOWriteInfo *)arg);
+     case BH_IO_OP_CTL:      return ioCtl(io, (BH_IOCtlInfo *)arg);
+     case BH_IO_OP_CAP:      return ioCap(io, (int*)arg);
+     default:                return BH_NOIMPL;
+     }
+ }
+
+ BH_IO *BH_MyIONew(int *result)
+ {
+     BH_MyIO *io;
+     int code;
+
+     code = BH_OOM;
+     if ((io = malloc(sizeof(*io))))
+     {
+         io->parent.callback = (BH_IOCallback)ioCallback;
+         io->flags = 0;
+     }
+
+     if (result)
+         *result = code;
+
+     return (BH_IO*)io;
+ }
+
+
+=head1 API ВЫЗОВЫ
+
+
+=head2 BH_FileNew
+
+ BH_IO *BH_FileNew(const char *path,
+                   int mode,
+                   int *result);
+
+Создает устройство ввода-вывода для работы с файлом по пути I<path>.
+
+Параметр I<mode> может принимать комбинацию из следующих значений:
+
+=over
+
+=item B<BH_FILE_READ>
+
+Открывает файл на чтение
+
+=item B<BH_FILE_WRTIE>
+
+Открывает файл на запись
+
+=item B<BH_FILE_APPEND>
+
+Открывает файл в режиме добавление в конец
+
+=item B<BH_FILE_TRUNCATE>
+
+Усекает файл
+
+=item B<BH_FILE_CREATE>
+
+Файл должен быть создан
+
+=item B<BH_FILE_EXIST>
+
+Файл должен существовать
+
+=back
+
+Опциональный параметр I<result> возвращает 0 или код ошибки.
+
+Данная функция возвращает указатель на новый BH_IO объект или NULL.
+
+
+=head2 BH_BufferNew
+
+ BH_IO *BH_BufferNew(BH_IO *device,
+                     size_t size,
+                     int *result);
+
+Создает устройство ввода-вывода для буферизации данных к другому устройству
+I<device>.
+
+Параметр I<size> отвечает за размер буферов чтения и записи.
+
+Опциональный параметр I<result> возвращает 0 или код ошибки.
+
+В случае успеха, данная функция возвращает указатель на новый BH_IO объект или
+NULL в случае ошибки.
+
+
+=head2 BH_BytesNew
+
+ BH_IO *BH_BytesNew(char *data,
+                    size_t size,
+                    int *result);
+
+Создает устройство ввода-вывода для региона памяти I<data> с размером I<size>.
+
+Опциональный параметр I<result> возвращает код ошибки.
+
+В случае успеха, данная функция возвращает указатель на новый BH_IO объект или
+NULL в случае ошибки.
+
+
+=head2 BH_IOFree
+
+ void BH_IOFree(BH_IO *device);
+
+Уничтожает устройство ввода-вывода.
+
+
+=head2 BH_IORead
+
+ int BH_IORead(BH_IO *device,
+               char *buffer,
+               size_t size,
+               size_t *actual);
+
+Читает до I<size> байт из устройства ввода-вывода и записывает данные в
+I<buffer>.
+
+Опциональный параметр I<actual> возвращает число байт, которое было фактически
+прочитано.
+
+В случае успеха, данная функция возвращает 0 или код ошибки.
+
+
+=head2 BH_IOWrite
+
+ int BH_IOWrite(BH_IO *io,
+                const char *buffer,
+                size_t size,
+                size_t *actual);
+
+Записывает до I<size> байт в устройство ввода-вывода из I<buffer>.
+
+Опциональный параметр I<actual> возвращает число байт, которое было записано.
+
+В случае успеха, данная функция возвращает 0 или код ошибки.
+
+
+=head2 BH_IOCtl
+
+ int BH_IOCtl(BH_IO *device,
+              int op,
+              void *arg);
+
+Манипулирует параметрами устройства ввода-вывода с помощью команды I<op> и
+параметра I<arg>.
+
+Возможные значения I<op>:
+
+=over
+
+=item B<BH_IO_CTL_FLAGS>
+
+Аргумент: int *
+
+Вернуть флаги устройства ввода-вывода.
+
+=item B<BH_IO_CTL_CLEAR>
+
+Сбросить ошибки устройства ввода-вывода.
+
+=item B<BH_IO_CTL_PEEK>
+
+Аргумент: L<BH_IOReadInfo *|/BH_IOReadInfo>
+
+Читает без извлечения данные из устройства ввода-вывода.
+
+=item B<BH_IO_CTL_FLUSH>
+
+Записать буферизированные данные в устройство ввода-вывода.
+
+=item B<BH_IO_CTL_SIZE>
+
+Аргумент: int64_t *
+
+Получить размер устройства ввода-вывода.
+
+=item B<BH_IO_CTL_TELL>
+
+Аргумент: int64_t *
+
+Читает текущее смещение указателя чтения устройства ввода-вывода.
+
+=item B<BH_IO_CTL_SEEK>
+
+Аргумент: L<BH_IOSeekInfo *|/BH_IOSeekInfo>
+
+Изменяет текущее положение указателя чтения устройства ввода-вывода.
+
+=item B<BH_IO_CTL_GET_IO>
+
+Аргумент: L<BH_IO **|/BH_IO>|void *
+
+Получает объект устройства, используемый в реализации.
+
+=item B<BH_IO_CTL_SET_IO>
+
+Аргумент: L<BH_IO *|/BH_IO>|void *
+
+Устанавливает объект устройства, который будет использоваться в реализации.
+
+=back
+
+В случае успеха, данная функция возвращает 0 или код ошибки.
+
+
+=head2 BH_IOCap
+
+ int BH_IOCap(BH_IO *device,
+              int op);
+
+Проверяет возможность выполнения команды I<op> на устройстве ввода-вывода.
+
+В случае успеха, данная функция возвращает 0 или код ошибки.
+
+
+=head2 BH_IOFlags
+
+ int BH_IOFlags(BH_IO *device,
+                int *flags);
+
+Возвращает текущие флаги I<flags> устройства ввода-вывода.
+
+Возможные флаги (и их комбинации):
+
+=over
+
+=item B<BH_IO_FLAG_ERROR>
+
+В процессе выполнения возникла ошибка.
+
+=item B<BH_IO_FLAG_EOF>
+
+Устройство достигло конца файла.
+
+=back
+
+В случае успеха, данная функция возвращает 0 или код ошибки.
+
+
+=head2 BH_IOClear
+
+ int BH_IOClear(BH_IO *device);
+
+Очищает устройство ввода-вывода от ошибок.
+
+В случае успеха, данная функция возвращает 0 или код ошибки.
+
+
+=head2 BH_IOPeek
+
+ int BH_IOPeek(BH_IO *device,
+               char *buffer,
+               size_t size,
+               size_t *actual);
+
+Читает без извлечения до I<size> байт из устройства ввода-вывода и записывает
+данные в I<buffer>.
+
+Опциональный параметр I<actual> возвращает число байт, которое было фактически
+прочитано.
+
+В случае успеха, данная функция возвращает 0 или код ошибки.
+
+
+=head2 BH_IOFlush
+
+ int BH_IOFlush(BH_IO *device);
+
+Записывает буферизированные значения в устройство ввода-вывода.
+
+В случае успеха, данная функция возвращает 0 или код ошибки.
+
+
+=head2 BH_IOSize
+
+ int BH_IOSize(BH_IO *device,
+               int64_t *size);
+
+Читает текущий размер устройства ввода-вывода в байтах и записывает значение в
+I<size>.
+
+Для различных типов устройств ввода-вывода данное значение может означать разные
+вещи (к примеру: текущий размер файла, размер выделенной для ввода-вывода памяти
+и т.д.).
+
+В случае успеха, данная функция возвращает 0 или код ошибки.
+
+
+=head2 BH_IOTell
+
+ int BH_IOTell(BH_IO *device,
+               int64_t *offset);
+
+Читает текущее смещение указателя чтения устройства ввода-вывода относительно
+начала и записывает значение в I<offset>.
+
+В случае успеха, данная функция возвращает 0 или код ошибки.
+
+
+=head2 BH_IOSeek
+
+ int BH_IOSeek(BH_IO *device,
+               int64_t offset,
+               int whence);
+
+Изменяет текущее положение указателя чтения устройства ввода-вывода с учетом
+смещения I<offset> и начальной позиции I<whence>.
+
+Возможные значения начальной позиции I<whence>:
+
+=over
+
+=item B<BH_IO_SEEK_SET>
+
+Смещение относительно начала устройства.
+
+=item B<BH_IO_SEEK_CUR>
+
+Смещение относительно текущей позиции устройства.
+
+=item B<BH_IO_SEEK_END>
+
+Смещение относительно конца устройства.
+
+=back
+
+В случае успеха, данная функция возвращает 0 или код ошибки.
+
+
+=head2 BH_IOError
+
+ int BH_IOError(BH_IO *device);
+
+Проверяет, находится ли устройство ввода-вывода в состоянии ошибки.
+
+Данная функция эквивалентна следующему коду:
+
+ (BH_IOFlags(device) & BH_IO_FLAG_ERROR)
+
+
+=head2 BH_IOEndOfFile
+
+ int BH_IOEndOfFile(BH_IO *device);
+
+Проверяет, достигло ли устройство ввода-вывода конца.
+
+Данная функция эквивалентна следующему коду:
+
+ (BH_IOFlags(device) & BH_IO_FLAG_EOF)
+
+
+=head1 СТРУКТУРЫ ДАННЫХ
+
+
+=head2 BH_IO
+
+ typedef struct BH_IO
+ {
+     BH_IOCallback callback;
+ } BH_IO;
+
+
+=head2 BH_IOReadInfo
+
+ typedef struct BH_IOReadInfo
+ {
+     char *data;
+     size_t size;
+     size_t *actual;
+ } BH_IOReadInfo;
+
+
+=head2 BH_IOWriteInfo
+
+ typedef struct BH_IOWriteInfo
+ {
+     const char *data;
+     size_t size;
+     size_t *actual;
+ } BH_IOWriteInfo;
+
+
+=head2 BH_IOCtlInfo
+
+ typedef struct BH_IOCtlInfo
+ {
+     int op;
+     void *arg;
+ } BH_IOCtlInfo;
+
+
+=head2 BH_IOSeekInfo
+
+ typedef struct BH_IOSeekInfo
+ {
+     int64_t offset;
+     int whence;
+ } BH_IOSeekInfo;
+
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

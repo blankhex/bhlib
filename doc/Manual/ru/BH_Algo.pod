@@ -1,0 +1,165 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_Algo - Общие алгоритмы
+
+
+=head1 СИНТАКСИС
+
+ #include <BH/Algo.h>
+
+ int data[4] = {5, 2, 3, 1};
+ int value, i;
+
+ value = 4;
+ BH_Partition(&value, data, 4, sizeof(int), intEqual);
+ BH_Sort(data, 4, sizeof(int), intEqual);
+ BH_HeapMake(data, 4, sizeof(int), intEqual);
+
+ cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+Библиотека BH_Algo предоставляет набор алгоритмов для работы с данными:
+
+=over
+
+=item * 
+
+Обмен значениями (L</BH_Swap>)
+
+=item * 
+
+Разбиение массива (L</BH_Partition>)
+
+=item * 
+
+Сортировка (L</BH_Sort>)
+
+=item * 
+
+Работа с кучей (L</BH_HeapMake>, L</BH_HeapRemove>, L</BH_HeapInsert>,
+L</BH_HeapReplace>)
+
+=back
+
+Эти алгоритмы позволяют эффективно выполнять различные операции над массивами и
+другими структурами данных.
+
+
+=head1 API ВЫЗОВЫ
+
+
+=head2 BH_Swap
+
+ void BH_Swap(void *dest,
+              void *src,
+              size_t size);
+
+Меняет значение между переменными I<dest> и I<src> заданного размера I<size>.
+
+
+=head2 BH_Partition
+
+ void *BH_Partition(void *pivot,
+                    void *array,
+                    size_t size,
+                    size_t element,
+                    BH_EqualCallback equal);
+
+Разбивает массив элементов I<array> (с количеством элементов I<size> и размером
+элемента I<element>) на две группы относительно элемента I<pivot>.
+
+Параметр I<equal> принимает указатель на функцию, которая сравнивает два
+элемента.
+
+Параметр I<pivot> может ссылаться на элемент разбиваемого массива.
+
+Функция возвращает указатель на первый элемент массива, который принадлежит
+второй группе.
+
+
+=head2 BH_Sort
+
+ void BH_Sort(void *array,
+              size_t size,
+              size_t element,
+              BH_EqualCallback equal);
+
+Сортирует массив элементов I<array> (с количеством элементов I<size> и размером
+элемента I<element>).
+
+Параметр I<equal> принимает указатель на функцию, которая сравнивает два
+элемента.
+
+
+=head2 BH_HeapMake
+
+ void BH_HeapMake(void *array,
+                  size_t size,
+                  size_t element,
+                  BH_EqualCallback equal);
+
+Создаёт кучу в массиве I<array> (с количеством элементов I<size> и размером
+элемента I<element>).
+
+Параметр I<equal> принимает указатель на функцию, которая сравнивает два
+элемента.
+
+
+=head2 BH_HeapRemove
+
+ void BH_HeapRemove(void *array,
+                    size_t size,
+                    size_t element,
+                    BH_EqualCallback equal);
+
+Извлекает верхний элемент кучи в массиве I<array> (с количеством элементов
+I<size> и размером элемента I<element>).
+
+Параметр I<equal> принимает указатель на функцию, которая сравнивает два
+элемента.
+
+
+=head2 BH_HeapInsert
+
+ void BH_HeapInsert(void *value,
+                    void *array,
+                    size_t size,
+                    size_t element,
+                    BH_EqualCallback equal);
+
+Добавляет элемент I<value> в кучу в массиве I<array> (с количеством элементов
+I<size> и размером элемента I<element>).
+
+Если I<value> равен NULL, предполагается, что новое значение находится в конце
+массива.
+
+Параметр I<equal> принимает указатель на функцию, которая сравнивает два
+элемента.
+
+
+=head2 BH_HeapReplace
+
+ void BH_HeapReplace(void *value,
+                     void *array,
+                     size_t size,
+                     size_t element,
+                     BH_EqualCallback equal);
+
+Извлекает верхний элемент кучи в массиве I<array> (с количеством элементов
+I<size> и размером элемента I<element>) и добавляет в неё элемент I<value>.
+
+Если I<value> равен NULL, предполагается, что новое значение находится в конце
+массива.
+
+Параметр I<equal> принимает указатель на функцию, которая сравнивает два
+элемента.
+
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

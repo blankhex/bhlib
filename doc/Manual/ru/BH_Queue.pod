@@ -1,0 +1,137 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_Queue - контейнер очереди
+
+
+=head1 СИНТАКСИС
+
+ #include <BH/Queue.h>
+ 
+ cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+Модуль BH_Queue предоставляет реализацию контейнера очереди, который позволяет
+добавлять элементы в конец и извлекать их из начала. Очередь основана на
+динамическом массиве, что обеспечивает эффективное использование памяти и 
+быстрый доступ к элементам.
+
+
+=head1 API ВЫЗОВЫ
+
+
+=head2 BH_QueueNew
+
+ BH_Queue *BH_QueueNew(void);
+
+Создаёт очередь.
+
+В случае успеха функция возвращает указатель на новый объект BH_Queue,
+или NULL в случае ошибки.
+
+
+=head2 BH_QueueFree
+
+ void BH_QueueFree(BH_Queue *queue);
+
+Уничтожает очередь.
+
+
+=head2 BH_QueueClear
+
+ void BH_QueueClear(BH_Queue *queue);
+
+Очищает очередь.
+
+
+=head2 BH_QueueReserve
+
+ int BH_QueueReserve(BH_Queue *queue, 
+                     size_t size);
+
+Резервирует место как минимум для I<size> элементов.
+
+Вызов этой функции делает существующие итераторы недействительными.
+
+В случае успеха функция возвращает 0, в случае ошибки - код ошибки.
+
+
+=head2 BH_QueueInsert
+
+ int BH_QueueInsert(BH_Queue *queue, 
+                    void *value);
+
+Вставляет элемент I<value>.
+
+Вызов этой функции делает существующие итераторы недействительными.
+
+В случае успеха функция возвращает 0, в случае ошибки - код ошибки.
+
+
+=head2 BH_QueueRemove
+
+ void BH_QueueRemove(BH_Queue *queue);
+
+Удаляет первый элемент из очереди.
+
+Вызов этой функции делает существующие итераторы недействительными.
+
+
+=head2 BH_QueueFront
+
+ int BH_QueueFront(BH_Queue *queue, 
+                   void **value);
+
+Возвращает первый элемент очереди.
+
+Параметр I<value> возвращает значение элемента.
+
+В случае успеха функция возвращает 0, в случае ошибки - код ошибки.
+
+
+=head2 BH_QueueEmpty
+
+ int BH_QueueEmpty(BH_Queue *queue);
+
+Проверяет, является ли очередь пустой.
+
+
+=head2 BH_QueueSize
+
+ size_t BH_QueueSize(BH_Queue *queue);
+
+Возвращает количество элементов.
+
+
+=head2 BH_QueueCapacity
+
+ size_t BH_QueueCapacity(BH_Queue *queue);
+
+Возвращает ёмкость.
+
+
+=head2 BH_QueueIterNext
+
+ void *BH_QueueIterNext(BH_Queue *queue, void *iter);
+
+Возвращает итератор на следующий элемент.
+
+Опциональный параметр I<iter> принимает итератор на текущий элемент.
+
+В случае успеха функция возвращает итератор или NULL.
+
+
+=head2 BH_QueueIterValue
+
+ void *BH_QueueIterValue(void *iter);
+
+Возвращает значение элемента, указываемое итератором I<iter>.
+
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

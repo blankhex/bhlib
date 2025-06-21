@@ -1,0 +1,50 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Math - Mathematical functions
+
+
+=head1 SYNTAX
+
+ #include <BH/Math.h>
+
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Math library provides a set of mathematical functions for various 
+calculations.
+
+
+=head1 API CALLS
+
+
+=head2 BH_Lerpf
+
+ float BH_Lerpf(float a,
+                float b, 
+                float t);
+
+Interpolates the value between I<a> and I<b> with a given coefficient I<t>.
+
+
+=head2 BH_Triangle3fBarycentric
+
+ void BH_Triangle3fBarycentric(const float a[3],
+                               const float b[3],
+                               const float c[3],
+                               const float point[3],
+                               float out[3]);
+
+Calculates the barycentric coordinates of the I<point> relative to the 
+triangle defined by points I<a>, I<b>, I<c>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head1 SEE ALSO
+
+L<BH>

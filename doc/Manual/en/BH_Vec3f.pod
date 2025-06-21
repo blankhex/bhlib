@@ -1,0 +1,203 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Vec3f - three-dimensional real vector
+
+
+=head1 SYNTAX
+
+ #include <BH/Math.h>
+
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Vec3f module provides a set of functions for working with 
+three-dimensional vectors. The functions allow performing arithmetic operations,
+calculating scalar and vector products, normalizing vectors, and performing
+other vector operations.
+
+
+=head1 API CALLS
+
+
+=head2 BH_Vec3fAdd
+
+ void BH_Vec3fAdd(const float a[3],
+                  const float b[3],
+                  float out[3]);
+
+Calculates the sum of two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec3fSub
+
+ void BH_Vec3fSub(const float a[3],
+                  const float b[3],
+                  float out[3]);
+
+Calculates the difference between two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec3fMul
+
+ void BH_Vec3fMul(const float a[3],
+                  const float b[3],
+                  float out[3]);
+
+Calculates the result of multiplying two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec3fScale
+
+ void BH_Vec3fScale(const float a[3],
+                    float b,
+                    float out[3]);
+
+Calculates the result of multiplying vector I<a> by value I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec3fMulAdd
+
+ void BH_Vec3fMulAdd(const float a[3],
+                     const float b[3],
+                     const float c[3],
+                     float out[3]);
+
+Calculates the result of the sum I<c> and the result of multiplying vectors I<a>
+and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec3fNegate
+
+ void BH_Vec3fNegate(const float in[3],
+                     float out[3]);
+
+Calculates the opposite vector from vector I<in>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec3fDot
+
+ float BH_Vec3fDot(const float a[3],
+                   const float b[3]);
+
+Calculates the dot product of vectors I<a> and I<b>.
+
+
+=head2 BH_Vec3fCross
+
+ void BH_Vec3fCross(const float a[3],
+                    const float b[3],
+                    float out[3]);
+
+Calculates the cross product of vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec3fLength
+
+ float BH_Vec3fLength(const float in[3]);
+
+Calculates the length of vector I<in>.
+
+
+=head2 BH_Vec3fNormal
+
+ void BH_Vec3fNormal(const float in[3],
+                     float out[3]);
+
+Calculates the normalized form of vector I<in>.
+
+
+=head2 BH_Vec3fNormalEx
+
+ float BH_Vec3fNormalEx(const float in[3],
+                        float out[3]);
+
+Calculates the normalized form of vector I<in> and returns its original length.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec3fMin
+
+ void BH_Vec3fMin(const float a[3],
+                  const float b[3],
+                  float out[3]);
+
+Calculates the element-wise minimum of two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec3fMax
+
+ void BH_Vec3fMax(const float a[3],
+                  const float b[3],
+                  float out[3]);
+
+Calculates the element-wise maximum of two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec3fLerp
+
+ void BH_Vec3fLerp(const float a[3],
+                   const float b[3],
+                   float t,
+                   float out[3]);
+
+Performs linear interpolation between two vectors I<a> and I<b> with parameter
+I<t>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec3fProject
+
+ void BH_Vec3fProject(const float a[3],
+                      const float b[3],
+                      float out[3]);
+
+Calculates the result of projecting vector I<a> onto vector I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec3fBarycentric
+
+ void BH_Vec3fBarycentric(const float a[3],
+                          const float b[3],
+                          const float c[3],
+                          float v,
+                          float w,
+                          float out[3]);
+
+Calculates the vector from barycentric coordinates I<v>, I<w> and vectors of
+points I<a>, I<b>, I<c>.
+
+The calculation is performed using the formula A + v*(B-A) + w*(C-A).
+
+The I<out> parameter describes the resulting vector.
+
+
+=head1 SEE ALSO
+
+L<BH>

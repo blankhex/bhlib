@@ -1,0 +1,62 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Line - a straight line on a plane.
+
+
+=head1 SYNTAX
+
+ #include <BH/Math.h>
+
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Line module provides functions for working with straight lines on a 
+plane. It allows you to calculate the coefficients of a line based on two 
+points, find the distance from a point to a line, and determine the closest 
+point on the line to a given point.
+
+
+=head1 API CALLS
+
+
+=head2 BH_LineFromPoints
+
+ int BH_LineFromPoints(const float a[2],
+                       const float b[2],
+                       float out[3]);
+
+Calculates the coefficients of a line on a plane based on two points I<a> and 
+I<b>.
+
+The I<out> parameter describes the resulting line on the plane.
+
+If successful, the function returns 0, otherwise it returns an error code.
+
+
+=head2 BH_LineDistance
+
+ float BH_LineDistance(const float line[3],
+                       const float point[2]);
+
+Calculates the distance from the point I<point> to the line I<line>.
+
+
+=head2 BH_LineClosestPoint
+
+ void BH_LineClosestPoint(const float line[3],
+                          const float point[2],
+                          float out[2]);
+
+Calculates the closest point on the line I<line> to another point I<point>.
+
+The I<out> parameter describes the resulting point.
+
+
+=head1 SEE ALSO
+
+L<BH>

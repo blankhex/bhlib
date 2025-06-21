@@ -1,0 +1,194 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Vec4f - four-dimensional real vector
+
+
+=head1 SYNTAX
+
+ #include <BH/Math.h>
+
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Vec4f module provides a set of functions for working with 
+four-dimensional vectors. The functions allow performing arithmetic operations,
+normalization, calculating the dot product, and other mathematical operations 
+on vectors.
+
+
+=head1 API CALLS
+
+
+=head2 BH_Vec4fAdd
+
+ void BH_Vec4fAdd(const float a[4],
+                  const float b[4],
+                  float out[4]);
+
+Calculates the sum of two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4fSub
+
+ void BH_Vec4fSub(const float a[4],
+                  const float b[4],
+                  float out[4]);
+
+Calculates the difference between two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4fMul
+
+ void BH_Vec4fMul(const float a[4],
+                  const float b[4],
+                  float out[4]);
+
+Calculates the result of multiplying two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4fScale
+
+ void BH_Vec4fScale(const float a[4],
+                    float b,
+                    float out[4]);
+
+Calculates the result of multiplying vector I<a> by value I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4fMulAdd
+
+ void BH_Vec4fMulAdd(const float a[4],
+                     const float b[4],
+                     const float c[4],
+                     float out[4]);
+
+Calculates the result of the sum I<c> and the result of multiplying vectors I<a>
+and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4fNegate
+
+ void BH_Vec4fNegate(const float in[4],
+                     float out[4]);
+
+Calculates the opposite vector from vector I<in>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4fDot
+
+ float BH_Vec4fDot(const float a[4],
+                   const float b[4]);
+
+Calculates the dot product of vectors I<a> and I<b>.
+
+
+=head2 BH_Vec4fLength
+
+ float BH_Vec4fLength(const float in[4]);
+
+Calculates the length of vector I<in>.
+
+
+=head2 BH_Vec4fNormal
+
+ void BH_Vec4fNormal(const float in[4],
+                     float out[4]);
+
+Calculates the normalized form of vector I<in>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4fNormalEx
+
+ float BH_Vec4fNormalEx(const float in[4],
+                        float out[4]);
+
+Calculates the normalized form of vector I<in> and returns its original length.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4fMin
+
+ void BH_Vec4fMin(const float a[4],
+                  const float b[4],
+                  float out[4]);
+
+Calculates the element-wise minimum of two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4fMax
+
+ void BH_Vec4fMax(const float a[4],
+                  const float b[4],
+                  float out[4]);
+
+Calculates the element-wise maximum of two vectors I<a> and I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4fLerp
+
+ void BH_Vec4fLerp(const float a[4],
+                   const float b[4],
+                   float t,
+                   float out[4]);
+
+Performs linear interpolation between two vectors I<a> and I<b> with parameter 
+I<t>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4fProject
+
+ void BH_Vec4fProject(const float a[4],
+                      const float b[4],
+                      float out[4]);
+
+Calculates the result of projecting vector I<a> onto vector I<b>.
+
+The I<out> parameter describes the resulting vector.
+
+
+=head2 BH_Vec4fBarycentric
+
+ void BH_Vec4fBarycentric(const float a[4],
+                          const float b[4],
+                          const float c[4],
+                          float v,
+                          float w,
+                          float out[4]);
+
+Calculates the vector from barycentric coordinates I<v>, I<w> and vectors of
+points I<a>, I<b>, I<c>.
+
+The calculation is performed using the formula A + v*(B-A) + w*(C-A).
+
+The I<out> parameter describes the resulting vector.
+
+
+=head1 SEE ALSO
+
+L<BH>
