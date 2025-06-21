@@ -9,10 +9,8 @@ int BH_LineFromPoints(const float a[2],
                       float out[3]);
 
 
-
 float BH_LineDistance(const float line[3],
                       const float point[2]);
-
 
 
 void BH_LineClosestPoint(const float line[3],

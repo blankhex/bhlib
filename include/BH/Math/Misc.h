@@ -6,7 +6,6 @@
 float BH_Lerpf(float a, float b, float t);
 
 
-
 void BH_Triangle3fBarycentric(const float a[3],
                               const float b[3],
                               const float c[3],

@@ -12,7 +12,6 @@ void BH_Box2fUnion(const float aMin[2],
                    float outMax[2]);
 
 
-
 int BH_Box2fIntersect(const float aMin[2],
                       const float aMax[2],
                       const float bMin[2],
@@ -21,11 +20,9 @@ int BH_Box2fIntersect(const float aMin[2],
                       float outMax[2]);
 
 
-
 int BH_Box2fContains(const float aMin[2],
                      const float aMax[2],
                      const float point[2]);
-
 
 
 int BH_Box2fEnclose(const float *points,
