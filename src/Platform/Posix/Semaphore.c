@@ -60,9 +60,15 @@ int BH_SemaphoreWaitFor(BH_Semaphore *semaphore,
                         uint32_t timeout)
 {
     struct timespec ts;
-
-    ts.tv_sec = timeout / 1000;
-    ts.tv_nsec = (timeout - ts.tv_sec * 1000) * 1000000;
+    
+    /* Calculate absoulute time for timed wait */
+    clock_gettime(CLOCK_REALTIME, &ts);
+    ts.tv_sec += timeout / 1000;
+    ts.tv_nsec += (timeout % 1000) * 1000000;
+    while (ts.tv_nsec >= 1000000000) {
+        ts.tv_nsec -= 1000000000;
+        ts.tv_sec += 1;
+    }
 
     switch (sem_timedwait(&semaphore->handle, &ts))
     {
@@ -165,9 +171,14 @@ int BH_SemaphoreWaitFor(BH_Semaphore *semaphore,
     int result;
     struct timespec ts;
 
-    /* Setup timeout */
-    ts.tv_sec = timeout / 1000;
-    ts.tv_nsec = (timeout - ts.tv_sec * 1000) * 1000000;
+    /* Calculate absoulute time for timed wait */
+    clock_gettime(CLOCK_REALTIME, &ts);
+    ts.tv_sec += timeout / 1000;
+    ts.tv_nsec += (timeout % 1000) * 1000000;
+    while (ts.tv_nsec >= 1000000000) {
+        ts.tv_nsec -= 1000000000;
+        ts.tv_sec += 1;
+    }
     result = BH_OK;
 
     /* Wait until semaphore count is not zero or timeout */
