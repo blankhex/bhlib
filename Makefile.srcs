@@ -1,0 +1,91 @@
+# Source files
+
+SRCS = src/Algo.c \
+	src/Args.c \
+	src/Buffer.c \
+	src/Bytes.c \
+	src/Hashmap.c \
+	src/IO.c \
+	src/Math/Box2f.c \
+	src/Math/Box3f.c \
+	src/Math/Line.c \
+	src/Math/Mat3f.c \
+	src/Math/Mat4f.c \
+	src/Math/Misc.c \
+	src/Math/Plane.c \
+	src/Math/Quat4f.c \
+	src/Math/Ray2f.c \
+	src/Math/Ray3f.c \
+	src/Math/Vec2f.c \
+	src/Math/Vec2i.c \
+	src/Math/Vec3f.c \
+	src/Math/Vec3i.c \
+	src/Math/Vec4f.c \
+	src/Math/Vec4i.c \
+	src/Platform/Spinlock.c \
+	src/Queue.c \
+	src/String/Float.c \
+	src/String/Int.c \
+	src/String/Unicode.c \
+	src/Util.c
+
+SRCS_DUMMY = src/Platform/Dummy/File.c
+
+SRCS_DUMMY_MT = src/Platform/Dummy/Condition.c \
+	src/Platform/Dummy/Mutex.c \
+	src/Platform/Dummy/Semaphore.c \
+	src/Platform/Dummy/Thread.c \
+	src/Platform/Dummy/Tss.c
+
+SRCS_POSIX = src/Platform/Posix/File.c
+
+SRCS_POSIX_MT = src/Platform/Posix/Condition.c \
+	src/Platform/Posix/Mutex.c \
+	src/Platform/Posix/Semaphore.c \
+	src/Platform/Posix/Thread.c \
+	src/Platform/Posix/Tss.c
+
+SRCS_WIN32 = src/Platform/Win32/File.c
+
+SRCS_WIN32_MT = src/Platform/Win32/Condition.c \
+	src/Platform/Win32/Mutex.c \
+	src/Platform/Win32/Semaphore.c \
+	src/Platform/Win32/Thread.c \
+	src/Platform/Win32/Tss.c
+
+INCS = include/BH/Algo.h \
+	include/BH/Args.h \
+	include/BH/Common.h \
+	include/BH/Hashmap.h \
+	include/BH/IO.h \
+	include/BH/Math/Box2f.h \
+	include/BH/Math/Box3f.h \
+	include/BH/Math/Line.h \
+	include/BH/Math/Mat3f.h \
+	include/BH/Math/Mat4f.h \
+	include/BH/Math/Misc.h \
+	include/BH/Math/Plane.h \
+	include/BH/Math/Quat.h \
+	include/BH/Math/Ray2f.h \
+	include/BH/Math/Ray3f.h \
+	include/BH/Math/Vec2f.h \
+	include/BH/Math/Vec2i.h \
+	include/BH/Math/Vec3f.h \
+	include/BH/Math/Vec3i.h \
+	include/BH/Math/Vec4f.h \
+	include/BH/Math/Vec4i.h \
+	include/BH/Queue.h \
+	include/BH/String.h \
+	include/BH/Thread.h \
+	include/BH/Unicode.h \
+	include/BH/Util.h
+
+INCS_DUMMY_MT = src/Platform/Dummy/Thread.h
+
+INCS_POSIX_MT = src/Platform/Posix/Thread.h
+
+INCS_WIN32_MT = src/Platform/Win32/Thread.h
+
+SRCS_UNIT = unit/src/Unit.c
+
+INCS_UNIT = unit/include/BH/Unit.h

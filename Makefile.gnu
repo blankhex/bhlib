@@ -1,0 +1,49 @@
+# GNU makefile 
+
+
+# User configuration
+DESTDIR ?= /local
+CFLAGS ?= -fPIC -O2 -Iinclude
+LDFLAGS ?= -lm
+TARGET = bh
+ENABLE_MT = 1
+
+
+# System configuration
+include Makefile.srcs
+
+SRCS += $(SRCS_POSIX)
+ifeq ($(ENABLE_MT), 1)
+	SRCS += $(SRCS_POSIX_MT)
+	CFLAGS += -pthread
+	LDFLAGS += -lpthread
+else
+	SRCS += $(SRCS_DUMMY_MT)
+endif
+
+INCDIR ?= $(DESTDIR)/usr/include
+INSTALLDIR ?= $(DESTDIR)/usr/lib
+STATICLIB = lib$(TARGET).a
+SHAREDLIB = lib$(TARGET).so
+OBJS = $(SRCS:.c=.o)
+
+
+# Targets
+all: $(STATICLIB) $(SHAREDLIB)
+
+dist: $(STATICLIB) $(SHAREDLIB)
+	mkdir -p dist
+	cp *.a dist/
+	cp *.so dist/
+
+$(STATICLIB): $(OBJS)
+	$(AR) r $@ $(OBJS)
+
+$(SHAREDLIB): $(OBJS)
+	$(CC) -s -shared $(LDFLAGS) -o $@ $(OBJS)
+
+.c.o:
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	-rm -rf $(OBJS) $(STATICLIB) $(SHAREDLIB) dist
