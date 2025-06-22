@@ -33,8 +33,7 @@ static int bytesInit(BH_Bytes *bytes,
 
 static int bytesDestroy(BH_Bytes *bytes)
 {
-    BH_UNUSED(bytes);
-
+    free(bytes);
     return BH_OK;
 }
 
