@@ -8,6 +8,7 @@
 
 #define EPSILON 0.00001f
 #define PI      3.14159265358979323846f
+#define SET_ROW(row, val) row[0] = row[1] = row[2] = row[3] = val
 
 
 void BH_Mat4fIdentity(float out[16])
@@ -52,25 +53,25 @@ void BH_Mat4fMul(const float a[16],
 {
     float tmp[16], row[4];
 
-    row[0] = row[1] = row[2] = row[3] = b[0]; BH_Vec4fMul(&a[0], row, &tmp[0]);
-    row[0] = row[1] = row[2] = row[3] = b[1]; BH_Vec4fMulAdd(&a[4], row, &tmp[0], &tmp[0]);
-    row[0] = row[1] = row[2] = row[3] = b[2]; BH_Vec4fMulAdd(&a[8], row, &tmp[0], &tmp[0]);
-    row[0] = row[1] = row[2] = row[3] = b[3]; BH_Vec4fMulAdd(&a[12], row, &tmp[0], &tmp[0]);
+    SET_ROW(row, b[0]); BH_Vec4fMul(&a[0], row, &tmp[0]);
+    SET_ROW(row, b[1]); BH_Vec4fMulAdd(&a[4], row, &tmp[0], &tmp[0]);
+    SET_ROW(row, b[2]); BH_Vec4fMulAdd(&a[8], row, &tmp[0], &tmp[0]);
+    SET_ROW(row, b[3]); BH_Vec4fMulAdd(&a[12], row, &tmp[0], &tmp[0]);
 
-    row[0] = row[1] = row[2] = row[3] = b[4]; BH_Vec4fMul(&a[0], row, &tmp[4]);
-    row[0] = row[1] = row[2] = row[3] = b[5]; BH_Vec4fMulAdd(&a[4], row, &tmp[4], &tmp[4]);
-    row[0] = row[1] = row[2] = row[3] = b[6]; BH_Vec4fMulAdd(&a[8], row, &tmp[4], &tmp[4]);
-    row[0] = row[1] = row[2] = row[3] = b[7]; BH_Vec4fMulAdd(&a[12], row, &tmp[4], &tmp[4]);
+    SET_ROW(row, b[4]); BH_Vec4fMul(&a[0], row, &tmp[4]);
+    SET_ROW(row, b[5]); BH_Vec4fMulAdd(&a[4], row, &tmp[4], &tmp[4]);
+    SET_ROW(row, b[6]); BH_Vec4fMulAdd(&a[8], row, &tmp[4], &tmp[4]);
+    SET_ROW(row, b[7]); BH_Vec4fMulAdd(&a[12], row, &tmp[4], &tmp[4]);
 
-    row[0] = row[1] = row[2] = row[3] = b[8]; BH_Vec4fMul(&a[0], row, &tmp[8]);
-    row[0] = row[1] = row[2] = row[3] = b[9]; BH_Vec4fMulAdd(&a[4], row, &tmp[8], &tmp[8]);
-    row[0] = row[1] = row[2] = row[3] = b[10]; BH_Vec4fMulAdd(&a[8], row, &tmp[8], &tmp[8]);
-    row[0] = row[1] = row[2] = row[3] = b[11]; BH_Vec4fMulAdd(&a[12], row, &tmp[8], &tmp[8]);
+    SET_ROW(row, b[8]); BH_Vec4fMul(&a[0], row, &tmp[8]);
+    SET_ROW(row, b[9]); BH_Vec4fMulAdd(&a[4], row, &tmp[8], &tmp[8]);
+    SET_ROW(row, b[10]); BH_Vec4fMulAdd(&a[8], row, &tmp[8], &tmp[8]);
+    SET_ROW(row, b[11]); BH_Vec4fMulAdd(&a[12], row, &tmp[8], &tmp[8]);
 
-    row[0] = row[1] = row[2] = row[3] = b[12]; BH_Vec4fMul(&a[0], row, &tmp[12]);
-    row[0] = row[1] = row[2] = row[3] = b[13]; BH_Vec4fMulAdd(&a[4], row, &tmp[12], &tmp[12]);
-    row[0] = row[1] = row[2] = row[3] = b[14]; BH_Vec4fMulAdd(&a[8], row, &tmp[12], &tmp[12]);
-    row[0] = row[1] = row[2] = row[3] = b[15]; BH_Vec4fMulAdd(&a[12], row, &tmp[12], &tmp[12]);
+    SET_ROW(row, b[12]); BH_Vec4fMul(&a[0], row, &tmp[12]);
+    SET_ROW(row, b[13]); BH_Vec4fMulAdd(&a[4], row, &tmp[12], &tmp[12]);
+    SET_ROW(row, b[14]); BH_Vec4fMulAdd(&a[8], row, &tmp[12], &tmp[12]);
+    SET_ROW(row, b[15]); BH_Vec4fMulAdd(&a[12], row, &tmp[12], &tmp[12]);
 
     memcpy(out, tmp, sizeof(tmp));
 }
@@ -425,10 +426,10 @@ void BH_Mat4fApplyVec4f(const float a[16],
 {
     float tmp[4], row[4];
 
-    row[0] = row[1] = row[2] = row[3] = b[0]; BH_Vec4fMul(&a[0], row, tmp);
-    row[0] = row[1] = row[2] = row[3] = b[1]; BH_Vec4fMulAdd(&a[4], row, tmp, tmp);
-    row[0] = row[1] = row[2] = row[3] = b[2]; BH_Vec4fMulAdd(&a[8], row, tmp, tmp);
-    row[0] = row[1] = row[2] = row[3] = b[3]; BH_Vec4fMulAdd(&a[12], row, tmp, tmp);
+    SET_ROW(row, b[0]); BH_Vec4fMul(&a[0], row, tmp);
+    SET_ROW(row, b[1]); BH_Vec4fMulAdd(&a[4], row, tmp, tmp);
+    SET_ROW(row, b[2]); BH_Vec4fMulAdd(&a[8], row, tmp, tmp);
+    SET_ROW(row, b[3]); BH_Vec4fMulAdd(&a[12], row, tmp, tmp);
 
     memcpy(out, tmp, sizeof(tmp));
 }
@@ -440,10 +441,10 @@ void BH_Mat4fApplyVec3f(const float a[16],
 {
     float tmp[4], row[4];
 
-    row[0] = row[1] = row[2] = row[3] = b[0]; BH_Vec4fMul(&a[0], row, tmp);
-    row[0] = row[1] = row[2] = row[3] = b[1]; BH_Vec4fMulAdd(&a[4], row, tmp, tmp);
-    row[0] = row[1] = row[2] = row[3] = b[2]; BH_Vec4fMulAdd(&a[8], row, tmp, tmp);
-    row[0] = row[1] = row[2] = row[3] = 1.0f; BH_Vec4fMulAdd(&a[12], row, tmp, tmp);
+    SET_ROW(row, b[0]); BH_Vec4fMul(&a[0], row, tmp);
+    SET_ROW(row, b[1]); BH_Vec4fMulAdd(&a[4], row, tmp, tmp);
+    SET_ROW(row, b[2]); BH_Vec4fMulAdd(&a[8], row, tmp, tmp);
+    SET_ROW(row, 1.0f); BH_Vec4fMulAdd(&a[12], row, tmp, tmp);
 
     memcpy(out, tmp, sizeof(float) * 3);
 }

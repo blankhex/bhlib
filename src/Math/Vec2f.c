@@ -2,6 +2,9 @@
 #include <math.h>
 
 
+#define SET_ROW(row, val) row[0] = row[1] = val
+
+
 void BH_Vec2fAdd(const float a[2],
                  const float b[2],
                  float out[2])
@@ -147,7 +150,7 @@ void BH_Vec2fBarycentric(const float a[2],
     float u;
 
     u = 1.0f - v - w;
-    tmp1[0] = tmp1[1] = u; BH_Vec2fMul(a, tmp1, tmp2);
-    tmp1[0] = tmp1[1] = v; BH_Vec2fMulAdd(b, tmp1, tmp2, tmp2);
-    tmp1[0] = tmp1[1] = w; BH_Vec2fMulAdd(c, tmp1, tmp2, out);
+    SET_ROW(tmp1, u); BH_Vec2fMul(a, tmp1, tmp2);
+    SET_ROW(tmp1, v); BH_Vec2fMulAdd(b, tmp1, tmp2, tmp2);
+    SET_ROW(tmp1, w); BH_Vec2fMulAdd(c, tmp1, tmp2, out);
 }
