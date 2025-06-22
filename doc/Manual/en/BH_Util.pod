@@ -9,14 +9,14 @@ BH_Util - Utility Functions
 =head1 SYNTAX
 
  #include <BH/Math.h>
- 
+
  cc prog.c -o prog -lbh
 
 
 =head1 DESCRIPTION
 
-The BH_Util library provides a set of functions for working with numbers in 
-little-endian and big-endian formats, as well as for classifying floating-point 
+The BH_Util library provides a set of functions for working with numbers in
+little-endian and big-endian formats, as well as for classifying floating-point
 values.
 
 
@@ -142,7 +142,7 @@ Reads a signed 64-bit big-endian integer from the buffer.
 
 =head2 BH_Write16LEu
 
- void BH_Write16LEu(char *buffer, 
+ void BH_Write16LEu(char *buffer,
                     uint16_t value);
 
 Writes an unsigned 16-bit little-endian integer to the buffer.
@@ -158,7 +158,7 @@ Writes a signed 16-bit little-endian integer to the buffer.
 
 =head2 BH_Write32LEu
 
- void BH_Write32LEu(char *buffer, 
+ void BH_Write32LEu(char *buffer,
                     uint32_t value);
 
 Writes an unsigned 32-bit little-endian integer to the buffer.
@@ -166,7 +166,7 @@ Writes an unsigned 32-bit little-endian integer to the buffer.
 
 =head2 BH_Write32LEs
 
- void BH_Write32LEs(char *buffer, 
+ void BH_Write32LEs(char *buffer,
                     int32_t value);
 
 Writes a signed 32-bit little-endian integer to the buffer.
@@ -206,7 +206,7 @@ Writes a signed 16-bit big-endian integer to the buffer.
 
 =head2 BH_Write32BEu
 
- void BH_Write32BEu(char *buffer, 
+ void BH_Write32BEu(char *buffer,
                     uint32_t value);
 
 Writes an unsigned 32-bit big-endian integer to the buffer.
@@ -214,7 +214,7 @@ Writes an unsigned 32-bit big-endian integer to the buffer.
 
 =head2 BH_Write32BEs
 
- void BH_Write32BEs(char *buffer, 
+ void BH_Write32BEs(char *buffer,
                     int32_t value);
 
 Writes a signed 32-bit big-endian integer to the buffer.
@@ -222,7 +222,7 @@ Writes a signed 32-bit big-endian integer to the buffer.
 
 =head2 BH_Write64BEu
 
- void BH_Write64BEu(char *buffer, 
+ void BH_Write64BEu(char *buffer,
                     uint64_t value);
 
 Writes an unsigned 64-bit big-endian integer to the buffer.
@@ -230,7 +230,7 @@ Writes an unsigned 64-bit big-endian integer to the buffer.
 
 =head2 BH_Write64BEs
 
- void BH_Write64BEs(char *buffer, 
+ void BH_Write64BEs(char *buffer,
                     int64_t value);
 
 Writes a signed 64-bit big-endian integer to the buffer.

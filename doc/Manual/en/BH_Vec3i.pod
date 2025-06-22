@@ -9,13 +9,13 @@ BH_Vec3i - three-dimensional integer vector
 =head1 SYNTAX
 
  #include <BH/Math.h>
- 
+
  cc prog.c -o prog -lbh
 
 
 =head1 DESCRIPTION
 
-The BH_Vec3i module provides a set of functions for working with 
+The BH_Vec3i module provides a set of functions for working with
 three-dimensional integer vectors.
 
 
@@ -73,7 +73,7 @@ The I<out> parameter describes the resulting vector.
                      const int c[3],
                      int out[3]);
 
-Calculates the result of the sum I<c> and the result of multiplying vectors 
+Calculates the result of the sum I<c> and the result of multiplying vectors
 I<a> and I<b>.
 
 The I<out> parameter describes the resulting vector.

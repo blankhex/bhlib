@@ -15,7 +15,7 @@ BH_Vec3f - three-dimensional real vector
 
 =head1 DESCRIPTION
 
-The BH_Vec3f module provides a set of functions for working with 
+The BH_Vec3f module provides a set of functions for working with
 three-dimensional vectors. The functions allow performing arithmetic operations,
 calculating scalar and vector products, normalizing vectors, and performing
 other vector operations.

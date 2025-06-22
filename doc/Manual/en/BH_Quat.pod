@@ -9,16 +9,16 @@ BH_Quat - Quaternion
 =head1 SYNTAX
 
  #include <BH/Math/Quat.h>
- 
+
  cc prog.c -o prog -lbh
 
 
 =head1 DESCRIPTION
 
-This module provides a set of functions for working with quaternions. 
-Quaternions are used to represent rotations in three-dimensional space and have 
-advantages over other methods, such as rotation matrices or Euler angles, in 
-terms of stability against error accumulation during multiple rotation 
+This module provides a set of functions for working with quaternions.
+Quaternions are used to represent rotations in three-dimensional space and have
+advantages over other methods, such as rotation matrices or Euler angles, in
+terms of stability against error accumulation during multiple rotation
 operations.
 
 
@@ -98,7 +98,7 @@ The parameter I<out> describes the resulting quaternion.
  #define BH_Quat4fLerp(a, b, t, out) \
      BH_Vec4fLerp(a, b, t, out)
 
-Performs linear interpolation between two quaternions I<a> and I<b> with 
+Performs linear interpolation between two quaternions I<a> and I<b> with
 parameter I<t>.
 
 The parameter I<out> describes the resulting quaternion.
@@ -149,7 +149,7 @@ The parameter I<out> describes the resulting quaternion.
                      float t,
                      float out[4]);
 
-Performs spherical linear interpolation between two quaternions I<a> and I<b> 
+Performs spherical linear interpolation between two quaternions I<a> and I<b>
 with parameter I<t>.
 
 The parameter I<out> describes the resulting quaternion.
@@ -176,7 +176,7 @@ The parameter I<out> describes the resulting quaternion.
                         float angle,
                         float out[4]);
 
-Calculates the quaternion from rotation around the I<axis> with the given 
+Calculates the quaternion from rotation around the I<axis> with the given
 I<angle>.
 
 The parameter I<out> describes the resulting quaternion.

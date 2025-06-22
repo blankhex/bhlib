@@ -27,7 +27,7 @@ The BH_Algo library provides a set of algorithms for working with data:
 
 =over
 
-=item * 
+=item *
 
 Value swapping (L</BH_Swap>)
 
@@ -35,18 +35,18 @@ Value swapping (L</BH_Swap>)
 
 Array partitioning (L</BH_Partition>)
 
-=item * 
+=item *
 
 Sorting (L</BH_Sort>)
 
-=item * 
+=item *
 
 Heap operations (L</BH_HeapMake>, L</BH_HeapRemove>, L</BH_HeapInsert>,
 L</BH_HeapReplace>)
 
 =back
 
-These algorithms allow you to efficiently perform various operations on arrays 
+These algorithms allow you to efficiently perform various operations on arrays
 and other data structures.
 
 
@@ -72,7 +72,7 @@ I<size>.
                     BH_EqualCallback equal);
 
 Partitions the array of elements I<array> (with the number of elements I<size>
-and the size of the element I<element>) into two groups relative to the pivot 
+and the size of the element I<element>) into two groups relative to the pivot
 element I<pivot>.
 
 The I<equal> parameter takes a pointer to a function that compares two elements.
@@ -90,7 +90,7 @@ the second group.
               size_t element,
               BH_EqualCallback equal);
 
-Sorts the array of elements I<array> (with the number of elements I<size> and 
+Sorts the array of elements I<array> (with the number of elements I<size> and
 the size of the element I<element>).
 
 The I<equal> parameter takes a pointer to a function that compares two elements.
@@ -103,7 +103,7 @@ The I<equal> parameter takes a pointer to a function that compares two elements.
                   size_t element,
                   BH_EqualCallback equal);
 
-Creates a heap in the array I<array> (with the number of elements I<size> and 
+Creates a heap in the array I<array> (with the number of elements I<size> and
 the size of the element I<element>).
 
 The I<equal> parameter takes a pointer to a function that compares two elements.
@@ -116,7 +116,7 @@ The I<equal> parameter takes a pointer to a function that compares two elements.
                     size_t element,
                     BH_EqualCallback equal);
 
-Extracts the top element of the heap in the array I<array> (with the number of 
+Extracts the top element of the heap in the array I<array> (with the number of
 elements I<size> and the size of the element I<element>).
 
 The I<equal> parameter takes a pointer to a function that compares two elements.
@@ -133,7 +133,7 @@ The I<equal> parameter takes a pointer to a function that compares two elements.
 Adds the element I<value> to the heap in the array I<array> (with the number of
 elements I<size> and the size of the element I<element>).
 
-If I<value> is NULL, it is assumed that the new value is at the end of the 
+If I<value> is NULL, it is assumed that the new value is at the end of the
 array.
 
 The I<equal> parameter takes a pointer to a function that compares two elements.
@@ -147,11 +147,11 @@ The I<equal> parameter takes a pointer to a function that compares two elements.
                      size_t element,
                      BH_EqualCallback equal);
 
-Extracts the top element of the heap in the array I<array> (with the number of 
-elements I<size> and the size of the element I<element>) and adds the element 
+Extracts the top element of the heap in the array I<array> (with the number of
+elements I<size> and the size of the element I<element>) and adds the element
 I<value> to it.
 
-If I<value> is NULL, it is assumed that the new value is at the end of the 
+If I<value> is NULL, it is assumed that the new value is at the end of the
 array.
 
 The I<equal> parameter takes a pointer to a function that compares two elements.

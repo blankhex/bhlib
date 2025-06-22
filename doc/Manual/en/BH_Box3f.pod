@@ -9,14 +9,14 @@ BH_Box3f - three-dimensional bounding box
 =head1 SYNTAX
 
  #include <BH/Math/Box3f.h>
- 
+
  cc prog.c -o prog -lbh
 
 
 =head1 DESCRIPTION
 
-The BH_Box3f module provides functions for working with three-dimensional 
-bounding boxes. It includes operations for union, intersection, checking if a 
+The BH_Box3f module provides functions for working with three-dimensional
+bounding boxes. It includes operations for union, intersection, checking if a
 point is inside a box, and calculating the bounding box for a set of points.
 
 

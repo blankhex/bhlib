@@ -17,7 +17,7 @@ BH_Queue - queue container
 
 The BH_Queue module provides an implementation of a queue container that allows
 adding elements to the end and removing them from the beginning. The queue is
-based on a dynamic array, which ensures efficient memory usage and fast access 
+based on a dynamic array, which ensures efficient memory usage and fast access
 to elements.
 
 
@@ -30,7 +30,7 @@ to elements.
 
 Creates a queue.
 
-If successful, the function returns a pointer to a new BH_Queue object, or NULL 
+If successful, the function returns a pointer to a new BH_Queue object, or NULL
 in case of an error.
 
 
@@ -50,7 +50,7 @@ Clears the queue.
 
 =head2 BH_QueueReserve
 
- int BH_QueueReserve(BH_Queue *queue, 
+ int BH_QueueReserve(BH_Queue *queue,
                      size_t size);
 
 Reserves space for at least I<size> elements.
@@ -62,7 +62,7 @@ If successful, the function returns 0; otherwise, it returns an error code.
 
 =head2 BH_QueueInsert
 
- int BH_QueueInsert(BH_Queue *queue, 
+ int BH_QueueInsert(BH_Queue *queue,
                     void *value);
 
 Inserts an element I<value>.
@@ -83,7 +83,7 @@ Calling this function invalidates existing iterators.
 
 =head2 BH_QueueFront
 
- int BH_QueueFront(BH_Queue *queue, 
+ int BH_QueueFront(BH_Queue *queue,
                    void **value);
 
 Returns the first element of the queue.
@@ -116,7 +116,7 @@ Returns the capacity.
 
 =head2 BH_QueueIterNext
 
- void *BH_QueueIterNext(BH_Queue *queue, 
+ void *BH_QueueIterNext(BH_Queue *queue,
                         void *iter);
 
 Returns an iterator to the next element.

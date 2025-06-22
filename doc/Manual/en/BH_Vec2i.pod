@@ -9,7 +9,7 @@ BH_Vec2i - two-dimensional integer vector
 =head1 SYNTAX
 
  #include <BH/Math.h>
- 
+
  cc prog.c -o prog -lbh
 
 

@@ -9,14 +9,14 @@ BH_Hashmap - unordered associative array
 =head1 SYNTAX
 
  #include <BH/Hashmap.h>
- 
+
  cc prog.c -o prog -lbh
 
 
 =head1 DESCRIPTION
 
-The BH_Hashmap library provides an implementation of an unordered associative 
-array based on a hash table. It allows you to store and retrieve data by key 
+The BH_Hashmap library provides an implementation of an unordered associative
+array based on a hash table. It allows you to store and retrieve data by key
 efficiently.
 
 
@@ -142,7 +142,7 @@ Returns the maximum load factor.
 
 Sets the maximum load factor I<factor>.
 
-The new value of the maximum load factor will be applied on the next call to 
+The new value of the maximum load factor will be applied on the next call to
 L</BH_HashmapInsert> or L</BH_HashmapReserve>.
 
 

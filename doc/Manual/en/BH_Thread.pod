@@ -9,14 +9,14 @@ BH_Thread - multithreading and synchronization primitives
 =head1 SYNTAX
 
  #include <BH/Thread.h>
- 
+
  cc prog.c -o prog -lbh
 
 
 =head1 DESCRIPTION
 
-The BH_Thread library provides a set of functions for working with 
-multithreading and thread synchronization. It includes functions for creating 
+The BH_Thread library provides a set of functions for working with
+multithreading and thread synchronization. It includes functions for creating
 and managing threads, working with mutexes, semaphores, condition variables, and
 spinlocks.
 
@@ -194,7 +194,7 @@ a change in the condition.
 
 In some situations, the signal of a condition change may be false.
 
-The I<mutex> parameter specifies the mutex used in conjunction with the 
+The I<mutex> parameter specifies the mutex used in conjunction with the
 condition variable.
 
 Returns 0 on success, otherwise an error code.
@@ -211,7 +211,7 @@ signals a change in the condition within a specified time I<timeout>.
 
 In some situations, the signal of a condition change may be false.
 
-The I<mutex> parameter specifies the mutex used in conjunction with the 
+The I<mutex> parameter specifies the mutex used in conjunction with the
 condition variable.
 
 The I<timeout> parameter specifies the waiting time in milliseconds.

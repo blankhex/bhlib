@@ -15,9 +15,9 @@ BH_Vec4f - four-dimensional real vector
 
 =head1 DESCRIPTION
 
-The BH_Vec4f module provides a set of functions for working with 
+The BH_Vec4f module provides a set of functions for working with
 four-dimensional vectors. The functions allow performing arithmetic operations,
-normalization, calculating the dot product, and other mathematical operations 
+normalization, calculating the dot product, and other mathematical operations
 on vectors.
 
 
@@ -155,7 +155,7 @@ The I<out> parameter describes the resulting vector.
                    float t,
                    float out[4]);
 
-Performs linear interpolation between two vectors I<a> and I<b> with parameter 
+Performs linear interpolation between two vectors I<a> and I<b> with parameter
 I<t>.
 
 The I<out> parameter describes the resulting vector.

@@ -16,7 +16,7 @@ BH_Box2f - two-dimensional bounding box
 =head1 DESCRIPTION
 
 The BH_Box2f module provides functions for working with two-dimensional bounding
-boxes. It includes operations for union, intersection, checking if a point is 
+boxes. It includes operations for union, intersection, checking if a point is
 inside a rectangle, and calculating the bounding box for a set of points.
 
 

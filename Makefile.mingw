@@ -1,4 +1,4 @@
-# GNU makefile 
+# GNU makefile
 
 
 # User configuration

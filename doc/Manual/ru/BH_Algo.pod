@@ -27,19 +27,19 @@ BH_Algo - Общие алгоритмы
 
 =over
 
-=item * 
+=item *
 
 Обмен значениями (L</BH_Swap>)
 
-=item * 
+=item *
 
 Разбиение массива (L</BH_Partition>)
 
-=item * 
+=item *
 
 Сортировка (L</BH_Sort>)
 
-=item * 
+=item *
 
 Работа с кучей (L</BH_HeapMake>, L</BH_HeapRemove>, L</BH_HeapInsert>,
 L</BH_HeapReplace>)

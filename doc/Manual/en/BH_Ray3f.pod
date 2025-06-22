@@ -9,14 +9,14 @@ BH_Ray3f, BH_Segment3f - ray/segment in space
 =head1 SYNTAX
 
  #include <BH/Math/Ray3f.h>
- 
+
  cc prog.c -o prog -lbh
 
 
 =head1 DESCRIPTION
 
-This module provides functions for working with rays and segments in 
-three-dimensional space. It includes methods for checking intersections of rays 
+This module provides functions for working with rays and segments in
+three-dimensional space. It includes methods for checking intersections of rays
 and segments with planes, triangles, and bounding boxes.
 
 
@@ -126,7 +126,7 @@ The parameters I<aStart> and I<aDirection> describe the ray.
 
 The parameters I<bMin> and I<bMax> describe the bounding box.
 
-The parameter I<t> describes the resulting time of the first segment's 
+The parameter I<t> describes the resulting time of the first segment's
 intersection.
 
 The parameter I<out> describes the resulting point of intersection.
@@ -149,7 +149,7 @@ The parameters I<aStart> and I<aEnd> describe the segment.
 
 The parameters I<bMin> and I<bMax> describe the bounding box.
 
-The parameter I<t> describes the resulting time of the first segment's 
+The parameter I<t> describes the resulting time of the first segment's
 intersection.
 
 The parameter I<out> describes the resulting point of intersection.

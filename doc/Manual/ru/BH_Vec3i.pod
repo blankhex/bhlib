@@ -9,7 +9,7 @@ BH_Vec3i - трёхмерный целочисленный вектор
 =head1 СИНТАКСИС
 
  #include <BH/Math.h>
- 
+
  cc prog.c -o prog -lbh
 
 

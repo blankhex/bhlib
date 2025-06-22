@@ -9,14 +9,14 @@ BH_Ray2f, BH_Segment2f - Ray/segment on a plane
 =head1 SYNTAX
 
  #include <BH/Math/Ray2f.h>
- 
+
  cc prog.c -o prog -lbh
 
 
 =head1 DESCRIPTION
 
 This module provides functions for working with rays and segments on a plane.
-It includes functions for checking intersections between rays, segments, lines, 
+It includes functions for checking intersections between rays, segments, lines,
 and bounding rectangles.
 
 
@@ -59,10 +59,10 @@ The parameters I<aStart> and I<aDirection> describe the first ray.
 
 The parameters I<bStart> and I<bDirection> describe the second ray.
 
-The parameter I<time1> describes the resulting intersection time of the first 
+The parameter I<time1> describes the resulting intersection time of the first
 ray.
 
-The parameter I<time2> describes the resulting intersection time of the second 
+The parameter I<time2> describes the resulting intersection time of the second
 ray.
 
 If successful, the function returns 0, otherwise it returns an error code.
@@ -148,7 +148,7 @@ The parameters I<aStart> and I<aEnd> describe the first segment.
 
 The parameters I<bStart> and I<bEnd> describe the second segment.
 
-The parameter I<t> describes the resulting intersection time of the first 
+The parameter I<t> describes the resulting intersection time of the first
 segment.
 
 The parameter I<out> describes the resulting intersection point.

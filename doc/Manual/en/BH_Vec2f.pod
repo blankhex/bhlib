@@ -16,7 +16,7 @@ BH_Vec2f - two-dimensional real vector
 =head1 DESCRIPTION
 
 The BH_Vec2f module provides a set of functions for working with two-dimensional
-vectors. It includes operations for addition, subtraction, multiplication, 
+vectors. It includes operations for addition, subtraction, multiplication,
 scaling, calculating the dot and cross product, as well as normalizing vectors.
 
 
@@ -161,7 +161,7 @@ The I<out> parameter describes the resulting vector.
                    float t,
                    float out[2]);
 
-Performs linear interpolation between two vectors I<a> and I<b> with parameter 
+Performs linear interpolation between two vectors I<a> and I<b> with parameter
 I<t>.
 
 The I<out> parameter describes the resulting vector.

@@ -9,15 +9,15 @@ BH_Plane - Plane in space
 =head1 SYNTAX
 
  #include <BH/Math.h>
- 
+
  cc prog.c -o prog -lbh
- 
+
 
 =head1 DESCRIPTION
 
-The BH_Plane module provides functions for working with planes in 
-three-dimensional space. It allows you to calculate the coefficients of a plane 
-from three points, determine the distance from a point to a plane, and find the 
+The BH_Plane module provides functions for working with planes in
+three-dimensional space. It allows you to calculate the coefficients of a plane
+from three points, determine the distance from a point to a plane, and find the
 closest point on the plane to a given point.
 
 

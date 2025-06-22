@@ -15,18 +15,18 @@ BH_String - Working with strings
 
 =head1 DESCRIPTION
 
-The BH_String library provides a set of functions for working with strings, 
+The BH_String library provides a set of functions for working with strings,
 including converting numbers to strings and back.
 
 
 =head1 DEFINING THE BASE
 
-The functions of the I<StringToInt> family have an algorithm for determining the 
-base of a number by string prefixes:
+The functions of the I<StringToInt> family have an algorithm for determining
+the base of a number by string prefixes:
 
 =over
 
-=item * 
+=item *
 
 If the prefix I<0b>, then base 2
 
@@ -61,7 +61,7 @@ Otherwise, base 10.
 Formats a real number I<value> into a null-terminated string I<string>
 (with a length limit of I<size>).
 
-The I<format> parameter specifies the format for converting a number to a 
+The I<format> parameter specifies the format for converting a number to a
 string. Acceptable formats:
 
 =over
@@ -80,9 +80,9 @@ Fixed or scientific format, depending on which one is shorter.
 
 =back
 
-The I<precision> parameter sets the precision of converting a number to a 
-string. If the accuracy value is negative, the conversion will be performed with 
-the minimum required accuracy so that the reverse conversion results in the 
+The I<precision> parameter sets the precision of converting a number to a
+string. If the accuracy value is negative, the conversion will be performed with
+the minimum required accuracy so that the reverse conversion results in the
 original number.
 
 The optional parameter I<actual> returns the length of the recorded string.
@@ -100,8 +100,8 @@ If successful, it returns 0 or an error code.
                         int base,
                         size_t *actual);
 
-Formats an 8-bit signed integer I<value> into a null-terminated string 
-I<string> (with a length limit of I<size>). 
+Formats an 8-bit signed integer I<value> into a null-terminated string
+I<string> (with a length limit of I<size>).
 
 The I<base> parameter sets the base for the conversion.
 
@@ -118,8 +118,8 @@ If successful, it returns 0 or an error code.
                          int base,
                          size_t *actual);
 
-Formats a 16-bit signed integer I<value> into a null-terminated string I<string> 
-(with a length limit of I<size>). 
+Formats a 16-bit signed integer I<value> into a null-terminated string I<string>
+(with a length limit of I<size>).
 
 The I<base> parameter sets the base for the conversion.
 
@@ -137,7 +137,7 @@ If successful, it returns 0 or an error code.
                          size_t *actual);
 
 Formats a 32-bit signed integer I<value> into a null-terminated string I<string>
-(with a length limit of I<size>). 
+(with a length limit of I<size>).
 
 The I<base> parameter sets the base for the conversion.
 
@@ -155,7 +155,7 @@ If successful, it returns 0 or an error code.
                          size_t *actual);
 
 Formats a 64-bit signed integer I<value> into a null-terminated string I<string>
-(with a length limit of I<size>). 
+(with a length limit of I<size>).
 
 The I<base> parameter sets the base for the conversion.
 
@@ -172,8 +172,8 @@ If successful, it returns 0 or an error code.
                         int base,
                         size_t *actual);
 
-Formats an 8-bit unsigned integer I<value> into a null-terminated string 
-I<string> (with a length limit of I<size>). 
+Formats an 8-bit unsigned integer I<value> into a null-terminated string
+I<string> (with a length limit of I<size>).
 
 The I<base> parameter sets the base for the conversion.
 
@@ -190,8 +190,8 @@ If successful, it returns 0 or an error code.
                          int base,
                          size_t *actual);
 
-Formats a 16-bit unsigned integer I<value> into a null-terminated string 
-I<string> (with a length limit of I<size>). 
+Formats a 16-bit unsigned integer I<value> into a null-terminated string
+I<string> (with a length limit of I<size>).
 
 The I<base> parameter sets the base for the conversion.
 
@@ -208,8 +208,8 @@ If successful, it returns 0 or an error code.
                          int base,
                          size_t *actual);
 
-Formats a 32-bit unsigned integer I<value> into a null-terminated string 
-I<string> (with a length limit of I<size>). 
+Formats a 32-bit unsigned integer I<value> into a null-terminated string
+I<string> (with a length limit of I<size>).
 
 The I<base> parameter sets the base for the conversion.
 
@@ -226,8 +226,8 @@ If successful, it returns 0 or an error code.
                          int base,
                          size_t *actual);
 
-Formats a 64-bit unsigned integer I<value> into a null-terminated string 
-I<string> (with a length limit of I<size>). 
+Formats a 64-bit unsigned integer I<value> into a null-terminated string
+I<string> (with a length limit of I<size>).
 
 The I<base> parameter sets the base for the conversion.
 
@@ -243,8 +243,8 @@ If successful, it returns 0 or an error code.
 
 Converts the string I<string> to a real number.
 
-The optional parameter I<size> returns the number of characters read from the 
-string. 
+The optional parameter I<size> returns the number of characters read from the
+string.
 
 If successful, it returns the converted number or 0.
 
@@ -257,8 +257,8 @@ If successful, it returns the converted number or 0.
 
 Converts the string I<string> to an 8-bit signed integer.
 
-The optional parameter I<size> returns the number of characters read from the 
-string. 
+The optional parameter I<size> returns the number of characters read from the
+string.
 
 The optional parameter I<base> specifies the base of the number.
 
@@ -273,8 +273,8 @@ If successful, it returns the converted number or 0.
 
 Converts the string I<string> to a signed 16-bit integer.
 
-The optional parameter I<size> returns the number of characters read from the 
-string. 
+The optional parameter I<size> returns the number of characters read from the
+string.
 
 The optional parameter I<base> specifies the base of the number.
 
@@ -289,8 +289,8 @@ If successful, it returns the converted number or 0.
 
 Converts the string I<string> to a signed 32-bit integer.
 
-The optional parameter I<size> returns the number of characters read from the 
-string. 
+The optional parameter I<size> returns the number of characters read from the
+string.
 
 The optional parameter I<base> specifies the base of the number.
 
@@ -306,7 +306,7 @@ If successful, it returns the converted number or 0.
 Converts the string I<string> to a signed 64-bit integer.
 
 The optional parameter I<size> returns the number of characters read from the
-string. 
+string.
 
 The optional parameter I<base> specifies the base of the number.
 
@@ -322,7 +322,7 @@ If successful, it returns the converted number or 0.
 Converts the string I<string> to an unsigned 8-bit integer.
 
 The optional parameter I<size> returns the number of characters read from the
-string. 
+string.
 
 The optional parameter I<base> specifies the base of the number.
 
@@ -338,7 +338,7 @@ If successful, it returns the converted number or 0.
 Converts the string I<string> to an unsigned 16-bit integer.
 
 The optional parameter I<size> returns the number of characters read from the
-string. 
+string.
 
 The optional parameter I<base> specifies the base of the number.
 
@@ -354,7 +354,7 @@ If successful, it returns the converted number or 0.
 Converts the string I<string> to an unsigned 32-bit integer.
 
 The optional parameter I<size> returns the number of characters read from the
-string. 
+string.
 
 The optional parameter I<base> specifies the base of the number.
 
@@ -370,7 +370,7 @@ If successful, it returns the converted number or 0.
 Converts the string I<string> to an unsigned 64-bit integer.
 
 The optional parameter I<size> returns the number of characters read from the
-string. 
+string.
 
 The optional parameter I<base> specifies the base of the number.
 

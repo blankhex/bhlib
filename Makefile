@@ -12,13 +12,13 @@ endif
 
 # Targets
 default:
-	$(MAKE) -f Makefile.$(MAKEFILE) 
+	$(MAKE) -f Makefile.$(MAKEFILE)
 
 all:
-	$(MAKE) -f Makefile.$(MAKEFILE) all 
+	$(MAKE) -f Makefile.$(MAKEFILE) all
 
 dist:
-	$(MAKE) -f Makefile.$(MAKEFILE) dist 
+	$(MAKE) -f Makefile.$(MAKEFILE) dist
 
 clean:
-	$(MAKE) -f Makefile.$(MAKEFILE) clean 
+	$(MAKE) -f Makefile.$(MAKEFILE) clean

@@ -9,7 +9,7 @@ BH_Mat3f - вещественная матрица 3x3
 =head1 СИНТАКСИС
 
  #include <BH/Math/Mat3f.h>
- 
+
  cc prog.c -o prog -lbh
 
 

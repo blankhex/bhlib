@@ -60,7 +60,7 @@ int BH_SemaphoreWaitFor(BH_Semaphore *semaphore,
                         uint32_t timeout)
 {
     struct timespec ts;
-    
+
     /* Calculate absoulute time for timed wait */
     clock_gettime(CLOCK_REALTIME, &ts);
     ts.tv_sec += timeout / 1000;

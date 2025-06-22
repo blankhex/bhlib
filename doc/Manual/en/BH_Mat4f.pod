@@ -9,15 +9,15 @@ BH_Mat4f - real 4x4 matrix
 =head1 SYNTAX
 
  #include <BH/Math/Mat4f.h>
- 
+
  cc prog.c -o prog -lbh
 
 
 =head1 DESCRIPTION
 
-The BH_Mat4f module provides a set of functions for working with real 4x4 
-matrices. These functions allow you to perform various operations on matrices, 
-such as addition, subtraction, multiplication, transposition, determinant 
+The BH_Mat4f module provides a set of functions for working with real 4x4
+matrices. These functions allow you to perform various operations on matrices,
+such as addition, subtraction, multiplication, transposition, determinant
 calculation, and others.
 
 

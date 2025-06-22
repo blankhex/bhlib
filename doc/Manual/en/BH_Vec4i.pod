@@ -9,13 +9,13 @@ BH_Vec4i - four-dimensional integer vector
 =head1 SYNTAX
 
  #include <BH/Math.h>
- 
+
  cc prog.c -o prog -lbh
 
 
 =head1 DESCRIPTION
 
-The BH_Vec4i module provides a set of functions for working with 
+The BH_Vec4i module provides a set of functions for working with
 four-dimensional integer vectors.
 
 

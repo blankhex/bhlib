@@ -9,13 +9,13 @@ BH_Mat3f - a real 3x3 matrix
 =head1 SYNTAX
 
  #include <BH/Math/Mat3f.h>
- 
+
  cc prog.c -o prog -lbh
 
 
 =head1 DESCRIPTION
 
-The BH_Mat3f module provides a set of functions for working with real 3x3 
+The BH_Mat3f module provides a set of functions for working with real 3x3
 matrices.
 
 

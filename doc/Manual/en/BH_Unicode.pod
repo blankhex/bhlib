@@ -30,7 +30,7 @@ strings in the specified encodings.
 
 Converts the Unicode code I<unit> to lowercase.
 
-The conversion is performed for characters in the Basic Multilingual Plane 
+The conversion is performed for characters in the Basic Multilingual Plane
 (i.e., the first 65,536 codes).
 
 
@@ -40,7 +40,7 @@ The conversion is performed for characters in the Basic Multilingual Plane
 
 Converts the Unicode code I<unit> to uppercase.
 
-The conversion is performed for characters in the Basic Multilingual Plane 
+The conversion is performed for characters in the Basic Multilingual Plane
 (i.e., the first 65,536 codes).
 
 
@@ -50,12 +50,12 @@ The conversion is performed for characters in the Basic Multilingual Plane
                              size_t size,
                              uint32_t *unit);
 
-Decodes the UTF-8 sequence from I<string> (with the specified length I<size>) 
+Decodes the UTF-8 sequence from I<string> (with the specified length I<size>)
 and writes the code to I<unit>.
 
 Invalid UTF-8 sequences will be converted to code -1.
 
-If successful, the function returns the number of bytes read or 0 if I<string> 
+If successful, the function returns the number of bytes read or 0 if I<string>
 contains only part of the sequence.
 
 
@@ -82,7 +82,7 @@ and writes the code to I<unit>.
 
 Invalid UTF-16LE sequences will be converted to code -1.
 
-If successful, the function returns the number of bytes read or 0 if I<string> 
+If successful, the function returns the number of bytes read or 0 if I<string>
 contains only part of the sequence.
 
 
@@ -97,7 +97,7 @@ and writes the code to I<unit>.
 
 Invalid UTF-16BE sequences will be converted to code -1.
 
-If successful, the function returns the number of bytes read or 0 if I<string> 
+If successful, the function returns the number of bytes read or 0 if I<string>
 contains only part of the sequence.
 
 
@@ -136,7 +136,7 @@ and writes the code to I<unit>.
 
 Invalid UTF-32LE sequences will be converted to code -1.
 
-If successful, the function returns the number of bytes read or 0 if I<string> 
+If successful, the function returns the number of bytes read or 0 if I<string>
 contains only part of the sequence.
 
 
@@ -151,7 +151,7 @@ and writes the code to I<unit>.
 
 Invalid UTF-32BE sequences will be converted to code -1.
 
-If successful, the function returns the number of bytes read or 0 if I<string> 
+If successful, the function returns the number of bytes read or 0 if I<string>
 contains only part of the sequence.
 
 

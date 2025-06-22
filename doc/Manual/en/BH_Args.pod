@@ -61,8 +61,8 @@ BH_Args - command line argument processing
 
 =head1 DESCRIPTION
 
-The BH_Args library is designed for convenient handling of command line 
-arguments in programs. It allows you to define a set of options that can be 
+The BH_Args library is designed for convenient handling of command line
+arguments in programs. It allows you to define a set of options that can be
 specified when starting a program and provides mechanisms for their analysis and
 processing.
 
@@ -137,7 +137,7 @@ If the I<padding> parameter is 0, the default value (30) will be used.
 The I<key> field contains the option identifier. If the I<key> identifier is a
 printable ASCII character, it will be used as a short argument.
 
-The optional I<name> field contains a string that will be used as a long 
+The optional I<name> field contains a string that will be used as a long
 argument.
 
 The I<flags> field contains argument flags. A combination of the following flags
@@ -155,7 +155,7 @@ The argument value is optional.
 
 =back
 
-The I<description> field contains a string that will be used when displaying 
+The I<description> field contains a string that will be used when displaying
 help information using the L</BH_ArgsHelp> function.
 
 

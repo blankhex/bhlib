@@ -9,14 +9,14 @@ BH_Util - Вспомогательные функции
 =head1 СИНТАКСИС
 
  #include <BH/Math.h>
- 
+
  cc prog.c -o prog -lbh
 
 
 =head1 ОПИСАНИЕ
 
-Библиотека BH_Util предоставляет набор функций для работы с числами в форматах 
-little-endian и big-endian, а также для классификации значений с плавающей 
+Библиотека BH_Util предоставляет набор функций для работы с числами в форматах
+little-endian и big-endian, а также для классификации значений с плавающей
 точкой.
 
 
@@ -142,7 +142,7 @@ little-endian и big-endian, а также для классификации з�
 
 =head2 BH_Write16LEu
 
- void BH_Write16LEu(char *buffer, 
+ void BH_Write16LEu(char *buffer,
                     uint16_t value);
 
 Записывает целое 16-битное беззнаковое little-endian число в буфер.
@@ -150,7 +150,7 @@ little-endian и big-endian, а также для классификации з�
 
 =head2 BH_Write16LEs
 
- void BH_Write16LEs(char *buffer, 
+ void BH_Write16LEs(char *buffer,
                     int16_t value);
 
 Записывает целое 16-битное знаковое little-endian число в буфер.
@@ -158,7 +158,7 @@ little-endian и big-endian, а также для классификации з�
 
 =head2 BH_Write32LEu
 
- void BH_Write32LEu(char *buffer, 
+ void BH_Write32LEu(char *buffer,
                     uint32_t value);
 
 Записывает целое 32-битное беззнаковое little-endian число в буфер.
@@ -166,7 +166,7 @@ little-endian и big-endian, а также для классификации з�
 
 =head2 BH_Write32LEs
 
- void BH_Write32LEs(char *buffer, 
+ void BH_Write32LEs(char *buffer,
                     int32_t value);
 
 Записывает целое 32-битное знаковое little-endian число в буфер.
@@ -174,7 +174,7 @@ little-endian и big-endian, а также для классификации з�
 
 =head2 BH_Write64LEu
 
- void BH_Write64LEu(char *buffer, 
+ void BH_Write64LEu(char *buffer,
                     uint64_t value);
 
 Записывает целое 64-битное беззнаковое little-endian число в буфер.
@@ -182,7 +182,7 @@ little-endian и big-endian, а также для классификации з�
 
 =head2 BH_Write64LEs
 
- void BH_Write64LEs(char *buffer, 
+ void BH_Write64LEs(char *buffer,
                     int64_t value);
 
 Записывает целое 64-битное знаковое little-endian число в буфер.
@@ -190,7 +190,7 @@ little-endian и big-endian, а также для классификации з�
 
 =head2 BH_Write16BEu
 
- void BH_Write16BEu(char *buffer, 
+ void BH_Write16BEu(char *buffer,
                     uint16_t value);
 
 Записывает целое 16-битное беззнаковое big-endian число в буфер.
@@ -198,7 +198,7 @@ little-endian и big-endian, а также для классификации з�
 
 =head2 BH_Write16BEs
 
- void BH_Write16BEs(char *buffer, 
+ void BH_Write16BEs(char *buffer,
                     int16_t value);
 
 Записывает целое 16-битное знаковое big-endian число в буфер.
@@ -206,7 +206,7 @@ little-endian и big-endian, а также для классификации з�
 
 =head2 BH_Write32BEu
 
- void BH_Write32BEu(char *buffer, 
+ void BH_Write32BEu(char *buffer,
                     uint32_t value);
 
 Записывает целое 32-битное беззнаковое big-endian число в буфер.
@@ -214,7 +214,7 @@ little-endian и big-endian, а также для классификации з�
 
 =head2 BH_Write32BEs
 
- void BH_Write32BEs(char *buffer, 
+ void BH_Write32BEs(char *buffer,
                     int32_t value);
 
 Записывает целое 32-битное знаковое big-endian число в буфер.
@@ -222,7 +222,7 @@ little-endian и big-endian, а также для классификации з�
 
 =head2 BH_Write64BEu
 
- void BH_Write64BEu(char *buffer, 
+ void BH_Write64BEu(char *buffer,
                     uint64_t value);
 
 Записывает целое 64-битное беззнаковое big-endian число в буфер.
@@ -230,7 +230,7 @@ little-endian и big-endian, а также для классификации з�
 
 =head2 BH_Write64BEs
 
- void BH_Write64BEs(char *buffer, 
+ void BH_Write64BEs(char *buffer,
                     int64_t value);
 
 Записывает целое 64-битное знаковое big-endian число в буфер.

@@ -9,7 +9,7 @@ BH_Queue - контейнер очереди
 =head1 СИНТАКСИС
 
  #include <BH/Queue.h>
- 
+
  cc prog.c -o prog -lbh
 
 
@@ -17,7 +17,7 @@ BH_Queue - контейнер очереди
 
 Модуль BH_Queue предоставляет реализацию контейнера очереди, который позволяет
 добавлять элементы в конец и извлекать их из начала. Очередь основана на
-динамическом массиве, что обеспечивает эффективное использование памяти и 
+динамическом массиве, что обеспечивает эффективное использование памяти и
 быстрый доступ к элементам.
 
 
@@ -50,7 +50,7 @@ BH_Queue - контейнер очереди
 
 =head2 BH_QueueReserve
 
- int BH_QueueReserve(BH_Queue *queue, 
+ int BH_QueueReserve(BH_Queue *queue,
                      size_t size);
 
 Резервирует место как минимум для I<size> элементов.
@@ -62,7 +62,7 @@ BH_Queue - контейнер очереди
 
 =head2 BH_QueueInsert
 
- int BH_QueueInsert(BH_Queue *queue, 
+ int BH_QueueInsert(BH_Queue *queue,
                     void *value);
 
 Вставляет элемент I<value>.
@@ -83,7 +83,7 @@ BH_Queue - контейнер очереди
 
 =head2 BH_QueueFront
 
- int BH_QueueFront(BH_Queue *queue, 
+ int BH_QueueFront(BH_Queue *queue,
                    void **value);
 
 Возвращает первый элемент очереди.
