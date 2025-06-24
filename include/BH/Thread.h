@@ -39,7 +39,7 @@ int BH_MutexLock(BH_Mutex *mutex);
 int BH_MutexUnlock(BH_Mutex *mutex);
 
 
-int BH_MutexLockTry(BH_Mutex *mutex);
+int BH_MutexTryLock(BH_Mutex *mutex);
 
 
 BH_Semaphore *BH_SemaphoreNew(int value);
@@ -54,7 +54,7 @@ int BH_SemaphorePost(BH_Semaphore *semaphore);
 int BH_SemaphoreWait(BH_Semaphore *semaphore);
 
 
-int BH_SemaphoreWaitTry(BH_Semaphore *semaphore);
+int BH_SemaphoreTryWait(BH_Semaphore *semaphore);
 
 
 int BH_SemaphoreWaitFor(BH_Semaphore *semaphore,
@@ -85,7 +85,7 @@ int BH_ConditionBroadcast(BH_Condition *condition);
 void BH_SpinlockLock(int *lock);
 
 
-int BH_SpinlockLockTry(int *lock);
+int BH_SpinlockTryLock(int *lock);
 
 
 void BH_SpinlockUnlock(int *lock);

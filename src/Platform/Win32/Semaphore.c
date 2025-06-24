@@ -46,7 +46,7 @@ int BH_SemaphoreWait(BH_Semaphore *semaphore)
 }
 
 
-int BH_SemaphoreWaitTry(BH_Semaphore *semaphore)
+int BH_SemaphoreTryWait(BH_Semaphore *semaphore)
 {
     if (WaitForSingleObject(semaphore->handle, 0))
         return BH_ERROR;

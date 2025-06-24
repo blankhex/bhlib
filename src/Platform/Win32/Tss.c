@@ -18,12 +18,19 @@ static void __stdcall BH_TssKeyCleanup(void *data)
 {
     int i;
 
+    /* Skip or remove TSS data */
+    if (!data)
+        return;
+    else if (FlsSetValue(tssKey, NULL))
+        abort();
+
     /* Lock cleanup table and call cleanups */
     BH_SpinlockLock(&tssCleanupLock);
     for (i = 0; i < tssCleanupSize; i++)
         tssCleanupData[i](((void **)data)[i]);
     BH_SpinlockUnlock(&tssCleanupLock);
 
+    /* Deallocate TSS data */
     free(data);
 }
 

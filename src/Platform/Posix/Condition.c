@@ -1,4 +1,5 @@
 #include "Thread.h"
+#include "Timespec.h"
 
 #include <stdlib.h>
 #include <errno.h>
@@ -44,13 +45,7 @@ int BH_ConditionWaitFor(BH_Condition *condition,
     struct timespec ts;
 
     /* Calculate absoulute time for timed wait */
-    clock_gettime(CLOCK_REALTIME, &ts);
-    ts.tv_sec += timeout / 1000;
-    ts.tv_nsec += (timeout % 1000) * 1000000;
-    while (ts.tv_nsec >= 1000000000) {
-        ts.tv_nsec -= 1000000000;
-        ts.tv_sec += 1;
-    }
+    convertToTimespec(&ts, timeout);
 
     switch (pthread_cond_timedwait(&condition->handle, &mutex->handle, &ts))
     {

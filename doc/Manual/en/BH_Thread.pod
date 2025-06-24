@@ -98,9 +98,9 @@ If the mutex is locked by another thread, the behavior is undefined.
 Returns 0 on success, otherwise an error code.
 
 
-=head2 BH_MutexLockTry
+=head2 BH_MutexTryLock
 
- int BH_MutexLockTry(BH_Mutex *mutex);
+ int BH_MutexTryLock(BH_Mutex *mutex);
 
 Attempts to lock the mutex.
 
@@ -144,9 +144,9 @@ the semaphore value becomes greater than 0.
 Returns 0 on success, otherwise an error code.
 
 
-=head2 BH_SemaphoreWaitTry
+=head2 BH_SemaphoreTryWait
 
- int BH_SemaphoreWaitTry(BH_Semaphore *semaphore);
+ int BH_SemaphoreTryWait(BH_Semaphore *semaphore);
 
 Attempts to decrease the semaphore value by 1.
 
@@ -244,9 +244,9 @@ Returns 0 on success, otherwise an error code.
 Locks the spinlock.
 
 
-=head2 BH_SpinlockLockTry
+=head2 BH_SpinlockTryLock
 
- int BH_SpinlockLockTry(int *lock);
+ int BH_SpinlockTryLock(int *lock);
 
 Attempts to lock the spinlock.
 

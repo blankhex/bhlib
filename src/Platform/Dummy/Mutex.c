@@ -29,7 +29,7 @@ int BH_MutexUnlock(BH_Mutex *mutex)
 }
 
 
-int BH_MutexLockTry(BH_Mutex *mutex)
+int BH_MutexTryLock(BH_Mutex *mutex)
 {
     BH_UNUSED(mutex);
 

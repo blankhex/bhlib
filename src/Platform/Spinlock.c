@@ -21,7 +21,7 @@ void BH_SpinlockLock(int *lock)
 }
 
 
-int BH_SpinlockLockTry(int *lock)
+int BH_SpinlockTryLock(int *lock)
 {
 #if defined(__clang__) || defined(__GNUC__)
     if (__sync_lock_test_and_set(lock, 1))
