@@ -45,7 +45,8 @@ int BH_ConditionWaitFor(BH_Condition *condition,
     struct timespec ts;
 
     /* Calculate absoulute time for timed wait */
-    convertToTimespec(&ts, timeout);
+    if (convertToTimespec(&ts, timeout))
+        return BH_ERROR;
 
     switch (pthread_cond_timedwait(&condition->handle, &mutex->handle, &ts))
     {

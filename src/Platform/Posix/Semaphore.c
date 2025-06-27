@@ -61,7 +61,8 @@ int BH_SemaphoreWaitFor(BH_Semaphore *semaphore,
                         uint32_t timeout)
 {
     struct timespec ts;
-    convertToTimespec(&ts, timeout);
+    if (convertToTimespec(&ts, timeout))
+        return BH_ERROR;
 
     switch (sem_timedwait(&semaphore->handle, &ts))
     {
@@ -111,14 +112,19 @@ void BH_SemaphoreFree(BH_Semaphore *semaphore)
 
 int BH_SemaphorePost(BH_Semaphore *semaphore)
 {
-    /* Increase semaphore value */
-    pthread_mutex_lock(&semaphore->mutex);
-    semaphore->count++;
-    if (semaphore->waiters)
-        pthread_cond_signal(&semaphore->condition);
-    pthread_mutex_unlock(&semaphore->mutex);
+    int result;
 
-    return BH_OK;
+    /* Increase semaphore value */
+    if (pthread_mutex_lock(&semaphore->mutex))
+        return BH_ERROR;
+    
+    result = BH_OK;
+    semaphore->count++;
+    if (semaphore->waiters && pthread_cond_signal(&semaphore->condition))
+        result = BH_ERROR;
+
+    pthread_mutex_unlock(&semaphore->mutex);
+    return result;
 }
 
 
@@ -127,11 +133,19 @@ int BH_SemaphoreWait(BH_Semaphore *semaphore)
     int result;
 
     /* Wait until semaphore count is not zero */
-    result = BH_ERROR;
-    pthread_mutex_lock(&semaphore->mutex);
+    if (pthread_mutex_lock(&semaphore->mutex))
+        return BH_ERROR;
+
+    result = BH_OK;
     semaphore->waiters++;
-    while (!semaphore->count)
-        pthread_cond_wait(&semaphore->condition, &semaphore->mutex);
+    while (!semaphore->count) {
+        result = pthread_cond_wait(&semaphore->condition, &semaphore->mutex);
+        if (result && result != ETIMEDOUT) {
+            result = BH_ERROR;
+            break; 
+        }
+        result = BH_OK;
+    }
     semaphore->waiters--;
     semaphore->count--;
     pthread_mutex_unlock(&semaphore->mutex);
@@ -165,7 +179,8 @@ int BH_SemaphoreWaitFor(BH_Semaphore *semaphore,
     struct timespec ts;
 
     /* Calculate absoulute time for timed wait */
-    convertToTimespec(&ts, timeout);
+    if (convertToTimespec(&ts, timeout))
+        return BH_ERROR;
     result = BH_OK;
 
     /* Wait until semaphore count is not zero or timeout */
