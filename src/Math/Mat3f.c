@@ -48,7 +48,7 @@ void BH_Mat3fMul(const float a[9],
 {
     float tmp[9], row[3];
 
-    SET_ROW(row, b[0]); BH_Vec3fMul(&a[0], row, &tmp[0]); 
+    SET_ROW(row, b[0]); BH_Vec3fMul(&a[0], row, &tmp[0]);
     SET_ROW(row, b[1]); BH_Vec3fMulAdd(&a[3], row, &tmp[0], &tmp[0]);
     SET_ROW(row, b[2]); BH_Vec3fMulAdd(&a[6], row, &tmp[0], &tmp[0]);
 

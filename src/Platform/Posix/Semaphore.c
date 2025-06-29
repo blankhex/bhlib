@@ -117,7 +117,7 @@ int BH_SemaphorePost(BH_Semaphore *semaphore)
     /* Increase semaphore value */
     if (pthread_mutex_lock(&semaphore->mutex))
         return BH_ERROR;
-    
+
     result = BH_OK;
     semaphore->count++;
     if (semaphore->waiters && pthread_cond_signal(&semaphore->condition))
@@ -142,7 +142,7 @@ int BH_SemaphoreWait(BH_Semaphore *semaphore)
         result = pthread_cond_wait(&semaphore->condition, &semaphore->mutex);
         if (result && result != ETIMEDOUT) {
             result = BH_ERROR;
-            break; 
+            break;
         }
         result = BH_OK;
     }
