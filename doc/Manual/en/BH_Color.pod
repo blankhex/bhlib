@@ -1,0 +1,314 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Color - color manipulation utility
+
+
+=head1 SYNTAX
+
+ #include <BH/Math/Box3f.h>
+
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Color module provides mechanism for color representation and translation
+between different color spaces color spaces (RGB, HSL and HSV). Additionally,
+this module provides mechanism for blending two colors.
+
+
+=head1 NOTES
+
+Internally, color is stored in four 16-bit integers.
+
+When converting between RGB and HSV/HSL there is ~0.009% error. While this is
+not an issue, if you are using 8-bit RGB value, this may become a problem for
+the 16-bit RGB values (not every RGB value can be represented in unique HSV/HSL
+value). If you need this kind of precision, then this module is not for you.
+
+Almost all color blending modes work like in other software packages. The
+exception is I<BH_COLOR_MODE_SOFT_LIGHT>. This library opted-in for the Pegtop's
+version of the formula (which might yield different results). This might be an
+issue if you are trying to implement standard complient SVG or PDF renderer.
+
+The I<BH_COLOR_MODE_HUE>, I<BH_COLOR_MODE_SATURATION>, I<BH_COLOR_MODE_COLOR>
+and I<BH_COLOR_MODE_LUMINOSITY> are implemented in HSL color space.
+
+
+=head1 API CALLS
+
+
+=head2 BH_ColorRGBA8
+
+ void BH_ColorRGBA8(const BH_Color *color,
+                    uint8_t *r,
+                    uint8_t *g,
+                    uint8_t *b,
+                    uint8_t *a);
+
+Gets 8-bit RGBA representation of the I<color>.
+
+Parameters I<r>, I<g>, I<b>, I<a> represent color components in RGB color space.
+
+
+=head2 BH_ColorRGBA16
+
+ void BH_ColorRGBA16(const BH_Color *color,
+                     uint16_t *r,
+                     uint16_t *g,
+                     uint16_t *b,
+                     uint16_t *a);
+
+Gets 16-bit RGBA representation of the I<color>.
+
+Parameters I<r>, I<g>, I<b>, I<a> represent color components in RGB color space.
+
+
+=head2 BH_ColorRGBAf
+
+ void BH_ColorRGBAf(const BH_Color *color,
+                    float *r,
+                    float *g,
+                    float *b,
+                    float *a);
+
+Gets floating-point RGBA representation of the I<color>.
+
+Parameters I<r>, I<g>, I<b>, I<a> represent color components in RGB color space.
+
+=head2 BH_ColorSetRGBA8
+
+ void BH_ColorSetRGBA8(BH_Color *color,
+                       uint8_t r,
+                       uint8_t g,
+                       uint8_t b,
+                       uint8_t a);
+
+Sets 8-bit I<r>, I<g>, I<b>, I<a> components of the color.
+
+
+=head2 BH_ColorSetRGBA16
+
+ void BH_ColorSetRGBA16(BH_Color *color,
+                        uint16_t r,
+                        uint16_t g,
+                        uint16_t b,
+                        uint16_t a);
+
+Sets 16-bit I<r>, I<g>, I<b>, I<a> components of the color.
+
+
+=head2 BH_ColorSetRGBAf
+
+ void BH_ColorSetRGBAf(BH_Color *color,
+                       float r,
+                       float g,
+                       float b,
+                       float a);
+
+Sets floating-point I<r>, I<g>, I<b>, I<a> components of the color.
+
+
+=head2 BH_ColorHSVAf
+
+ void BH_ColorHSVAf(const BH_Color *color,
+                    float *h,
+                    float *s,
+                    float *v,
+                    float *a);
+
+Gets floating-point HSV representation of the I<color>.
+
+Parameters I<h>, I<s>, I<v>, I<a> represent color components in HSV color space.
+
+
+=head2 BH_ColorSetHSVAf
+
+ void BH_ColorSetHSVAf(BH_Color *color,
+                       float h,
+                       float s,
+                       float v,
+                       float a);
+
+Sets floating-point I<h>, I<s>, I<v>, I<a> components of the color.
+
+
+=head2 BH_ColorHSLAf
+
+ void BH_ColorHSLAf(const BH_Color *color,
+                    float *h,
+                    float *s,
+                    float *l,
+                    float *a);
+
+Gets floating-point HSL representation of the I<color>.
+
+Parameters I<h>, I<s>, I<l>, I<a> represent color components in HSV color space.
+
+
+=head2 BH_ColorSetHSLAf
+
+ void BH_ColorSetHSLAf(BH_Color *color,
+                       float h,
+                       float s,
+                       float l,
+                       float a);
+
+Sets floating-point I<h>, I<s>, I<l>, I<a> components of the color.
+
+
+=head2 BH_ColorToRGBA
+
+ void BH_ColorToRGBA(const BH_Color *color,
+                     BH_Color *out);
+
+Converts I<color> to RGB color space.
+
+
+=head2 BH_ColorToHSVA
+
+ void BH_ColorToHSVA(const BH_Color *color,
+                     BH_Color *out);
+
+Converts I<color> to HSV color space.
+
+
+=head2 BH_ColorToHSLA
+
+ void BH_ColorToHSLA(const BH_Color *color,
+                     BH_Color *out);
+
+Converts I<color> to HSL color space.
+
+
+=head2 BH_ColorBlend
+
+ void BH_ColorBlend(const BH_Color *foreground,
+                    const BH_Color *background,
+                    int mode,
+                    BH_Color *dest);
+
+Blends I<foreground> and I<background> color, using specified blending I<mode>.
+
+The following modes can be used:
+
+=over
+
+=item B<BH_COLOR_MODE_NORMAL>
+
+ r = f
+
+=item B<BH_COLOR_MODE_MULTIPLY>
+
+ r = f * b
+
+=item B<BH_COLOR_MODE_SCREEN>
+
+ r = 1 - (1 - f) * (1 - b)
+
+=item B<BH_COLOR_MODE_OVERLAY>
+
+ r = HardLight(b, f)
+
+=item B<BH_COLOR_MODE_DARKEN>
+
+ r = min(f, b)
+
+=item B<BH_COLOR_MODE_LIGHTEN>
+
+ r = max(f, b)
+
+=item B<BH_COLOR_MODE_COLOR_DODGE>
+
+ r = min(1, b / (1 - f))
+
+=item B<BH_COLOR_MODE_COLOR_BURN>
+
+ r = 1 - min(1, (1 - b) / f)
+
+=item B<BH_COLOR_MODE_LINEAR_DODGE>
+
+ r = f + b
+
+=item B<BH_COLOR_MODE_LINEAR_BURN>
+
+ r = f + b - 1
+
+=item B<BH_COLOR_MODE_HARD_LIGHT>
+
+ if (f < 0.5)
+   r = Multipy(2 * f, b)
+ else
+   r = Screen(2 * f - 1, b)
+
+=item B<BH_COLOR_MODE_SOFT_LIGHT>
+
+ r = (1 - 2 * f) * b^2 + 2 * f * b
+
+=item B<BH_COLOR_MODE_DIFFERENCE>
+
+ r = abs(f - b)
+
+=item B<BH_COLOR_MODE_EXCLUSION>
+
+ r = f + b - (2 * f * b)
+
+=item B<BH_COLOR_MODE_HUE>
+
+ r = HSL(H(f), S(b), L(b))
+
+=item B<BH_COLOR_MODE_SATURATION>
+
+ r = HSL(H(b), S(f), L(b))
+
+=item B<BH_COLOR_MODE_COLOR>
+
+ r = HSL(H(f), S(f), L(b))
+
+=item B<BH_COLOR_MODE_LUMINOSITY>
+
+ r = HSL(H(b), S(b), L(f))
+
+=back
+
+
+=head1 STRUCTURES
+
+
+=head2 BH_Color
+
+ typedef struct BH_Color
+ {
+     int type;
+     union
+     {
+         struct
+         {
+             uint16_t r;
+             uint16_t g;
+             uint16_t b;
+             uint16_t a;
+         } rgba;
+         struct
+         {
+             uint16_t h;
+             uint16_t s;
+             uint16_t v;
+             uint16_t a;
+         } hsva;
+         struct
+         {
+             uint16_t h;
+             uint16_t s;
+             uint16_t l;
+             uint16_t a;
+         } hsla;
+     } data;
+ } BH_Color;
+
+=head1 SEE ALSO
+
+L<BH>

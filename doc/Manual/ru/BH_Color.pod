@@ -1,0 +1,319 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_Color - утилиты для работы с цветом
+
+
+=head1 СИНТАКСИС
+
+ #include <BH/Math/Box3f.h>
+
+ cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+Модуль BH_Color предоставляет механизм для представления цвета и трансляции
+между различными цветовыми пространствами (RGB, HSL и HSV). Кроме того, этот
+модуль предоставляет механизм для смешивания двух цветов.
+
+
+=head1 ЗАМЕТКИ
+
+Внутренне, цвет хранится в четырех 16-разрядных целых числах.
+
+При преобразовании между RGB и HSV/HSL возникает ошибка ~0,009%. Это не является
+проблемой, если вы используете 8-битные RGB значения. Это может стать проблемой
+если вы используете 16-битные значения RGB (не каждое значение RGB сможет быть
+представлено в уникальном значении HSV/HSL). Если вам нужна такая точность, то
+этот модуль не для вас.
+
+Почти все режимы смешивания цветов работают так же, как и в других программных
+пакетах.  Исключением является I<BH_COLOR_MODE_SOFT_LIGHT>. Эта библиотека
+использует Pegtop весию формулы (которая может привести к другому результату).
+Это может быть проблемой, если вы пытаетесь реализовать стандартный рендеринг
+для форматов SVG или PDF.
+
+I<BH_COLOR_MODE_HUE>, I<BH_COLOR_MODE_SATURATION>, I<BH_COLOR_MODE_COLOR>
+и I<BH_COLOR_MODE_LUMINOSITY> реализованы в цветовом пространстве HSL.
+
+
+=head1 API ВЫЗОВЫ
+
+
+=head2 BH_ColorRGBA8
+
+ void BH_ColorRGBA8(const BH_Color *color,
+                    uint8_t *r,
+                    uint8_t *g,
+                    uint8_t *b,
+                    uint8_t *a);
+
+Возвращает 8-битное RGB представление цвета I<color>.
+
+Параметры I<r>, I<g>, I<b>, I<a> представляю компоненты цвета в RGB.
+
+
+=head2 BH_ColorRGBA16
+
+ void BH_ColorRGBA16(const BH_Color *color,
+                     uint16_t *r,
+                     uint16_t *g,
+                     uint16_t *b,
+                     uint16_t *a);
+
+Возвращает 16-битное RGB представление цвета I<color>.
+
+Параметры I<r>, I<g>, I<b>, I<a> представляют компоненты цвета в RGB.
+
+
+
+=head2 BH_ColorRGBAf
+
+ void BH_ColorRGBAf(const BH_Color *color,
+                    float *r,
+                    float *g,
+                    float *b,
+                    float *a);
+
+Возвращает вещественное RGB представление цвета I<color>.
+
+Параметры I<r>, I<g>, I<b>, I<a> представляют компоненты цвета в RGB.
+
+
+=head2 BH_ColorSetRGBA8
+
+ void BH_ColorSetRGBA8(BH_Color *color,
+                       uint8_t r,
+                       uint8_t g,
+                       uint8_t b,
+                       uint8_t a);
+
+Устанавливает 8-битные компонеты I<r>, I<g>, I<b>, I<a> цвета.
+
+
+=head2 BH_ColorSetRGBA16
+
+ void BH_ColorSetRGBA16(BH_Color *color,
+                        uint16_t r,
+                        uint16_t g,
+                        uint16_t b,
+                        uint16_t a);
+
+Устанавливает 16-битные компонеты I<r>, I<g>, I<b>, I<a> цвета.
+
+
+=head2 BH_ColorSetRGBAf
+
+ void BH_ColorSetRGBAf(BH_Color *color,
+                       float r,
+                       float g,
+                       float b,
+                       float a);
+
+Устанавливает вещественные компонеты I<r>, I<g>, I<b>, I<a> цвета.
+
+
+=head2 BH_ColorHSVAf
+
+ void BH_ColorHSVAf(const BH_Color *color,
+                    float *h,
+                    float *s,
+                    float *v,
+                    float *a);
+
+Возвращает вещественное HSV представление цвета I<color>.
+
+Параметры I<h>, I<s>, I<v>, I<a> представляют компоненты цвета в RGB.
+
+
+=head2 BH_ColorSetHSVAf
+
+ void BH_ColorSetHSVAf(BH_Color *color,
+                       float h,
+                       float s,
+                       float v,
+                       float a);
+
+Устанавливает вещественные компонеты I<h>, I<s>, I<v>, I<a> цвета.
+
+
+=head2 BH_ColorHSLAf
+
+ void BH_ColorHSLAf(const BH_Color *color,
+                    float *h,
+                    float *s,
+                    float *l,
+                    float *a);
+
+Возвращает вещественное HSL представление цвета I<color>.
+
+Параметры I<h>, I<s>, I<l>, I<a> представляют компоненты цвета в RGB.
+
+
+=head2 BH_ColorSetHSLAf
+
+ void BH_ColorSetHSLAf(BH_Color *color,
+                       float h,
+                       float s,
+                       float l,
+                       float a);
+
+Устанавливает вещественные компонеты I<h>, I<s>, I<l>, I<a> цвета.
+
+
+=head2 BH_ColorToRGBA
+
+ void BH_ColorToRGBA(const BH_Color *color,
+                     BH_Color *out);
+
+Преобразует цвет I<color> в цветовое представление RGB.
+
+
+=head2 BH_ColorToHSVA
+
+ void BH_ColorToHSVA(const BH_Color *color,
+                     BH_Color *out);
+
+Преобразует цвет I<color> в цветовое представление HSV.
+
+
+=head2 BH_ColorToHSLA
+
+ void BH_ColorToHSLA(const BH_Color *color,
+                     BH_Color *out);
+
+Преобразует цвет I<color> в цветовое представление HSL.
+
+
+=head2 BH_ColorBlend
+
+ void BH_ColorBlend(const BH_Color *foreground,
+                    const BH_Color *background,
+                    int mode,
+                    BH_Color *dest);
+
+Смешивает цвета I<foreground> и I<background>, используя указанный режим
+смешивания I<mode>.
+
+Могут использоваться следующие режимы:
+
+=over
+
+=item B<BH_COLOR_MODE_NORMAL>
+
+ r = f
+
+=item B<BH_COLOR_MODE_MULTIPLY>
+
+ r = f * b
+
+=item B<BH_COLOR_MODE_SCREEN>
+
+ r = 1 - (1 - f) * (1 - b)
+
+=item B<BH_COLOR_MODE_OVERLAY>
+
+ r = HardLight(b, f)
+
+=item B<BH_COLOR_MODE_DARKEN>
+
+ r = min(f, b)
+
+=item B<BH_COLOR_MODE_LIGHTEN>
+
+ r = max(f, b)
+
+=item B<BH_COLOR_MODE_COLOR_DODGE>
+
+ r = min(1, b / (1 - f))
+
+=item B<BH_COLOR_MODE_COLOR_BURN>
+
+ r = 1 - min(1, (1 - b) / f)
+
+=item B<BH_COLOR_MODE_LINEAR_DODGE>
+
+ r = f + b
+
+=item B<BH_COLOR_MODE_LINEAR_BURN>
+
+ r = f + b - 1
+
+=item B<BH_COLOR_MODE_HARD_LIGHT>
+
+ if (f < 0.5)
+   r = Multipy(2 * f, b)
+ else
+   r = Screen(2 * f - 1, b)
+
+=item B<BH_COLOR_MODE_SOFT_LIGHT>
+
+ r = (1 - 2 * f) * b^2 + 2 * f * b
+
+=item B<BH_COLOR_MODE_DIFFERENCE>
+
+ r = abs(f - b)
+
+=item B<BH_COLOR_MODE_EXCLUSION>
+
+ r = f + b - (2 * f * b)
+
+=item B<BH_COLOR_MODE_HUE>
+
+ r = HSL(H(f), S(b), L(b))
+
+=item B<BH_COLOR_MODE_SATURATION>
+
+ r = HSL(H(b), S(f), L(b))
+
+=item B<BH_COLOR_MODE_COLOR>
+
+ r = HSL(H(f), S(f), L(b))
+
+=item B<BH_COLOR_MODE_LUMINOSITY>
+
+ r = HSL(H(b), S(b), L(f))
+
+=back
+
+
+=head1 СТРУКТУРЫ
+
+
+=head2 BH_Color
+
+ typedef struct BH_Color
+ {
+     int type;
+     union
+     {
+         struct
+         {
+             uint16_t r;
+             uint16_t g;
+             uint16_t b;
+             uint16_t a;
+         } rgba;
+         struct
+         {
+             uint16_t h;
+             uint16_t s;
+             uint16_t v;
+             uint16_t a;
+         } hsva;
+         struct
+         {
+             uint16_t h;
+             uint16_t s;
+             uint16_t l;
+             uint16_t a;
+         } hsla;
+     } data;
+ } BH_Color;
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

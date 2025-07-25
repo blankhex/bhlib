@@ -5,6 +5,7 @@ HTMLS = BH_Algo.html \
 	BH_Args.html \
 	BH_Box2f.html \
 	BH_Box3f.html \
+	BH_Color.html \
 	BH_Hashmap.html \
 	BH_IO.html \
 	BH_Line.html \
@@ -31,6 +32,7 @@ MANS = BH_Algo.3 \
 	BH_Args.3 \
 	BH_Box2f.3 \
 	BH_Box3f.3 \
+	BH_Color.3 \
 	BH_Hashmap.3 \
 	BH_IO.3 \
 	BH_Line.3 \

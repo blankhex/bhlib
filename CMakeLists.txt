@@ -82,6 +82,7 @@ set(BH_SOURCE
     src/Args.c
     src/Buffer.c
     src/Bytes.c
+    src/Color.c
     src/Hashmap.c
     src/IO.c
     src/Math/Box2f.c
@@ -110,6 +111,7 @@ set(BH_SOURCE
 set(BH_HEADER
     include/BH/Algo.h
     include/BH/Args.h
+    include/BH/Color.h
     include/BH/Common.h
     include/BH/Hashmap.h
     include/BH/IO.h
