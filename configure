@@ -44,7 +44,7 @@ for option do
         --enable-lfs|--enable-lfs=*) assign_toggle "$option" enable_lfs yes; ;;
         --enable-tests|--enable-tests=*) assign_toggle "$option" enable_tests yes; ;;
         --use-clock_gettime|--use-clock_gettime=*) assign_toggle "$option" use_clock_gettime yes; ;;
-        --source-path=*) assign_option "$option" source_path; ;;
+        --source=*) assign_option "$option" source_path; ;;
         --help|-h) display_help="yes"; ;;
         *) echo "configure: WARNING: unrecognized option $option"; ;;
     esac
@@ -57,7 +57,7 @@ Usage: configure [OPTIONS]
 
 Options:
   --help                            Print this message
-  --source-path=                    Path to the source code
+  --source=                         Path to the source code
   --cc=CC                           C compiler
   --ar=AR                           Library archiver
   --extra-cflags=                   Extra compiler flags
