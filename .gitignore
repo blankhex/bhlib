@@ -81,3 +81,7 @@ _deps
 # Exclude temporary and backup files
 *.tmp
 *.bak
+
+# Postconfigured Makefile
+[Mm]akefile
+[Cc]onfig.h

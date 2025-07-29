@@ -2,6 +2,7 @@
 #define BH_PLATFORM_POSIX_TIMESPEC_H
 
 
+#include <Config.h>
 #include <BH/Thread.h>
 #include <sys/time.h>
 #include <time.h>
@@ -10,7 +11,7 @@
 static int convertToTimespec(struct timespec *ts,
                               uint32_t timeout)
 {
-#ifdef USE_CLOCK_GETTIME
+#if (_POSIX_TIMERS > 0) || defined(BH_USE_CLOCK_GETTIME)
     if (clock_gettime(CLOCK_REALTIME, ts))
         return BH_ERROR;
 #else
