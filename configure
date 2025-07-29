@@ -5,6 +5,8 @@
 source_path=""
 cc=$CC
 ar=$AR
+staticlib=libbh.a
+dynamiclib=libbh.so
 enable_dynamic="no"
 enable_mt="no"
 enable_lfs="no"
@@ -124,6 +126,7 @@ if [ "$platform" = "Posix" ]; then
     mkdir src/Platform/Posix 2> /dev/null
 elif [ "$platform" = "Win32" ]; then
     exe=".exe"
+    dynamiclib="bh.dll"
     sources="$sources:${source_path}src/Platform/Win32/File.c"
     mkdir src/Platform/Win32 2> /dev/null
 else
@@ -180,12 +183,13 @@ fi
 
 # Generate variables
 echo "CC=$cc" > Makefile
+echo "AR=$ar" >> Makefile
 echo "CFLAGS=$cflags" >> Makefile
 echo "LDFLAGS=$ldflags" >> Makefile
-echo "STATICLIB=libbh.a" >> Makefile
+echo "STATICLIB=$staticlib" >> Makefile
 
 if [ "$enable_dynamic" = "yes" ]; then
-    echo "DYNAMICLIB=libbh.so" >> Makefile
+    echo "DYNAMICLIB=$dynamiclib" >> Makefile
 fi
 
 # Set a list of objects
