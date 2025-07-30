@@ -53,7 +53,7 @@ set(ENABLE_EXAMPLES ON CACHE BOOL "Enable building examples")
 set(ENABLE_LTO ON CACHE BOOL "Enable LTO support")
 set(ENABLE_MT ON CACHE BOOL "Enable multithreading support")
 set(USE_CLOCK_GETTIME OFF CACHE BOOL "Force use clock gettime")
-set(BH_ENABLE_LFS OFF CACHE BOOL "Enable long file support")
+set(ENABLE_LFS OFF CACHE BOOL "Enable long file support")
 
 # Enable IPO/LTO
 if(ENABLE_LTO)
@@ -77,6 +77,16 @@ if(ENABLE_TESTING)
     include(CTest)
     enable_testing()
 endif()
+
+# Additional feature flags
+if(ENABLE_LFS)
+    set(BH_ENABLE_LFS TRUE)
+endif()
+
+if(USE_CLOCK_GETTIME)
+    set(BH_USE_CLOCK_GETTIME TRUE)
+endif()
+
 
 # Set library code
 file(GLOB BH_SOURCE
