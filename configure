@@ -31,6 +31,12 @@ assign_toggle() {
     eval "$1=$2"
 }
 
+add_trailing_slash() {
+    set -- "$1" "$(printf "%s" "$1" | tail -c 1)"
+    if [ "$2" = "/" ]; then echo "$1";
+    else echo "$1/"; fi
+}
+
 # Option parsing
 for option do
     case $option in
@@ -73,6 +79,11 @@ exit 1
 }
 
 if [ -n "$display_help" ]; then show_help; fi
+
+# Add trailing slash if needed
+if [ -n "$source_path" ]; then
+    source_path=$(add_trailing_slash "$source_path")
+fi
 
 # Detect OS and platform, because it wasn't specified
 os="Unknown"
