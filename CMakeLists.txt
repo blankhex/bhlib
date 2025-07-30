@@ -52,6 +52,8 @@ set(ENABLE_COVERAGE OFF CACHE BOOL "Enable coverage")
 set(ENABLE_EXAMPLES ON CACHE BOOL "Enable building examples")
 set(ENABLE_LTO ON CACHE BOOL "Enable LTO support")
 set(ENABLE_MT ON CACHE BOOL "Enable multithreading support")
+set(USE_CLOCK_GETTIME OFF CACHE BOOL "Force use clock gettime")
+set(BH_ENABLE_LFS OFF CACHE BOOL "Enable long file support")
 
 # Enable IPO/LTO
 if(ENABLE_LTO)
@@ -77,63 +79,15 @@ if(ENABLE_TESTING)
 endif()
 
 # Set library code
-set(BH_SOURCE
-    src/Algo.c
-    src/Args.c
-    src/Buffer.c
-    src/Bytes.c
-    src/Color.c
-    src/Hashmap.c
-    src/IO.c
-    src/Math/Box2f.c
-    src/Math/Box3f.c
-    src/Math/Line.c
-    src/Math/Mat3f.c
-    src/Math/Mat4f.c
-    src/Math/Misc.c
-    src/Math/Plane.c
-    src/Math/Quat4f.c
-    src/Math/Ray2f.c
-    src/Math/Ray3f.c
-    src/Math/Vec2f.c
-    src/Math/Vec2i.c
-    src/Math/Vec3f.c
-    src/Math/Vec3i.c
-    src/Math/Vec4f.c
-    src/Math/Vec4i.c
-    src/Queue.c
-    src/String/Float.c
-    src/String/Int.c
-    src/String/Unicode.c
-    src/Util.c
+file(GLOB BH_SOURCE
+    "src/*.c"
+    "src/Math/*.c"
+    "src/String/*.c"
 )
 
-set(BH_HEADER
-    include/BH/Algo.h
-    include/BH/Args.h
-    include/BH/Color.h
-    include/BH/Common.h
-    include/BH/Hashmap.h
-    include/BH/IO.h
-    include/BH/Math/Box2f.h
-    include/BH/Math/Box3f.h
-    include/BH/Math/Line.h
-    include/BH/Math/Mat3f.h
-    include/BH/Math/Mat4f.h
-    include/BH/Math/Misc.h
-    include/BH/Math/Plane.h
-    include/BH/Math/Quat.h
-    include/BH/Math/Ray2f.h
-    include/BH/Math/Ray3f.h
-    include/BH/Math/Vec2f.h
-    include/BH/Math/Vec2i.h
-    include/BH/Math/Vec3f.h
-    include/BH/Math/Vec3i.h
-    include/BH/Math/Vec4f.h
-    include/BH/Math/Vec4i.h
-    include/BH/Queue.h
-    include/BH/Thread.h
-    include/BH/Util.h
+file(GLOB BH_HEADER
+    "include/BH/*.h"
+    "include/BH/Math/*.h"
 )
 
 set(BH_SOURCE_DUMMY
@@ -232,6 +186,8 @@ endif()
 add_library(BHLib STATIC ${BH_SOURCE} ${BH_HEADER})
 target_include_directories(BHLib PUBLIC ${BH_INCLUDE_DIRS})
 target_link_libraries(BHLib PUBLIC m)
+configure_file(Config.cmake Config.h @ONLY)
+target_include_directories(BHLib PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 # Enable all compiler warnings
 if(MSVC)
