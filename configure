@@ -8,9 +8,9 @@ ar=$AR
 staticlib=libbh.a
 dynamiclib=libbh.so
 enable_dynamic="no"
-enable_mt="no"
+enable_mt="yes"
 enable_lfs="no"
-enable_tests="no"
+enable_tests="yes"
 use_clock_gettime="no"
 
 if [ -z "$cc" ]; then cc="gcc"; fi
