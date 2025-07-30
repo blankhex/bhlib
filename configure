@@ -7,6 +7,7 @@ cc=$CC
 ar=$AR
 staticlib=libbh.a
 dynamiclib=libbh.so
+exe=""
 enable_dynamic="no"
 enable_mt="yes"
 enable_lfs="no"
@@ -132,7 +133,6 @@ sources="${source_path}src/Platform/Spinlock.c"
 
 # Platform dependant sources
 if [ "$platform" = "Posix" ]; then
-    exe=""
     sources="$sources:${source_path}src/Platform/Posix/File.c"
     mkdir src/Platform/Posix 2> /dev/null
 elif [ "$platform" = "Win32" ]; then
@@ -141,7 +141,6 @@ elif [ "$platform" = "Win32" ]; then
     sources="$sources:${source_path}src/Platform/Win32/File.c"
     mkdir src/Platform/Win32 2> /dev/null
 else
-    exe=""
     sources="$sources:${source_path}src/Platform/Dummy/File.c"
     mkdir src/Platform/Dummy 2> /dev/null
 fi
