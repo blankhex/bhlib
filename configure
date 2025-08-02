@@ -22,7 +22,7 @@ if [ -z "$ar" ]; then ar="ar"; fi
 assign_option() {
     set -- "${1#--}" "$2"
     set -- "${2:-${1%%=*}}" "${1#*=}"
-    eval "$1=$2"
+    eval "$1=\"$2\""
 }
 
 assign_toggle() {
