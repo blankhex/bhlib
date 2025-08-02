@@ -3,6 +3,7 @@ POD2MAN = pod2man
 
 HTMLS = BH_Algo.html \
 	BH_Args.html \
+	BH_Bitmap.html \
 	BH_Box2f.html \
 	BH_Box3f.html \
 	BH_Color.html \
@@ -30,6 +31,7 @@ HTMLS = BH_Algo.html \
 
 MANS = BH_Algo.3 \
 	BH_Args.3 \
+	BH_Bitmap.3 \
 	BH_Box2f.3 \
 	BH_Box3f.3 \
 	BH_Color.3 \

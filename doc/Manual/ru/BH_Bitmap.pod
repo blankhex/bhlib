@@ -1,0 +1,297 @@
+=encoding UTF-8
+
+
+=head1 НАИМЕНОВАНИЕ
+
+BH_Bitmap - доступ к растровому изображению/картинке с изображением
+
+
+=head1 СИНТАКСИС
+
+ #include <BH/Bitmap.h>
+
+ cc prog.c -o prog -lbh
+
+
+=head1 ОПИСАНИЕ
+
+Модуль BH_Bitmap предоставляет методы для доступа к пиксельным данным растрового
+изображения и для преобразования между различными пиксельными форматами.
+
+
+=head1 ФОРМАТЫ
+
+В настоящее время поддерживаются следующие пиксельные форматы:
+
+=over
+
+=item B<BH_BITMAP_INDEX8>
+
+8-разрядный индексированный/палитрированный
+
+=item B<BH_BITMAP_GRAY8>
+
+8-разрядные оттенки серого
+
+=item B<BH_BITMAP_GRAY16>
+
+16-битные оттенки серого
+
+=item B<BH_BITMAP_RGBA32>
+
+32-разрядный RGB с прозрачностью, представленный в виде uint32_t.
+Формат: 0xAARRGGBB
+
+=item B<BH_BITMAP_RGBA64>
+
+64-разрядный RGB с прозрачностью, представленный в виде uint64_t.
+Формат: 0xAAAARRRRGGGGBBBB
+
+=item B<BH_BITMAP_RGB565>
+
+16-разрядный RGB
+
+=item B<BH_BITMAP_RGB888>
+
+24-разрядный RGB
+
+=item B<BH_BITMAP_RGBA8888>
+
+32-разрядный RGB с прозрачностью
+
+=item B<BH_BITMAP_RGB161616>
+
+48-разрядный RGB
+
+=item B<BH_BITMAP_RGBA16161616>
+
+64-разрядный RGB с прозрачностью
+
+=item B<BH_BITMAP_RGBA1010102>
+
+32-разрядный RGB с прозрачностью
+
+=back
+
+Во всех форматах пикселей используется нативный порядок байт.
+
+Флаг I<BH_BITMAP_BGR> может использоваться для изменения порядка цветовых
+каналов (RGB -> BGR). Этот флаг не влияет на следующие пиксельные форматы:
+I<BH_BITMAP_INDEX8>, I<BH_BITMAP_GRAY8>, I<BH_BITMAP_GRAY16>,
+I<BH_BITMAP_RGBA32> и I<BH_BITMAP_RGBA64>.
+
+Флаг I<BH_BITMAP_NOALPHA> может использоваться для указания того,
+что альфа-канал не используется и всегда должен быть установлен в максимальное
+значение (255 для 8-разрядных и 65535 для 16-разрядных).
+
+Флаг I<BH_BITMAP_PREMULT> может использоваться для указания того, что значения
+цвета представлены в предварительно умноженном виде.
+
+Предполагается, что цветовая палитра содержит ровно 256 цветов и хранится в
+пиксельном формате I<BH_BITMAP_RGBA32>.
+
+
+=head1 ВЫЗОВЫ API
+
+
+=head2 BH_BitmapNew
+
+ BH_Bitmap *BH_BitmapNew(int width,
+                          int height,
+                          int format,
+                          int flags,
+                          void *data,
+                          void *palette);
+
+Создает растровое изображение с указанной шириной, высотой и пиксельным
+форматом.
+
+Параметры I<width> и I<height> указывают размеры изображения.
+
+Параметр I<format> указывает используемый пиксельный формат изображения.
+
+Параметр I<flags> может принимать комбинацию из следующих значений:
+
+=over
+
+=item B<BH_BITMAP_FLAG_ALIGN32>
+
+Строки выравниваются по 32-разрядной границе
+
+=back
+
+Необязательный параметр I<data> указывает на существующие данные.
+
+Необязательный параметр I<palette> указывает на существующую палитру.
+
+Эта функция возвращает указатель на новый объект BH_Bitmap или значение NULL.
+
+
+=head2 BH_BitmapFree
+
+ void BH_BitmapFree(BH_Bitmap *bitmap);
+
+Уничтожает растровый объект.
+
+
+=head2 BH_BitmapColor
+
+ void BH_BitmapColor(const BH_Bitmap *bitmap,
+                     int x,
+                     int y,
+                     BH_Color *value);
+
+Считывает значение цвета пикселя в указанной позиции.
+
+Параметры I<x> и I<y> определяют положение на растровом изображении.
+
+
+=head2 BH_BitmapSetColor
+
+ void BH_BitmapSetColor(BH_Bitmap *bitmap,
+                        int x,
+                        int y,
+                        const BH_Color *value);
+
+Записывает значение цвета пикселя в указанной позиции.
+
+Параметры I<x> и I<y> определяют положение на растровой карте.
+
+
+=head2 BH_BitmapCopy
+
+ BH_Bitmap *BH_BitmapCopy(BH_Bitmap *bitmap,
+                          int x,
+                          int y,
+                          int width,
+                          int height,
+                          int shallow);
+
+Создает копию области растрового изображения с заданным положением и размером.
+
+Параметры I<x> и I<y> задают положение на растровом изображении.
+
+Параметры I<width> и I<height> задают размер нового растрового изображения.
+
+Параметр I<shallow> указывает, является ли новое растровое изображение
+поверхностной копией (или отображением) существующего растрового изображения или
+его глубокой копией. Для работы с поверхностной копией область должна находиться
+в пределах существующего растрового изображения.
+
+Эта функция возвращает указатель на новый объект BH_Bitmap или NULL.
+
+
+=head2 BH_BitmapScanline
+
+ void *BH_BitmapScanline(const BH_Bitmap *bitmap,
+                         int y);
+
+Возвращает адрес строки сканирования в растровом изображении.
+
+
+=head2 BH_BitmapAt
+
+ void *BH_BitmapAt(const BH_Bitmap *bitmap,
+                   int x,
+                   int y);
+
+Возвращает адрес пикселя в растровом изображении.
+
+
+=head2 BH_BitmapWidth
+
+ int BH_BitmapWidth(BH_Bitmap *bitmap);
+
+Возвращает ширину растрового изображения.
+
+
+=head2 BH_BitmapHeight
+
+ int BH_BitmapHeight(BH_Bitmap *bitmap);
+
+Возвращает высоту растрового изображения.
+
+
+=head2 BH_BitmapFormat
+
+ int BH_BitmapFormat(BH_Bitmap *bitmap);
+
+Возвращает пиксельный формат растрового изображения.
+
+
+=head2 BH_BitmapStride
+
+ size_t BH_BitmapStride(BH_Bitmap *bitmap);
+
+Возвращает шаг строки растрового изображения.
+
+
+=head2 BH_BitmapData
+
+ void *BH_BitmapData(BH_Bitmap *bitmap);
+
+Возвращает указатель на пиксельные данные растрового изображения.
+
+
+=head2 BH_BitmapPalette
+
+ void *BH_BitmapPalette(BH_Bitmap *bitmap);
+
+Возвращает указатель на палитру растрового изображения.
+
+
+=head2 BH_BitmapFlags
+
+ int BH_BitmapFlags(BH_Bitmap *bitmap);
+
+Возвращает флаги растрового изображения.
+
+Результатом может быть комбинация следующих значений:
+
+=over
+
+=item B<BH_BITMAP_FLAG_ALIGN32>
+
+Строки выравниваются по 32-битной границе
+
+=item B<BH_BITMAP_FLAG_EXT_DATA>
+
+Растровому изображению не принадлежат пиксельные данные
+
+=item B<BH_BITMAP_FLAG_EXT_PALETTE>
+
+Растровому изображению не принадлежат данные палитры
+
+=back
+
+
+=head2 BH_BitmapConvertRow
+
+ void BH_BitmapConvertRow(void *src,
+                          int srcFormat,
+                          void *srcPalette,
+                          void *dest,
+                          int destFormat,
+                          void *destPalette,
+                          size_t count);
+
+Преобразует строку исходных данных из одного пиксельного формата в другой пиксельный формат.
+
+Параметры I<src> и I<srcFormat> указывают источник данных и его
+формат в пикселях.
+
+Параметр I<srcPalette> указывает исходную палитру (если это требуется
+для формата в пикселях).
+
+Параметры I<dest> и I<destFormat> указывают назначение данных и
+их формат в пикселях.
+
+Параметр I<destPalette> определяет целевую палитру (если этого требует формат
+пикселя).
+
+Параметр I<count> определяет количество пикселей для преобразования.
+
+
+=head1 СМ. ТАКЖЕ
+
+L<BH>

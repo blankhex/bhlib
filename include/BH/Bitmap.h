@@ -1,0 +1,105 @@
+#ifndef BH_BITMAP_H
+#define BH_BITMAP_H
+
+
+#include "Common.h"
+#include "Color.h"
+
+
+typedef struct BH_Bitmap BH_Bitmap;
+
+
+#define BH_BITMAP_PREMULT           0x1000
+#define BH_BITMAP_NOALPHA           0x2000
+#define BH_BITMAP_BGR               0x4000
+
+
+#define BH_BITMAP_INDEX8            0x0000
+#define BH_BITMAP_GRAY8             0x0001
+#define BH_BITMAP_GRAY16            0x0002
+#define BH_BITMAP_RGBA32            0x0003
+#define BH_BITMAP_RGBA64            0x0004
+#define BH_BITMAP_RGB565            0x8000
+#define BH_BITMAP_RGB888            0x8001
+#define BH_BITMAP_RGBA8888          0x8002
+#define BH_BITMAP_RGB161616         0x8003
+#define BH_BITMAP_RGBA16161616      0x8004
+#define BH_BITMAP_RGBA1010102       0x8005
+
+
+#define BH_BITMAP_FLAG_ALIGN32      0x0001
+#define BH_BITMAP_FLAG_EXT_DATA     0x0002
+#define BH_BITMAP_FLAG_EXT_PALETTE  0x0004
+
+
+BH_Bitmap *BH_BitmapNew(int width,
+                        int height,
+                        int format,
+                        int flags,
+                        void *data,
+                        void *palette);
+
+
+void BH_BitmapFree(BH_Bitmap *bitmap);
+
+
+void BH_BitmapColor(const BH_Bitmap *bitmap,
+                    int x,
+                    int y,
+                    BH_Color *value);
+
+
+void BH_BitmapSetColor(BH_Bitmap *bitmap,
+                       int x,
+                       int y,
+                       const BH_Color *value);
+
+
+BH_Bitmap *BH_BitmapCopy(BH_Bitmap *bitmap,
+                         int x,
+                         int y,
+                         int width,
+                         int height,
+                         int shallow);
+
+
+void *BH_BitmapScanline(const BH_Bitmap *bitmap,
+                        int y);
+
+
+void *BH_BitmapAt(const BH_Bitmap *bitmap,
+                  int x,
+                  int y);
+
+
+int BH_BitmapWidth(BH_Bitmap *bitmap);
+
+
+int BH_BitmapHeight(BH_Bitmap *bitmap);
+
+
+int BH_BitmapFormat(BH_Bitmap *bitmap);
+
+
+size_t BH_BitmapStride(BH_Bitmap *bitmap);
+
+
+void *BH_BitmapData(BH_Bitmap *bitmap);
+
+
+void *BH_BitmapPalette(BH_Bitmap *bitmap);
+
+
+int BH_BitmapFlags(BH_Bitmap *bitmap);
+
+
+void BH_BitmapConvertRow(void *src,
+                         int srcFormat,
+                         void *srcPalette,
+                         void *dest,
+                         int destFormat,
+                         void *destPalette,
+                         size_t count);
+
+
+#endif /* BH_BITMAP_H */

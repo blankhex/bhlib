@@ -1,0 +1,290 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Bitmap - bitmap/image access
+
+
+=head1 SYNTAX
+
+ #include <BH/Bitmap.h>
+
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+The BH_Bitmap module provides methods for accessing the pixel data of a bitmap
+(image) and for converting between different pixel formats.
+
+
+=head1 FORMATS
+
+Currently, the following pixel formats are supported:
+
+=over
+
+=item B<BH_BITMAP_INDEX8>
+
+8-bit indexed/paletted
+
+=item B<BH_BITMAP_GRAY8>
+
+8-bit grayscale
+
+=item B<BH_BITMAP_GRAY16>
+
+16-bit grayscale
+
+=item B<BH_BITMAP_RGBA32>
+
+32-bit RGB with alpha represented in uint32_t value. The layout is: 0xAARRGGBB
+
+=item B<BH_BITMAP_RGBA64>
+
+64-bit RGB with alpha represented in uint64_t value. The layout is:
+0xAAAARRRRGGGGBBBB
+
+=item B<BH_BITMAP_RGB565>
+
+16-bit RGB
+
+=item B<BH_BITMAP_RGB888>
+
+24-bit RGB
+
+=item B<BH_BITMAP_RGBA8888>
+
+32-bit RGB with alpha
+
+=item B<BH_BITMAP_RGB161616>
+
+48-bit RGB
+
+=item B<BH_BITMAP_RGBA16161616>
+
+64-bit RGB with alpha
+
+=item B<BH_BITMAP_RGBA1010102>
+
+32-bit RGB with alpha
+
+=back
+
+All pixel formats use the current machine endianness.
+
+The flag I<BH_BITMAP_BGR>  can be used to change the order of the color channels
+(RGB -> BGR). The flag has no effect on the following pixel formats:
+I<BH_BITMAP_INDEX8>, I<BH_BITMAP_GRAY8>, I<BH_BITMAP_GRAY16>,
+I<BH_BITMAP_RGBA32> and I<BH_BITMAP_RGBA64>.
+
+The flag I<BH_BITMAP_NOALPHA> can be used to indicate that the alpha channel is
+not used and should always be set to the maximum value (255 for 8-bit and 65535
+for 16-bit).
+
+The flag I<BH_BITMAP_PREMULT>  can be used to indicate that color values are in
+premultiplied form.
+
+The color palette is assumed to contain exactly 256 colors and is stored in the
+I<BH_BITMAP_RGBA32> pixel format.
+
+
+=head1 API CALLS
+
+
+=head2 BH_BitmapNew
+
+ BH_Bitmap *BH_BitmapNew(int width,
+                         int height,
+                         int format,
+                         int flags,
+                         void *data,
+                         void *palette);
+
+Creates the bitmap with the specified I<width>, I<height> and pixel I<format>.
+
+The I<flags> parameter can take a combination of the following values:
+
+=over
+
+=item B<BH_BITMAP_FLAG_ALIGN32>
+
+Rows are aligned to 32-bit boundary
+
+=back
+
+The optional I<data> parameter specifies pointer to the existing data.
+
+The optional I<palette> parameter specifies pointer to the existing palette.
+
+This function returns a pointer to a new BH_Bitmap object or NULL.
+
+
+=head2 BH_BitmapFree
+
+ void BH_BitmapFree(BH_Bitmap *bitmap);
+
+Destroys the bitmap object.
+
+
+=head2 BH_BitmapColor
+
+ void BH_BitmapColor(const BH_Bitmap *bitmap,
+                     int x,
+                     int y,
+                     BH_Color *value);
+
+Reads color value of the pixel at specified position.
+
+The I<x> and I<y> parameters specify a position on the bitmap.
+
+
+=head2 BH_BitmapSetColor
+
+ void BH_BitmapSetColor(BH_Bitmap *bitmap,
+                        int x,
+                        int y,
+                        const BH_Color *value);
+
+Writes color value of the pixel at specified position.
+
+The I<x> and I<y> parameters specify a position on the bitmap.
+
+
+=head2 BH_BitmapCopy
+
+ BH_Bitmap *BH_BitmapCopy(BH_Bitmap *bitmap,
+                          int x,
+                          int y,
+                          int width,
+                          int height,
+                          int shallow);
+
+Creates a copy of the bitmap region by the given position and size.
+
+The I<x> and I<y> parameters specify a position on the bitmap.
+
+The I<width> and I<height> parameters specify size of the new bitmap.
+
+The I<shallow> parameter specifies whether the new bitmap is a shallow copy (or
+a view) of the existing bitmap or a deep copy. For the shallow copy to work, the
+region should be within the existing bitmap.
+
+This function returns a pointer to a new BH_Bitmap object or NULL.
+
+
+=head2 BH_BitmapScanline
+
+ void *BH_BitmapScanline(const BH_Bitmap *bitmap,
+                         int y);
+
+Returns address of the scanline in the bitmap.
+
+
+=head2 BH_BitmapAt
+
+ void *BH_BitmapAt(const BH_Bitmap *bitmap,
+                   int x,
+                   int y);
+
+Returns address of the pixel in the bitmap.
+
+
+=head2 BH_BitmapWidth
+
+ int BH_BitmapWidth(BH_Bitmap *bitmap);
+
+Returns width of the bitmap.
+
+
+=head2 BH_BitmapHeight
+
+ int BH_BitmapHeight(BH_Bitmap *bitmap);
+
+Returns height of the bitmap.
+
+
+=head2 BH_BitmapFormat
+
+ int BH_BitmapFormat(BH_Bitmap *bitmap);
+
+Returns pixel format of the bitmap.
+
+
+=head2 BH_BitmapStride
+
+ size_t BH_BitmapStride(BH_Bitmap *bitmap);
+
+Returns row stride of the bitmap.
+
+
+=head2 BH_BitmapData
+
+ void *BH_BitmapData(BH_Bitmap *bitmap);
+
+Returns pointer to the pixel data of the bitmap.
+
+
+=head2 BH_BitmapPalette
+
+ void *BH_BitmapPalette(BH_Bitmap *bitmap);
+
+Returns pointer to the bitmap's palette.
+
+
+=head2 BH_BitmapFlags
+
+ int BH_BitmapFlags(BH_Bitmap *bitmap);
+
+Returns bitmap's flags.
+
+The result can be a combination of the following values:
+
+=over
+
+=item B<BH_BITMAP_FLAG_ALIGN32>
+
+Rows are aligned to 32-bit boundary
+
+=item B<BH_BITMAP_FLAG_EXT_DATA>
+
+Bitmap doesn't own the pixel data
+
+=item B<BH_BITMAP_FLAG_EXT_PALETTE>
+
+Bitmap doesn't own palette data
+
+=back
+
+
+=head2 BH_BitmapConvertRow
+
+ void BH_BitmapConvertRow(void *src,
+                          int srcFormat,
+                          void *srcPalette,
+                          void *dest,
+                          int destFormat,
+                          void *destPalette,
+                          size_t count);
+
+Converts a row of source data from one pixel format to another pixel format.
+
+The parameter I<src> and I<srcFormat> specify the source of the data and its
+pixel format.
+
+The parameter I<srcPalette> specify the source palette (if required by the pixel
+format).
+
+The parameter I<dest> and I<destFormat> specify the destination of the data and
+its pixel format.
+
+The parameter I<destPalette> specify the destination palette (if required by the
+pixel format).
+
+The parameter I<count> specifies the number of pixel for conversion.
+
+
+=head1 SEE ALSO
+
+L<BH>
