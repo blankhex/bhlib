@@ -8,7 +8,7 @@ BH_Color - утилиты для работы с цветом
 
 =head1 СИНТАКСИС
 
- #include <BH/Math/Box3f.h>
+ #include <BH/Color.h>
 
  cc prog.c -o prog -lbh
 
