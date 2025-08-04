@@ -35,8 +35,8 @@ typedef struct BH_Bitmap BH_Bitmap;
 #define BH_BITMAP_FLAG_EXT_PALETTE  0x0004
 
 
-BH_Bitmap *BH_BitmapNew(int width,
-                        int height,
+BH_Bitmap *BH_BitmapNew(uint32_t width,
+                        uint32_t height,
                         int format,
                         int flags,
                         void *data,
@@ -47,49 +47,49 @@ void BH_BitmapFree(BH_Bitmap *bitmap);
 
 
 void BH_BitmapColor(const BH_Bitmap *bitmap,
-                    int x,
-                    int y,
+                    uint32_t x,
+                    uint32_t y,
                     BH_Color *value);
 
 
 void BH_BitmapSetColor(BH_Bitmap *bitmap,
-                       int x,
-                       int y,
+                       uint32_t x,
+                       uint32_t y,
                        const BH_Color *value);
 
 
 uint8_t BH_BitmapIndex(const BH_Bitmap *bitmap,
-                       int x,
-                       int y);
+                       uint32_t x,
+                       uint32_t y);
 
 
 void BH_BitmapSetIndex(BH_Bitmap *bitmap,
-                       int x,
-                       int y,
+                       uint32_t x,
+                       uint32_t y,
                        uint8_t index);
 
 
 BH_Bitmap *BH_BitmapCopy(BH_Bitmap *bitmap,
-                         int x,
-                         int y,
-                         int width,
-                         int height,
+                         uint32_t x,
+                         uint32_t y,
+                         uint32_t width,
+                         uint32_t height,
                          int shallow);
 
 
 void *BH_BitmapScanline(const BH_Bitmap *bitmap,
-                        int y);
+                        uint32_t y);
 
 
 void *BH_BitmapAt(const BH_Bitmap *bitmap,
-                  int x,
-                  int y);
+                  uint32_t x,
+                  uint32_t y);
 
 
-int BH_BitmapWidth(BH_Bitmap *bitmap);
+uint32_t BH_BitmapWidth(BH_Bitmap *bitmap);
 
 
-int BH_BitmapHeight(BH_Bitmap *bitmap);
+uint32_t BH_BitmapHeight(BH_Bitmap *bitmap);
 
 
 int BH_BitmapFormat(BH_Bitmap *bitmap);

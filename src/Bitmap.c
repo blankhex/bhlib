@@ -9,8 +9,8 @@
 
 struct BH_Bitmap
 {
-    int width;
-    int height;
+    uint32_t width;
+    uint32_t height;
     int format;
     int flags;
     size_t step;
@@ -131,7 +131,7 @@ static size_t calculateStep(int format)
 
 static uint8_t bitmapIndex(void *data,
                            int format,
-                           int x)
+                           uint32_t x)
 {
     int isLSB;
     uint8_t octet;
@@ -161,7 +161,7 @@ static uint8_t bitmapIndex(void *data,
 
 static void setBitmapIndex(void *data,
                            int format,
-                           int x,
+                           uint32_t x,
                            uint8_t index)
 {
     int isLSB;
@@ -199,7 +199,7 @@ static void bitmapColor(void *data,
                         void *palette,
                         int format,
                         BH_Color *value,
-                        int x)
+                        uint32_t x)
 {
     switch (format & 0x0FFF)
     {
@@ -423,7 +423,7 @@ static void setBitmapColor(void *data,
                            void *palette,
                            int format,
                            const BH_Color *value,
-                           int x)
+                           uint32_t x)
 {
     switch (format & 0x0FFF)
     {
@@ -611,7 +611,7 @@ static void setBitmapColor(void *data,
 static void *rowAt(void *data,
                    int format,
                    int step,
-                   int x)
+                   uint32_t x)
 {
     switch (format & 0x0FFF)
     {
@@ -631,16 +631,22 @@ static void *rowAt(void *data,
 
 
 static size_t calculateStride(int format,
-                              int width)
+                              uint32_t width)
 {
+    size_t step;
+
     switch (format & 0x0FFF)
     {
     case BH_BITMAP_INDEX1: return (width + 7) / 8;
     case BH_BITMAP_INDEX2: return (width + 3) / 4;
     case BH_BITMAP_INDEX4: return (width + 1) / 2;
-    case BH_BITMAP_INDEX8: return width * calculateStep(format);
     }
-    return width * calculateStep(format);
+
+    step = calculateStep(format);
+    if (BH_CHECK_UMUL_WRAP(step, width, size_t))
+        return 0;
+
+    return step * width;
 }
 
 
@@ -673,8 +679,8 @@ static size_t calculateTrailer(int format)
 
 
 /* Public functions */
-BH_Bitmap *BH_BitmapNew(int width,
-                        int height,
+BH_Bitmap *BH_BitmapNew(uint32_t width,
+                        uint32_t height,
                         int format,
                         int flags,
                         void *data,
@@ -682,7 +688,12 @@ BH_Bitmap *BH_BitmapNew(int width,
 {
     BH_Bitmap *result;
     int needPalette;
-    size_t header, body, trailer, stride, step;
+    size_t header, body, allocSize, stride, step;
+
+    /* Basic sanity check */
+    if (width == 0 || width >= 0x7FFFFFFF || 
+        height == 0 || height >= 0x7FFFFFFF)
+        return NULL;
 
     /* Unset internal flags */
     flags &= ~BH_BITMAP_FLAG_EXT_DATA;
@@ -693,19 +704,35 @@ BH_Bitmap *BH_BitmapNew(int width,
     stride = calculateStride(format, width);
     needPalette = isPaletteNeeded(format);
 
+    /* Check stride overflow */
+    if (!stride)
+        return NULL;
+
     if (flags & BH_BITMAP_FLAG_ALIGN32)
+    {
+        if (BH_CHECK_UADD_WRAP(stride, sizeof(uint32_t) - 1, size_t))
+            return NULL;
+        
         stride = (stride + sizeof(uint32_t) - 1) & ~(sizeof(uint32_t) - 1);
+    }
 
     header = sizeof(*result);
     header = (header + (sizeof(uint64_t) - 1)) & ~(sizeof(uint64_t) - 1);
-    body = (stride * height + (sizeof(uint32_t) - 1)) & ~(sizeof(uint32_t) - 1);
-    trailer = calculateTrailer(format);
+    allocSize = calculateTrailer(format);
+
+    body = stride * height;
+    if (BH_CHECK_UMUL_WRAP(stride, height, size_t))
+        return NULL;
+    
+    if (BH_CHECK_UADD_WRAP(body, sizeof(uint32_t) - 1, size_t))
+        return NULL;
+    body = (body + (sizeof(uint32_t) - 1)) & ~(sizeof(uint32_t) - 1);
 
     /* Adjust body and trailer size if ext data or palette is provided */
     if (palette)
     {
         flags |= BH_BITMAP_FLAG_EXT_PALETTE;
-        trailer = 0;
+        allocSize = 0;
     }
 
     if (data)
@@ -714,8 +741,16 @@ BH_Bitmap *BH_BitmapNew(int width,
         body = 0;
     }
 
+    if (BH_CHECK_UADD_WRAP(allocSize, header, size_t))
+        return NULL;
+    allocSize += header;
+    
+    if (BH_CHECK_UADD_WRAP(allocSize, body, size_t))
+        return NULL;
+    allocSize += body;
+
     /* Allocate and setup bitmap data */
-    result = malloc(header + body + trailer);
+    result = malloc(allocSize);
     if (!result)
         return NULL;
 
@@ -745,16 +780,16 @@ void BH_BitmapFree(BH_Bitmap *bitmap)
 
 
 void BH_BitmapColor(const BH_Bitmap *bitmap,
-                    int x,
-                    int y,
+                    uint32_t x,
+                    uint32_t y,
                     BH_Color *value)
 {
     bitmapColor(BH_BitmapAt(bitmap, x, y), bitmap->palette, bitmap->format, value, x);
 }
 
 void BH_BitmapSetColor(BH_Bitmap *bitmap,
-                       int x,
-                       int y,
+                       uint32_t x,
+                       uint32_t y,
                        const BH_Color *value)
 {
     setBitmapColor(BH_BitmapAt(bitmap, x, y), bitmap->palette, bitmap->format, value, x);
@@ -762,33 +797,28 @@ void BH_BitmapSetColor(BH_Bitmap *bitmap,
 
 
 BH_Bitmap *BH_BitmapCopy(BH_Bitmap *bitmap,
-                         int x,
-                         int y,
-                         int width,
-                         int height,
+                         uint32_t x,
+                         uint32_t y,
+                         uint32_t width,
+                         uint32_t height,
                          int shallow)
 {
     BH_Bitmap *result;
-    int i, j;
+    uint32_t i, j;
 
-    /* Check for bogus width and height */
-    if (width < 0 || height < 0)
+    /* Sanity checks */
+    if (!width || !height || x >= bitmap->width || y >= bitmap->height)
+        return NULL;
+    
+    if (width < bitmap->width - x || height < bitmap->height - y)
         return NULL;
 
     /* Shallow copy can't go out of bounds of the source bitmap */
     if (shallow)
     {
-        if (x < 0 || x > bitmap->width || y < 0 || y > bitmap->height)
-            return NULL;
-
-        if (width < 0 || width > bitmap->width - x ||
-            height < 0 || height > bitmap->height - y)
-            return NULL;
-
         result = BH_BitmapNew(width, height, bitmap->format, bitmap->flags,
                               BH_BitmapAt(bitmap, x, y), bitmap->palette);
         result->stride = bitmap->stride;
-
         return result;
     }
 
@@ -806,13 +836,7 @@ BH_Bitmap *BH_BitmapCopy(BH_Bitmap *bitmap,
         for (i = 0; i < width; ++i)
         {
             BH_Color color;
-            memset(&color, 0, sizeof(color));
-
-
-            if (i + x >= 0 && i + x < bitmap->width &&
-                j + y >= 0 && j + y < bitmap->height)
-                BH_BitmapColor(bitmap, i + x, j + y, &color);
-
+            BH_BitmapColor(bitmap, i + x, j + y, &color);
             BH_BitmapSetColor(result, i, j, &color);
         }
     }
@@ -822,16 +846,16 @@ BH_Bitmap *BH_BitmapCopy(BH_Bitmap *bitmap,
 
 
 uint8_t BH_BitmapIndex(const BH_Bitmap *bitmap,
-                       int x,
-                       int y)
+                       uint32_t x,
+                       uint32_t y)
 {
     return bitmapIndex(BH_BitmapAt(bitmap, x, y), bitmap->format, x);
 }
 
 
 void BH_BitmapSetIndex(BH_Bitmap *bitmap,
-                       int x,
-                       int y,
+                       uint32_t x,
+                       uint32_t y,
                        uint8_t index)
 {
     setBitmapIndex(BH_BitmapAt(bitmap, x, y), bitmap->format, x, index);
@@ -839,27 +863,27 @@ void BH_BitmapSetIndex(BH_Bitmap *bitmap,
 
 
 void *BH_BitmapScanline(const BH_Bitmap *bitmap,
-                        int y)
+                        uint32_t y)
 {
     return bitmap->data + y * bitmap->stride;
 }
 
 
 void *BH_BitmapAt(const BH_Bitmap *bitmap,
-                  int x,
-                  int y)
+                  uint32_t x,
+                  uint32_t y)
 {
     return rowAt(BH_BitmapScanline(bitmap, y), bitmap->format, bitmap->step, x);
 }
 
 
-int BH_BitmapWidth(BH_Bitmap *bitmap)
+uint32_t BH_BitmapWidth(BH_Bitmap *bitmap)
 {
     return bitmap->width;
 }
 
 
-int BH_BitmapHeight(BH_Bitmap *bitmap)
+uint32_t BH_BitmapHeight(BH_Bitmap *bitmap)
 {
     return bitmap->height;
 }
