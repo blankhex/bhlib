@@ -12,19 +12,22 @@ typedef struct BH_Bitmap BH_Bitmap;
 #define BH_BITMAP_PREMULT           0x1000
 #define BH_BITMAP_NOALPHA           0x2000
 #define BH_BITMAP_BGR               0x4000
+#define BH_BITMAP_LSB               0x8000
 
-
-#define BH_BITMAP_INDEX8            0x0000
-#define BH_BITMAP_GRAY8             0x0001
-#define BH_BITMAP_GRAY16            0x0002
-#define BH_BITMAP_RGBA32            0x0003
-#define BH_BITMAP_RGBA64            0x0004
-#define BH_BITMAP_RGB565            0x8000
-#define BH_BITMAP_RGB888            0x8001
-#define BH_BITMAP_RGBA8888          0x8002
-#define BH_BITMAP_RGB161616         0x8003
-#define BH_BITMAP_RGBA16161616      0x8004
-#define BH_BITMAP_RGBA1010102       0x8005
+#define BH_BITMAP_INDEX1            0x0000
+#define BH_BITMAP_INDEX2            0x0001
+#define BH_BITMAP_INDEX4            0x0002
+#define BH_BITMAP_INDEX8            0x0003
+#define BH_BITMAP_GRAY8             0x0004
+#define BH_BITMAP_GRAY16            0x0005
+#define BH_BITMAP_RGBA32            0x0006
+#define BH_BITMAP_RGBA64            0x0007
+#define BH_BITMAP_RGB565            0x0008
+#define BH_BITMAP_RGB888            0x0009
+#define BH_BITMAP_RGBA8888          0x000A
+#define BH_BITMAP_RGB161616         0x000B
+#define BH_BITMAP_RGBA16161616      0x000C
+#define BH_BITMAP_RGBA1010102       0x000D
 
 
 #define BH_BITMAP_FLAG_ALIGN32      0x0001
@@ -53,6 +56,17 @@ void BH_BitmapSetColor(BH_Bitmap *bitmap,
                        int x,
                        int y,
                        const BH_Color *value);
+
+
+uint8_t BH_BitmapIndex(const BH_Bitmap *bitmap,
+                       int x,
+                       int y);
+
+
+void BH_BitmapSetIndex(BH_Bitmap *bitmap,
+                       int x,
+                       int y,
+                       uint8_t index);
 
 
 BH_Bitmap *BH_BitmapCopy(BH_Bitmap *bitmap,

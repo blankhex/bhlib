@@ -25,6 +25,18 @@ Currently, the following pixel formats are supported:
 
 =over
 
+=item B<BH_BITMAP_INDEX1>
+
+1-bit indexed/paletted
+
+=item B<BH_BITMAP_INDEX2>
+
+2-bit indexed/paletted
+
+=item B<BH_BITMAP_INDEX4>
+
+4-bit indexed/paletted
+
 =item B<BH_BITMAP_INDEX8>
 
 8-bit indexed/paletted
@@ -74,10 +86,16 @@ Currently, the following pixel formats are supported:
 
 All pixel formats use the current machine endianness.
 
-The flag I<BH_BITMAP_BGR>  can be used to change the order of the color channels
+The flag I<BH_BITMAP_BGR> can be used to change the order of the color channels
 (RGB -> BGR). The flag has no effect on the following pixel formats:
+I<BH_BITMAP_INDEX1>, I<BH_BITMAP_INDEX2>, I<BH_BITMAP_INDEX4>,
 I<BH_BITMAP_INDEX8>, I<BH_BITMAP_GRAY8>, I<BH_BITMAP_GRAY16>,
 I<BH_BITMAP_RGBA32> and I<BH_BITMAP_RGBA64>.
+
+The flag I<BH_BITMAP_LSB> can be used to change the start of the bit order for
+indexed images. This flag only affects the following pixel formats:
+I<BH_BITMAP_INDEX1>, I<BH_BITMAP_INDEX2>, I<BH_BITMAP_INDEX4> and
+I<BH_BITMAP_INDEX8>.
 
 The flag I<BH_BITMAP_NOALPHA> can be used to indicate that the alpha channel is
 not used and should always be set to the maximum value (255 for 8-bit and 65535
@@ -148,6 +166,29 @@ The I<x> and I<y> parameters specify a position on the bitmap.
                         const BH_Color *value);
 
 Writes color value of the pixel at specified position.
+
+The I<x> and I<y> parameters specify a position on the bitmap.
+
+
+=head2 BH_BitmapIndex
+
+ uint8_t BH_BitmapIndex(const BH_Bitmap *bitmap,
+                        int x,
+                        int y);
+
+Returns the index value at the specified position.
+
+The I<x> and I<y> parameters specify a position on the bitmap.
+
+
+=head2 BH_BitmapSetIndex
+
+ void BH_BitmapSetIndex(BH_Bitmap *bitmap,
+                        int x,
+                        int y,
+                        uint8_t index);
+
+Sets the index value at the specified position.
 
 The I<x> and I<y> parameters specify a position on the bitmap.
 
