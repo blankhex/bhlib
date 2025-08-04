@@ -62,16 +62,16 @@ static int BH_CalcCapacity(size_t size,
     *threshold = *capacity * factor;
     while (size > *threshold)
     {
+        /* Catch capacity overflow  */
+        if (BH_CHECK_UMUL_WRAP(*capacity, 2, size_t))
+            return BH_OOM;
+            
         *capacity *= 2;
         *threshold = *capacity * factor;
-
-        /* Catch capacity overflow  */
-        if (*capacity < 16)
-            return BH_OOM;
     }
 
     /* Catch malloc overflow */
-    if (*capacity >= ((size_t)-1) / sizeof(BH_HashmapNode))
+    if (BH_CHECK_UMUL_WRAP(*capacity, sizeof(BH_HashmapNode), size_t))
         return BH_OOM;
 
     return BH_OK;

@@ -27,7 +27,7 @@ static void BH_QueueDestroy(BH_Queue *queue)
 
 
 static void BH_QueueCopy(BH_Queue *dest,
-                       BH_Queue *src)
+                         BH_Queue *src)
 {
     void *iter;
 
@@ -69,7 +69,7 @@ void BH_QueueClear(BH_Queue *queue)
 
 
 int BH_QueueReserve(BH_Queue *queue,
-                     size_t size)
+                    size_t size)
 {
     BH_Queue other;
 
@@ -78,7 +78,7 @@ int BH_QueueReserve(BH_Queue *queue,
         size = queue->size;
 
     /* Catch malloc overflow */
-    if (size >= ((size_t)-1) / sizeof(void *))
+    if (BH_CHECK_UMUL_WRAP(size, sizeof(void *), size_t))
         return BH_OOM;
 
     /* Prevent same size memory reallocation */
@@ -110,7 +110,7 @@ int BH_QueueReserve(BH_Queue *queue,
 
 
 int BH_QueueInsert(BH_Queue *queue,
-                    void *value)
+                   void *value)
 {
     /* Check if queue can contain new element */
     if (queue->size + 1 > queue->capacity)
@@ -177,7 +177,7 @@ size_t BH_QueueCapacity(BH_Queue *queue)
 
 
 void *BH_QueueIterNext(BH_Queue *queue,
-                         void *iter)
+                       void *iter)
 {
     void **element = (void **)iter;
 

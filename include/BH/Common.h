@@ -20,6 +20,9 @@
 #define BH_PTR2INT(x)   ((intptr_t)(x))
 #define BH_INT2PTR(x)   ((void*)((intptr_t)(x)))
 
+#define BH_CHECK_UADD_WRAP(x, y, type)   ((type)((x) + (y)) < (type)(y))
+#define BH_CHECK_USUB_WRAP(x, y, type)   ((type)((x) - (y)) > (type)(x))
+#define BH_CHECK_UMUL_WRAP(x, y, type)   ((x) > ((type)-1 / (y)))
 
 typedef int (*BH_EqualCallback)(const void *, const void *);
 typedef size_t (*BH_HashCallback)(const void *);
