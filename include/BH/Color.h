@@ -56,6 +56,7 @@ typedef struct BH_Color
             uint16_t l;
             uint16_t a;
         } hsla;
+        uint16_t channel[4];
     } data;
 } BH_Color;
 

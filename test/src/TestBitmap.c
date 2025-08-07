@@ -28,12 +28,6 @@ BH_UNIT_TEST(RoundTrip)
         {65535, 65535, 65535, 0},
     };
 
-    uint16_t flags[] =
-    {
-        0,
-        BH_BITMAP_BGR,
-    };
-
     uint16_t formats[] =
     {
         BH_BITMAP_RGBA32,
@@ -49,36 +43,32 @@ BH_UNIT_TEST(RoundTrip)
         BH_BITMAP_RGBA1010102 | BH_BITMAP_NOALPHA,
     };
 
-    for (flag = 0; flag < sizeof(flags) / sizeof(uint16_t); ++flag)
+    for (format = 0; format < sizeof(formats) / sizeof(uint16_t); ++format)
     {
-        for (format = 0; format < sizeof(formats) / sizeof(uint16_t); ++format)
+        for (i = 0; i < 16; ++i)
         {
-            for (i = 0; i < 16; ++i)
-            {
-                BH_Color source, destination;
-                uint64_t temp;
+            BH_Color source, destination;
+            uint64_t temp;
 
-                BH_ColorSetRGBA16(&source, data[i][0], data[i][1], data[i][2],
-                                           data[i][3]);
-                BH_BitmapConvertRow(&source.data, BH_BITMAP_RGBA16161616, NULL,
-                                    &temp, formats[format] | flags[flag], NULL,
-                                    1);
-                BH_BitmapConvertRow(&temp, formats[format] | flags[flag], NULL,
-                                    &destination.data, BH_BITMAP_RGBA16161616,
-                                    NULL, 1);
+            temp = 0;
+            BH_ColorSetRGBA16(&source, data[i][0], data[i][1], data[i][2],
+                                        data[i][3]);
+            BH_BitmapConvertRow(&source.data, BH_BITMAP_RGBA16161616, NULL,
+                                &temp, formats[format], NULL, 1);
+            BH_BitmapConvertRow(&temp, formats[format], NULL, &destination.data, 
+                                BH_BITMAP_RGBA16161616, NULL, 1);
 
-                BH_VERIFY(source.data.rgba.r == destination.data.rgba.r);
-                BH_VERIFY(source.data.rgba.g == destination.data.rgba.g);
-                BH_VERIFY(source.data.rgba.b == destination.data.rgba.b);
+            BH_VERIFY(source.data.rgba.r == destination.data.rgba.r);
+            BH_VERIFY(source.data.rgba.g == destination.data.rgba.g);
+            BH_VERIFY(source.data.rgba.b == destination.data.rgba.b);
 
-                if (formats[format] == BH_BITMAP_RGB888 ||
-                    formats[format] == BH_BITMAP_RGB161616 ||
-                    formats[format] == BH_BITMAP_RGB565 ||
-                    (formats[format] | flags[flag]) & BH_BITMAP_NOALPHA)
-                    BH_VERIFY(destination.data.rgba.a == 65535);
-                else
-                    BH_VERIFY(source.data.rgba.a == destination.data.rgba.a);
-            }
+            if (formats[format] == BH_BITMAP_RGB888 ||
+                formats[format] == BH_BITMAP_RGB161616 ||
+                formats[format] == BH_BITMAP_RGB565 ||
+                formats[format] & BH_BITMAP_NOALPHA)
+                BH_VERIFY(destination.data.rgba.a == 65535);
+            else
+                BH_VERIFY(source.data.rgba.a == destination.data.rgba.a);
         }
     }
 

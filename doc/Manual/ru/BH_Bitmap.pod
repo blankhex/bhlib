@@ -27,15 +27,27 @@ BH_Bitmap - доступ к растровому изображению/карт
 
 =item B<BH_BITMAP_INDEX1>
 
-1-разрядный индексированный/палитрированный
+1-разрядный индексированный/палитрированный (биты упаковываются начиная с самого старшего бита)
+
+=item B<BH_BITMAP_INDEX1_LSB>
+
+1-разрядный индексированный/палитрированный (биты упаковываются начиная с самого младшего бита)
 
 =item B<BH_BITMAP_INDEX2>
 
-2-разрядный индексированный/палитрированный
+2-разрядный индексированный/палитрированный (биты упаковываются начиная с самого старшего бита)
+
+=item B<BH_BITMAP_INDEX2_LSB>
+
+2-разрядный индексированный/палитрированный (биты упаковываются начиная с самого младшего бита)
 
 =item B<BH_BITMAP_INDEX4>
 
-4-разрядный индексированный/палитрированный
+4-разрядный индексированный/палитрированный (биты упаковываются начиная с самого старшего бита)
+
+=item B<BH_BITMAP_INDEX4_LSB>
+
+4-разрядный индексированный/палитрированный (биты упаковываются начиная с самого младшего бита)
 
 =item B<BH_BITMAP_INDEX8>
 
@@ -59,27 +71,27 @@ BH_Bitmap - доступ к растровому изображению/карт
 64-разрядный RGB с прозрачностью, представленный в виде uint64_t.
 Формат: 0xAAAARRRRGGGGBBBB
 
-=item B<BH_BITMAP_RGB565>
+=item B<BH_BITMAP_RGB565>, B<BH_BITMAP_BGR565>
 
 16-разрядный RGB
 
-=item B<BH_BITMAP_RGB888>
+=item B<BH_BITMAP_RGB888>, B<BH_BITMAP_BGR888>
 
 24-разрядный RGB
 
-=item B<BH_BITMAP_RGBA8888>
+=item B<BH_BITMAP_RGBA8888>, B<BH_BITMAP_BGRA8888>, B<BH_BITMAP_ARGB8888>, B<BH_BITMAP_ABGR8888>
 
 32-разрядный RGB с прозрачностью
 
-=item B<BH_BITMAP_RGB161616>
+=item B<BH_BITMAP_RGB161616>, B<BH_BITMAP_BGR161616>
 
 48-разрядный RGB
 
-=item B<BH_BITMAP_RGBA16161616>
+=item B<BH_BITMAP_RGBA16161616>, B<BH_BITMAP_BGRA16161616>, B<BH_BITMAP_ARGB16161616>, B<BH_BITMAP_ABGR16161616>
 
 64-разрядный RGB с прозрачностью
 
-=item B<BH_BITMAP_RGBA1010102>
+=item B<BH_BITMAP_RGBA1010102>, B<BH_BITMAP_BGRA1010102>, B<BH_BITMAP_ARGB1010102>, B<BH_BITMAP_ABGR1010102>
 
 32-разрядный RGB с прозрачностью
 
@@ -87,26 +99,12 @@ BH_Bitmap - доступ к растровому изображению/карт
 
 Во всех форматах пикселей используется нативный порядок байт.
 
-Флаг I<BH_BITMAP_BGR> может использоваться для изменения порядка цветовых
-каналов (RGB -> BGR). Этот флаг не влияет на следующие пиксельные форматы:
-I<BH_BITMAP_INDEX1>, I<BH_BITMAP_INDEX2>, I<BH_BITMAP_INDEX4>,
-I<BH_BITMAP_INDEX8>, I<BH_BITMAP_GRAY8>, I<BH_BITMAP_GRAY16>,
-I<BH_BITMAP_RGBA32> и I<BH_BITMAP_RGBA64>.
-
-Флаг I<BH_BITMAP_LSB> может использоваться для изменения начала отсчета порядка
-бит для индексированных изображений. Этот флаг влияет только на следующие
-пиксельные форматы: I<BH_BITMAP_INDEX1>, I<BH_BITMAP_INDEX2>,
-I<BH_BITMAP_INDEX4> и I<BH_BITMAP_INDEX8>.
-
 Флаг I<BH_BITMAP_NOALPHA> может использоваться для указания того,
 что альфа-канал не используется и всегда должен быть установлен в максимальное
 значение (255 для 8-разрядных и 65535 для 16-разрядных).
 
 Флаг I<BH_BITMAP_PREMULT> может использоваться для указания того, что значения
 цвета представлены в предварительно умноженном виде.
-
-Предполагается, что цветовая палитра содержит ровно 256 цветов и хранится в
-пиксельном формате I<BH_BITMAP_RGBA32>.
 
 
 =head1 ВЫЗОВЫ API
@@ -119,7 +117,7 @@ I<BH_BITMAP_INDEX4> и I<BH_BITMAP_INDEX8>.
                          int format,
                          int flags,
                          void *data,
-                         void *palette);
+                         BH_Color *palette);
 
 Создает растровое изображение с указанной шириной, высотой и пиксельным
 форматом.
@@ -310,10 +308,10 @@ void BH_BitmapSetIndex(BH_Bitmap *bitmap,
 
  void BH_BitmapConvertRow(void *src,
                           int srcFormat,
-                          void *srcPalette,
+                          const BH_Color *srcPalette,
                           void *dest,
                           int destFormat,
-                          void *destPalette,
+                          const BH_Color *destPalette,
                           size_t count);
 
 Преобразует строку исходных данных из одного пиксельного формата в другой пиксельный формат.
