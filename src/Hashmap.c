@@ -65,7 +65,7 @@ static int BH_CalcCapacity(size_t size,
         /* Catch capacity overflow  */
         if (BH_CHECK_UMUL_WRAP(*capacity, 2, size_t))
             return BH_OOM;
-            
+
         *capacity *= 2;
         *threshold = *capacity * factor;
     }

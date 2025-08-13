@@ -113,7 +113,7 @@ static size_t bestPaletteIndex(BH_Color *color,
         delta[2] = (int32_t)color->data.channel[2] - palette[i].data.channel[2];
         delta[3] = (int32_t)color->data.channel[3] - palette[i].data.channel[3];
 
-        currentError = delta[0] * delta[0] + delta[1] * delta[1] + 
+        currentError = delta[0] * delta[0] + delta[1] * delta[1] +
                        delta[2] * delta[2] + delta[3] * delta[3];
 
         if (currentError < bestError)
@@ -133,13 +133,13 @@ static void readPacked(const FormatInfo *formatInfo,
                        BH_Color *value)
 {
     uint64_t raw;
-    
+
     switch (formatInfo->type)
     {
     case TYPE_PACKED8: raw = *(uint8_t *)data; break;
     case TYPE_PACKED16: raw = *(uint16_t *)data; break;
     case TYPE_PACKED32: raw = *(uint32_t *)data; break;
-    case TYPE_PACKED64: raw = *(uint64_t *)data; break; 
+    case TYPE_PACKED64: raw = *(uint64_t *)data; break;
     }
 
     switch (formatInfo->channels)
@@ -173,8 +173,8 @@ static void writePacked(const FormatInfo *formatInfo,
     case TYPE_PACKED8: *(uint8_t *)data = raw; break;
     case TYPE_PACKED16: *(uint16_t *)data = raw; break;
     case TYPE_PACKED32: *(uint32_t *)data = raw; break;
-    case TYPE_PACKED64: *(uint64_t *)data = raw; break; 
-    }    
+    case TYPE_PACKED64: *(uint64_t *)data = raw; break;
+    }
 }
 
 
@@ -301,7 +301,7 @@ void readData(const FormatInfo *formatInfo,
     case TYPE_INDEX:
         *value = palette[readIndex(formatInfo, data, x)];
         break;
-    
+
     case TYPE_ARRAY:
         readArray(formatInfo, data, x, value);
         value->type = BH_COLOR_TYPE_RGBA;
@@ -326,7 +326,7 @@ void writeData(const FormatInfo *formatInfo,
     case TYPE_INDEX:
         writeIndex(formatInfo, data, x, bestPaletteIndex(value, palette, formatInfo));
         break;
-    
+
     case TYPE_ARRAY:
         BH_ColorToRGBA(value, value);
         writeArray(formatInfo, data, x, value);
@@ -423,12 +423,14 @@ BH_Bitmap *BH_BitmapNew(uint32_t width,
     size_t header, body, allocSize, stride, step;
 
     /* Basic sanity check */
-    if (width == 0 || width >= 0x7FFFFFFF || 
+    if (width == 0 || width >= 0x7FFFFFFF ||
         height == 0 || height >= 0x7FFFFFFF)
         return NULL;
 
     /* Get format information */
     formatInfo = formats + (format & 0x0FFF);
+    if ((format & 0x0FFF) > sizeof(formats) / sizeof(FormatInfo))
+        return NULL;
 
     /* Unset internal flags */
     flags &= ~BH_BITMAP_FLAG_EXT_DATA;
@@ -446,7 +448,7 @@ BH_Bitmap *BH_BitmapNew(uint32_t width,
     {
         if (BH_CHECK_UADD_WRAP(stride, sizeof(uint32_t) - 1, size_t))
             return NULL;
-        
+
         stride = (stride + sizeof(uint32_t) - 1) & ~(sizeof(uint32_t) - 1);
     }
 
@@ -457,7 +459,7 @@ BH_Bitmap *BH_BitmapNew(uint32_t width,
     body = stride * height;
     if (BH_CHECK_UMUL_WRAP(stride, height, size_t))
         return NULL;
-    
+
     if (BH_CHECK_UADD_WRAP(body, sizeof(uint32_t) - 1, size_t))
         return NULL;
     body = (body + (sizeof(uint32_t) - 1)) & ~(sizeof(uint32_t) - 1);
@@ -478,7 +480,7 @@ BH_Bitmap *BH_BitmapNew(uint32_t width,
     if (BH_CHECK_UADD_WRAP(allocSize, header, size_t))
         return NULL;
     allocSize += header;
-    
+
     if (BH_CHECK_UADD_WRAP(allocSize, body, size_t))
         return NULL;
     allocSize += body;
@@ -550,7 +552,7 @@ BH_Bitmap *BH_BitmapCopy(BH_Bitmap *bitmap,
     /* Sanity checks */
     if (!width || !height || x >= bitmap->width || y >= bitmap->height)
         return NULL;
-    
+
     if (width < bitmap->width - x || height < bitmap->height - y)
         return NULL;
 
@@ -673,6 +675,12 @@ void BH_BitmapConvertRow(void *src,
 
     srcInfo = formats + (srcFormat & 0x0FFF);
     destInfo = formats + (destFormat & 0x0FFF);
+
+    if ((srcFormat & 0x0FFF) > sizeof(formats) / sizeof(FormatInfo))
+        return;
+
+    if ((destFormat & 0x0FFF) > sizeof(formats) / sizeof(FormatInfo))
+        return;
 
     for (x = 0; count; --count, ++x)
     {
