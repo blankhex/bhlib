@@ -6,7 +6,7 @@
 
 BH_UNIT_TEST(RoundTrip)
 {
-    size_t i, flag, format;
+    size_t i, format;
 
     uint16_t data[][4] =
     {
@@ -55,7 +55,7 @@ BH_UNIT_TEST(RoundTrip)
                                         data[i][3]);
             BH_BitmapConvertRow(&source.data, BH_BITMAP_RGBA16161616, NULL,
                                 &temp, formats[format], NULL, 1);
-            BH_BitmapConvertRow(&temp, formats[format], NULL, &destination.data, 
+            BH_BitmapConvertRow(&temp, formats[format], NULL, &destination.data,
                                 BH_BITMAP_RGBA16161616, NULL, 1);
 
             BH_VERIFY(source.data.rgba.r == destination.data.rgba.r);
