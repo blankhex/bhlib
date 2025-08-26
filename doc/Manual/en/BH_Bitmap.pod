@@ -70,6 +70,10 @@ Currently, the following pixel formats are supported:
 64-bit RGB with alpha represented in uint64_t value. The layout is:
 0xAAAARRRRGGGGBBBB
 
+=item B<BH_BITMAP_RGBA5551>, B<BH_BITMAP_BGRA5551>, B<BH_BITMAP_ARGB1555>, B<BH_BITMAP_ABGR1555>
+
+16-bit RGB
+
 =item B<BH_BITMAP_RGB565>, B<BH_BITMAP_BGR565>
 
 16-bit RGB
@@ -116,7 +120,8 @@ premultiplied form.
                          int format,
                          int flags,
                          void *data,
-                         BH_Color *palette);
+                         BH_Color *palette,
+                         int *result);
 
 Creates the bitmap with the specified I<width>, I<height> and pixel I<format>.
 
@@ -133,6 +138,8 @@ Rows are aligned to 32-bit boundary
 The optional I<data> parameter specifies pointer to the existing data.
 
 The optional I<palette> parameter specifies pointer to the existing palette.
+
+The optional parameter I<result> returns 0 or an error code.
 
 This function returns a pointer to a new BH_Bitmap object or NULL.
 
@@ -198,7 +205,8 @@ The I<x> and I<y> parameters specify a position on the bitmap.
                           uint32_t y,
                           uint32_t width,
                           uint32_t height,
-                          int shallow);
+                          int shallow,
+                          int *result);
 
 Creates a copy of the bitmap region by the given position and size.
 
@@ -209,6 +217,8 @@ The I<width> and I<height> parameters specify size of the new bitmap.
 The I<shallow> parameter specifies whether the new bitmap is a shallow copy (or
 a view) of the existing bitmap or a deep copy. For the shallow copy to work, the
 region should be within the existing bitmap.
+
+The optional parameter I<result> returns 0 or an error code.
 
 This function returns a pointer to a new BH_Bitmap object or NULL.
 

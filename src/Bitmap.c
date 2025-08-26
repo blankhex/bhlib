@@ -1,3 +1,4 @@
+#include "BH/Common.h"
 #include <BH/Bitmap.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,44 +28,93 @@
 typedef struct FormatInfo
 {
     int type;
-    int channels;
+    size_t channels;
     uint16_t masks[4];
     uint8_t shifts[8];
-    int size;
+    size_t size;
 } FormatInfo;
+
+struct BH_Bitmap
+{
+    uint32_t width;
+    uint32_t height;
+    int format;
+    const FormatInfo *formatInfo;
+    int flags;
+    size_t stride;
+    uint8_t *data;
+    BH_Color *palette;
+};
 
 
 const static struct FormatInfo formats[] =
 {
-    {TYPE_INDEX1, 7, {0x0001}, {7, 6, 5, 4, 3, 2, 1, 0}, 0},                    /* BH_BITMAP_INDEX1 */
-    {TYPE_INDEX1, 7, {0x0001}, {0, 1, 2, 3, 4, 5, 6, 7}, 0},                    /* BH_BITMAP_INDEX1_LSB */
-    {TYPE_INDEX2, 3, {0x0003}, {3, 2, 1, 0}, 0},                                /* BH_BITMAP_INDEX2 */
-    {TYPE_INDEX2, 3, {0x0003}, {0, 1, 2, 3}, 0},                                /* BH_BITMAP_INDEX2_LSB */
-    {TYPE_INDEX4, 1, {0x000F}, {1, 0}, 0},                                      /* BH_BITMAP_INDEX4 */
-    {TYPE_INDEX4, 1, {0x000F}, {0, 1}, 0},                                      /* BH_BITMAP_INDEX4_LSB */
-    {TYPE_INDEX8, 0, {0x00FF}, {0}, 1},                                         /* BH_BITMAP_INDEX8 */
-    {TYPE_PACKED8, 1, {0x00FF}, {0}, 1},                                        /* BH_BITMAP_GRAY8 */
-    {TYPE_PACKED16, 1, {0xFFFF}, {0}, 2},                                       /* BH_BITMAP_GRAY16 */
-    {TYPE_PACKED32, 4, {0x00FF, 0x00FF, 0x00FF, 0x00FF}, {16, 8, 0, 24}, 4},    /* BH_BITMAP_RGBA32 */
-    {TYPE_PACKED64, 4, {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF}, {32, 16, 0, 48}, 8},   /* BH_BITMAP_RGBA64 */
-    {TYPE_PACKED16, 3, {0x001F, 0x003F, 0x001F}, {11, 5, 0}, 2},                /* BH_BITMAP_RGB565 */
-    {TYPE_PACKED16, 3, {0x001F, 0x003F, 0x001F}, {0, 5, 11}, 2},                /* BH_BITMAP_BGR565 */
-    {TYPE_ARRAY8, 3, {0x00FF, 0x00FF, 0x00FF}, {0, 1, 2}, 3},                   /* BH_BITMAP_RGB888 */
-    {TYPE_ARRAY8, 3, {0x00FF, 0x00FF, 0x00FF}, {2, 1, 0}, 3},                   /* BH_BITMAP_BGR888 */
-    {TYPE_ARRAY8, 4, {0x00FF, 0x00FF, 0x00FF, 0x00FF}, {0, 1, 2, 3}, 4},        /* BH_BITMAP_RGBA8888 */
-    {TYPE_ARRAY8, 4, {0x00FF, 0x00FF, 0x00FF, 0x00FF}, {2, 1, 0, 3}, 4},        /* BH_BITMAP_BGRA8888 */
-    {TYPE_ARRAY8, 4, {0x00FF, 0x00FF, 0x00FF, 0x00FF}, {1, 2, 3, 0}, 4},        /* BH_BITMAP_ARGB8888 */
-    {TYPE_ARRAY8, 4, {0x00FF, 0x00FF, 0x00FF, 0x00FF}, {3, 2, 1, 0}, 4},        /* BH_BITMAP_ABGR8888 */
-    {TYPE_ARRAY16, 3, {0xFFFF, 0xFFFF, 0xFFFF}, {0, 1, 2}, 6},                  /* BH_BITMAP_RGB161616 */
-    {TYPE_ARRAY16, 3, {0xFFFF, 0xFFFF, 0xFFFF}, {2, 1, 0}, 6},                  /* BH_BITMAP_BGR161616 */
-    {TYPE_ARRAY16, 4, {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF}, {0, 1, 2, 3}, 8},       /* BH_BITMAP_RGBA16161616 */
-    {TYPE_ARRAY16, 4, {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF}, {2, 1, 0, 3}, 8},       /* BH_BITMAP_BGRA16161616 */
-    {TYPE_ARRAY16, 4, {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF}, {1, 2, 3, 0}, 8},       /* BH_BITMAP_ARGB16161616 */
-    {TYPE_ARRAY16, 4, {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF}, {3, 2, 1, 0}, 8},       /* BH_BITMAP_ABGR16161616 */
-    {TYPE_PACKED32, 4, {0x03FF, 0x03FF, 0x03FF, 0x0003}, {22, 12, 2, 0}, 4},    /* BH_BITMAP_RGBA1010102 */
-    {TYPE_PACKED32, 4, {0x03FF, 0x03FF, 0x03FF, 0x0003}, {2, 12, 22, 0}, 4},    /* BH_BITMAP_BGRA1010102 */
-    {TYPE_PACKED32, 4, {0x03FF, 0x03FF, 0x03FF, 0x0003}, {20, 10, 0, 30}, 4},   /* BH_BITMAP_ARGB2101010 */
-    {TYPE_PACKED32, 4, {0x03FF, 0x03FF, 0x03FF, 0x0003}, {0, 10, 20, 30}, 4},   /* BH_BITMAP_ABGR2101010 */
+    /* BH_BITMAP_INDEX1 */
+    {TYPE_INDEX1, 7, {0x0001}, {7, 6, 5, 4, 3, 2, 1, 0}, 0},
+    /* BH_BITMAP_INDEX1_LSB */
+    {TYPE_INDEX1, 7, {0x0001}, {0, 1, 2, 3, 4, 5, 6, 7}, 0},
+    /* BH_BITMAP_INDEX2 */
+    {TYPE_INDEX2, 3, {0x0003}, {3, 2, 1, 0}, 0},
+    /* BH_BITMAP_INDEX2_LSB */
+    {TYPE_INDEX2, 3, {0x0003}, {0, 1, 2, 3}, 0},
+    /* BH_BITMAP_INDEX4 */
+    {TYPE_INDEX4, 1, {0x000F}, {1, 0}, 0},
+    /* BH_BITMAP_INDEX4_LSB */
+    {TYPE_INDEX4, 1, {0x000F}, {0, 1}, 0},
+    /* BH_BITMAP_INDEX8 */
+    {TYPE_INDEX8, 0, {0x00FF}, {0}, 1},
+    /* BH_BITMAP_GRAY8 */
+    {TYPE_PACKED8, 1, {0x00FF}, {0}, 1},
+    /* BH_BITMAP_GRAY16 */
+    {TYPE_PACKED16, 1, {0xFFFF}, {0}, 2},
+    /* BH_BITMAP_RGBA32 */
+    {TYPE_PACKED32, 4, {0x00FF, 0x00FF, 0x00FF, 0x00FF}, {16, 8, 0, 24}, 4},
+    /* BH_BITMAP_RGBA64 */
+    {TYPE_PACKED64, 4, {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF}, {32, 16, 0, 48}, 8},
+    /* BH_BITMAP_RGB565 */
+    {TYPE_PACKED16, 3, {0x001F, 0x003F, 0x001F}, {11, 5, 0}, 2},
+    /* BH_BITMAP_BGR565 */
+    {TYPE_PACKED16, 3, {0x001F, 0x003F, 0x001F}, {0, 5, 11}, 2},
+    /* BH_BITMAP_RGBA5551 */
+    {TYPE_PACKED16, 4, {0x001F, 0x001F, 0x001F, 0x0001}, {11, 6, 1, 0}, 2},
+    /* BH_BITMAP_BGRA5551 */
+    {TYPE_PACKED16, 4, {0x001F, 0x001F, 0x001F, 0x0001}, {1, 6, 11, 0}, 2},
+    /* BH_BITMAP_ARGB1555 */
+    {TYPE_PACKED16, 4, {0x001F, 0x001F, 0x001F, 0x0001}, {10, 5, 0, 15}, 2},
+    /* BH_BITMAP_ABGR1555 */
+    {TYPE_PACKED16, 4, {0x001F, 0x001F, 0x001F, 0x0001}, {0, 5, 10, 15}, 2},
+    /* BH_BITMAP_RGB888 */
+    {TYPE_ARRAY8, 3, {0x00FF, 0x00FF, 0x00FF}, {0, 1, 2}, 3},
+    /* BH_BITMAP_BGR888 */
+    {TYPE_ARRAY8, 3, {0x00FF, 0x00FF, 0x00FF}, {2, 1, 0}, 3},
+    /* BH_BITMAP_RGBA8888 */
+    {TYPE_ARRAY8, 4, {0x00FF, 0x00FF, 0x00FF, 0x00FF}, {0, 1, 2, 3}, 4},
+    /* BH_BITMAP_BGRA8888 */
+    {TYPE_ARRAY8, 4, {0x00FF, 0x00FF, 0x00FF, 0x00FF}, {2, 1, 0, 3}, 4},
+    /* BH_BITMAP_ARGB8888 */
+    {TYPE_ARRAY8, 4, {0x00FF, 0x00FF, 0x00FF, 0x00FF}, {1, 2, 3, 0}, 4},
+    /* BH_BITMAP_ABGR8888 */
+    {TYPE_ARRAY8, 4, {0x00FF, 0x00FF, 0x00FF, 0x00FF}, {3, 2, 1, 0}, 4},
+    /* BH_BITMAP_RGB161616 */
+    {TYPE_ARRAY16, 3, {0xFFFF, 0xFFFF, 0xFFFF}, {0, 1, 2}, 6},
+    /* BH_BITMAP_BGR161616 */
+    {TYPE_ARRAY16, 3, {0xFFFF, 0xFFFF, 0xFFFF}, {2, 1, 0}, 6},
+    /* BH_BITMAP_RGBA16161616 */
+    {TYPE_ARRAY16, 4, {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF}, {0, 1, 2, 3}, 8},
+    /* BH_BITMAP_BGRA16161616 */
+    {TYPE_ARRAY16, 4, {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF}, {2, 1, 0, 3}, 8},
+    /* BH_BITMAP_ARGB16161616 */
+    {TYPE_ARRAY16, 4, {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF}, {1, 2, 3, 0}, 8},
+    /* BH_BITMAP_ABGR16161616 */
+    {TYPE_ARRAY16, 4, {0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF}, {3, 2, 1, 0}, 8},
+    /* BH_BITMAP_RGBA1010102 */
+    {TYPE_PACKED32, 4, {0x03FF, 0x03FF, 0x03FF, 0x0003}, {22, 12, 2, 0}, 4},
+    /* BH_BITMAP_BGRA1010102 */
+    {TYPE_PACKED32, 4, {0x03FF, 0x03FF, 0x03FF, 0x0003}, {2, 12, 22, 0}, 4},
+    /* BH_BITMAP_ARGB2101010 */
+    {TYPE_PACKED32, 4, {0x03FF, 0x03FF, 0x03FF, 0x0003}, {20, 10, 0, 30}, 4},
+    /* BH_BITMAP_ABGR2101010 */
+    {TYPE_PACKED32, 4, {0x03FF, 0x03FF, 0x03FF, 0x0003}, {0, 10, 20, 30}, 4},
 };
 
 
@@ -129,7 +179,6 @@ static size_t bestPaletteIndex(BH_Color *color,
 
 static void readPacked(const FormatInfo *formatInfo,
                        void *data,
-                       int x,
                        BH_Color *value)
 {
     uint64_t raw;
@@ -154,7 +203,6 @@ static void readPacked(const FormatInfo *formatInfo,
 
 static void writePacked(const FormatInfo *formatInfo,
                         void *data,
-                        int x,
                         BH_Color *value)
 {
     uint64_t raw;
@@ -180,7 +228,6 @@ static void writePacked(const FormatInfo *formatInfo,
 
 static void readArray8(const FormatInfo *formatInfo,
                        void *data,
-                       int x,
                        BH_Color *value)
 {
     switch (formatInfo->channels)
@@ -195,7 +242,6 @@ static void readArray8(const FormatInfo *formatInfo,
 
 static void writeArray8(const FormatInfo *formatInfo,
                         void *data,
-                        int x,
                         BH_Color *value)
 {
     switch (formatInfo->channels)
@@ -210,7 +256,6 @@ static void writeArray8(const FormatInfo *formatInfo,
 
 static void readArray16(const FormatInfo *formatInfo,
                         void *data,
-                        int x,
                         BH_Color *value)
 {
     value->type = BH_COLOR_TYPE_RGBA;
@@ -226,7 +271,6 @@ static void readArray16(const FormatInfo *formatInfo,
 
 static void writeArray16(const FormatInfo *formatInfo,
                          void *data,
-                         int x,
                          BH_Color *value)
 {
     switch (formatInfo->channels)
@@ -241,26 +285,24 @@ static void writeArray16(const FormatInfo *formatInfo,
 
 static void readArray(const FormatInfo *formatInfo,
                       void *data,
-                      int x,
                       BH_Color *value)
 {
     switch (formatInfo->type)
     {
-    case TYPE_ARRAY8: readArray8(formatInfo, data, x, value); break;
-    case TYPE_ARRAY16: readArray16(formatInfo, data, x, value); break;
+    case TYPE_ARRAY8: readArray8(formatInfo, data, value); break;
+    case TYPE_ARRAY16: readArray16(formatInfo, data, value); break;
     }
 }
 
 
 static void writeArray(const FormatInfo *formatInfo,
                       void *data,
-                      int x,
                       BH_Color *value)
 {
     switch (formatInfo->type)
     {
-    case TYPE_ARRAY8: writeArray8(formatInfo, data, x, value); break;
-    case TYPE_ARRAY16: writeArray16(formatInfo, data, x, value); break;
+    case TYPE_ARRAY8: writeArray8(formatInfo, data, value); break;
+    case TYPE_ARRAY16: writeArray16(formatInfo, data, value); break;
     }
 }
 
@@ -285,16 +327,16 @@ static void writeIndex(const FormatInfo *formatInfo,
 }
 
 
-void readData(const FormatInfo *formatInfo,
-              void *data,
-              int x,
-              BH_Color *value,
-              const BH_Color *palette)
+static void readData(const FormatInfo *formatInfo,
+                     void *data,
+                     int x,
+                     BH_Color *value,
+                     const BH_Color *palette)
 {
     switch (formatInfo->type & 0x0F00)
     {
     case TYPE_PACKED:
-        readPacked(formatInfo, data, x, value);
+        readPacked(formatInfo, data, value);
         value->type = BH_COLOR_TYPE_RGBA;
         break;
 
@@ -303,24 +345,24 @@ void readData(const FormatInfo *formatInfo,
         break;
 
     case TYPE_ARRAY:
-        readArray(formatInfo, data, x, value);
+        readArray(formatInfo, data, value);
         value->type = BH_COLOR_TYPE_RGBA;
         break;
     }
 }
 
 
-void writeData(const FormatInfo *formatInfo,
-               void *data,
-               int x,
-               BH_Color *value,
-               const BH_Color *palette)
+static void writeData(const FormatInfo *formatInfo,
+                      void *data,
+                      int x,
+                      BH_Color *value,
+                      const BH_Color *palette)
 {
     switch (formatInfo->type & 0x0F00)
     {
     case TYPE_PACKED:
         BH_ColorToRGBA(value, value);
-        writePacked(formatInfo, data, x, value);
+        writePacked(formatInfo, data, value);
         break;
 
     case TYPE_INDEX:
@@ -329,23 +371,10 @@ void writeData(const FormatInfo *formatInfo,
 
     case TYPE_ARRAY:
         BH_ColorToRGBA(value, value);
-        writeArray(formatInfo, data, x, value);
+        writeArray(formatInfo, data, value);
         break;
     }
 }
-
-
-struct BH_Bitmap
-{
-    uint32_t width;
-    uint32_t height;
-    int format;
-    const FormatInfo *formatInfo;
-    int flags;
-    size_t stride;
-    uint8_t *data;
-    BH_Color *palette;
-};
 
 
 static void *rowAt(const FormatInfo *formatInfo,
@@ -365,8 +394,6 @@ static void *rowAt(const FormatInfo *formatInfo,
 static size_t calculateStride(const FormatInfo *formatInfo,
                               uint32_t width)
 {
-    size_t step;
-
     switch (formatInfo->type)
     {
     case TYPE_INDEX1: return (width + 7) / 8;
@@ -409,28 +436,31 @@ static size_t calculateTrailer(const FormatInfo *formatInfo)
 }
 
 
-/* Public functions */
 BH_Bitmap *BH_BitmapNew(uint32_t width,
                         uint32_t height,
                         int format,
                         int flags,
                         void *data,
-                        BH_Color *palette)
+                        BH_Color *palette,
+                        int *result)
 {
-    BH_Bitmap *result;
     const FormatInfo *formatInfo;
-    int needPalette;
-    size_t header, body, allocSize, stride, step;
+    size_t header, body, allocSize, stride;
+    int needPalette, code;
+    BH_Bitmap *bitmap;
 
-    /* Basic sanity check */
-    if (width == 0 || width >= 0x7FFFFFFF ||
-        height == 0 || height >= 0x7FFFFFFF)
-        return NULL;
-
-    /* Get format information */
+    bitmap = NULL;
+    code = BH_OK;
     formatInfo = formats + (format & 0x0FFF);
-    if ((format & 0x0FFF) > sizeof(formats) / sizeof(FormatInfo))
-        return NULL;
+
+    /* Basic checks and format validation  */
+    if (width == 0 || width >= 0x7FFFFFFF ||
+        height == 0 || height >= 0x7FFFFFFF ||
+        (format & 0x0FFF) > sizeof(formats) / sizeof(FormatInfo))
+    {
+        code = BH_INVALID;
+        goto done;
+    }
 
     /* Unset internal flags */
     flags &= ~BH_BITMAP_FLAG_EXT_DATA;
@@ -442,26 +472,33 @@ BH_Bitmap *BH_BitmapNew(uint32_t width,
 
     /* Check stride overflow */
     if (!stride)
-        return NULL;
+    {
+        code = BH_ERROR;
+        goto done;
+    }
 
     if (flags & BH_BITMAP_FLAG_ALIGN32)
     {
         if (BH_CHECK_UADD_WRAP(stride, sizeof(uint32_t) - 1, size_t))
-            return NULL;
+        {
+            code = BH_ERROR;
+            goto done;
+        }
 
         stride = (stride + sizeof(uint32_t) - 1) & ~(sizeof(uint32_t) - 1);
     }
 
-    header = sizeof(*result);
+    header = sizeof(*bitmap);
     header = (header + (sizeof(uint64_t) - 1)) & ~(sizeof(uint64_t) - 1);
     allocSize = calculateTrailer(formatInfo);
 
     body = stride * height;
-    if (BH_CHECK_UMUL_WRAP(stride, height, size_t))
-        return NULL;
-
-    if (BH_CHECK_UADD_WRAP(body, sizeof(uint32_t) - 1, size_t))
-        return NULL;
+    if (BH_CHECK_UMUL_WRAP(stride, height, size_t) ||
+        BH_CHECK_UADD_WRAP(body, sizeof(uint32_t) - 1, size_t))
+    {
+        code = BH_ERROR;
+        goto done;
+    }
     body = (body + (sizeof(uint32_t) - 1)) & ~(sizeof(uint32_t) - 1);
 
     /* Adjust body and trailer size if ext data or palette is provided */
@@ -477,35 +514,42 @@ BH_Bitmap *BH_BitmapNew(uint32_t width,
         body = 0;
     }
 
-    if (BH_CHECK_UADD_WRAP(allocSize, header, size_t))
-        return NULL;
-    allocSize += header;
-
-    if (BH_CHECK_UADD_WRAP(allocSize, body, size_t))
-        return NULL;
-    allocSize += body;
+    if (BH_CHECK_UADD_WRAP(allocSize, header, size_t) ||
+        BH_CHECK_UADD_WRAP(allocSize + header, body, size_t))
+    {
+        code = BH_ERROR;
+        goto done;
+    }
+    allocSize += header + body;
 
     /* Allocate and setup bitmap data */
-    result = malloc(allocSize);
-    if (!result)
-        return NULL;
+    bitmap = malloc(allocSize);
+    if (!bitmap)
+    {
+        code = BH_OOM;
+        goto done;
+    }
 
     if (!data)
-        data = (uint8_t *)result + header;
+        data = (uint8_t *)bitmap + header;
 
     if (!palette && needPalette)
-        palette = (BH_Color *)((uint8_t *)result + header + body);
+        palette = (BH_Color *)((uint8_t *)bitmap + header + body);
 
-    result->width = width;
-    result->height = height;
-    result->format = format;
-    result->formatInfo = formatInfo;
-    result->flags = flags;
-    result->stride = stride;
-    result->data = data;
-    result->palette = palette;
+    bitmap->width = width;
+    bitmap->height = height;
+    bitmap->format = format;
+    bitmap->formatInfo = formatInfo;
+    bitmap->flags = flags;
+    bitmap->stride = stride;
+    bitmap->data = data;
+    bitmap->palette = palette;
 
-    return result;
+done:
+    if (result)
+        *result = code;
+
+    return bitmap;
 }
 
 
@@ -544,9 +588,10 @@ BH_Bitmap *BH_BitmapCopy(BH_Bitmap *bitmap,
                          uint32_t y,
                          uint32_t width,
                          uint32_t height,
-                         int shallow)
+                         int shallow,
+                         int *result)
 {
-    BH_Bitmap *result;
+    BH_Bitmap *resultBitmap;
     uint32_t i, j;
 
     /* Sanity checks */
@@ -559,20 +604,22 @@ BH_Bitmap *BH_BitmapCopy(BH_Bitmap *bitmap,
     /* Shallow copy can't go out of bounds of the source bitmap */
     if (shallow)
     {
-        result = BH_BitmapNew(width, height, bitmap->format, bitmap->flags,
-                              BH_BitmapAt(bitmap, x, y), bitmap->palette);
-        result->stride = bitmap->stride;
-        return result;
+        resultBitmap = BH_BitmapNew(width, height, bitmap->format, bitmap->flags,
+                                    BH_BitmapAt(bitmap, x, y), bitmap->palette,
+                                    result);
+        resultBitmap->stride = bitmap->stride;
+        return resultBitmap;
     }
 
     /* Deep copy of the bitmap */
-    result = BH_BitmapNew(width, height, bitmap->format, bitmap->flags, NULL, NULL);
-    if (!result)
+    resultBitmap = BH_BitmapNew(width, height, bitmap->format, bitmap->flags,
+                                NULL, NULL, result);
+    if (!resultBitmap)
         return NULL;
 
     /* Copy the palette if neccesery */
-    if (result->palette)
-        memcpy(result->palette, bitmap->palette, sizeof(uint32_t) * 256);
+    if (resultBitmap->palette)
+        memcpy(resultBitmap->palette, bitmap->palette, sizeof(uint32_t) * 256);
 
     for (j = 0; j < height; ++j)
     {
@@ -580,11 +627,11 @@ BH_Bitmap *BH_BitmapCopy(BH_Bitmap *bitmap,
         {
             BH_Color color;
             BH_BitmapColor(bitmap, i + x, j + y, &color);
-            BH_BitmapSetColor(result, i, j, &color);
+            BH_BitmapSetColor(resultBitmap, i, j, &color);
         }
     }
 
-    return result;
+    return resultBitmap;
 }
 
 
