@@ -163,7 +163,7 @@ void BH_ArgsHelp(BH_ArgsOption *options,
     BH_ArgsOption *option;
 
     if (padding == 0)
-    padding = 30;
+        padding = 30;
 
     /* Calculate option column width */
     for (option = options; option->key || option->name; option++)
