@@ -50,9 +50,11 @@ BH_UNIT_TEST(Condition)
     start = time(NULL);
     BH_VERIFY((condition = BH_ConditionNew()) != NULL);
     BH_VERIFY((mutex = BH_MutexNew()) != NULL);
+    BH_VERIFY(BH_MutexLock(mutex) == BH_OK);
     BH_VERIFY(BH_ConditionWaitFor(condition, mutex, 5000) == BH_TIMEOUT);
     BH_VERIFY(BH_ConditionSignal(condition) == BH_OK);
     BH_VERIFY(BH_ConditionBroadcast(condition) == BH_OK);
+    BH_VERIFY(BH_MutexUnlock(mutex) == BH_OK);
     BH_VERIFY(time(NULL) - start >= 5);
     BH_ConditionFree(condition);
     BH_MutexFree(mutex);
