@@ -28,7 +28,7 @@ BH_UNIT_TEST(Semaphore)
     BH_VERIFY((semaphore = BH_SemaphoreNew(1)) != NULL);
     BH_VERIFY(BH_SemaphoreWait(semaphore) == BH_OK);
     BH_VERIFY(BH_SemaphoreTryWait(semaphore) != BH_OK);
-    BH_VERIFY(BH_SemaphoreWaitFor(semaphore, 5000) != BH_OK);
+    BH_VERIFY(BH_SemaphoreWaitFor(semaphore, 5000) == BH_TIMEOUT);
     BH_VERIFY(BH_SemaphorePost(semaphore) == BH_OK);
     BH_VERIFY(BH_SemaphoreTryWait(semaphore) == BH_OK);
     BH_VERIFY(BH_SemaphorePost(semaphore) == BH_OK);
@@ -50,7 +50,7 @@ BH_UNIT_TEST(Condition)
     start = time(NULL);
     BH_VERIFY((condition = BH_ConditionNew()) != NULL);
     BH_VERIFY((mutex = BH_MutexNew()) != NULL);
-    BH_VERIFY(BH_ConditionWaitFor(condition, mutex, 5000) != BH_OK);
+    BH_VERIFY(BH_ConditionWaitFor(condition, mutex, 5000) == BH_TIMEOUT);
     BH_VERIFY(BH_ConditionSignal(condition) == BH_OK);
     BH_VERIFY(BH_ConditionBroadcast(condition) == BH_OK);
     BH_VERIFY(time(NULL) - start >= 5);

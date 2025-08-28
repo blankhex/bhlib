@@ -64,9 +64,11 @@ int BH_SemaphoreWaitFor(BH_Semaphore *semaphore,
     if (convertToTimespec(&ts, timeout))
         return BH_ERROR;
 
-    switch (sem_timedwait(&semaphore->handle, &ts))
+    if (!sem_timedwait(&semaphore->handle, &ts))
+        return BH_OK;
+
+    switch (errno)
     {
-        case 0: return BH_OK;
         case ETIMEDOUT: return BH_TIMEOUT;
         default: return BH_ERROR;
     }
