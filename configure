@@ -2,7 +2,7 @@
 # Configure script by blankhex
 
 # Global variables
-source_path=""
+source_path=$(dirname "$0")
 cc=$CC
 ar=$AR
 staticlib=libbh.a
