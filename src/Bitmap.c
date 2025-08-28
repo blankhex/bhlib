@@ -47,7 +47,7 @@ struct BH_Bitmap
 };
 
 
-const static struct FormatInfo formats[] =
+static const struct FormatInfo formats[] =
 {
     /* BH_BITMAP_INDEX1 */
     {TYPE_INDEX1, 7, {0x0001}, {7, 6, 5, 4, 3, 2, 1, 0}, 0},

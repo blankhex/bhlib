@@ -76,6 +76,7 @@ static int bytesSeek(BH_Bytes *bytes,
 
     switch (info->whence)
     {
+    default:
     case BH_IO_SEEK_SET:
         offset = MAX(info->offset, 0);
         offset = MIN(offset, (int64_t)bytes->size);

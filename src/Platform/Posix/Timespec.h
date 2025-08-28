@@ -9,7 +9,7 @@
 
 
 static int convertToTimespec(struct timespec *ts,
-                              uint32_t timeout)
+                             uint32_t timeout)
 {
 #if (_POSIX_TIMERS > 0) || defined(BH_USE_CLOCK_GETTIME)
     if (clock_gettime(CLOCK_REALTIME, ts))

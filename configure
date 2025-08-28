@@ -113,10 +113,6 @@ cflags="-fPIC -I${source_path}include -I."
 ldflags=""
 ldlibs="-lm"
 
-cflags="$cflags $extra_cflags"
-ldflags="$ldflags $extra_ldflags"
-ldlibs="$ldlibs $extra_ldlibs"
-
 # Make sure that build directories exist
 mkdir src src/Platform src/Math src/String 2> /dev/null
 
@@ -183,6 +179,11 @@ if [ "$enable_tests" = "yes" ]; then
         else tests="$file"; fi
     done
 fi
+
+# Add extra flags
+cflags="$cflags $extra_cflags"
+ldflags="$ldflags $extra_ldflags"
+ldlibs="$ldlibs $extra_ldlibs"
 
 # Makefile generation
 {
@@ -285,8 +286,8 @@ fi
 # Generate internal config.h
 {
     printf "#ifndef BH_SRC_CONFIG_H\n#define BH_SRC_CONFIG_H\n\n"
-    if [ "$use_clock_gettime" ]; then printf "#define BH_USE_CLOCK_GETTIME\n"; fi
-    if [ "$enable_lfs" ]; then printf "#define BH_ENABLE_LFS\n"; fi
+    if [ "$use_clock_gettime" = "yes" ]; then printf "#define BH_USE_CLOCK_GETTIME\n"; fi
+    if [ "$enable_lfs" = "yes" ]; then printf "#define BH_ENABLE_LFS\n"; fi
     printf "\n#endif /* BH_SRC_CONFIG_H */\n"
 } > Config.h
 
