@@ -45,6 +45,7 @@ for option do
         --ar=*) assign_option "$option"; ;;
         --extra-cflags=*) assign_option "$option" extra_cflags; ;;
         --extra-ldflags=*) assign_option "$option" extra_ldflags; ;;
+        --extra-ldlibs=*) assign_option "$option" extra_ldlibs; ;;
         --platform=*) assign_option "$option"; ;;
         --enable-dynamic|--enable-dynamic=*) assign_toggle "$option" enable_dynamic yes; ;;
         --enable-mt|--enable-mt=*) assign_toggle "$option" enable_mt yes; ;;
@@ -69,6 +70,7 @@ Options:
   --ar=AR                           Library archiver
   --extra-cflags=                   Extra compiler flags
   --extra-ldflags=                  Extra linker flags
+  --extra-ldlibs=                   Extra libraries
   --platform=[Posix|Win32|Dummy]    Specify target platform
   --enable-dynamic[=yes|no]         Make dynamic library
   --enable-mt[=yes|no]              Enable multithreading support
@@ -108,22 +110,12 @@ esac
 
 # Make build magic
 cflags="-fPIC -I${source_path}include -I."
-ldflags="-lm -shared"
+ldflags=""
+ldlibs="-lm"
+
 cflags="$cflags $extra_cflags"
 ldflags="$ldflags $extra_ldflags"
-
-echo "OS:                       $os"
-echo "Platform:                 $platform"
-echo "Source path:              $source_path"
-echo "CC:                       $cc"
-echo "AR:                       $ar"
-echo "CFLAGS:                   $cflags"
-echo "LDFLAGS:                  $ldflags"
-echo "Enable multithreading:    $enable_mt"
-echo "Enable long file support: $enable_lfs"
-echo "Enable tests:             $enable_tests"
-echo "Build dynamic library:    $enable_dynamic"
-echo "Use clock_gettime:        $use_clock_gettime"
+ldlibs="$ldlibs $extra_ldlibs"
 
 # Make sure that build directories exist
 mkdir src src/Platform src/Math src/String 2> /dev/null
@@ -151,6 +143,7 @@ if [ "$platform" = "Posix" ] && [ "$enable_mt" = "yes" ]; then
     sources="$sources:${source_path}src/Platform/Posix/Semaphore.c"
     sources="$sources:${source_path}src/Platform/Posix/Thread.c"
     sources="$sources:${source_path}src/Platform/Posix/Tss.c"
+    ldlibs="$ldlibs -pthread"
     mkdir src/Platform/Posix 2> /dev/null
 elif [ "$platform" = "Win32" ] && [ "$enable_mt" = "yes" ]; then
     sources="$sources:${source_path}src/Platform/Win32/Condition.c"
@@ -198,6 +191,7 @@ fi
     echo "AR=$ar"
     echo "CFLAGS=$cflags"
     echo "LDFLAGS=$ldflags"
+    echo "LDLIBS=$ldlibs"
     echo "STATICLIB=$staticlib"
 
     if [ "$enable_dynamic" = "yes" ]; then
@@ -222,7 +216,7 @@ fi
         printf "all: static dynamic\n\n"
         printf "dynamic: \$(DYNAMICLIB)\n\n"
         printf "\$(DYNAMICLIB): \$(OBJS)\n"
-        printf "\t\$(CC) \$(LDFLAGS) \$(OBJS) -o \$(DYNAMICLIB)\n\n"
+        printf "\t\$(CC) \$(LDFLAGS) -shared \$(OBJS) -o \$(DYNAMICLIB) \$(LDLIBS)\n\n"
     else
         printf "all: static\n\n"
     fi
@@ -240,7 +234,7 @@ fi
             object=${source%%.c}${exe}
             object=${object#${source_path}}
             printf "%s: %s \$(STATICLIB)\n" $object $source
-            printf "\t\$(CC) \$(CFLAGS) \$(LDFLAGS) -I${source_path}unit/include \$> %s -o %s\n\n" "${source_path}unit/src/Unit.c" "$object"
+            printf "\t\$(CC) \$(CFLAGS) -I${source_path}unit/include \$(LDFLAGS) %s %s \$(STATICLIB) -o %s \$(LDLIBS)\n\n" "$source" "${source_path}unit/src/Unit.c" "$object"
         done
     )
     printf "tests: "
@@ -263,7 +257,7 @@ fi
             object=${source%%.c}.o
             object=${object#${source_path}}
             printf "$object: $source\n"
-            printf "\t\$(CC) -c \$(CFLAGS) \$> -o \$@\n\n"
+            printf "\t\$(CC) -c \$(CFLAGS) %s -o %s\n\n" "$source" "$object"
         done
     )
     printf "\n\n"
@@ -295,3 +289,17 @@ fi
     if [ "$enable_lfs" ]; then printf "#define BH_ENABLE_LFS\n"; fi
     printf "\n#endif /* BH_SRC_CONFIG_H */\n"
 } > Config.h
+
+echo "OS:                       $os"
+echo "Platform:                 $platform"
+echo "Source path:              $source_path"
+echo "CC:                       $cc"
+echo "AR:                       $ar"
+echo "CFLAGS:                   $cflags"
+echo "LDFLAGS:                  $ldflags"
+echo "LDLIBS:                   $ldlibs"
+echo "Enable multithreading:    $enable_mt"
+echo "Enable long file support: $enable_lfs"
+echo "Enable tests:             $enable_tests"
+echo "Build dynamic library:    $enable_dynamic"
+echo "Use clock_gettime:        $use_clock_gettime"
