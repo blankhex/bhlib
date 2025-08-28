@@ -88,7 +88,7 @@ fi
 
 # Detect OS and platform, because it wasn't specified
 os="Unknown"
-if [ -z "$platform" ]; then 
+if [ -z "$platform" ]; then
     case $(uname) in
         Darwin) os="MacOS"; platform="Posix"; ;;
         Linux) os="Linux"; platform="Posix"; ;;
@@ -240,7 +240,7 @@ fi
             object=${source%%.c}${exe}
             object=${object#${source_path}}
             printf "%s: %s \$(STATICLIB)\n" $object $source
-            printf "\t\$(CC) \$(CFLAGS) -I${source_path}unit/include %s %s \$(STATICLIB) -o %s\n\n" "$source" "${source_path}unit/src/Unit.c" "$object"
+            printf "\t\$(CC) \$(CFLAGS) \$(LDFLAGS) -I${source_path}unit/include \$> %s -o %s\n\n" "${source_path}unit/src/Unit.c" "$object"
         done
     )
     printf "tests: "
@@ -263,7 +263,7 @@ fi
             object=${source%%.c}.o
             object=${object#${source_path}}
             printf "$object: $source\n"
-            printf "\t\$(CC) -c \$(CFLAGS) \$< -o \$@\n\n"
+            printf "\t\$(CC) -c \$(CFLAGS) \$> -o \$@\n\n"
         done
     )
     printf "\n\n"
