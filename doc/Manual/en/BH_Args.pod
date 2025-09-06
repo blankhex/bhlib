@@ -19,7 +19,7 @@ BH_Args - command line argument processing
      {0, NULL, 0, NULL}
  };
 
- static int OptionsCallback(int key,
+ static int optionsCallback(int key,
                             char *arg,
                             void *data)
  {

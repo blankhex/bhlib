@@ -68,7 +68,7 @@ static const Mpi powLookup[] =
 };
 
 
-static int MpiClz(MPI_TYPE value)
+static int mpiClz(MPI_TYPE value)
 {
     if (value & 0xFF000000ul)
         return clzLookup[(value >> 24) & 0xFF];
@@ -110,7 +110,7 @@ static const Mpi powLookup[] =
 };
 
 
-static int MpiClz(MPI_TYPE value)
+static int mpiClz(MPI_TYPE value)
 {
     if (value & 0xFF00)
         return clzLookup[(value >> 8) & 0xFF];
@@ -120,18 +120,18 @@ static int MpiClz(MPI_TYPE value)
 #endif
 
 
-static int MpiLog2(const Mpi *in)
+static int mpiLog2(const Mpi *in)
 {
     /* Preconditions */
     assert(in != NULL);
     assert(in->size != 0);
     assert(in->data[in->size - 1] != 0);
 
-    return (MPI_BITS - 1) - MpiClz(in->data[in->size - 1]) + MPI_BITS * (in->size - 1);
+    return (MPI_BITS - 1) - mpiClz(in->data[in->size - 1]) + MPI_BITS * (in->size - 1);
 }
 
 
-static void MpiTrim(Mpi *in)
+static void mpiTrim(Mpi *in)
 {
     /* Preconditions */
     assert(in != NULL);
@@ -141,7 +141,7 @@ static void MpiTrim(Mpi *in)
 }
 
 
-static int MpiCompare(const Mpi *a,
+static int mpiCompare(const Mpi *a,
                       const Mpi *b)
 {
     int i;
@@ -167,7 +167,7 @@ static int MpiCompare(const Mpi *a,
 }
 
 
-static void MpiAdd(const Mpi *a,
+static void mpiAdd(const Mpi *a,
                    const Mpi *b,
                    Mpi *out)
 {
@@ -200,7 +200,7 @@ static void MpiAdd(const Mpi *a,
 }
 
 
-static void MpiSub(const Mpi *a,
+static void mpiSub(const Mpi *a,
                    const Mpi *b,
                    Mpi *out)
 {
@@ -209,7 +209,7 @@ static void MpiSub(const Mpi *a,
 
     /* Preconditions */
     assert(a != NULL && b != NULL && out != NULL);
-    assert(MpiCompare(a, b) >= 0);
+    assert(mpiCompare(a, b) >= 0);
 
     /* Main subtraction loop */
     carry = 0;
@@ -227,11 +227,11 @@ static void MpiSub(const Mpi *a,
 
     /* Trim leading zeros */
     out->size = a->size;
-    MpiTrim(out);
+    mpiTrim(out);
 }
 
 
-static void MpiMul(const Mpi *a,
+static void mpiMul(const Mpi *a,
                    const Mpi *b,
                    Mpi *out)
 {
@@ -261,11 +261,11 @@ static void MpiMul(const Mpi *a,
 
     /* Trim leading zeros */
     out->size = a->size + b->size;
-    MpiTrim(out);
+    mpiTrim(out);
 }
 
 
-static void MpiMulDigit(const Mpi *a,
+static void mpiMulDigit(const Mpi *a,
                         MPI_TYPE b,
                         Mpi *out)
 {
@@ -288,11 +288,11 @@ static void MpiMulDigit(const Mpi *a,
 
     /* Trim leading zeros */
     out->size = a->size + 1;
-    MpiTrim(out);
+    mpiTrim(out);
 }
 
 
-static void MpiPow10(const Mpi *in,
+static void mpiPow10(const Mpi *in,
                      int exponent,
                      Mpi *out,
                      Mpi *tmp)
@@ -309,14 +309,14 @@ static void MpiPow10(const Mpi *in,
         if (!(exponent & 0x1))
             continue;
 
-        MpiMul(&tmp[current], &powLookup[i], &tmp[1 - current]);
+        mpiMul(&tmp[current], &powLookup[i], &tmp[1 - current]);
         current = 1 - current;
     }
     *out = tmp[current];
 }
 
 
-static void MpiLsh(const Mpi *in,
+static void mpiLsh(const Mpi *in,
                    int amount,
                    Mpi *out)
 {
@@ -356,13 +356,13 @@ static void MpiLsh(const Mpi *in,
     }
 
     /* Trim leading zeros and zero out lower blocks */
-    MpiTrim(out);
+    mpiTrim(out);
     for (i = blocks; i; i--)
         out->data[i - 1] = 0;
 }
 
 
-static void MpiRsh(const Mpi *in,
+static void mpiRsh(const Mpi *in,
                    int amount,
                    Mpi *out)
 {
@@ -404,11 +404,11 @@ static void MpiRsh(const Mpi *in,
 
     /* Trim leading zeros */
     out->size = in->size - blocks;
-    MpiTrim(out);
+    mpiTrim(out);
 }
 
 
-static MPI_TTYPE MpiGuess(const Mpi *a,
+static MPI_TTYPE mpiGuess(const Mpi *a,
                           const Mpi *b)
 {
     MPI_TTYPE tmp;
@@ -418,7 +418,7 @@ static MPI_TTYPE MpiGuess(const Mpi *a,
     assert(a->size > 0 && b->size > 0);
     assert((a->size == b->size) || ((a->size != b->size) && a->size > 1));
 
-    if (MpiCompare(a, b) < 0)
+    if (mpiCompare(a, b) < 0)
         return 0;
 
     tmp = a->data[a->size - 1];
@@ -429,7 +429,7 @@ static MPI_TTYPE MpiGuess(const Mpi *a,
 }
 
 
-static void MpiDiv(const Mpi *a,
+static void mpiDiv(const Mpi *a,
                    const Mpi *b,
                    Mpi *q,
                    Mpi *r,
@@ -443,7 +443,7 @@ static void MpiDiv(const Mpi *a,
     assert(b->size != 0);
 
     /* Handle case where a is less then b */
-    if (MpiCompare(a, b) < 0)
+    if (mpiCompare(a, b) < 0)
     {
         *r = *a;
         q->size = 0;
@@ -451,16 +451,16 @@ static void MpiDiv(const Mpi *a,
     }
 
     /* Normilize input to reduce tries */
-    shift = MpiClz(b->data[b->size - 1]);
-    MpiLsh(a, shift, &tmp[0]);
-    MpiLsh(b, shift, &tmp[1]);
+    shift = mpiClz(b->data[b->size - 1]);
+    mpiLsh(a, shift, &tmp[0]);
+    mpiLsh(b, shift, &tmp[1]);
 
     /* Prepare first step of the division */
     q->size = 0;
     r->size = 0;
-    while (MpiCompare(r, &tmp[1]) < 0)
+    while (mpiCompare(r, &tmp[1]) < 0)
     {
-        MpiLsh(r, MPI_BITS, r);
+        mpiLsh(r, MPI_BITS, r);
         r->data[0] = tmp[0].data[--tmp[0].size];
         r->size += !r->size;
     }
@@ -468,19 +468,19 @@ static void MpiDiv(const Mpi *a,
     while (1)
     {
         /* Make a guess and check */
-        digit = MpiGuess(r, &tmp[1]);
+        digit = mpiGuess(r, &tmp[1]);
         while (digit > MPI_MASK)
             digit--;
-        MpiMulDigit(&tmp[1], digit, &tmp[2]);
-        while (MpiCompare(r, &tmp[2]) < 0)
+        mpiMulDigit(&tmp[1], digit, &tmp[2]);
+        while (mpiCompare(r, &tmp[2]) < 0)
         {
             --digit;
-            MpiSub(&tmp[2], &tmp[1], &tmp[2]);
+            mpiSub(&tmp[2], &tmp[1], &tmp[2]);
         }
 
         /* Store digit in quotient */
-        MpiSub(r, &tmp[2], r);
-        MpiLsh(q, MPI_BITS, q);
+        mpiSub(r, &tmp[2], r);
+        mpiLsh(q, MPI_BITS, q);
         q->data[0] = digit;
         q->size += !q->size;
 
@@ -488,12 +488,12 @@ static void MpiDiv(const Mpi *a,
         if (!tmp[0].size)
             break;
 
-        MpiLsh(r, MPI_BITS, r);
+        mpiLsh(r, MPI_BITS, r);
         r->data[0] = tmp[0].data[--tmp[0].size];
         if (!r->size)
             r->size = 1;
     }
 
     /* Normilize remainder */
-    MpiRsh(r, shift, r);
+    mpiRsh(r, shift, r);
 }

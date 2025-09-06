@@ -27,7 +27,7 @@ typedef struct PakEntry
 } PakEntry;
 
 
-static int ParseHeader(BH_IO *io,
+static int parseHeader(BH_IO *io,
                        PakHeader *header)
 {
     char buffer[HEADER_SIZE];
@@ -47,7 +47,7 @@ static int ParseHeader(BH_IO *io,
 }
 
 
-static int ParseEntry(BH_IO *io,
+static int parseEntry(BH_IO *io,
                       PakEntry *entry)
 {
     char buffer[ENTRY_SIZE];
@@ -84,14 +84,14 @@ static BH_ArgsOption options[] = {
 };
 
 
-static void PrintHelp(void)
+static void printHelp(void)
 {
     printf("Usage: PakReader [options...] <file>\n");
     BH_ArgsHelp(options, 0);
 }
 
 
-static int OptionsCallback(int key,
+static int optionsCallback(int key,
                            char *arg,
                            void *data)
 {
@@ -101,7 +101,7 @@ static int OptionsCallback(int key,
     {
     case BH_ARGS_UNKNOWN: break;
     case BH_ARGS_ARGUMENT: if (!config->file) config->file = arg; break;
-    case 'h': PrintHelp(); exit(0);
+    case 'h': printHelp(); exit(0);
     case 'l': config->list = 1; break;
     case 'i': config->input = arg; break;
     case 'o': config->output = arg; break;
@@ -112,7 +112,7 @@ static int OptionsCallback(int key,
 
 
 /* Copy data between two IO */
-static int CopyData(BH_IO *from,
+static int copyData(BH_IO *from,
                     BH_IO *to,
                     size_t size)
 {
@@ -137,7 +137,7 @@ static int CopyData(BH_IO *from,
 
 
 /* Process pack (list files or extract file) */
-static int ProcessPack(Config *config,
+static int processPack(Config *config,
                        BH_IO *io)
 {
     PakHeader header;
@@ -146,7 +146,7 @@ static int ProcessPack(Config *config,
     size_t i;
 
     /* Read header and seek to begging of the file table */
-    if (ParseHeader(io, &header))
+    if (parseHeader(io, &header))
         return BH_ERROR;
 
     if (BH_IOSeek(io, header.offset, BH_IO_SEEK_SET))
@@ -155,7 +155,7 @@ static int ProcessPack(Config *config,
     /* Parse and output entries */
     for (i = header.size / 64; i; i--)
     {
-        if (ParseEntry(io, &entry))
+        if (parseEntry(io, &entry))
             return BH_ERROR;
 
         if (config->list)
@@ -167,7 +167,7 @@ static int ProcessPack(Config *config,
 
             output = BH_FileNew(config->output, BH_FILE_WRITE | BH_FILE_TRUNCATE, NULL);
             if (!output || BH_IOSeek(io, entry.offset, BH_IO_SEEK_SET) ||
-                CopyData(io, output, entry.size))
+                copyData(io, output, entry.size))
             {
                 BH_IOFree(output);
                 return BH_ERROR;
@@ -193,9 +193,9 @@ int main(int argc, char **argv)
 
     /* Parse arguments */
     memset(&config, 0, sizeof(config));
-    if (BH_ArgsParse(argc, argv, options, OptionsCallback, &config) || !config.file)
+    if (BH_ArgsParse(argc, argv, options, optionsCallback, &config) || !config.file)
     {
-        PrintHelp();
+        printHelp();
         return -1;
     }
 
@@ -203,7 +203,7 @@ int main(int argc, char **argv)
     if (!config.list && (!config.input || !config.output))
     {
         printf("Specify input and output files\n");
-        PrintHelp();
+        printHelp();
         return -1;
     }
 
@@ -215,7 +215,7 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    result = ProcessPack(&config, io);
+    result = processPack(&config, io);
     BH_IOFree(io);
 
     return result;

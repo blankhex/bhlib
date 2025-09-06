@@ -23,9 +23,9 @@ struct BH_Hashmap
 };
 
 
-static void BH_HashmapInit(BH_Hashmap *hashmap,
-                           BH_EqualCallback equal,
-                           BH_HashCallback hash)
+static void hashmapInit(BH_Hashmap *hashmap,
+                        BH_EqualCallback equal,
+                        BH_HashCallback hash)
 {
     memset(hashmap, 0, sizeof(*hashmap));
     hashmap->factor = 0.75f;
@@ -34,7 +34,7 @@ static void BH_HashmapInit(BH_Hashmap *hashmap,
 }
 
 
-static void BH_HashmapDestroy(BH_Hashmap *hashmap)
+static void hashmapDestroy(BH_Hashmap *hashmap)
 {
     if (hashmap->capacity)
     {
@@ -44,10 +44,10 @@ static void BH_HashmapDestroy(BH_Hashmap *hashmap)
 }
 
 
-static int BH_CalcCapacity(size_t size,
-                           float factor,
-                           size_t *capacity,
-                           size_t *threshold)
+static int calcCapacity(size_t size,
+                        float factor,
+                        size_t *capacity,
+                        size_t *threshold)
 {
     /* Check if we need any capacity at all */
     if (!size)
@@ -78,8 +78,8 @@ static int BH_CalcCapacity(size_t size,
 }
 
 
-static void BH_CopyHashmap(BH_Hashmap *dest,
-                           BH_Hashmap *src)
+static void copyHashmap(BH_Hashmap *dest,
+                        BH_Hashmap *src)
 {
     void *iter;
 
@@ -105,7 +105,7 @@ BH_Hashmap *BH_HashmapNew(BH_EqualCallback equal,
 
     result = malloc(sizeof(*result));
     if (result)
-        BH_HashmapInit(result, equal, hash);
+        hashmapInit(result, equal, hash);
 
     return result;
 }
@@ -113,7 +113,7 @@ BH_Hashmap *BH_HashmapNew(BH_EqualCallback equal,
 
 void BH_HashmapFree(BH_Hashmap *hashmap)
 {
-    BH_HashmapDestroy(hashmap);
+    hashmapDestroy(hashmap);
     free(hashmap);
 }
 
@@ -137,7 +137,7 @@ int BH_HashmapReserve(BH_Hashmap *hashmap,
         size = hashmap->size;
 
     /* Calculate new capacity */
-    if (BH_CalcCapacity(size, hashmap->factor, &capacity, &threshold))
+    if (calcCapacity(size, hashmap->factor, &capacity, &threshold))
         return BH_OOM;
 
     /* Prevent same size reallocation */
@@ -145,7 +145,7 @@ int BH_HashmapReserve(BH_Hashmap *hashmap,
         return BH_OK;
 
     /* Initialize new hashmap */
-    BH_HashmapInit(&other, hashmap->equal, hashmap->hash);
+    hashmapInit(&other, hashmap->equal, hashmap->hash);
     other.factor = hashmap->factor;
 
     if (capacity)
@@ -170,11 +170,11 @@ int BH_HashmapReserve(BH_Hashmap *hashmap,
         memset(other.psls, 0, sizeof(size_t) * other.capacity);
 
         /* Copy data from old hashmap to the new hashmap */
-        BH_CopyHashmap(&other, hashmap);
+        copyHashmap(&other, hashmap);
     }
 
     /* Swap hashmaps */
-    BH_HashmapDestroy(hashmap);
+    hashmapDestroy(hashmap);
     *hashmap = other;
     return BH_OK;
 }

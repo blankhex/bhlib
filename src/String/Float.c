@@ -55,21 +55,21 @@ static void dragonFixup(struct DragonState *state,
     /* Account for unqual gaps */
     if (f == (((uint64_t)1) << 52))
     {
-        MpiLsh(&state->mp, 1, &state->mp);
-        MpiLsh(&state->r, 1, &state->r);
-        MpiLsh(&state->s, 1, &state->s);
+        mpiLsh(&state->mp, 1, &state->mp);
+        mpiLsh(&state->r, 1, &state->r);
+        mpiLsh(&state->s, 1, &state->s);
     }
     state->k = 0;
 
     /* Burger/Dybvig approach */
     #ifndef BH_TWEAK_SHORT_BINT
-    state->k = MpiClz((f >> 32) & MPI_MASK);
-    state->k += (state->k == 32) ? (MpiClz(f & MPI_MASK)) : (0);
+    state->k = mpiClz((f >> 32) & MPI_MASK);
+    state->k += (state->k == 32) ? (mpiClz(f & MPI_MASK)) : (0);
     #else
-    state->k = MpiClz((f >> 48) & MPI_MASK);
-    state->k += (state->k == 16) ? (MpiClz((f >> 32) & MPI_MASK)) : (0);
-    state->k += (state->k == 32) ? (MpiClz((f >> 16) & MPI_MASK)) : (0);
-    state->k += (state->k == 48) ? (MpiClz(f & MPI_MASK)) : (0);
+    state->k = mpiClz((f >> 48) & MPI_MASK);
+    state->k += (state->k == 16) ? (mpiClz((f >> 32) & MPI_MASK)) : (0);
+    state->k += (state->k == 32) ? (mpiClz((f >> 16) & MPI_MASK)) : (0);
+    state->k += (state->k == 48) ? (mpiClz(f & MPI_MASK)) : (0);
     #endif
 
     /* 77 / 256 is an approximation for Log(2) or 0.30102999 */
@@ -82,18 +82,18 @@ static void dragonFixup(struct DragonState *state,
     /* Scale numbers accordinaly */
     if (state->k < 0)
     {
-        MpiPow10(&state->r, -state->k, &state->r, state->tmp);
-        MpiPow10(&state->mm, -state->k, &state->mm, state->tmp);
-        MpiPow10(&state->mp, -state->k, &state->mp, state->tmp);
+        mpiPow10(&state->r, -state->k, &state->r, state->tmp);
+        mpiPow10(&state->mm, -state->k, &state->mm, state->tmp);
+        mpiPow10(&state->mp, -state->k, &state->mp, state->tmp);
     }
     else if (state->k > 0)
-        MpiPow10(&state->s, state->k, &state->s, state->tmp);
+        mpiPow10(&state->s, state->k, &state->s, state->tmp);
 
     /* Scale S if we underestimated */
-    if (MpiCompare(&state->r, &state->s) >= 0)
+    if (mpiCompare(&state->r, &state->s) >= 0)
     {
         state->k += 1;
-        MpiMulDigit(&state->s, 10, &state->s);
+        mpiMulDigit(&state->s, 10, &state->s);
     }
 
     /* Find cutoff */
@@ -122,8 +122,8 @@ static void dragonRound(struct DragonState *state,
     /* Check if rounding up required */
     if (high == low)
     {
-        MpiLsh(&state->r, 1, &state->tmp[0]);
-        i = MpiCompare(&state->tmp[0], &state->s);
+        mpiLsh(&state->r, 1, &state->tmp[0]);
+        i = mpiCompare(&state->tmp[0], &state->s);
         if (i < 0) { low = 1; high = 0; }
         else if (i > 0) { low = 0; high = 1; }
         else low = (((s - '0') & 0x1) == 0);
@@ -185,12 +185,12 @@ static void dragon(double value,
     state.r.data[3] = (f >> 48) & MPI_MASK;
     state.r.size = 4;
     #endif
-    MpiTrim(&state.r);
+    mpiTrim(&state.r);
 
-    MpiLsh(&state.r, MAX(e - 53, 0), &state.r);
-    MpiLsh(&BInt1, MAX(0, -(e - 53)), &state.s);
-    MpiLsh(&BInt1, MAX(e - 53, 0), &state.mm);
-    MpiLsh(&BInt1, MAX(e - 53, 0), &state.mp);
+    mpiLsh(&state.r, MAX(e - 53, 0), &state.r);
+    mpiLsh(&BInt1, MAX(0, -(e - 53)), &state.s);
+    mpiLsh(&BInt1, MAX(e - 53, 0), &state.mm);
+    mpiLsh(&BInt1, MAX(e - 53, 0), &state.mp);
     dragonFixup(&state, precision, mode, f, e);
 
     /* Main digit generation loop */
@@ -198,8 +198,8 @@ static void dragon(double value,
     while(1)
     {
         state.k -= 1;
-        MpiMulDigit(&state.r, 10, &state.r);
-        MpiDiv(&state.r, &state.s, &state.tmp[0], &state.r, &state.tmp[1]);
+        mpiMulDigit(&state.r, 10, &state.r);
+        mpiDiv(&state.r, &state.s, &state.tmp[0], &state.r, &state.tmp[1]);
 
         s = '0';
         if (state.tmp[0].size)
@@ -208,13 +208,13 @@ static void dragon(double value,
 
         if (mode == NORMAL)
         {
-            MpiMulDigit(&state.mm, 10, &state.mm);
-            MpiMulDigit(&state.mp, 10, &state.mp);
-            MpiLsh(&state.r, 1, &state.tmp[1]);
-            MpiLsh(&state.s, 1, &state.tmp[2]);
-            MpiAdd(&state.tmp[1], &state.mp, &state.tmp[3]);
-            low = MpiCompare(&state.tmp[1], &state.mm) < 0;
-            high = MpiCompare(&state.tmp[3], &state.tmp[2]) > 0;
+            mpiMulDigit(&state.mm, 10, &state.mm);
+            mpiMulDigit(&state.mp, 10, &state.mp);
+            mpiLsh(&state.r, 1, &state.tmp[1]);
+            mpiLsh(&state.s, 1, &state.tmp[2]);
+            mpiAdd(&state.tmp[1], &state.mp, &state.tmp[3]);
+            low = mpiCompare(&state.tmp[1], &state.mm) < 0;
+            high = mpiCompare(&state.tmp[3], &state.tmp[2]) > 0;
             if (low || high || state.k == state.cutoff || buffer->size >= BUFSIZE)
                 break;
         }
@@ -668,43 +668,43 @@ double BH_StringToDouble(const char *string,
     for (i = 0; i < count; i++)
     {
         tmp[0].data[0] = buffer[i] - '0';
-        MpiMulDigit(&r, 10, &r);
-        MpiAdd(&r, &tmp[0], &r);
+        mpiMulDigit(&r, 10, &r);
+        mpiAdd(&r, &tmp[0], &r);
     }
 
     if (e >= 0)
-        MpiPow10(&r, e, &r, &tmp[0]);
+        mpiPow10(&r, e, &r, &tmp[0]);
     else
-        MpiPow10(&s, -e, &s, &tmp[0]);
+        mpiPow10(&s, -e, &s, &tmp[0]);
 
     /* Calculate required shift */
     shift = -52;
-    if (MpiCompare(&r, &s) >= 0)
+    if (mpiCompare(&r, &s) >= 0)
     {
-        MpiDiv(&r, &s, &tmp[0], &tmp[1], &tmp[2]);
-        shift += MpiLog2(&tmp[0]);
+        mpiDiv(&r, &s, &tmp[0], &tmp[1], &tmp[2]);
+        shift += mpiLog2(&tmp[0]);
     }
     else
     {
-        MpiDiv(&s, &r, &tmp[0], &tmp[1], &tmp[2]);
-        shift += -(MpiLog2(&tmp[0]) + 1);
+        mpiDiv(&s, &r, &tmp[0], &tmp[1], &tmp[2]);
+        shift += -(mpiLog2(&tmp[0]) + 1);
     }
 
     /* Shift */
     if (shift > 0)
-        MpiLsh(&s, shift, &s);
+        mpiLsh(&s, shift, &s);
     else if (shift < 0)
-        MpiLsh(&r, -shift, &r);
+        mpiLsh(&r, -shift, &r);
 
     /* Calculate final exponent and 53 bit integer */
-    MpiDiv(&r, &s, &tmp[0], &tmp[1], &tmp[2]);
-    MpiRsh(&s, 1, &s);
-    if (MpiCompare(&tmp[1], &s) > 0 || (MpiCompare(&tmp[1], &s) == 0 && (tmp[0].data[0] & 0x1)))
+    mpiDiv(&r, &s, &tmp[0], &tmp[1], &tmp[2]);
+    mpiRsh(&s, 1, &s);
+    if (mpiCompare(&tmp[1], &s) > 0 || (mpiCompare(&tmp[1], &s) == 0 && (tmp[0].data[0] & 0x1)))
     {
-        MpiAdd(&tmp[0], &BInt1, &tmp[0]);
-        if (MpiCompare(&tmp[0], &BInt53) >= 0)
+        mpiAdd(&tmp[0], &BInt1, &tmp[0]);
+        if (mpiCompare(&tmp[0], &BInt53) >= 0)
         {
-            MpiRsh(&tmp[0], 1, &tmp[0]);
+            mpiRsh(&tmp[0], 1, &tmp[0]);
             shift++;
         }
     }

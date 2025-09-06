@@ -222,7 +222,7 @@ typedef struct PakEntry
 } PakEntry;
 
 
-static int ParseHeader(BH_IO *io,
+static int parseHeader(BH_IO *io,
                        PakHeader *header)
 {
     char buffer[HEADER_SIZE];
@@ -242,7 +242,7 @@ static int ParseHeader(BH_IO *io,
 }
 
 
-static int ParseEntry(BH_IO *io,
+static int parseEntry(BH_IO *io,
                       PakEntry *entry)
 {
     char buffer[ENTRY_SIZE];
@@ -279,14 +279,14 @@ static BH_ArgsOption options[] = {
 };
 
 
-static void PrintHelp(void)
+static void printHelp(void)
 {
     printf("Usage: PakReader [options...] <file>\n");
     BH_ArgsHelp(options, 0);
 }
 
 
-static int OptionsCallback(int key,
+static int optionsCallback(int key,
                            char *arg,
                            void *data)
 {
@@ -307,7 +307,7 @@ static int OptionsCallback(int key,
 
 
 /* Copy data between two IO */
-static int CopyData(BH_IO *from,
+static int copyData(BH_IO *from,
                     BH_IO *to,
                     size_t size)
 {
@@ -332,7 +332,7 @@ static int CopyData(BH_IO *from,
 
 
 /* Process pack (list files or extract file) */
-static int ProcessPack(Config *config,
+static int processPack(Config *config,
                        BH_IO *io)
 {
     PakHeader header;

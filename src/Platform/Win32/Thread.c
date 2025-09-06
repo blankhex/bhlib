@@ -10,7 +10,7 @@ struct BH_ThreadContext
 };
 
 
-static unsigned __stdcall BH_ThreadRun(void *context)
+static unsigned __stdcall threadRun(void *context)
 {
 
     BH_ThreadCallback callback;
@@ -27,10 +27,10 @@ static unsigned __stdcall BH_ThreadRun(void *context)
 }
 
 
-static int BH_ThreadInit(BH_Thread *thread,
-                         size_t stack,
-                         BH_ThreadCallback callback,
-                         void *data)
+static int threadInit(BH_Thread *thread,
+                      size_t stack,
+                      BH_ThreadCallback callback,
+                      void *data)
 {
     struct BH_ThreadContext *context;
 
@@ -58,7 +58,7 @@ BH_Thread *BH_ThreadNew(size_t stack,
     BH_Thread *thread;
 
     thread = malloc(sizeof(BH_Thread));
-    if (thread && BH_ThreadInit(thread, stack, callback, data))
+    if (thread && threadInit(thread, stack, callback, data))
     {
         free(thread);
         return NULL;

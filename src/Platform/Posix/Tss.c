@@ -13,7 +13,7 @@ static int tssReady = 0;
 static pthread_key_t tssKey;
 
 
-static void BH_TssKeyCleanup(void *data)
+static void keyCleanup(void *data)
 {
     int i;
 
@@ -34,7 +34,7 @@ static void BH_TssKeyCleanup(void *data)
 }
 
 
-static void **BH_TssDataFetch(void)
+static void **dataFetch(void)
 {
     void **result;
 
@@ -42,7 +42,7 @@ static void **BH_TssDataFetch(void)
     BH_SpinlockLock(&tssLock);
     if (!tssReady)
     {
-        if (pthread_key_create(&tssKey, BH_TssKeyCleanup))
+        if (pthread_key_create(&tssKey, keyCleanup))
             abort();
         tssReady = 1;
     }
@@ -67,7 +67,7 @@ static void **BH_TssDataFetch(void)
 
 void BH_TssCleanup(void)
 {
-    BH_TssKeyCleanup(BH_TssDataFetch());
+    keyCleanup(dataFetch());
 }
 
 
@@ -92,12 +92,12 @@ int BH_TssCreate(BH_GenericCallback callback)
 
 void *BH_TssRead(int index)
 {
-    return BH_TssDataFetch()[index];
+    return dataFetch()[index];
 }
 
 
 void BH_TssWrite(int index,
                  void *value)
 {
-    BH_TssDataFetch()[index] = value;
+    dataFetch()[index] = value;
 }

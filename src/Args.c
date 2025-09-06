@@ -5,14 +5,14 @@
 #include <memory.h>
 
 
-static int BH_ArgsExtractArg(int argc,
-                             char **argv,
-                             BH_ArgsOption *option,
-                             BH_ArgsCallback callback,
-                             void *data,
-                             int *i,
-                             int isLong,
-                             char *next)
+static int extractArg(int argc,
+                      char **argv,
+                      BH_ArgsOption *option,
+                      BH_ArgsCallback callback,
+                      void *data,
+                      int *i,
+                      int isLong,
+                      char *next)
 {
     if (isLong && *next == '=')
         return callback(option->key, next + 1, data);
@@ -30,12 +30,12 @@ static int BH_ArgsExtractArg(int argc,
 }
 
 
-static int BH_ArgsParseShort(int argc,
-                             char **argv,
-                             BH_ArgsOption *options,
-                             BH_ArgsCallback callback,
-                             void *data,
-                             int *i)
+static int parseShort(int argc,
+                      char **argv,
+                      BH_ArgsOption *options,
+                      BH_ArgsCallback callback,
+                      void *data,
+                      int *i)
 {
     char *symbol;
     BH_ArgsOption *option;
@@ -49,7 +49,7 @@ static int BH_ArgsParseShort(int argc,
                 continue;
 
             if (option->flags & BH_ARGS_VALUE)
-                return BH_ArgsExtractArg(argc, argv, option, callback, data, i, 0, symbol + 1);
+                return extractArg(argc, argv, option, callback, data, i, 0, symbol + 1);
 
             if (callback(option->key, NULL, data))
                 return BH_ERROR;
@@ -69,12 +69,12 @@ static int BH_ArgsParseShort(int argc,
 }
 
 
-static int BH_ArgsParseLong(int argc,
-                            char **argv,
-                            BH_ArgsOption *options,
-                            BH_ArgsCallback callback,
-                            void *data,
-                            int *i)
+static int parseLong(int argc,
+                     char **argv,
+                     BH_ArgsOption *options,
+                     BH_ArgsCallback callback,
+                     void *data,
+                     int *i)
 {
     char *start, *end;
     BH_ArgsOption *option;
@@ -98,7 +98,7 @@ static int BH_ArgsParseLong(int argc,
             continue;
 
         if (option->flags & BH_ARGS_VALUE)
-            return BH_ArgsExtractArg(argc, argv, option, callback, data, i, 1, end);
+            return extractArg(argc, argv, option, callback, data, i, 1, end);
 
         return callback(option->key, NULL, data);
     }
@@ -128,13 +128,13 @@ int BH_ArgsParse(int argc,
             /* Parse ingore, short or long option */
             if (arg[1] == '-')
             {
-                if (arg[2] && BH_ArgsParseLong(argc, argv, options, callback, data, &i))
+                if (arg[2] && parseLong(argc, argv, options, callback, data, &i))
                     return BH_ERROR;
                 else if (!arg[2])
                     ignoreRest = 1;
 
             }
-            else if (arg[1] && BH_ArgsParseShort(argc, argv, options, callback, data, &i))
+            else if (arg[1] && parseShort(argc, argv, options, callback, data, &i))
                 return BH_ERROR;
 
             i++;

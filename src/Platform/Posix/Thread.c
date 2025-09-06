@@ -11,7 +11,7 @@ struct BH_ThreadContext
 };
 
 
-static void *BH_ThreadRun(void *context)
+static void *threadRun(void *context)
 {
     BH_ThreadCallback callback;
     void *data;
@@ -27,10 +27,10 @@ static void *BH_ThreadRun(void *context)
 }
 
 
-static int BH_ThreadInit(BH_Thread *thread,
-                         size_t stack,
-                         BH_ThreadCallback callback,
-                         void *data)
+static int threadInit(BH_Thread *thread,
+                      size_t stack,
+                      BH_ThreadCallback callback,
+                      void *data)
 {
     struct BH_ThreadContext *context;
     pthread_attr_t attributes;
@@ -46,13 +46,13 @@ static int BH_ThreadInit(BH_Thread *thread,
     pthread_attr_init(&attributes);
 
     if (!stack)
-        result = pthread_create(&thread->handle, NULL, BH_ThreadRun, context);
+        result = pthread_create(&thread->handle, NULL, threadRun, context);
     else
     {
         if (stack < PTHREAD_STACK_MIN)
             stack = PTHREAD_STACK_MIN;
         pthread_attr_setstacksize(&attributes, stack);
-        result = pthread_create(&thread->handle, &attributes, BH_ThreadRun, context);
+        result = pthread_create(&thread->handle, &attributes, threadRun, context);
     }
 
     pthread_attr_destroy(&attributes);
@@ -67,7 +67,7 @@ BH_Thread *BH_ThreadNew(size_t stack,
     BH_Thread *thread;
 
     thread = malloc(sizeof(BH_Thread));
-    if (thread && BH_ThreadInit(thread, stack, callback, data))
+    if (thread && threadInit(thread, stack, callback, data))
     {
         free(thread);
         return NULL;

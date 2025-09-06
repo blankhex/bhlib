@@ -13,7 +13,7 @@ typedef struct BH_Unit
 static BH_Unit *root = NULL;
 
 
-static void BH_UnitCleanup(void)
+static void cleanup(void)
 {
     BH_Unit *current;
 
@@ -75,6 +75,6 @@ int BH_UnitRun(void)
         current = current->next;
     }
 
-    BH_UnitCleanup();
+    cleanup();
     return result;
 }

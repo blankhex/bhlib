@@ -13,20 +13,20 @@ struct BH_Queue
 };
 
 
-static void BH_QueueInit(BH_Queue *queue)
+static void queueInit(BH_Queue *queue)
 {
     memset(queue, 0, sizeof(*queue));
 }
 
 
-static void BH_QueueDestroy(BH_Queue *queue)
+static void queueDestroy(BH_Queue *queue)
 {
     if (queue->capacity)
         free(queue->data);
 }
 
 
-static void BH_QueueCopy(BH_Queue *dest,
+static void queueCopy(BH_Queue *dest,
                          BH_Queue *src)
 {
     void *iter;
@@ -47,7 +47,7 @@ BH_Queue *BH_QueueNew(void)
 
     result = malloc(sizeof(*result));
     if (result)
-        BH_QueueInit(result);
+        queueInit(result);
 
     return result;
 }
@@ -55,7 +55,7 @@ BH_Queue *BH_QueueNew(void)
 
 void BH_QueueFree(BH_Queue *queue)
 {
-    BH_QueueDestroy(queue);
+    queueDestroy(queue);
     free(queue);
 }
 
@@ -86,7 +86,7 @@ int BH_QueueReserve(BH_Queue *queue,
         return BH_OK;
 
     /* Prepare new empty queue */
-    BH_QueueInit(&other);
+    queueInit(&other);
     if (size)
     {
         /* Allocate new capacity for the queue */
@@ -96,7 +96,7 @@ int BH_QueueReserve(BH_Queue *queue,
             return BH_OOM;
 
         /* Iterate over old queue and insert data into new queue */
-        BH_QueueCopy(&other, queue);
+        queueCopy(&other, queue);
     }
 
     /* If old queue had allocated data - free it */

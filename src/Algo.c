@@ -77,10 +77,10 @@ void *BH_Partition(void *pivot,
 
 
 #if 0
-static void BH_SortInsert(void *array,
-                          size_t size,
-                          size_t element,
-                          BH_EqualCallback equal)
+static void sortInsert(void *array,
+                       size_t size,
+                       size_t element,
+                       BH_EqualCallback equal)
 {
     size_t i, j;
 
@@ -105,10 +105,10 @@ static void BH_SortInsert(void *array,
 #endif
 
 
-static void BH_SortShell(void *array,
-                         size_t size,
-                         size_t element,
-                         BH_EqualCallback equal)
+static void sortShell(void *array,
+                      size_t size,
+                      size_t element,
+                      BH_EqualCallback equal)
 {
     static const size_t gaps[10] = {1750, 701, 301, 132, 57, 23, 10, 4, 1, 0};
     const size_t *gap;
@@ -136,10 +136,10 @@ static void BH_SortShell(void *array,
 }
 
 
-static void BH_SortHeap(void *array,
-                        size_t size,
-                        size_t element,
-                        BH_EqualCallback equal)
+static void sortHeap(void *array,
+                     size_t size,
+                     size_t element,
+                     BH_EqualCallback equal)
 {
     size_t i;
 
@@ -149,11 +149,11 @@ static void BH_SortHeap(void *array,
 }
 
 
-static void BH_SortIntroR(void *array,
-                          size_t size,
-                          size_t element,
-                          BH_EqualCallback equal,
-                          size_t depth)
+static void sortIntroR(void *array,
+                       size_t size,
+                       size_t element,
+                       BH_EqualCallback equal,
+                       size_t depth)
 {
     /* Introsort (with manual tail call optimization) */
     while (1)
@@ -163,13 +163,13 @@ static void BH_SortIntroR(void *array,
         if (size < 16)
         {
             /* There are less then 16 elements left - use Shell/Insert sort */
-            BH_SortShell(array, size, element, equal);
+            sortShell(array, size, element, equal);
             return;
         }
         else if (!depth)
         {
             /* Max depth reached - use heap sort */
-            BH_SortHeap(array, size, element, equal);
+            sortHeap(array, size, element, equal);
             return;
         }
 
@@ -202,7 +202,7 @@ static void BH_SortIntroR(void *array,
         middle = BH_Partition(pivot, array, size, element, equal);
 
         /* Recursive call into first half */
-        BH_SortIntroR(array, (middle - start) / element, element, equal, depth - 1);
+        sortIntroR(array, (middle - start) / element, element, equal, depth - 1);
 
         /* Setup array and size for the second half */
         array = middle;
@@ -229,7 +229,7 @@ void BH_Sort(void *array,
     }
 
     /* Call main sorting function */
-    BH_SortIntroR(array, size, element, equal, depth);
+    sortIntroR(array, size, element, equal, depth);
 }
 
 
