@@ -18,6 +18,9 @@ cflags=${CFLAGS}
 ldflags=${LDFLAGS}
 ldlibs=${LDLIBS}
 ldshared=${LDSHARED:--shared}
+cflagsmt=${CFLAGSMT:--pthread}
+ldflagsmt=${LDFLAGSMT:--pthread}
+ldlibsmt=${LDLIBSMT}
 platform=""
 display_help="no"
 
@@ -32,6 +35,9 @@ for option do
         --ldflags=*) ldflags="${option#--ldflags=}" ;;
         --ldlibs=*) ldlibs="${option#--ldlibs=}" ;;
         --ldshared=*) ldshared="${option#--ldshared=}" ;;
+        --cflagsmt=*) cflagsmt="${option#--cflagsmt=}" ;;
+        --ldflagsmt=*) ldflagsmt="${option#--ldflagsmt=}" ;;
+        --ldlibsmt=*) ldlibsmt="${option#--ldlibsmt=}" ;;
         --platform=*) platform="${option#--platform=}" ;;
         --prefix=*) prefix_path="${option#--prefix=}" ;;
         --enable-shared|--enable-shared=yes) enable_shared="yes" ;;
@@ -65,8 +71,11 @@ Options:
   --arflags=                        Archiver flags
   --cflags=                         Compiler flags
   --ldflags=                        Linker flags
-  --ldlibs=                         Extra libraries
+  --ldlibs=                         Linker libraries
   --ldshared=                       Linker flags for shared libraries
+  --cflagsmt=                       Compiler flags for multithreading
+  --ldflagsmt=                      Linker flags for multithreading
+  --ldlibsmt=                       Linker libraries for multithreading
   --platform=[Posix|Win32|Dummy]    Specify target platform
   --prefix=                         Install prefix
   --enable-shared[=yes|no]          Make shared library
@@ -124,8 +133,10 @@ if [ "$enable_pic" = "no" ] && [ "$enable_shared" = "yes" ]; then
     echo "configure: WARNING: expect build failure"
 fi
 
-if [ "$enable_mt" = "yes" ] && [ "$platform" = "Posix" ]; then
-    ldlibs="$ldlibs -pthread"
+if [ "$enable_mt" = "yes" ]; then
+    cflags="$cflags $cflagsmt"
+    ldflags="$ldflags $ldflagsmt"
+    ldlibs="$ldlibs $ldlibsmt"
 fi
 
 # Create directories
