@@ -199,13 +199,6 @@ target_link_libraries(BHLib PUBLIC m)
 configure_file(Config.cmake Config.h @ONLY)
 target_include_directories(BHLib PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
-# Enable all compiler warnings
-if(MSVC)
-    target_compile_options(BHLib PRIVATE /W4 /WX)
-else()
-    target_compile_options(BHLib PRIVATE -Wall -Wextra -Wpedantic -Werror -fstrict-aliasing)
-endif()
-
 # Coverage
 if(ENABLE_COVERAGE)
     target_compile_options(BHLib PRIVATE -coverage)

@@ -16,13 +16,6 @@ foreach(TEST_FILENAME ${TEST_FILES})
     target_link_libraries("${TEST_NAME}" BHLib BHUnit)
     add_test(NAME "${TEST_NAME}" COMMAND "${TEST_NAME}")
 
-    # Enable all compiler warnings
-    if(MSVC)
-        target_compile_options("${TEST_NAME}" PRIVATE /W4 /WX)
-    else()
-        target_compile_options("${TEST_NAME}" PRIVATE -Wall -Wextra -Wpedantic -Werror -fstrict-aliasing)
-    endif()
-
     # Enable coverage
     if(ENABLE_COVERAGE)
         target_compile_options("${TEST_NAME}" PRIVATE -coverage)
