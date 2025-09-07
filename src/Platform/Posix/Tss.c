@@ -56,7 +56,7 @@ static void **dataFetch(void)
         if (!result)
             abort();
 
-        memset(result, 0, sizeof(sizeof(void *) * BH_MAX_TSS));
+        memset(result, 0, sizeof(void *) * BH_MAX_TSS);
         if (pthread_setspecific(tssKey, result))
             abort();
     }

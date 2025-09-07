@@ -33,11 +33,13 @@ int BH_ConditionWaitFor(BH_Condition *condition,
                         BH_Mutex *mutex,
                         uint32_t timeout)
 {
-    switch (SleepConditionVariableCS(&condition->handle, &mutex->handle, timeout))
+    if (SleepConditionVariableCS(&condition->handle, &mutex->handle, timeout))
+        return BH_OK;
+
+    switch (GetLastError())
     {
-        case 0: return BH_ERROR;
         case ERROR_TIMEOUT: return BH_TIMEOUT;
-        default: return BH_OK;
+        default: return BH_ERROR;
     }
 }
 

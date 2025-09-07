@@ -21,7 +21,7 @@ static void __stdcall keyCleanup(void *data)
     /* Skip or remove TSS data */
     if (!data)
         return;
-    else if (FlsSetValue(tssKey, NULL))
+    else if (!FlsSetValue(tssKey, NULL))
         abort();
 
     /* Lock cleanup table and call cleanups */
@@ -58,8 +58,8 @@ static void **dataFetch(void)
         if (!result)
             abort();
 
-        memset(result, 0, sizeof(sizeof(void *) * BH_MAX_TSS));
-        if (FlsSetValue(tssKey, result))
+        memset(result, 0, sizeof(void *) * BH_MAX_TSS);
+        if (!FlsSetValue(tssKey, result))
             abort();
     }
 
