@@ -40,7 +40,7 @@ static int threadInit(BH_Thread *thread,
     context->callback = callback;
     context->data = data;
 
-    thread->handle = (HANDLE)_beginthreadex(NULL, stack, BH_ThreadRun, context, 0, NULL);
+    thread->handle = (HANDLE)_beginthreadex(NULL, stack, threadRun, context, 0, NULL);
     if (!thread->handle)
     {
         free(context);
