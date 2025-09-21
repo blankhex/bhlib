@@ -6,6 +6,7 @@
 #include <BH/Thread.h>
 #include <sys/time.h>
 #include <time.h>
+#include <unistd.h>
 
 
 static int convertToTimespec(struct timespec *ts,
@@ -13,16 +14,16 @@ static int convertToTimespec(struct timespec *ts,
 {
 #if (_POSIX_TIMERS > 0) || defined(BH_USE_CLOCK_GETTIME)
     if (clock_gettime(CLOCK_REALTIME, ts))
-        return BH_ERROR;
-#else
-    struct timeval tv;
-
-    if (gettimeofday(&tv, NULL))
-        return BH_ERROR;
-
-    ts->tv_sec = tv.tv_sec;
-    ts->tv_nsec = tv.tv_usec * 1000;
 #endif
+    {
+        struct timeval tv;
+
+        if (gettimeofday(&tv, NULL))
+            return BH_ERROR;
+
+        ts->tv_sec = tv.tv_sec;
+        ts->tv_nsec = tv.tv_usec * 1000;
+    }
 
     /* Calculate absoulute time for timed wait */
     ts->tv_sec += timeout / 1000;

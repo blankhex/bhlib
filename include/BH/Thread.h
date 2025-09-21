@@ -27,6 +27,9 @@ int BH_ThreadJoin(BH_Thread *thread);
 int BH_ThreadDetach(BH_Thread *thread);
 
 
+void BH_ThreadSleep(uint32_t timeout);
+
+
 BH_Mutex *BH_MutexNew(void);
 
 

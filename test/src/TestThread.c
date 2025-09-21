@@ -3,6 +3,18 @@
 #include <time.h>
 
 
+BH_UNIT_TEST(Sleep)
+{
+    time_t start;
+
+    start = time(NULL);
+    BH_ThreadSleep(5000);
+    BH_VERIFY(time(NULL) - start >= 5);
+
+    return 0;
+}
+
+
 BH_UNIT_TEST(Mutex)
 {
     BH_Mutex *mutex;
@@ -102,6 +114,7 @@ int main(int argc, char **argv)
     (void)argc;
     (void)argv;
 
+    BH_UNIT_ADD(Sleep);
     BH_UNIT_ADD(Mutex);
     BH_UNIT_ADD(Semaphore);
     BH_UNIT_ADD(Condition);

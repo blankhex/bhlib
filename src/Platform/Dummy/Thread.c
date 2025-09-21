@@ -27,3 +27,9 @@ int BH_ThreadDetach(BH_Thread *thread)
 
     return BH_NOIMPL;
 }
+
+
+void BH_ThreadSleep(uint32_t timeout)
+{
+    BH_UNUSED(timeout);
+}

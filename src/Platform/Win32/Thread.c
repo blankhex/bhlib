@@ -87,3 +87,9 @@ int BH_ThreadDetach(BH_Thread *thread)
 
     return BH_OK;
 }
+
+
+void BH_ThreadSleep(uint32_t timeout)
+{
+    Sleep(timeout);
+}

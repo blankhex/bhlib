@@ -58,6 +58,15 @@ Upon completion of the thread, the resources of the I<thread> are freed.
 Returns 0 on success, otherwise an error code.
 
 
+=head2 BH_ThreadSleep
+
+ void BH_ThreadSleep(uint32_t timeout)
+
+Makes thread sleep for the specified amount of time.
+
+The I<timeout> parameter specifies the waiting time in milliseconds.
+
+
 =head2 BH_MutexNew
 
  BH_Mutex *BH_MutexNew(void);

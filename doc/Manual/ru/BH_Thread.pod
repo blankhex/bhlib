@@ -57,6 +57,15 @@ I<callback> и данными I<data>.
 В случае успеха возвращает 0, иначе код ошибки.
 
 
+=head2 BH_ThreadSleep
+
+ void BH_ThreadSleep(uint32_t timeout)
+
+Останавливает выполнения потока на указнный промежуток времени.
+
+Параметр I<timeout> задаёт время ожидания в миллисекундах.
+
+
 =head2 BH_MutexNew
 
  BH_Mutex *BH_MutexNew(void);

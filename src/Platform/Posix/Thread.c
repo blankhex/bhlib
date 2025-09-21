@@ -2,6 +2,7 @@
 
 #include <limits.h>
 #include <stdlib.h>
+#include <errno.h>
 
 
 struct BH_ThreadContext
@@ -94,4 +95,22 @@ int BH_ThreadDetach(BH_Thread *thread)
 
     free(thread);
     return BH_OK;
+}
+
+
+void BH_ThreadSleep(uint32_t timeout)
+{
+    struct timespec ts;
+    int result;
+
+    /* We don't care about nanoseconds */
+    ts.tv_sec = timeout / 1000;
+    ts.tv_nsec = (timeout % 1000) * 1000000;
+
+    do
+    {
+        result = nanosleep(&ts, &ts);
+        if (errno != EINTR)
+            break;
+    } while (result);
 }
