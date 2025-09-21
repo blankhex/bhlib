@@ -102,14 +102,17 @@ file(GLOB BH_HEADER
 
 set(BH_SOURCE_DUMMY
     src/Platform/Dummy/File.c
+    src/Platform/Dummy/Timer.c
 )
 
 set(BH_SOURCE_WIN32
     src/Platform/Win32/File.c
+    src/Platform/Win32/Timer.c
 )
 
 set(BH_SOURCE_POSIX
     src/Platform/Posix/File.c
+    src/Platform/Posix/Timer.c
 )
 
 set(BH_SOURCE_WIN32_MT

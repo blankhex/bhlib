@@ -1,0 +1,82 @@
+=encoding UTF-8
+
+
+=head1 NAME
+
+BH_Timer - timer utilities
+
+
+=head1 SYNTAX
+
+ #include <BH/Timer.h>
+
+ cc prog.c -o prog -lbh
+
+
+=head1 DESCRIPTION
+
+This module provides a simple high-resolution timer interface for measuring
+elapsed time. The timer uses a monotonic clock source when available, making it
+suitable for accurate time measurements, such as profiling or timeouts. It
+supports millisecond and nanosecond precision and can be started, restarted,
+and queried for elapsed time.
+
+
+
+=head1 API CALLS
+
+
+=head2 BH_TimerNew
+
+ BH_Timer *BH_TimerNew(void);
+
+Creates and initializes a new timer object.
+
+Returns a pointer to a newly allocated BH_Timer on success, or NULL on failure.
+
+
+=head2 BH_TimerFree
+
+ void BH_TimerFree(BH_Timer *timer);
+
+Destroys the timer.
+
+=head2 BH_TimerIsMonotonic
+
+ int BH_TimerIsMonotonic(BH_Timer *timer);
+
+Checks whether the timer uses a monotonic clock source.
+
+
+=head2 BH_TimerStart
+
+ void BH_TimerStart(BH_Timer *timer);
+
+Starts or resets the timer to begin counting from the current time.
+
+
+=head2 BH_TimerRestart
+
+ int64_t BH_TimerRestart(BH_Timer *timer);
+
+Restarts the timer and returns the number of milliseconds that had elapsed since
+the start of the timer.
+
+
+=head2 BH_TimerMilliseconds
+
+ int64_t BH_TimerMilliseconds(BH_Timer *timer);
+
+Returns the number of milliseconds that had elapsed since the start of the
+timer.
+
+
+=head2 BH_TimerNanoseconds
+
+ int64_t BH_TimerNanoseconds(BH_Timer *timer);
+
+Returns the number of nanoseconds that had elapsed since the start of the timer.
+
+=head1 SEE ALSO
+
+L<BH>

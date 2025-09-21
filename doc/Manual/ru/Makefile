@@ -20,6 +20,7 @@ HTMLS = BH_Algo.html \
 	BH_Ray3f.html \
 	BH_String.html \
 	BH_Thread.html \
+	BH_Timer.html \
 	BH_Unicode.html \
 	BH_Util.html \
 	BH_Vec2f.html \
@@ -48,6 +49,7 @@ MANS = BH_Algo.3 \
 	BH_Ray3f.3 \
 	BH_String.3 \
 	BH_Thread.3 \
+	BH_Timer.3 \
 	BH_Unicode.3 \
 	BH_Util.3 \
 	BH_Vec2f.3 \

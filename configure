@@ -164,9 +164,12 @@ done
 add_source "${source_path}src/Platform/Spinlock.c"
 
 case "$platform" in
-    Posix) add_source "${source_path}src/Platform/Posix/File.c" ;;
-    Win32) add_source "${source_path}src/Platform/Win32/File.c" ;;
-    *) add_source "${source_path}src/Platform/Dummy/File.c" ;;
+    Posix) add_source "${source_path}src/Platform/Posix/File.c" ;
+           add_source "${source_path}src/Platform/Posix/Timer.c" ;;
+    Win32) add_source "${source_path}src/Platform/Win32/File.c" ;
+           add_source "${source_path}src/Platform/Win32/Timer.c" ;;
+    *) add_source "${source_path}src/Platform/Dummy/File.c" ;
+       add_source "${source_path}src/Platform/Dummy/Timer.c" ;;
 esac
 
 if [ "$enable_mt" = "yes" ]; then
