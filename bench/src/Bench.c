@@ -4,6 +4,9 @@
 #include <stdio.h>
 
 
+#define BATCH_ITERS     1024
+
+
 struct BH_Bench
 {
     struct BH_Bench *next;
@@ -63,25 +66,29 @@ void BH_BenchAdd(const char *name,
 
 int BH_BenchIter(BH_Bench *state)
 {
-    if (state->started)
-    {
-        int64_t millis;
+    int64_t millis;
 
-        state->iterations++;
-        millis = BH_TimerMilliseconds(timer);
-
-        if (millis > 1000 && state->iterations > 10)
-        {
-            printf("%s\t%f ips\n", state->name, state->iterations / (millis / 1000.0f));
-            return 0;
-        }
-    }
-    else
+    if (!state->started)
     {
         state->started = 1;
+        state->iterations = 0;
         BH_TimerRestart(timer);
+        return 1;
     }
 
+    state->iterations++;
+    if (state->iterations & (BATCH_ITERS - 1))
+        return 1;
+
+    millis = BH_TimerMilliseconds(timer);
+    if (millis > 1000 || state->iterations > 1000000000)
+    {
+        float ips, ns;
+        ips = state->iterations / (millis / 1000.0f);
+        ns = (millis * 1000000.0) / state->iterations;
+        printf("%s\t%.2f ips (%.2f ns)\n", state->name, ips, ns);
+        return 0;
+    }
     return 1;
 }
 
