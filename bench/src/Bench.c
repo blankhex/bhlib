@@ -86,7 +86,7 @@ int BH_BenchIter(BH_Bench *state)
         float ips, ns;
         ips = state->iterations / (millis / 1000.0f);
         ns = (millis * 1000000.0) / state->iterations;
-        printf("%s\t%.2f ips (%.2f ns)\n", state->name, ips, ns);
+        printf("%-12s %.2f ips (%.2f ns)\n", state->name, ips, ns);
         return 0;
     }
     return 1;

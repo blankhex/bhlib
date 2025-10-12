@@ -13,6 +13,7 @@ enable_lfs="no"
 enable_tests="yes"
 enable_benchmarks="no"
 enable_pic="yes"
+enable_lto="no"
 use_clock_gettime="no"
 use_short_limbs="no"
 arflags=${ARFLAGS:-cr}
@@ -57,8 +58,10 @@ for option do
         --use-short-limbs|--use-short-limbs=yes) use_short_limbs="yes" ;;
         --use-short-limbs=no) use_short_limbs="no" ;;
         --source=*) source_path="${option#--source=}" ;;
-        --enable-pic|--with-pic=yes) enable_pic="yes" ;;
+        --enable-pic|--enable-pic=yes) enable_pic="yes" ;;
         --enable-pic=no) enable_pic="no" ;;
+        --enable-lto|--enable-lto=yes) enable_lto="yes" ;;
+        --enable-lto=no) enable_lto="no" ;;
         --help|-h) display_help="yes" ;;
         *) echo "configure: WARNING unrecognized option $option" ;;
     esac
@@ -86,6 +89,7 @@ Options:
   --prefix=                         Install prefix
   --enable-shared[=yes|no]          Make shared library
   --enable-pic[=yes|no]             Enable position independent code (PIC)
+  --enable-lto[=yes|no]             Enable link time optimizations
   --enable-mt[=yes|no]              Enable multithreading support
   --enable-lfs[=yes|no]             Enable large file support
   --enable-tests[=yes|no]           Enable unit tests
@@ -134,6 +138,11 @@ ldlibs="-lm $ldlibs"
 
 if [ "$enable_pic" = "yes" ]; then
     cflags="$cflags -fPIC"
+fi
+
+if [ "$enable_lto" = "yes" ]; then
+    cflags="$cflags -flto"
+    ldflags="$ldflags -flto"
 fi
 
 if [ "$enable_pic" = "no" ] && [ "$enable_shared" = "yes" ]; then
@@ -435,6 +444,7 @@ echo "Enable long file support: $enable_lfs"
 echo "Enable tests:             $enable_tests"
 echo "Enable benchmarks:        $enable_benchmarks"
 echo "Enable PIC:               $enable_pic"
+echo "Enable LTO:               $enable_lto"
 echo "Build shared library:     $enable_shared"
 echo "Use clock_gettime:        $use_clock_gettime"
 echo "Use short limbs:          $use_short_limbs"
