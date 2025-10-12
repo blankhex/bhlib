@@ -47,13 +47,15 @@ include(CheckIncludeFile)
 include(CheckSymbolExists)
 
 # Unit testing and coverage configuration
-set(ENABLE_TESTING ON CACHE BOOL "Enable unit-testing")
+set(ENABLE_TESTS ON CACHE BOOL "Enable unit-testing")
+set(ENABLE_BENCHMARKS OFF CACHE BOOL "Enable benchmarks")
 set(ENABLE_COVERAGE OFF CACHE BOOL "Enable coverage")
 set(ENABLE_EXAMPLES ON CACHE BOOL "Enable building examples")
 set(ENABLE_LTO ON CACHE BOOL "Enable LTO support")
 set(ENABLE_MT ON CACHE BOOL "Enable multithreading support")
 set(USE_CLOCK_GETTIME OFF CACHE BOOL "Force use clock gettime")
 set(ENABLE_LFS OFF CACHE BOOL "Enable long file support")
+set(USE_SHORT_LIMBS OFF CACHE BOOL "Use shorter limbs in big integers")
 
 # Enable IPO/LTO
 if(ENABLE_LTO)
@@ -73,7 +75,7 @@ if(ENABLE_MT)
 endif()
 
 # Enable testing
-if(ENABLE_TESTING)
+if(ENABLE_TESTS)
     include(CTest)
     enable_testing()
 endif()
@@ -85,6 +87,10 @@ endif()
 
 if(USE_CLOCK_GETTIME)
     set(BH_USE_CLOCK_GETTIME TRUE)
+endif()
+
+if(USE_SHORT_LIMBS)
+    set(BH_USE_SHORT_LIMBS)
 endif()
 
 
@@ -209,11 +215,15 @@ if(ENABLE_COVERAGE)
 endif()
 
 # Tests
-if(ENABLE_TESTING)
-    add_subdirectory(unit)
+if(ENABLE_TESTS)
     add_subdirectory(test)
 endif()
 
 if(ENABLE_EXAMPLES)
     add_subdirectory(doc/Examples)
+endif()
+
+# Benchmarks
+if(ENABLE_BENCHMARKS)
+    add_subdirectory(bench)
 endif()

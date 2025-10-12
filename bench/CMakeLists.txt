@@ -7,17 +7,18 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
 # Library code
-set(BHUNIT_SOURCE
-    src/Unit.c
+set(BHBENCH_SOURCE
+    src/Bench.c
 )
 
-set(BHUNIT_HEADER
-    include/BH/Unit.h
+set(BHBENCH_HEADER
+    include/BH/Bench.h
 )
 
 # Library
-add_library(BHUnit STATIC ${BHUNIT_SOURCE} ${BHUNIT_HEADER})
-target_include_directories(BHUnit PUBLIC include)
+add_library(BHBench STATIC ${BHBENCH_SOURCE} ${BHBENCH_HEADER})
+target_include_directories(BHBench PUBLIC include)
+target_link_libraries(BHBench BHLib)
 
 # Enable testing
 include(CTest)
@@ -30,7 +31,7 @@ foreach(TEST_FILENAME ${TEST_FILES})
     # Add test
     get_filename_component(TEST_NAME ${TEST_FILENAME} NAME_WE)
     add_executable("${TEST_NAME}" ${TEST_FILENAME})
-    target_link_libraries("${TEST_NAME}" BHLib BHUnit)
+    target_link_libraries("${TEST_NAME}" BHLib BHBench)
     add_test(NAME "${TEST_NAME}" COMMAND "${TEST_NAME}")
 
     # Enable coverage

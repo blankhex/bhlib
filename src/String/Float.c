@@ -62,7 +62,7 @@ static void dragonFixup(struct DragonState *state,
     state->k = 0;
 
     /* Burger/Dybvig approach */
-    #ifndef BH_TWEAK_SHORT_BINT
+    #ifndef BH_USE_SHORT_LIMBS
     state->k = mpiClz((f >> 32) & MPI_MASK);
     state->k += (state->k == 32) ? (mpiClz(f & MPI_MASK)) : (0);
     #else
@@ -174,7 +174,7 @@ static void dragon(double value,
 
     /* Prepare dragon */
     f = frexp(value, &e) * ((uint64_t)1 << 53);
-    #ifndef BH_TWEAK_SHORT_BINT
+    #ifndef BH_USE_SHORT_LIMBS
     state.r.data[0] = f & MPI_MASK;
     state.r.data[1] = (f >> 32) & MPI_MASK;
     state.r.size = 2;
@@ -710,7 +710,7 @@ double BH_StringToDouble(const char *string,
     }
 
     /* Create double from integer and exponent */
-    #ifndef BH_TWEAK_SHORT_BINT
+    #ifndef BH_USE_SHORT_LIMBS
     f = (tmp[0].data[1] & 0x001FFFFFul);
     f = (f << 32) | tmp[0].data[0];
     #else

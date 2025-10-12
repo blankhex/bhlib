@@ -11,8 +11,10 @@ enable_shared="no"
 enable_mt="yes"
 enable_lfs="no"
 enable_tests="yes"
+enable_benchmarks="no"
 enable_pic="yes"
 use_clock_gettime="no"
+use_short_limbs="no"
 arflags=${ARFLAGS:-cr}
 cflags=${CFLAGS}
 ldflags=${LDFLAGS}
@@ -48,8 +50,12 @@ for option do
         --enable-lfs=no) enable_lfs="no" ;;
         --enable-tests|--enable-tests=yes) enable_tests="yes" ;;
         --enable-tests=no) enable_tests="no" ;;
+        --enable-benchmarks|--enable-benchmarks=yes) enable_benchmarks="yes" ;;
+        --enable-benchmarks=no) enable_benchmarks="no" ;;
         --use-clock_gettime|--use-clock_gettime=yes) use_clock_gettime="yes" ;;
         --use-clock_gettime=no) use_clock_gettime="no" ;;
+        --use-short-limbs|--use-short-limbs=yes) use_short_limbs="yes" ;;
+        --use-short-limbs=no) use_short_limbs="no" ;;
         --source=*) source_path="${option#--source=}" ;;
         --enable-pic|--with-pic=yes) enable_pic="yes" ;;
         --enable-pic=no) enable_pic="no" ;;
@@ -83,7 +89,9 @@ Options:
   --enable-mt[=yes|no]              Enable multithreading support
   --enable-lfs[=yes|no]             Enable large file support
   --enable-tests[=yes|no]           Enable unit tests
+  --enable-benchmarks[=yes|no]      Enable benchmarks
   --use-clock_gettime[=yes|no]      Use of clock_gettime regardless of the support
+  --use-short-limbs[=yes|no]        Use shorter limbs in big integers
 EOF
     exit 1
 fi
@@ -143,7 +151,10 @@ fi
 mkdir src src/Platform src/Math src/String 2>/dev/null
 mkdir src/Platform/Posix src/Platform/Win32 src/Platform/Dummy 2>/dev/null
 if [ "$enable_tests" = "yes" ]; then
-    mkdir test test/src unit unit/src 2>/dev/null
+    mkdir test test/src test/tests 2>/dev/null
+fi
+if [ "$enable_benchmarks" = "yes" ]; then
+    mkdir bench bench/src bench/tests 2>/dev/null
 fi
 
 library=""
@@ -202,11 +213,24 @@ unit=""
 add_test() { tests="${tests}${tests:+:}$1"; }
 
 if [ "$enable_tests" = "yes" ]; then
-    unit="${source_path}unit/src/Unit.c"
-    for file in "${source_path}"test/src/*.c; do
+    unit="${source_path}test/src/Unit.c"
+    for file in "${source_path}"test/tests/*.c; do
         add_test "$file"
     done
 fi
+
+# Benchamarks
+btests=""
+bench=""
+add_bench() { btests="${btests}${btests:+:}$1"; }
+
+if [ "$enable_benchmarks" = "yes" ]; then
+    bench="${source_path}bench/src/Bench.c"
+    for file in "${source_path}"bench/tests/*.c; do
+        add_bench "$file"
+    done
+fi
+
 
 # Generate Makefile
 {
@@ -259,7 +283,7 @@ fi
         (
             unit_obj="${unit#$source_path}"
             printf "\n%s: %s\n" "${unit_obj%.c}.o" "$unit"
-            printf "\t\$(CC) \$(CFLAGS) -I${source_path}unit/include -c -o \$@ %s\n" "$unit"
+            printf "\t\$(CC) \$(CFLAGS) -I${source_path}test/include -c -o \$@ %s\n" "$unit"
 
             IFS=":";
             for item in $tests; do
@@ -268,7 +292,7 @@ fi
                 printf "\t\$(LD) \$(LDFLAGS) -o \$@ %s %s \$(STATICLIB) \$(LDLIBS)\n" "${object%.c}.o" "${unit_obj%.c}.o"
 
                 printf "\n%s: %s\n" "${object%.c}.o" "$item"
-                printf "\t\$(CC) \$(CFLAGS) -I${source_path}unit/include -c -o \$@ %s\n" "$item"
+                printf "\t\$(CC) \$(CFLAGS) -I${source_path}test/include -c -o \$@ %s\n" "$item"
             done
 
             printf "\ntest: "
@@ -280,6 +304,32 @@ fi
             for item in $tests; do
                 object="${item#$source_path}"
                 printf "\t./%s\n" "${object%.c}${exe_suffix}"
+            done
+            echo
+        )
+    fi
+
+    # Benchmarks
+    if [ "$enable_benchmarks" = "yes" ]; then
+        (
+            bench_obj="${bench#$source_path}"
+            printf "\n%s: %s\n" "${bench_obj%.c}.o" "$bench"
+            printf "\t\$(CC) \$(CFLAGS) -I${source_path}bench/include -c -o \$@ %s\n" "$bench"
+
+            IFS=":";
+            for item in $btests; do
+                object="${item#$source_path}"
+                printf "\n%s: %s %s \$(STATICLIB)\n" "${object%.c}${exe_suffix}" "${object%.c}.o" "${bench_obj%.c}.o"
+                printf "\t\$(LD) \$(LDFLAGS) -o \$@ %s %s \$(STATICLIB) \$(LDLIBS)\n" "${object%.c}.o" "${bench_obj%.c}.o"
+
+                printf "\n%s: %s\n" "${object%.c}.o" "$item"
+                printf "\t\$(CC) \$(CFLAGS) -I${source_path}bench/include -c -o \$@ %s\n" "$item"
+            done
+
+            printf "\nbenchmarks: "
+            for item in $btests; do
+                object="${item#$source_path}"
+                printf "%s " "${object%.c}${exe_suffix}"
             done
             echo
         )
@@ -302,6 +352,16 @@ fi
             unit_obj="${unit#$source_path}"
             printf "\t-rm -f %s\n" "${unit_obj%.c}.o"
             for item in $tests; do
+                item="${item#$source_path}"
+                printf "\t-rm -f %s\n" "${item%.c}.o"
+                printf "\t-rm -f %s\n" "${item%.c}${exe_suffix}"
+            done
+        fi
+
+        if [ "$enable_benchmarks" = "yes" ]; then
+            bench_obj="${bench#$source_path}"
+            printf "\t-rm -f %s\n" "${bench_obj%.c}.o"
+            for item in $btests; do
                 item="${item#$source_path}"
                 printf "\t-rm -f %s\n" "${item%.c}.o"
                 printf "\t-rm -f %s\n" "${item%.c}${exe_suffix}"
@@ -347,6 +407,9 @@ fi
     if [ "$enable_lfs" = "yes" ]; then
         printf "#define BH_ENABLE_LFS\n";
     fi
+    if [ "$use_short_limbs" = "yes" ]; then
+        printf "#define BH_USE_SHORT_LIMBS\n";
+    fi
     printf "\n#endif /* BH_SRC_CONFIG_H */\n"
 } > Config.h
 
@@ -370,6 +433,8 @@ echo " --- Enabled options --- "
 echo "Enable multithreading:    $enable_mt"
 echo "Enable long file support: $enable_lfs"
 echo "Enable tests:             $enable_tests"
+echo "Enable benchmarks:        $enable_benchmarks"
 echo "Enable PIC:               $enable_pic"
 echo "Build shared library:     $enable_shared"
 echo "Use clock_gettime:        $use_clock_gettime"
+echo "Use short limbs:          $use_short_limbs"

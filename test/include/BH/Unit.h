@@ -39,26 +39,15 @@ typedef int (*BH_UnitCallback)(void);
     static int unit##name(void)
 
 
-#define     BH_UNIT_ADD(name) \
+#define BH_UNIT_ADD(name) \
     BH_UnitAdd(#name, unit##name)
 
 
-/**
- * Adds unit test \a cb with name \a name for the testing.
- *
- * \param name  Unit test name
- * \param cb    Unit test function
- */
 void BH_UnitAdd(const char *name,
                 BH_UnitCallback cb);
 
 
-/**
- * Runs unit tests.
- *
- * \return On success, returns zero.
- * \return On failure, returns error code.
- */
 int BH_UnitRun(void);
+
 
 #endif /* BH_UNIT_H */

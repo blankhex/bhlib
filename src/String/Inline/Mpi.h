@@ -1,5 +1,5 @@
 /* Platform dependant definition */
-#ifndef BH_TWEAK_SHORT_BINT
+#ifndef BH_USE_SHORT_LIMBS
 #define MPI_SIZE   40
 #define MPI_TYPE   uint32_t
 #define MPI_TTYPE  uint64_t
@@ -41,7 +41,7 @@ static const uint8_t clzLookup[256] =
 };
 
 
-#ifndef BH_TWEAK_SHORT_BINT
+#ifndef BH_USE_SHORT_LIMBS
 static const Mpi BInt1 = {1, {0x00000001ul}};
 static const Mpi BInt53 = {2, {0x00000000ul, 0x00200000ul}};
 
