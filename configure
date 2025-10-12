@@ -26,6 +26,7 @@ ldflagsmt=${LDFLAGSMT:--pthread}
 ldlibsmt=${LDLIBSMT}
 platform=""
 display_help="no"
+release="no"
 
 # Parse arguments
 for option do
@@ -63,6 +64,7 @@ for option do
         --enable-lto|--enable-lto=yes) enable_lto="yes" ;;
         --enable-lto=no) enable_lto="no" ;;
         --help|-h) display_help="yes" ;;
+        --release) release="yes" ;;
         *) echo "configure: WARNING unrecognized option $option" ;;
     esac
 done
@@ -96,6 +98,7 @@ Options:
   --enable-benchmarks[=yes|no]      Enable benchmarks
   --use-clock_gettime[=yes|no]      Use of clock_gettime regardless of the support
   --use-short-limbs[=yes|no]        Use shorter limbs in big integers
+  --release                         Build in release mode
 EOF
     exit 1
 fi
@@ -135,6 +138,10 @@ fi
 # Build flags
 cflags="-I${source_path}include -I. $cflags"
 ldlibs="-lm $ldlibs"
+
+if [ "$release" = "yes" ]; then
+    cflags="$cflags -DNDEBUG"
+fi
 
 if [ "$enable_pic" = "yes" ]; then
     cflags="$cflags -fPIC"
@@ -426,6 +433,7 @@ echo " --- General information --- "
 echo "OS:                       $os"
 echo "Platform:                 $platform"
 echo "Source path:              $source_path"
+echo "Release:                  $release"
 echo
 echo " --- Makefile variables --- "
 echo "CC:                       $cc"
