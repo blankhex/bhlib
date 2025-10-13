@@ -8,6 +8,7 @@
 #include <string.h>
 
 
+#include <Config.h>
 #include "Inline/Mpi.h"
 
 
