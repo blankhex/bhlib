@@ -1,5 +1,5 @@
-#include "BH/Bench.h"
-#include "BH/Math/Box3f.h"
+#include <BH/Bench.h>
+#include <BH/Math/Box3f.h>
 
 
 static float boxAMin[3] = {1.0f, 2.0f, 3.0f};

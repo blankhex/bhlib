@@ -1,5 +1,5 @@
-#include "BH/Bench.h"
-#include "BH/Math/Vec2i.h"
+#include <BH/Bench.h>
+#include <BH/Math/Vec2i.h>
 
 
 static int vecA[2] = {5, -3};

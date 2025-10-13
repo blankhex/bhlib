@@ -1,5 +1,5 @@
-#include "BH/Bench.h"
-#include "BH/Math/Vec2f.h"
+#include <BH/Bench.h>
+#include <BH/Math/Vec2f.h>
 
 
 static float vecA[2] = {1.0f, 2.0f};

@@ -2,6 +2,9 @@
 #define BH_BENCH_H
 
 
+#include <BH/Common.h>
+
+
 typedef struct BH_Bench BH_Bench;
 typedef void (*BH_BenchCallback)(BH_Bench *);
 
@@ -19,6 +22,10 @@ void BH_BenchAdd(const char *name,
 
 
 int BH_BenchIter(BH_Bench *state);
+
+
+void BH_BenchSubcount(BH_Bench *state,
+                      size_t count);
 
 
 int BH_BenchRun(void);

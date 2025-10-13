@@ -1,5 +1,5 @@
-#include "BH/Bench.h"
-#include "BH/Math/Vec4i.h"
+#include <BH/Bench.h>
+#include <BH/Math/Vec4i.h>
 
 
 static int vecA[4] = {1, 2, 3, 4};

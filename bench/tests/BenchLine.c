@@ -1,5 +1,5 @@
-#include "BH/Bench.h"
-#include "BH/Math/Line.h"
+#include <BH/Bench.h>
+#include <BH/Math/Line.h>
 
 
 static float pointA[2] = {1.0f, 2.0f};

@@ -14,6 +14,7 @@ struct BH_Bench
     BH_BenchCallback cb;
     int started;
     size_t iterations;
+    size_t subcount;
 };
 
 
@@ -51,6 +52,7 @@ void BH_BenchAdd(const char *name,
     bench->cb = cb;
     bench->started = 0;
     bench->iterations = 0;
+    bench->subcount = 1;
 
     /* Append benchmark entry */
     current = root;
@@ -84,12 +86,19 @@ int BH_BenchIter(BH_Bench *state)
     if (millis > 1000 || state->iterations > 1000000000)
     {
         float ips, ns;
-        ips = state->iterations / (millis / 1000.0f);
-        ns = (millis * 1000000.0) / state->iterations;
+        ips = state->iterations / (millis / 1000.0f) * state->subcount;
+        ns = (millis * 1000000.0) / state->iterations / state->subcount;
         printf("%-12s %.2f ips (%.2f ns)\n", state->name, ips, ns);
         return 0;
     }
     return 1;
+}
+
+
+void BH_BenchSubcount(BH_Bench *state,
+                      size_t count)
+{
+    state->subcount = count;
 }
 
 
