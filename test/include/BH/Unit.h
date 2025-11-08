@@ -2,9 +2,12 @@
 #define BH_UNIT_H
 
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 
+
 typedef int (*BH_UnitCallback)(void);
+
 
 #define BH_VERIFY(e) \
     do { \
@@ -30,6 +33,17 @@ typedef int (*BH_UnitCallback)(void);
         if (BH_VERIFY_DELTA > (e)) { \
             printf("%s:%d\t%s (differs by %f)\n", \
                    __FILE__, __LINE__, #x " == " #y, BH_VERIFY_DELTA); \
+            return -1; \
+        } \
+    } while(0)
+
+
+#define BH_VERIFY_STR_EQ(actual, expected) \
+    do { \
+        BH_VERIFY((actual) != NULL && (expected) != NULL); \
+        if (strcmp((actual), (expected)) != 0) { \
+            printf("%s:%d\tExpected '%s', got '%s'\n", \
+                   __FILE__, __LINE__, (expected), (actual)); \
             return -1; \
         } \
     } while(0)

@@ -178,3 +178,53 @@ int BH_IOEndOfFile(BH_IO *device)
 
     return flags & BH_IO_FLAG_EOF;
 }
+
+
+char *BH_IOReadLine(BH_IO *device,
+                    char *str,
+                    size_t size)
+{
+    size_t i, actual;
+
+    if (size < 1)
+        return NULL;
+
+    i = 0;
+    while (i < size - 1)
+    {
+        if (BH_IORead(device, str + i, 1, &actual) || actual != 1)
+            break;
+
+        if (str[i++] == '\n')
+            break;
+    }
+    str[i] = 0;
+    return i ? str : NULL;
+}
+
+
+char *BH_IOReadLineFull(BH_IO *device,
+                        char *str,
+                        size_t size)
+{
+    size_t i, actual;
+    char data;
+
+    if (size < 1)
+        return NULL;
+
+    i = 0;
+    while (1)
+    {
+        if (BH_IORead(device, &data, 1, &actual) || actual != 1)
+            break;
+
+        if (i < size - 1)
+            str[i++] = data;
+
+        if (data == '\n')
+            break;
+    }
+    str[i] = 0;
+    return i ? str : NULL;
+}

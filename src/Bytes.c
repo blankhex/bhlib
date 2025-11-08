@@ -215,3 +215,13 @@ BH_IO *BH_BytesNew(char *data,
 
     return (BH_IO*)bytes;
 }
+
+
+int BH_IOIsBytes(BH_IO *device)
+{
+    if (!device)
+        return 0;
+
+    return device->callback == (BH_IOCallback)bytesCallback;
+}
+

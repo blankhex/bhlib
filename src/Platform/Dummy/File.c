@@ -13,3 +13,9 @@ BH_IO *BH_FileNew(const char *path,
 
     return NULL;
 }
+
+
+int BH_IOIsFile(BH_IO *device)
+{
+    return 0;
+}

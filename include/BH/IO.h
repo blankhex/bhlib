@@ -86,14 +86,23 @@ BH_IO *BH_FileNew(const char *path,
                   int *result);
 
 
+int BH_IOIsFile(BH_IO *device);
+
+
 BH_IO *BH_BufferNew(BH_IO *device,
                     size_t size,
                     int *result);
 
 
+int BH_IOIsBuffer(BH_IO *device);
+
+
 BH_IO *BH_BytesNew(char *data,
                    size_t size,
                    int *result);
+
+
+int BH_IOIsBytes(BH_IO *device);
 
 
 void BH_IOFree(BH_IO *device);
@@ -153,6 +162,16 @@ int BH_IOEndOfFile(BH_IO *device);
 
 
 int BH_IOClear(BH_IO *device);
+
+
+char *BH_IOReadLine(BH_IO *device,
+                    char *str,
+                    size_t size);
+
+
+char *BH_IOReadLineFull(BH_IO *device,
+                        char *str,
+                        size_t size);
 
 
 #endif /* BH_IO_H */

@@ -7,6 +7,7 @@
 BH_UNIT_TEST(Null)
 {
     BH_VERIFY(BH_BufferNew(NULL, 0, NULL) == NULL);
+    BH_VERIFY(BH_IOIsBuffer(NULL) == 0);
     return 0;
 }
 
@@ -21,6 +22,7 @@ BH_UNIT_TEST(Write)
     memset(data, 0, 16);
     BH_VERIFY((io = BH_BytesNew(data, 16, NULL)) != NULL);
     BH_VERIFY((buffer = BH_BufferNew(io, 4, NULL)) != NULL);
+    BH_VERIFY(BH_IOIsBuffer(buffer));
 
     BH_VERIFY(BH_IOWrite(buffer, "1234567", 7, &size) == BH_OK);
     BH_VERIFY(size == 7);

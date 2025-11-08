@@ -302,3 +302,12 @@ BH_IO *BH_BufferNew(BH_IO *device,
 
     return (BH_IO*)buffer;
 }
+
+
+int BH_IOIsBuffer(BH_IO *device)
+{
+    if (!device)
+        return 0;
+
+    return device->callback == (BH_IOCallback)bufferCallback;
+}

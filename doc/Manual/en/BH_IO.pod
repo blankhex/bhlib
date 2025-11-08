@@ -177,6 +177,13 @@ The optional parameter I<result> returns 0 or an error code.
 This function returns a pointer to a new BH_IO object or NULL.
 
 
+=head2 BH_IOIsFile
+
+ int BH_IOIsFile(BH_IO *device);
+
+Checks if I/O device is a file.
+
+
 =head2 BH_BufferNew
 
  BH_IO *BH_BufferNew(BH_IO *device,
@@ -193,6 +200,13 @@ If successful, this function returns a pointer to the new BH_IO object or
 NULL in case of an error.
 
 
+=head2 BH_IOIsBuffer
+
+ int BH_IOIsBuffer(BH_IO *device);
+
+Checks if I/O device is a buffer.
+
+
 =head2 BH_BytesNew
 
  BH_IO *BH_BytesNew(char *data,
@@ -205,6 +219,13 @@ The optional parameter I<result> returns 0 or an error code.
 
 If successful, this function returns a pointer to the new BH_IO object or
 NULL in case of an error.
+
+
+=head2 BH_IOIsBytes
+
+ int BH_IOIsBytes(BH_IO *device);
+
+Checks if I/O device is a memory region/bytes.
 
 
 =head2 BH_IOFree
@@ -454,6 +475,35 @@ Checks whether the I/O device has reached the end.
 This function is equivalent to the following code:
 
  (BH_IOFlags(device) & BH_IO_FLAG_EOF)
+
+
+=head2 BH_IOReadLine
+
+ char *BH_IOReadLine(BH_IO *device,
+                     char *str,
+                     size_t size);
+
+Reads a line from I<device> into I<str>, up to I<size-1> bytes.
+
+Stops at I<\n> or EOF. The result is null-terminated. Partial lines may remain
+in the stream if longer than buffer.
+
+Returns I<str> on success, NULL on error.
+
+
+=head2 BH_IOReadLineFull
+
+ char *BH_IOReadLineFull(BH_IO *device,
+                         char *str,
+                         size_t size);
+
+Reads a line from I<device> into I<str>, up to I<size-1> bytes.
+
+Stops at I<\n> or EOF. The result is null-terminated. Consumes the entire line
+from the stream, discarding excess data if the line is too long. Ensures no
+partial line remains.
+
+Returns I<str> on success, NULL on error.
 
 
 =head1 STRUCTURES

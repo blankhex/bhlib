@@ -315,3 +315,12 @@ BH_IO *BH_FileNew(const char *path,
 
     return (BH_IO*)file;
 }
+
+
+int BH_IOIsFile(BH_IO *device)
+{
+    if (!device)
+        return 0;
+
+    return device->callback == (BH_IOCallback)fileCallback;
+}

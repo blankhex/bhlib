@@ -10,6 +10,8 @@ BH_UNIT_TEST(Null)
     BH_VERIFY(BH_BytesNew(NULL, 0, NULL) == NULL);
     BH_VERIFY(BH_BytesNew(&data, 0, NULL) == NULL);
     BH_VERIFY(BH_BytesNew(NULL, 1234, NULL) == NULL);
+    BH_VERIFY(BH_IOIsBytes(NULL) == 0);
+
     return 0;
 }
 
@@ -22,6 +24,7 @@ BH_UNIT_TEST(Read)
     size_t size;
 
     BH_VERIFY((io = BH_BytesNew(buffer1, 14, NULL)) != NULL);
+    BH_VERIFY(BH_IOIsBytes(io));
     BH_VERIFY(BH_IORead(io, buffer2, 14, &size) == BH_OK);
     BH_VERIFY(size == 14);
     BH_VERIFY(memcmp(buffer1, buffer2, 14) == 0);

@@ -40,6 +40,7 @@ static int checkNull(void)
     BH_VERIFY(BH_IOCap(NULL, 0) != BH_OK);
     BH_VERIFY(BH_IOEndOfFile(NULL) != BH_OK);
     BH_VERIFY(BH_IOError(NULL) != BH_OK);
+    BH_VERIFY(BH_IOIsFile(NULL) == 0);
     BH_IOFree(NULL);
 
     return 0;
@@ -58,6 +59,7 @@ static int checkNormal(void)
 
     /* Check operations for write only access */
     BH_VERIFY((io = BH_FileNew(FILENAME1, BH_FILE_WRITE, NULL)) != NULL);
+    BH_VERIFY(BH_IOIsFile(io));
     BH_VERIFY(BH_IOWrite(io, "1234567890", 10, &actual) == BH_OK);
     BH_VERIFY(actual == 10);
 
