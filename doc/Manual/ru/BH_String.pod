@@ -368,6 +368,13 @@ I<string> (с ограничением по длинне I<size>).
 В случае успеха, возвращает преобразованное число или 0.
 
 
+=head2 BH_StringDup
+
+ char *BH_StringDup(const char *string);
+
+Создает копию строки I<string> (схоже с strdup).
+
+
 =head1 СМ. ТАКЖЕ
 
 L<BH>

@@ -113,4 +113,7 @@ uint64_t BH_StringToInt64u(const char *string,
                            int base);
 
 
+char *BH_StringDup(const char *string);
+
+
 #endif /* BH_STRING_H */

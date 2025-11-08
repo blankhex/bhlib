@@ -377,6 +377,13 @@ The optional parameter I<base> specifies the base of the number.
 If successful, it returns the converted number or 0.
 
 
+=head2 BH_StringDup
+
+ char *BH_StringDup(const char *string);
+
+Creates duplicate of the I<string> (simular to strdup).
+
+
 =head1 SEE ALSO
 
 L<BH>
