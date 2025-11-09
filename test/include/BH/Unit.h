@@ -40,10 +40,13 @@ typedef int (*BH_UnitCallback)(void);
 
 #define BH_VERIFY_STR_EQ(actual, expected) \
     do { \
-        BH_VERIFY((actual) != NULL && (expected) != NULL); \
-        if (strcmp((actual), (expected)) != 0) { \
+        const char *a, *b; \
+        a = (actual); \
+        b = (expected); \
+        BH_VERIFY(a != NULL && b != NULL); \
+        if (strcmp(a, b) != 0) { \
             printf("%s:%d\tExpected '%s', got '%s'\n", \
-                   __FILE__, __LINE__, (expected), (actual)); \
+                   __FILE__, __LINE__, a, b); \
             return -1; \
         } \
     } while(0)
