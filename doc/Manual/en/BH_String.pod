@@ -384,6 +384,22 @@ If successful, it returns the converted number or 0.
 Creates duplicate of the I<string> (simular to strdup).
 
 
+=head2 BH_StringCompare
+
+ int BH_StringCompare(const char *s1,
+                      const char *s2);
+
+Compares two strings.
+
+
+=head2 BH_StringCompareCaseless
+
+ int BH_StringCompareCaseless(const char *s1,
+                              const char *s2);
+
+Compares two case-insensitive strings.
+
+
 =head1 SEE ALSO
 
 L<BH>

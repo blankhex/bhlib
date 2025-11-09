@@ -375,6 +375,22 @@ I<string> (с ограничением по длинне I<size>).
 Создает копию строки I<string> (схоже с strdup).
 
 
+=head2 BH_StringCompare
+
+ int BH_StringCompare(const char *s1,
+                      const char *s2);
+
+Сравнивает две строки.
+
+
+=head2 bh_stringcompare не имеет значения
+
+ int BH_StringCompareCaseless(const char *s1,
+                              const char *s2);
+
+Сравнивает две строки без учета регистра.
+
+
 =head1 СМ. ТАКЖЕ
 
 L<BH>

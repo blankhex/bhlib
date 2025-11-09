@@ -116,4 +116,12 @@ uint64_t BH_StringToInt64u(const char *string,
 char *BH_StringDup(const char *string);
 
 
+int BH_StringCompare(const char *s1,
+                     const char *s2);
+
+
+int BH_StringCompareCaseless(const char *s1,
+                             const char *s2);
+
+
 #endif /* BH_STRING_H */
