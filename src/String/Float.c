@@ -515,11 +515,11 @@ static int caselessCompare(const char *src,
 
 
 static int parseFormat(const char *string,
-                       size_t *size,
                        char *buffer,
                        int *sign,
                        int *e,
-                       int *type)
+                       int *type,
+                       size_t *actual)
 {
     const char *current;
     int esign, dot, count;
@@ -607,15 +607,15 @@ static int parseFormat(const char *string,
     *e -= dot;
 
 done:
-    if (size)
-        *size = current - string;
+    if (actual)
+        *actual = current - string;
 
     return count;
 }
 
 
 double BH_StringToDouble(const char *string,
-                         size_t *size)
+                         size_t *actual)
 {
     int type, e, sign, i, count, shift;
     Mpi r, s, tmp[5];
@@ -627,7 +627,7 @@ double BH_StringToDouble(const char *string,
     assert(string != NULL);
 
     /* Parse from string format */
-    count = parseFormat(string, size, buffer, &sign, &e, &type);
+    count = parseFormat(string, buffer, &sign, &e, &type, actual);
 
     /* Handle special values */
     if (type == BH_FP_INFINITE)
@@ -641,8 +641,8 @@ double BH_StringToDouble(const char *string,
     else if (type == BH_FP_ZERO)
     {
         /* Hacky solution to indicate we haven't seen any digit */
-        if (size)
-            *size = 0;
+        if (actual)
+            *actual = 0;
         return 0.0;
     }
 

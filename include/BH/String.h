@@ -70,47 +70,47 @@ int BH_StringFromInt64u(char *string,
 
 
 double BH_StringToDouble(const char *string,
-                         size_t *size);
+                         size_t *actual);
 
 
 int8_t BH_StringToInt8s(const char *string,
-                        size_t *size,
-                        int base);
+                        int base,
+                        size_t *actual);
 
 
 int16_t BH_StringToInt16s(const char *string,
-                          size_t *size,
-                          int base);
+                          int base,
+                          size_t *actual);
 
 
 int32_t BH_StringToInt32s(const char *string,
-                          size_t *size,
-                          int base);
+                          int base,
+                          size_t *actual);
 
 
 int64_t BH_StringToInt64s(const char *string,
-                          size_t *size,
-                          int base);
+                          int base,
+                          size_t *actual);
 
 
 uint8_t BH_StringToInt8u(const char *string,
-                         size_t *size,
-                         int base);
+                         int base,
+                         size_t *actual);
 
 
 uint16_t BH_StringToInt16u(const char *string,
-                           size_t *size,
-                           int base);
+                           int base,
+                           size_t *actual);
 
 
 uint32_t BH_StringToInt32u(const char *string,
-                           size_t *size,
-                           int base);
+                           int base,
+                           size_t *actual);
 
 
 uint64_t BH_StringToInt64u(const char *string,
-                           size_t *size,
-                           int base);
+                           int base,
+                           size_t *actual);
 
 
 char *BH_StringDup(const char *string);

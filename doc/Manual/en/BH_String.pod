@@ -239,11 +239,11 @@ If successful, it returns 0 or an error code.
 =head2 BH_StringToDouble
 
  double BH_StringToDouble(const char *string,
-                          size_t *size);
+                          size_t *actual);
 
 Converts the string I<string> to a real number.
 
-The optional parameter I<size> returns the number of characters read from the
+The optional parameter I<actual> returns the number of characters read from the
 string.
 
 If successful, it returns the converted number or 0.
@@ -252,15 +252,15 @@ If successful, it returns the converted number or 0.
 =head2 BH_StringToInt8s
 
  int8_t BH_StringToInt8s(const char *string,
-                         size_t *size,
-                         int base);
+                         int base,
+                         size_t *actual);
 
 Converts the string I<string> to an 8-bit signed integer.
 
-The optional parameter I<size> returns the number of characters read from the
-string.
-
 The optional parameter I<base> specifies the base of the number.
+
+The optional parameter I<actual> returns the number of characters read from the
+string.
 
 If successful, it returns the converted number or 0.
 
@@ -268,15 +268,15 @@ If successful, it returns the converted number or 0.
 =head2 BH_StringToInt16s
 
  int16_t BH_StringToInt16s(const char *string,
-                           size_t *size,
-                           int base);
+                           int base,
+                           size_t *actual);
 
 Converts the string I<string> to a signed 16-bit integer.
 
-The optional parameter I<size> returns the number of characters read from the
-string.
-
 The optional parameter I<base> specifies the base of the number.
+
+The optional parameter I<actual> returns the number of characters read from the
+string.
 
 If successful, it returns the converted number or 0.
 
@@ -284,15 +284,15 @@ If successful, it returns the converted number or 0.
 =head2 BH_StringToInt32s
 
  int32_t BH_StringToInt32s(const char *string,
-                           size_t *size,
-                           int base);
+                           int base,
+                           size_t *actual);
 
 Converts the string I<string> to a signed 32-bit integer.
 
-The optional parameter I<size> returns the number of characters read from the
-string.
-
 The optional parameter I<base> specifies the base of the number.
+
+The optional parameter I<actual> returns the number of characters read from the
+string.
 
 If successful, it returns the converted number or 0.
 
@@ -300,15 +300,15 @@ If successful, it returns the converted number or 0.
 =head2 BH_StringToInt64s
 
  int64_t BH_StringToInt64s(const char *string,
-                           size_t *size,
-                           int base);
+                           int base,
+                           size_t *actual);
 
 Converts the string I<string> to a signed 64-bit integer.
 
-The optional parameter I<size> returns the number of characters read from the
-string.
-
 The optional parameter I<base> specifies the base of the number.
+
+The optional parameter I<actual> returns the number of characters read from the
+string.
 
 If successful, it returns the converted number or 0.
 
@@ -316,15 +316,15 @@ If successful, it returns the converted number or 0.
 =head2 BH_StringToInt8u
 
  uint8_t BH_StringToInt8u(const char *string,
-                          size_t *size,
-                          int base);
+                          int base,
+                          size_t *actual);
 
 Converts the string I<string> to an unsigned 8-bit integer.
 
-The optional parameter I<size> returns the number of characters read from the
-string.
-
 The optional parameter I<base> specifies the base of the number.
+
+The optional parameter I<actual> returns the number of characters read from the
+string.
 
 If successful, it returns the converted number or 0.
 
@@ -332,15 +332,15 @@ If successful, it returns the converted number or 0.
 =head2 BH_StringToInt16u
 
  uint16_t BH_StringToInt16u(const char *string,
-                            size_t *size,
-                            int base);
+                            int base,
+                            size_t *actual);
 
 Converts the string I<string> to an unsigned 16-bit integer.
 
-The optional parameter I<size> returns the number of characters read from the
-string.
-
 The optional parameter I<base> specifies the base of the number.
+
+The optional parameter I<actual> returns the number of characters read from the
+string.
 
 If successful, it returns the converted number or 0.
 
@@ -348,15 +348,15 @@ If successful, it returns the converted number or 0.
 =head2 BH_StringToInt32u
 
  uint32_t BH_StringToInt32u(const char *string,
-                            size_t *size,
-                            int base);
+                            int base,
+                            size_t *actual);
 
 Converts the string I<string> to an unsigned 32-bit integer.
 
-The optional parameter I<size> returns the number of characters read from the
-string.
-
 The optional parameter I<base> specifies the base of the number.
+
+The optional parameter I<actual> returns the number of characters read from the
+string.
 
 If successful, it returns the converted number or 0.
 
@@ -364,15 +364,15 @@ If successful, it returns the converted number or 0.
 =head2 BH_StringToInt64u
 
  uint64_t BH_StringToInt64u(const char *string,
-                            size_t *size,
-                            int base);
+                            int base,
+                            size_t *actual);
 
 Converts the string I<string> to an unsigned 64-bit integer.
 
-The optional parameter I<size> returns the number of characters read from the
-string.
-
 The optional parameter I<base> specifies the base of the number.
+
+The optional parameter I<actual> returns the number of characters read from the
+string.
 
 If successful, it returns the converted number or 0.
 
